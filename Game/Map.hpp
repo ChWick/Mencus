@@ -11,6 +11,7 @@
 #include <tinyxml2.h>
 #include "InputListener.hpp"
 #include "BoundingBox2d.hpp"
+#include "CollisionDefines.hpp"
 
 class CTile;
 class CPlayer;
@@ -21,13 +22,6 @@ class CExplosion;
 
 class CMap : Ogre::FrameListener, public CSpriteTransformPipeline, public CInputListener {
 public:
-  enum ECollisionCheckDirections {
-    CCD_TOP,
-    CCD_LEFT,
-    CCD_BOTTOM,
-    CCD_RIGHT,
-  };
-  
 private:
   std::list<CShot*> m_lShotsToDestroy;
   std::list<CExplosion*> m_lExplosionsToDestroy;
@@ -63,9 +57,12 @@ public:
   /**
    *  \param[in] uiTileMask a mask for tiles to match
    *  \param[in] bb The bounding box to check for a hit
-   *  \returns true if a hit occured
+   *  \param[out] pbbOverlap If not zero, the overlap of the hit with the collided bb will be stored
+   *  \returns the collision direction or CCD_NONE
    */
-  bool hitsTile(unsigned int uiTileMask, const CBoundingBox2d &bb) const;
+  unsigned int hitsTile(unsigned int uiTileMask,
+			const CBoundingBox2d &bb,
+			CBoundingBox2d *pbbOverlap = NULL) const;
   //! Function to check weather a bounding box is out of the map
   /**
    *  \param[in] bb The bounding box

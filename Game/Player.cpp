@@ -22,7 +22,9 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   m_vCurrentSpeed(0, 0),
   m_bOnGround(true),
   m_bJumping(false),
-  m_eLastDirection(LD_RIGHT) {
+  m_eLastDirection(LD_RIGHT),
+  m_uiCurrentWeapon(W_BOMB),
+  m_pBomb(NULL) {
   CInputListenerManager::getSingleton().addInputListener(this);
   init(1, ANIM_COUNT);
   setupAnimations();
@@ -44,6 +46,11 @@ void CPlayer::setupAnimations() {
   setupAnimation(ANIM_JUMP_LEFT, "jump_right", 1, CSpriteTexture::MIRROR_Y);
   setupAnimation(ANIM_FALL_RIGHT, "fall_right", 1);
   setupAnimation(ANIM_FALL_LEFT, "fall_right", 1, CSpriteTexture::MIRROR_Y);
+
+  setupAnimation(ANIM_HOLD_LEFT, "throw_right", 1, CSpriteTexture::MIRROR_Y);
+  setupAnimation(ANIM_HOLD_RIGHT, "throw_right", 1);
+  setupAnimation(ANIM_THROW_RIGHT, "throw_right", 2);
+  setupAnimation(ANIM_THROW_LEFT, "throw_right",2, CSpriteTexture::MIRROR_Y);
 
   // Fixes for attack sprite texutres
   for (int i = 2; i <= 7; i++) {
@@ -70,53 +77,87 @@ void CPlayer::update(Ogre::Real tpf) {
     m_vCurrentSpeed.y += c_fGravity * tpf; // twice gravity now
   }
 
+  if (!m_pBomb) {
+    Ogre::Real fPenetration = 0;
+    // move and check here only y direction movement
+    m_vPosition.y += m_vCurrentSpeed.y * tpf;
 
-  Ogre::Real fPenetration = 0;
-  // move and check here only y direction movement
-  m_vPosition.y += m_vCurrentSpeed.y * tpf;
+    if (m_vCurrentSpeed.y < 0) {
+      m_bOnGround = false;
+      m_bJumping = true;
+      fPenetration = m_pMap->hitsTile(CCD_BOTTOM, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+      if (fPenetration != 0) {
+	m_bOnGround = true;
+	m_bJumping = false;
+      }
+    }
+    else if (m_vCurrentSpeed.y > 0) {
+      fPenetration = m_pMap->hitsTile(CCD_TOP, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+    }
 
-  if (m_vCurrentSpeed.y < 0) {
-    m_bOnGround = false;
-    m_bJumping = true;
-    fPenetration = m_pMap->hitsTile(CMap::CCD_BOTTOM, CTile::TF_UNPASSABLE, getWorldBoundingBox());
     if (fPenetration != 0) {
-      m_bOnGround = true;
-      m_bJumping = false;
+      m_vCurrentSpeed.y = 0;
+      m_vPosition.y -= fPenetration;
+    }
+
+
+    // move and check here only x direction movement
+    fPenetration = 0;
+    m_vPosition.x += m_vCurrentSpeed.x * tpf;
+  
+    if (m_vCurrentSpeed.x < 0) {
+      fPenetration = m_pMap->hitsTile(CCD_LEFT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+      m_eLastDirection = LD_LEFT;
+    }
+    else if (m_vCurrentSpeed.x > 0) {
+      fPenetration += m_pMap->hitsTile(CCD_RIGHT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+      m_eLastDirection = LD_RIGHT;
+    }
+
+    if (fPenetration != 0) {
+      m_vPosition.x -= fPenetration;
+      m_vCurrentSpeed.x = 0;
     }
   }
-  else if (m_vCurrentSpeed.y > 0) {
-    fPenetration = m_pMap->hitsTile(CMap::CCD_TOP, CTile::TF_UNPASSABLE, getWorldBoundingBox());
-  }
 
-  if (fPenetration != 0) {
-    m_vCurrentSpeed.y = 0;
-    m_vPosition.y -= fPenetration;
-  }
-
-  // move and check here only x direction movement
-  fPenetration = 0;
-  m_vPosition.x += m_vCurrentSpeed.x * tpf;
-
-  if (m_vCurrentSpeed.x < 0) {
-    fPenetration = m_pMap->hitsTile(CMap::CCD_LEFT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
-    m_eLastDirection = LD_LEFT;
-  }
-  else if (m_vCurrentSpeed.x > 0) {
-    fPenetration += m_pMap->hitsTile(CMap::CCD_RIGHT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
-    m_eLastDirection = LD_RIGHT;
-  }
-  if (fPenetration != 0) {
-    m_vPosition.x -= fPenetration;
-    m_vCurrentSpeed.x = 0;
-  }
-
-  if (m_bOnGround) {
-    if (m_bAttackPressed && m_vCurrentSpeed.x == 0) {
+  if (m_uiCurrentAnimationSequence == ANIM_HOLD_LEFT || m_uiCurrentAnimationSequence == ANIM_HOLD_RIGHT) {
+    if (!m_bAttackPressed) {
+      // release bomb
+      m_pBomb->launch(Ogre::Vector2((m_eLastDirection == LD_LEFT) ? -1 : 1, 0));
+      m_pBomb = NULL;
       if (m_eLastDirection == LD_LEFT) {
-	changeCurrentAnimationSequence(ANIM_ATTACK_LEFT);
+	changeCurrentAnimationSequence(ANIM_THROW_LEFT);
       }
       else {
-	changeCurrentAnimationSequence(ANIM_ATTACK_RIGHT);
+	changeCurrentAnimationSequence(ANIM_THROW_RIGHT);
+      }
+    }
+  }
+  else if (m_uiCurrentAnimationSequence == ANIM_THROW_RIGHT || m_uiCurrentAnimationSequence == ANIM_THROW_LEFT){
+    // do nothing, wait for finished
+  }
+  else if (m_bOnGround) {
+    if (m_bAttackPressed && m_vCurrentSpeed.x == 0) {
+      if (m_uiCurrentWeapon == W_BOLT) {
+	if (m_eLastDirection == LD_LEFT) {
+	  changeCurrentAnimationSequence(ANIM_ATTACK_LEFT);
+	}
+	else {
+	  changeCurrentAnimationSequence(ANIM_ATTACK_RIGHT);
+	}
+      }
+      else if (m_uiCurrentWeapon == W_BOMB) {
+	if (!m_pBomb) {
+	  m_pBomb = new CShot(m_pMap, m_pSpriteManager, getCenter(), CShot::ST_BOMB, (m_eLastDirection == LD_LEFT) ? CShot::SD_LEFT : CShot::SD_RIGHT);
+	  m_pMap->addShot(m_pBomb);
+	}
+	m_pBomb->setPosition(getCenter());
+	if (m_eLastDirection == LD_LEFT) {
+	  changeCurrentAnimationSequence(ANIM_HOLD_LEFT);
+	}
+	else {
+	  changeCurrentAnimationSequence(ANIM_HOLD_RIGHT);
+	}
       }
     }
     else {
@@ -207,8 +248,17 @@ void CPlayer::animationTextureChangedCallback(unsigned int uiOldText, unsigned i
     if (m_uiCurrentAnimationSequence == ANIM_ATTACK_LEFT) {
       m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_LEFT, CShot::ST_BOLT, CShot::SD_LEFT))->launch(Ogre::Vector2(-1,0));
     }
-    else if(m_uiCurrentAnimationSequence ==ANIM_ATTACK_RIGHT) {
+    else if(m_uiCurrentAnimationSequence == ANIM_ATTACK_RIGHT) {
       m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_RIGHT, CShot::ST_BOLT, CShot::SD_RIGHT))->launch(Ogre::Vector2(1,0));
+    }
+  }
+  else if (uiOldText == m_AnimationSequences[m_uiCurrentAnimationSequence].size() - 1 && uiNewText == 0) {
+    // new loop of animation
+    if (m_uiCurrentAnimationSequence == ANIM_THROW_LEFT) {
+      changeCurrentAnimationSequence(ANIM_STAND_LEFT);
+    }
+    else if (m_uiCurrentAnimationSequence == ANIM_THROW_RIGHT) {
+      changeCurrentAnimationSequence(ANIM_STAND_RIGHT);
     }
   }
 }

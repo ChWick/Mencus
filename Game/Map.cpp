@@ -159,7 +159,7 @@ Ogre::Real CMap::hitsTile(ECollisionCheckDirections eCollisionCheckDirection, un
 
   return 0;			// No collision
 }
-bool CMap::hitsTile(unsigned int uiTileMask, const CBoundingBox2d &bb) const {
+unsigned int CMap::hitsTile(unsigned int uiTileMask, const CBoundingBox2d &bb, CBoundingBox2d *pbbOverlap) const {
   size_t minx = static_cast<size_t>(bb.getPosition().x);
   size_t miny = static_cast<size_t>(bb.getPosition().y);
   size_t maxx = static_cast<size_t>(bb.getPosition().x + bb.getSize().x);
@@ -176,13 +176,14 @@ bool CMap::hitsTile(unsigned int uiTileMask, const CBoundingBox2d &bb) const {
       CDebugDrawer::getSingleton().draw(m_gridTiles(x, y));
 #endif
       if ((m_gridTiles(x, y)->getTileFlags() & uiTileMask) == uiTileMask) {
-	if (m_gridTiles(x, y)->getWorldBoundingBox().collidesWith(bb)) {
-	  return true;
+	unsigned int uiCCD = bb.collidesWith(m_gridTiles(x, y)->getWorldBoundingBox(), pbbOverlap); 
+	if (uiCCD != CCD_NONE) {
+	  return uiCCD;
 	}
       }
     }
   }
-  return false;
+  return CCD_NONE;
 }
 bool CMap::outOfMap(const CBoundingBox2d &bb) const {
 	  if (bb.getPosition().x + bb.getSize().x < 0) return true;

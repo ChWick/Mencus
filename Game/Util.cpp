@@ -1,6 +1,12 @@
 #include "Util.hpp"
 #include <Ogre.h>
 
+std::string getBombTexture(std::string sName, int index) {
+  if (index < 0) {
+    return "../gfx/objects/bomb/" + sName + ".png";
+  }
+  return "../gfx/objects/bomb/" + sName + "_" + Ogre::StringConverter::toString(index) + ".png";
+}
 std::string getSwitchTexture(unsigned int uiSwitchID, bool on) {
   return "../gfx/objects/switch/switch"
     + Ogre::StringConverter::toString(uiSwitchID + 1)
