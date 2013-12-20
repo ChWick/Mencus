@@ -46,7 +46,7 @@ void CAnimatedSprite::changeCurrentAnimationSequence(unsigned int uiCurrentAnima
 void CAnimatedSprite::setupAnimation(unsigned int uiAnimSequence,
 				     const std::string &sName,
 				     int uiCount,
-				     EMirrorTypes eMirrorType,
+				     CSpriteTexture::EMirrorTypes eMirrorType,
 				     tGetPathFunctionType pGetPathFunction) {
   tGetPathFunctionType pFunc = (pGetPathFunction == NULL) ? m_pDefaultGetPathFunction : pGetPathFunction;
   assert(pFunc);
@@ -63,7 +63,7 @@ void CAnimatedSprite::setupAnimation(unsigned int uiAnimSequence,
 void CAnimatedSprite::setupAnimation(unsigned int uiAnimSequence,
 				     const std::string &sName,
 				     const std::vector<int> &uiIDs,
-				     EMirrorTypes eMirrorType,
+				     CSpriteTexture::EMirrorTypes eMirrorType,
 				     tGetPathFunctionType pGetPathFunction) {
   tGetPathFunctionType pFunc = (pGetPathFunction == NULL) ? m_pDefaultGetPathFunction : pGetPathFunction;
   assert(pFunc);

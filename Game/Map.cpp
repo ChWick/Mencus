@@ -25,7 +25,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager)
   m_p2dManagerMap = new Ogre2dManager();
   m_p2dManagerMap->init(pSceneManager, Ogre::RENDER_QUEUE_BACKGROUND, true);
   Ogre::Root::getSingleton().addFrameListener(this);
-  loadMap("../level/Level1/Scene3.xml");
+  loadMap("../level/level1/scene3.xml");
 
   CInputListenerManager::getSingleton().addInputListener(this);
 

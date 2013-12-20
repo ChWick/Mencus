@@ -11,15 +11,15 @@ using namespace std;
 
 class CSpriteTransformPipeline;
 
-enum EMirrorTypes {
-  MIRROR_NONE,
-  MIRROR_X,
-  MIRROR_Y,
-  MIRROR_XY,
-};
-
 class CSpriteTexture {
 public:
+  enum EMirrorTypes {
+    MIRROR_NONE,
+    MIRROR_X,
+    MIRROR_Y,
+    MIRROR_XY,
+  };
+
   static const Ogre::Vector2 DEFAULT_TEXTURE_TOP_LEFT;
   static const Ogre::Vector2 DEFAULT_TEXTURE_BOTTOM_RIGHT;
 private:

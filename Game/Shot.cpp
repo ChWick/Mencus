@@ -17,7 +17,8 @@ const Ogre::Real SHOT_SPEED[CShot::ST_COUNT] = {
 CShot::CShot(CMap *pMap,
 	     Ogre2dManager *pSpriteManager,
 	     const Ogre::Vector2 &vPosition,
-	     EShotTypes eShotType)
+	     EShotTypes eShotType,
+	     EShotDirections eShotDirection)
   :
   CAnimatedSprite(pMap,
 		  pSpriteManager,
@@ -26,13 +27,17 @@ CShot::CShot(CMap *pMap,
   m_pMap(pMap),
   m_eShotType(eShotType),
   m_bAffectedByGravity(SHOT_AFFECTED_BY_GRAVITY[eShotType]),
-  m_vSpeed(Ogre::Vector2::ZERO) {
+  m_vSpeed(Ogre::Vector2::ZERO),
+  m_eShotDirection(eShotDirection) {
 
   init(1, 1);
-  
+
+  CSpriteTexture::EMirrorTypes eMirrorType = CSpriteTexture::MIRROR_NONE;
+  if (eShotDirection == SD_LEFT) {eMirrorType = CSpriteTexture::MIRROR_Y;}
+
   setDefaultGetPath(&getPlayerTexturePath);
   if (m_eShotType == ST_BOLT) {
-    setupAnimation(0, "bolt", 4);
+    setupAnimation(0, "bolt", 2, eMirrorType);
   }
 }
 void CShot::launch(const Ogre::Vector2 &vInitialSpeed) {

@@ -35,15 +35,15 @@ CPlayer::~CPlayer() {
 void CPlayer::setupAnimations() {
   setDefaultGetPath(&getPlayerTexturePath);
   setupAnimation(ANIM_WALK_RIGHT, "walk_right", 4);
-  setupAnimation(ANIM_WALK_LEFT, "walk_right", 4, MIRROR_Y);
+  setupAnimation(ANIM_WALK_LEFT, "walk_right", 4, CSpriteTexture::MIRROR_Y);
   setupAnimation(ANIM_STAND_RIGHT, "walk_right", 1);
-  setupAnimation(ANIM_STAND_LEFT, "walk_right", 1, MIRROR_Y);
+  setupAnimation(ANIM_STAND_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
   setupAnimation(ANIM_ATTACK_RIGHT, "attack_right", {0, 1, 2, 3, 3, 3, 3, 2, 1, 0});
-  setupAnimation(ANIM_ATTACK_LEFT, "attack_right", {0, 1, 2, 3, 3, 3, 3, 2, 1, 0}, MIRROR_Y);
+  setupAnimation(ANIM_ATTACK_LEFT, "attack_right", {0, 1, 2, 3, 3, 3, 3, 2, 1, 0}, CSpriteTexture::MIRROR_Y);
   setupAnimation(ANIM_JUMP_RIGHT, "jump_right", 1);
-  setupAnimation(ANIM_JUMP_LEFT, "jump_right", 1, MIRROR_Y);
+  setupAnimation(ANIM_JUMP_LEFT, "jump_right", 1, CSpriteTexture::MIRROR_Y);
   setupAnimation(ANIM_FALL_RIGHT, "fall_right", 1);
-  setupAnimation(ANIM_FALL_LEFT, "fall_right", 1, MIRROR_Y);
+  setupAnimation(ANIM_FALL_LEFT, "fall_right", 1, CSpriteTexture::MIRROR_Y);
 
   // Fixes for attack sprite texutres
   for (int i = 2; i <= 7; i++) {
@@ -205,10 +205,10 @@ bool CPlayer::keyReleased( const OIS::KeyEvent &arg ) {
 void CPlayer::animationTextureChangedCallback(unsigned int uiOldText, unsigned int uiNewText) {
   if (uiOldText == 3 && uiNewText == 4) {
     if (m_uiCurrentAnimationSequence == ANIM_ATTACK_LEFT) {
-      m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_LEFT, CShot::ST_BOLT))->launch(Ogre::Vector2(-1,0));
+      m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_LEFT, CShot::ST_BOLT, CShot::SD_LEFT))->launch(Ogre::Vector2(-1,0));
     }
     else if(m_uiCurrentAnimationSequence ==ANIM_ATTACK_RIGHT) {
-      m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_RIGHT, CShot::ST_BOLT))->launch(Ogre::Vector2(1,0));
+      m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_RIGHT, CShot::ST_BOLT, CShot::SD_RIGHT))->launch(Ogre::Vector2(1,0));
     }
   }
 }

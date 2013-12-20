@@ -37,12 +37,12 @@ public:
   void setupAnimation(unsigned int uiAnimSequence,
 		      const std::string &sName,
 		      int uiCount,
-		      EMirrorTypes eMirrorType = MIRROR_NONE,
+		      CSpriteTexture::EMirrorTypes eMirrorType = CSpriteTexture::MIRROR_NONE,
 		      tGetPathFunctionType pGetPathFunction = NULL);
   void setupAnimation(unsigned int uiAnimSequence,
 		      const std::string &sName,
 		      const std::vector<int> &uiIDs,
-		      EMirrorTypes eMirrorType = MIRROR_NONE,
+		      CSpriteTexture::EMirrorTypes eMirrorType = CSpriteTexture::MIRROR_NONE,
 		      tGetPathFunctionType pGetPathFunction = NULL);
 
   void changeCurrentAnimationSequence(unsigned int uiCurrentAnimationSequence, bool reset = false);
