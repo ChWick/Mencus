@@ -44,7 +44,7 @@ Thumbs.db
 *~
 *CMakeFiles*
 Makefile
-*.cmake
+cmake_install.cmake
 cotire*
 CMakeCache.txt
 *.blend[0-9]
