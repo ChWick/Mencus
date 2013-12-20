@@ -9,6 +9,13 @@
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_RIGHT(0.2, 0.5);
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_LEFT(PLAYER_BOLT_OFFSET_RIGHT * Ogre::Vector2(-1, 1));
 
+const Ogre::Vector2 PLAYER_BOMB_OFFSET(0, 0.9);
+const Ogre::Vector2 PLAYER_BOMB_THROW_DIRECTION_RIGHT(0.9, 0.1);
+const Ogre::Vector2 PLAYER_BOMB_THROW_DIRECTION_LEFT(PLAYER_BOMB_THROW_DIRECTION_RIGHT * Ogre::Vector2(-1, 1));
+const Ogre::Real PLAYER_BOMB_DEFAULT_THROW_STRENGTH(1);
+const Ogre::Real PLAYER_BOMB_THROW_STRENGTH_INCREASE(3);
+const Ogre::Real PLAYER_BOMB_MAX_TRHOW_STRENGTH(5);
+
 CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager) 
  :
   CAnimatedSprite(pMap, pSpriteManager, Ogre::Vector2(0, 0), Ogre::Vector2(1, 2)),
@@ -123,7 +130,7 @@ void CPlayer::update(Ogre::Real tpf) {
   if (m_uiCurrentAnimationSequence == ANIM_HOLD_LEFT || m_uiCurrentAnimationSequence == ANIM_HOLD_RIGHT) {
     if (!m_bAttackPressed) {
       // release bomb
-      m_pBomb->launch(Ogre::Vector2((m_eLastDirection == LD_LEFT) ? -1 : 1, 0));
+      m_pBomb->launch(((m_eLastDirection == LD_LEFT) ? PLAYER_BOMB_THROW_DIRECTION_LEFT : PLAYER_BOMB_THROW_DIRECTION_RIGHT) * m_fBombThrowStrength);
       m_pBomb = NULL;
       if (m_eLastDirection == LD_LEFT) {
 	changeCurrentAnimationSequence(ANIM_THROW_LEFT);
@@ -131,6 +138,11 @@ void CPlayer::update(Ogre::Real tpf) {
       else {
 	changeCurrentAnimationSequence(ANIM_THROW_RIGHT);
       }
+    }
+    else {
+      // increase throw strength
+      m_fBombThrowStrength += PLAYER_BOMB_THROW_STRENGTH_INCREASE * tpf;
+      m_fBombThrowStrength = min(m_fBombThrowStrength, PLAYER_BOMB_MAX_TRHOW_STRENGTH);
     }
   }
   else if (m_uiCurrentAnimationSequence == ANIM_THROW_RIGHT || m_uiCurrentAnimationSequence == ANIM_THROW_LEFT){
@@ -151,7 +163,7 @@ void CPlayer::update(Ogre::Real tpf) {
 	  m_pBomb = new CShot(m_pMap, m_pSpriteManager, getCenter(), CShot::ST_BOMB, (m_eLastDirection == LD_LEFT) ? CShot::SD_LEFT : CShot::SD_RIGHT);
 	  m_pMap->addShot(m_pBomb);
 	}
-	m_pBomb->setPosition(getCenter());
+	m_pBomb->setCenter(getCenter() + PLAYER_BOMB_OFFSET);
 	if (m_eLastDirection == LD_LEFT) {
 	  changeCurrentAnimationSequence(ANIM_HOLD_LEFT);
 	}
@@ -219,6 +231,7 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
     }
   }
   else if (arg.key == OIS::KC_SPACE) {
+    m_fBombThrowStrength = PLAYER_BOMB_DEFAULT_THROW_STRENGTH;
     if (m_bOnGround) {
       m_bAttackPressed = true;
     }

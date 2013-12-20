@@ -104,11 +104,11 @@ void CShot::update(Ogre::Real tpf) {
 	m_vPosition.x += m_vSpeed.x * tpf;
 	if (uiCCD & CCD_RIGHT && m_vSpeed.x > 0) {
 	  m_vPosition.x -= m_vSpeed.x * tpf;
-	  m_vSpeed.x *= -1;
+	  m_vSpeed.x *= -0.5;
 	}
 	else if (uiCCD & CCD_LEFT && m_vSpeed.x < 0) {
 	  m_vPosition.x -= m_vSpeed.x * tpf;
-	  m_vSpeed.x *= -1;
+	  m_vSpeed.x *= -0.5;
 	}
 
 	m_vPosition.y += m_vSpeed.y * tpf;

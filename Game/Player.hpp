@@ -57,6 +57,7 @@ private:
   ELastDirection m_eLastDirection;
   unsigned int m_uiCurrentWeapon;
   CShot *m_pBomb;
+  Ogre::Real m_fBombThrowStrength;
 public:
   CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager);
   ~CPlayer();
