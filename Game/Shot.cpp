@@ -3,6 +3,7 @@
 #include "Util.hpp"
 #include "Map.hpp"
 #include "Tile.hpp"
+#include "Explosion.hpp"
 
 const Ogre::Vector2 SHOT_SIZE[CShot::ST_COUNT] = {
   Ogre::Vector2(0.5, 0.25)
@@ -53,10 +54,13 @@ void CShot::update(Ogre::Real tpf) {
 
   // check for collisions
   if (m_pMap->hitsTile(CTile::TF_UNPASSABLE, getWorldBoundingBox())) {
+    // create explosion
+    m_pMap->addExplosion(new CExplosion(m_pMap, getCenter(), CExplosion::ET_BOLT));
     m_pMap->destroyShot(this);
     return;
   }
   if (m_pMap->outOfMap(getWorldBoundingBox())) {
+    // just destroy it
     m_pMap->destroyShot(this);
     return;
   }

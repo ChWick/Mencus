@@ -16,6 +16,7 @@ class CTile;
 class CPlayer;
 class CSwitch;
 class CShot;
+class CExplosion;
 
 
 class CMap : Ogre::FrameListener, public CSpriteTransformPipeline, public CInputListener {
@@ -29,11 +30,13 @@ public:
   
 private:
   std::list<CShot*> m_lShotsToDestroy;
+  std::list<CExplosion*> m_lExplosionsToDestroy;
 
   Ogre2dManager* m_p2dManagerMap;
   grid2d<CTile*> m_gridTiles;
   std::list<CSwitch*> m_lSwitches;
   std::list<CShot*> m_lShots;
+  std::list<CExplosion*> m_lExplosions;
   std::string m_sBackground;
   CSprite *m_pBackgroundSprite;
 
@@ -90,6 +93,9 @@ public:
 
   CShot *addShot(CShot *pShot) {m_lShots.push_back(pShot); return pShot;}
   void destroyShot(CShot *pShot) {m_lShotsToDestroy.push_back(pShot);}
+
+  CExplosion *addExplosion(CExplosion *pExplosion) {m_lExplosions.push_back(pExplosion); return pExplosion;}
+  void destroyExplosion(CExplosion *pExplosion) {m_lExplosionsToDestroy.push_back(pExplosion);}
 private:
   void updateBackground(Ogre::Real tpf);
   void updateCameraPos();

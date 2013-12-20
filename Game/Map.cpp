@@ -7,6 +7,7 @@
 #include "DebugDrawer.hpp"
 #include "Switch.hpp"
 #include "Shot.hpp"
+#include "Explosion.hpp"
 
 using namespace tinyxml2;
 
@@ -46,12 +47,17 @@ CMap::~CMap() {
 }
 void CMap::clearMap() {
   m_lShotsToDestroy.clear();
+  m_lExplosionsToDestroy.clear();
   
   if (m_pBackgroundSprite) {
     delete m_pBackgroundSprite;
     m_pBackgroundSprite = NULL;
   }
   
+  while (m_lExplosions.size() > 0) {
+    delete m_lExplosions.front();
+    m_lExplosions.pop_front();
+  }
   while (m_lShots.size() > 0) {
     delete m_lShots.front();
     m_lShots.pop_front();
@@ -216,6 +222,8 @@ bool CMap::keyReleased( const OIS::KeyEvent &arg ) {
 }
 bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
   updateCameraPos();
+
+  // order of updates exquates drawing order, last one will be on top
   updateBackground(evt.timeSinceLastFrame);
   for (auto pTile : m_gridTiles) {
     pTile->update(evt.timeSinceLastFrame);
@@ -229,11 +237,20 @@ bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
 
   m_pPlayer->update(evt.timeSinceLastFrame);
 
+  for (auto pExplosion : m_lExplosions) {
+    pExplosion->update(evt.timeSinceLastFrame);
+  }
+
   // tidy up
   while (m_lShotsToDestroy.size() > 0) {
     delete m_lShotsToDestroy.front();
     m_lShots.remove(m_lShotsToDestroy.front());
     m_lShotsToDestroy.pop_front();
+  }
+  while(m_lExplosionsToDestroy.size() > 0) {
+    delete m_lExplosionsToDestroy.front();
+    m_lExplosions.remove(m_lExplosionsToDestroy.front());
+    m_lExplosionsToDestroy.pop_front();
   }
   return true;
 }
