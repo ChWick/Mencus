@@ -1,0 +1,4 @@
+#include "SpriteTransformPipeline.hpp"
+
+const CDefaultSpriteTransformPipeline CDefaultSpriteTransformPipeline::INSTANCE;
+const CBackgroundSpriteTransformPipeline CBackgroundSpriteTransformPipeline::INSTANCE;
