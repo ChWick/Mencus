@@ -3,10 +3,12 @@
 #include "Util.hpp"
 
 const Ogre::Vector2 EXPLOSION_SIZES[CExplosion::ET_COUNT] = {
-  Ogre::Vector2(0.5, 0.25)
+  Ogre::Vector2(0.5, 0.25),
+  Ogre::Vector2(2, 2)
 };
 const Ogre::Vector2 EXPLOSION_RELATIVE_OFFSET[CExplosion::ET_COUNT] = {
-  EXPLOSION_SIZES[CExplosion::ET_BOLT] / 2
+  EXPLOSION_SIZES[CExplosion::ET_BOLT] / 2,
+  EXPLOSION_SIZES[CExplosion::ET_BOMB] / 2
 };
 
 CExplosion::CExplosion(CMap *pMap, const Ogre::Vector2 &vCenter, EExplosionTypes eExplosionType)
@@ -24,6 +26,9 @@ CExplosion::CExplosion(CMap *pMap, const Ogre::Vector2 &vCenter, EExplosionTypes
 
   if (m_eExplosionType == ET_BOLT) {
     setupAnimation(0, "bolt_explosion", 5, eMirrorType, &getPlayerTexturePath);
+  }
+  else if (m_eExplosionType == ET_BOMB) {
+    setupAnimation(0, "bomb_explosion", 7, eMirrorType, &getBombTexture);
   }
 }
 void CExplosion::update(Ogre::Real tpf) {

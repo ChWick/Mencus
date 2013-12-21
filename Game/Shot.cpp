@@ -54,6 +54,7 @@ CShot::CShot(CMap *pMap,
   changeCurrentAnimationSequence(SA_DEFAULT);
 }
 void CShot::launch(const Ogre::Vector2 &vInitialSpeed, unsigned int uiNewAnimationSequence) {
+  m_fTimer = 0;
   m_bLaunched = true;
   m_vSpeed = vInitialSpeed * SHOT_SPEED[m_eShotType];
   if (uiNewAnimationSequence == SA_COUNT) {
@@ -92,6 +93,7 @@ void CShot::update(Ogre::Real tpf) {
     else if (m_eShotType == ST_BOMB) {
       m_fTimer += tpf;
       if (m_fTimer > BOMB_EXPLOSION_TIME) {
+	m_pMap->addExplosion(new CExplosion(m_pMap, getCenter(), CExplosion::ET_BOMB));
 	m_pMap->destroyShot(this);
       }
       else {

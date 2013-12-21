@@ -9,7 +9,7 @@ class CExplosion : public CAnimatedSprite {
 public:
   enum EExplosionTypes {
     ET_BOLT,
-    
+    ET_BOMB,
     ET_COUNT,    
   };
 private:
