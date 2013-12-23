@@ -174,6 +174,7 @@ void CPlayer::update(Ogre::Real tpf) {
       // release bomb
       m_pBomb->launch(((m_eLastDirection == LD_LEFT) ? PLAYER_BOMB_THROW_DIRECTION_LEFT : PLAYER_BOMB_THROW_DIRECTION_RIGHT) * m_fBombThrowStrength);
       m_pBomb = NULL;
+      m_pThrowStrengthIndicator->hide();
       if (m_eLastDirection == LD_LEFT) {
 	changeCurrentAnimationSequence(ANIM_THROW_LEFT);
       }
@@ -202,6 +203,7 @@ void CPlayer::update(Ogre::Real tpf) {
       }
       else if (m_uiCurrentWeapon == W_BOMB) {
 	if (!m_pBomb) {
+	  m_pThrowStrengthIndicator->show();
 	  m_pBomb = new CShot(m_pMap, m_pSpriteManager, getCenter(), CShot::ST_BOMB, (m_eLastDirection == LD_LEFT) ? CShot::SD_LEFT : CShot::SD_RIGHT);
 	  m_pMap->addShot(m_pBomb);
 	}
@@ -255,6 +257,7 @@ void CPlayer::update(Ogre::Real tpf) {
 #endif
 
   m_pThrowStrengthIndicator->setCenter(getCenter() + 0.5 * getSize().y * Ogre::Vector2::UNIT_Y);
+  m_pThrowStrengthIndicator->setValue(m_fBombThrowStrength / PLAYER_BOMB_MAX_TRHOW_STRENGTH);
   m_pThrowStrengthIndicator->update(tpf);
 
   m_Fader.fade(tpf);

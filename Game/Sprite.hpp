@@ -38,6 +38,7 @@ public:
   void setTexture(Ogre::TexturePtr pTexture) {m_Texture.setTexture(pTexture);}
   void setTexture(const string &sName);
   void setTextureToDraw(const CSpriteTexture *pTexture) {m_pTextureToDraw = pTexture;}
+  CSpriteTexture &getTexture() {return m_Texture;}
 
   void setTextureCoords(const Ogre::Vector2 &vTopLeft, const Ogre::Vector2 &vSize) {m_Texture.setTexturePosTopLeft(vTopLeft); m_Texture.setTexturePosBottomRight(vSize);}
 
