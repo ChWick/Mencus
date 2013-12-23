@@ -13,6 +13,11 @@ private:
     LD_LEFT,
     LD_RIGHT
   };
+  enum EGoToLinkStatus {
+    GTLS_NONE,        		//!< not in a link
+    GTLS_MOVE_TO_ENTRANCE,	//!< move to the entrance
+    GTLS_COME_OUT_FROM_EXIT,	//!< come out of the exit
+  };
 
 private:
   enum EWeapons {
@@ -48,6 +53,7 @@ private:
   bool m_bLeftPressed;
   bool m_bAttackPressed;
   bool m_bJumpPressed;
+  bool m_bActivateLinkPressed;
   Ogre::Real m_fMaxWalkSpeed;
   Ogre::Real m_fInitialJumpSpeed;
   Ogre::Vector2 m_vCurrentSpeed;
@@ -58,6 +64,10 @@ private:
   unsigned int m_uiCurrentWeapon;
   CShot *m_pBomb;
   Ogre::Real m_fBombThrowStrength;
+
+  Ogre::Vector2 m_vLinkFromPos;
+  Ogre::Vector2 m_vLinkToPos;
+  EGoToLinkStatus m_eGoToLinkStatus;
 public:
   CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager);
   ~CPlayer();

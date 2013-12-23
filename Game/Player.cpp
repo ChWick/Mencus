@@ -24,6 +24,7 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   m_bRightPressed(false),
   m_bAttackPressed(false),
   m_bJumpPressed(false),
+  m_bActivateLinkPressed(false),
   m_fMaxWalkSpeed(4),
   m_fInitialJumpSpeed(10),
   m_vCurrentSpeed(0, 0),
@@ -31,7 +32,8 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   m_bJumping(false),
   m_eLastDirection(LD_RIGHT),
   m_uiCurrentWeapon(W_BOMB),
-  m_pBomb(NULL) {
+  m_pBomb(NULL),
+  m_eGoToLinkStatus(GTLS_NONE) {
   CInputListenerManager::getSingleton().addInputListener(this);
   init(1, ANIM_COUNT);
   setupAnimations();
@@ -70,70 +72,91 @@ void CPlayer::update(Ogre::Real tpf) {
   // ========================================================================
   // Move the player
   // ========================================================================
-  if (m_bLeftPressed) {
-    m_vCurrentSpeed.x = -m_fMaxWalkSpeed;
-  }
-  else if (m_bRightPressed) {
-    m_vCurrentSpeed.x = m_fMaxWalkSpeed;
-  }
-  else {
-    m_vCurrentSpeed.x = 0;
-  }
-
-  m_vCurrentSpeed.y += c_fGravity * tpf;
-  
-  if (m_vCurrentSpeed.y > 0 && !m_bJumpPressed) {
-    // If the user wants to cancel the jump, do a higher acceleration
-    m_vCurrentSpeed.y += c_fGravity * tpf; // twice gravity now
-  }
-
-  if (!m_pBomb) {
-    Ogre::Real fPenetration = 0;
-    // move and check here only y direction movement
-    m_vPosition.y += m_vCurrentSpeed.y * tpf;
-
-    if (m_vCurrentSpeed.y < 0) {
-      m_bOnGround = false;
-      m_bJumping = true;
-      fPenetration = m_pMap->hitsTile(CCD_BOTTOM, CTile::TF_UNPASSABLE, getWorldBoundingBox());
-      if (fPenetration != 0) {
-	m_bOnGround = true;
-	m_bJumping = false;
-      }
+  if (m_eGoToLinkStatus == GTLS_NONE) {
+    if (m_bLeftPressed) {
+      m_vCurrentSpeed.x = -m_fMaxWalkSpeed;
     }
-    else if (m_vCurrentSpeed.y > 0) {
-      fPenetration = m_pMap->hitsTile(CCD_TOP, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+    else if (m_bRightPressed) {
+      m_vCurrentSpeed.x = m_fMaxWalkSpeed;
     }
-
-    if (fPenetration != 0) {
-      m_vCurrentSpeed.y = 0;
-      m_vPosition.y -= fPenetration;
-    }
-
-
-    // move and check here only x direction movement
-    fPenetration = 0;
-    m_vPosition.x += m_vCurrentSpeed.x * tpf;
-  
-    if (m_vCurrentSpeed.x < 0) {
-      fPenetration = m_pMap->hitsTile(CCD_LEFT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
-      m_eLastDirection = LD_LEFT;
-    }
-    else if (m_vCurrentSpeed.x > 0) {
-      fPenetration += m_pMap->hitsTile(CCD_RIGHT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
-      m_eLastDirection = LD_RIGHT;
-    }
-
-    if (fPenetration != 0) {
-      m_vPosition.x -= fPenetration;
+    else {
       m_vCurrentSpeed.x = 0;
     }
+
+    m_vCurrentSpeed.y += c_fGravity * tpf;
+  
+    if (m_vCurrentSpeed.y > 0 && !m_bJumpPressed) {
+      // If the user wants to cancel the jump, do a higher acceleration
+      m_vCurrentSpeed.y += c_fGravity * tpf; // twice gravity now
+    }
+
+    if (!m_pBomb) {
+      Ogre::Real fPenetration = 0;
+      // move and check here only y direction movement
+      m_vPosition.y += m_vCurrentSpeed.y * tpf;
+
+      if (m_vCurrentSpeed.y < 0) {
+	m_bOnGround = false;
+	m_bJumping = true;
+	fPenetration = m_pMap->hitsTile(CCD_BOTTOM, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+	if (fPenetration != 0) {
+	  m_bOnGround = true;
+	  m_bJumping = false;
+	}
+      }
+      else if (m_vCurrentSpeed.y > 0) {
+	fPenetration = m_pMap->hitsTile(CCD_TOP, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+      }
+
+      if (fPenetration != 0) {
+	m_vCurrentSpeed.y = 0;
+	m_vPosition.y -= fPenetration;
+      }
+
+
+      // move and check here only x direction movement
+      fPenetration = 0;
+      m_vPosition.x += m_vCurrentSpeed.x * tpf;
+  
+      if (m_vCurrentSpeed.x < 0) {
+	fPenetration = m_pMap->hitsTile(CCD_LEFT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+	m_eLastDirection = LD_LEFT;
+      }
+      else if (m_vCurrentSpeed.x > 0) {
+	fPenetration += m_pMap->hitsTile(CCD_RIGHT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+	m_eLastDirection = LD_RIGHT;
+      }
+
+      if (fPenetration != 0) {
+	m_vPosition.x -= fPenetration;
+	m_vCurrentSpeed.x = 0;
+      }
+    }
+    // Jump if key pressed and on ground
+    if (m_bJumpPressed && m_bOnGround) {
+      m_vCurrentSpeed.y = m_fInitialJumpSpeed;
+      m_bOnGround = false;
+      m_bJumping = true;
+    }
+
+    // if activate link and on ground
+    if (m_bActivateLinkPressed && m_bOnGround) {
+      if (m_pMap->findLink(getWorldBoundingBox(), m_vLinkFromPos, m_vLinkToPos)) {
+	m_eGoToLinkStatus = GTLS_MOVE_TO_ENTRANCE;
+      }
+    }
   }
-  // Jump if key pressed and on ground
-  if (m_bJumpPressed && m_bOnGround) {
-    m_vCurrentSpeed.y = m_fInitialJumpSpeed;
-    m_bOnGround = false;
-    m_bJumping = true;
+  else if (m_eGoToLinkStatus == GTLS_MOVE_TO_ENTRANCE) {
+    Ogre::Real fOldDistanceSq = m_vPosition.squaredDistance(m_vLinkFromPos);
+    Ogre::Vector2 vDir = (m_vLinkFromPos - m_vPosition).normalisedCopy();
+    m_vPosition += vDir * m_fMaxWalkSpeed;
+    if (fOldDistanceSq <= m_vPosition.squaredDistance(m_vLinkFromPos)) {
+      m_vPosition = m_vLinkToPos;
+      m_eGoToLinkStatus = GTLS_COME_OUT_FROM_EXIT;
+    }
+  }
+  else if (m_eGoToLinkStatus == GTLS_COME_OUT_FROM_EXIT) {
+    m_eGoToLinkStatus = GTLS_NONE;
   }
 
   // ========================================================================
@@ -236,7 +259,9 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
   }
   else if (arg.key == OIS::KC_UP) {
     m_bJumpPressed = true;
-
+  }
+  else if (arg.key == OIS::KC_DOWN) {
+    m_bActivateLinkPressed = true;
   }
   else if (arg.key == OIS::KC_SPACE) {
     m_fBombThrowStrength = PLAYER_BOMB_DEFAULT_THROW_STRENGTH;
@@ -261,6 +286,9 @@ bool CPlayer::keyReleased( const OIS::KeyEvent &arg ) {
   }
   else if (arg.key ==OIS::KC_SPACE) {
     m_bAttackPressed = false;
+  }
+  else if (arg.key == OIS::KC_DOWN) {
+    m_bActivateLinkPressed = false;
   }
   return true;
 }

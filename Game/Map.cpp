@@ -46,6 +46,7 @@ CMap::~CMap() {
   delete m_p2dManagerMap;
 }
 void CMap::clearMap() {
+  m_lLinks.clear();
   m_lShotsToDestroy.clear();
   m_lExplosionsToDestroy.clear();
   
@@ -123,6 +124,11 @@ void CMap::loadMap(string sFilename) {
 	readEndangeredTiles(pTile);
       }
     }
+    else if (std::string(pElement->Value()) == "links") {
+      for (XMLElement *pLink = pElement->FirstChildElement(); pLink; pLink = pLink->NextSiblingElement()) {
+	readLink(pLink);
+      }
+    }
   }
 
 
@@ -164,7 +170,7 @@ Ogre::Real CMap::hitsTile(ECollisionCheckDirections eCollisionCheckDirection, un
 
   return 0;			// No collision
 }
-unsigned int CMap::hitsTile(unsigned int uiTileMask, const CBoundingBox2d &bb, CBoundingBox2d *pbbOverlap) const {
+unsigned int CMap::hitsTile(unsigned int uiTileMask, const CBoundingBox2d &bb, CBoundingBox2d *pbbOverlap, CTile **ppTile) const {
   size_t minx = static_cast<size_t>(bb.getPosition().x);
   size_t miny = static_cast<size_t>(bb.getPosition().y);
   size_t maxx = static_cast<size_t>(bb.getPosition().x + bb.getSize().x);
@@ -183,6 +189,9 @@ unsigned int CMap::hitsTile(unsigned int uiTileMask, const CBoundingBox2d &bb, C
       if ((m_gridTiles(x, y)->getTileFlags() & uiTileMask) == uiTileMask) {
 	unsigned int uiCCD = bb.collidesWith(m_gridTiles(x, y)->getWorldBoundingBox(), pbbOverlap); 
 	if (uiCCD != CCD_NONE) {
+	  if (ppTile) {
+	    *ppTile = m_gridTiles(x, y);
+	  }
 	  return uiCCD;
 	}
       }
@@ -243,6 +252,22 @@ void CMap::explodeTile(size_t x, size_t y, bool bExplodeNeighbours) {
     if (y + 1 < m_gridTiles.getSizeY()) {explodeTile(x, y + 1, false);}
   }
 }
+bool CMap::findLink(const CBoundingBox2d &bb, Ogre::Vector2 &vFromPos, Ogre::Vector2 &vToPos) const {
+  for (const auto &link : m_lLinks) {
+    if (m_gridTiles(link.getFirstX(), link.getFirstY())->getWorldBoundingBox().collidesWith(bb) != CCD_NONE) {
+      vFromPos = Ogre::Vector2(link.getFirstX(), link.getFirstY());
+      vToPos   = Ogre::Vector2(link.getSecondX(), link.getSecondY());
+      return true;
+    }
+    else if (m_gridTiles(link.getSecondX(), link.getSecondY())->getWorldBoundingBox().collidesWith(bb) != CCD_NONE) {
+      vFromPos = Ogre::Vector2(link.getSecondX(), link.getSecondY());
+      vToPos   = Ogre::Vector2(link.getFirstX(), link.getFirstY());
+      return true;
+    }
+  }
+
+  return false;
+}
 bool CMap::keyPressed( const OIS::KeyEvent &arg ) {
   if (arg.key == OIS::KC_H) {
     m_vCameraDebugOffset.x -= 1;
@@ -282,6 +307,13 @@ bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
   for (auto pExplosion : m_lExplosions) {
     pExplosion->update(evt.timeSinceLastFrame);
   }
+
+  // draw links if debug
+#ifdef DEBUG_LINKS
+  for (auto &link : m_lLinks) {
+    CDebugDrawer::getSingleton().draw(link);
+  }
+#endif
 
   // tidy up
   while (m_lShotsToDestroy.size() > 0) {
@@ -356,4 +388,13 @@ void CMap::readEndangeredTiles(XMLElement *pTile) {
   m_gridTiles(x, y)->setEndangeredTileType(tt);
   
   Ogre::LogManager::getSingleton().logMessage("Parsed endangered tile at (" + Ogre::StringConverter::toString(x) + ", " + Ogre::StringConverter::toString(y) + ") with target tile type " + Ogre::StringConverter::toString(tt));
+}
+
+void CMap::readLink(XMLElement *pLink) {
+  m_lLinks.push_back(CLink(
+			   pLink->IntAttribute("fromx"),
+			   pLink->IntAttribute("fromy"),
+			   pLink->IntAttribute("tox"),
+			   pLink->IntAttribute("toy")));
+  Ogre::LogManager::getSingleton().logMessage("Parsed: " + m_lLinks.back().toString());
 }

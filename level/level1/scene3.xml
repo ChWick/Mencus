@@ -33,10 +33,10 @@
       <changes x="107" y="1" id="27" />
       <changes x="111" y="1" id="25" />
       <changes x="111" y="2" id="29" />
-    </switch>
+p    </switch>
   </switches>
   <links>
-    <link fromx="24" fromy="10" tox="148" toy="2"/>
+    <link fromx="24" fromy="1" tox="148" toy="9"/>
   </links>
   <objects>
     <object type="3" posx="4819" posy="80"/>

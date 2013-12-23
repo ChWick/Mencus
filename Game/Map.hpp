@@ -12,13 +12,13 @@
 #include "InputListener.hpp"
 #include "BoundingBox2d.hpp"
 #include "CollisionDefines.hpp"
+#include "Link.hpp"
 
 class CTile;
 class CPlayer;
 class CSwitch;
 class CShot;
 class CExplosion;
-
 
 class CMap : Ogre::FrameListener, public CSpriteTransformPipeline, public CInputListener {
 public:
@@ -31,6 +31,7 @@ private:
   std::list<CSwitch*> m_lSwitches;
   std::list<CShot*> m_lShots;
   std::list<CExplosion*> m_lExplosions;
+  std::list<CLink> m_lLinks;
   std::string m_sBackground;
   CSprite *m_pBackgroundSprite;
 
@@ -58,11 +59,13 @@ public:
    *  \param[in] uiTileMask a mask for tiles to match
    *  \param[in] bb The bounding box to check for a hit
    *  \param[out] pbbOverlap If not zero, the overlap of the hit with the collided bb will be stored
+   *  \param[out] ppTile the collided Tile
    *  \returns the collision direction or CCD_NONE
    */
   unsigned int hitsTile(unsigned int uiTileMask,
 			const CBoundingBox2d &bb,
-			CBoundingBox2d *pbbOverlap = NULL) const;
+			CBoundingBox2d *pbbOverlap = NULL,
+			CTile **ppTile = NULL) const;
   //! Function to check weather a bounding box is out of the map
   /**
    *  \param[in] bb The bounding box
@@ -88,6 +91,14 @@ public:
    * \param[in] bExplodeNeighbours Let nighbours explode aswell
    */ 
   void explodeTile(size_t x, size_t y, bool bExplodeNeighbours);
+  //! Function to find a link at the given position
+  /**
+   *  \param[in] bb The bounding box to check for collision
+   *  \param[out] The position of the entrance
+   *  \param[out] The position of the exit
+   *  \returns true if there was a collision
+   */
+  bool findLink(const CBoundingBox2d &bb, Ogre::Vector2 &vFromPos, Ogre::Vector2 &vToPos) const;
 
   virtual bool frameStarted(const Ogre::FrameEvent& evt);
 
@@ -116,6 +127,7 @@ private:
   void readRow(tinyxml2::XMLElement *pRow, unsigned int uiRow);
   void readSwitch(tinyxml2::XMLElement *pSwitch);
   void readEndangeredTiles(tinyxml2::XMLElement *pTile);
+  void readLink(tinyxml2::XMLElement *pLink);
 };
 
 #endif

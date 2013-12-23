@@ -23,8 +23,8 @@ public:
     TF_CHANGEBLOCK   = 128,
     TF_ENDANGERED    = 256,
   };
-private:
   static const Ogre::Vector2 DEFAULT_TILE_SIZE;
+private:
   static const string DEFAULT_TILE_TEXTURE_NAME;
 
   unsigned int m_uiTileFlags;
