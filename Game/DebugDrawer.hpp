@@ -6,8 +6,8 @@
 #include "DebugDefines.hpp"
 
 class CTile;
-class CBoundingBox2d;
 class CSprite;
+class CBoundingBox2d;
 class CSpriteTransformPipeline;
 class Ogre2dManager;
 class CLink;
