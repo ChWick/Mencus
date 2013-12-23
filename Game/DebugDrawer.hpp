@@ -16,6 +16,7 @@ public:
   enum EDebugTextures {
     DT_PINK,
     DT_BLUE,
+    DT_GREEN,
 
     DT_COUNT,
   };
