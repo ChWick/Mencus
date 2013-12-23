@@ -118,6 +118,11 @@ void CMap::loadMap(string sFilename) {
 	readSwitch(pSwitch);
       }
     }
+    else if (std::string(pElement->Value()) == "endangeredTiles") {
+      for (XMLElement *pTile = pElement->FirstChildElement(); pTile; pTile = pTile->NextSiblingElement()) {
+	readEndangeredTiles(pTile);
+      }
+    }
   }
 
 
@@ -200,6 +205,42 @@ void CMap::activateSwitchOnHit(const CBoundingBox2d &bb) {
 	// TODO: Change blocks
       }
     }
+  }
+}
+void CMap::explodeTiles(const Ogre::Vector2 &vCenter, Ogre::Real r) {
+  int minx = static_cast<int>(vCenter.x - r);
+  int maxx = static_cast<int>(vCenter.x + r);
+  int miny = static_cast<int>(vCenter.y - r);
+  int maxy = static_cast<int>(vCenter.y + r);
+
+  minx = max(minx, 0);
+  maxx = min(maxx, static_cast<int>(m_gridTiles.getSizeX()));
+  miny = max(miny, 0);
+  maxy = min(maxy, static_cast<int>(m_gridTiles.getSizeY()));
+
+  for (int cx = minx; cx < maxx; cx++) {
+    for (int cy = miny; cy < maxy; cy++) {
+      if (m_gridTiles(cx, cy)->getCenter().squaredDistance(vCenter) < r * r) {
+	explodeTile(cx, cy, true);
+      }
+    }
+  }
+}
+void CMap::explodeTile(size_t x, size_t y, bool bExplodeNeighbours) {
+  CTile* &tile = m_gridTiles(x, y);
+  if ((tile->getTileFlags() & CTile::TF_ENDANGERED) == 0) {
+    return;			// This tile is not endangered, cancel
+  }
+  TileType tt = tile->getEndangeredTileType();
+  delete tile;
+  tile = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), tt);
+
+  if (bExplodeNeighbours) {
+    // explode neighbours only left top bottom right
+    if (x - 1 >= 0) {explodeTile(x - 1, y, false);}
+    if (x + 1 < m_gridTiles.getSizeX()) {explodeTile(x + 1, y, false);}
+    if (y - 1 >= 0) {explodeTile(x, y - 1, false);}
+    if (y + 1 < m_gridTiles.getSizeY()) {explodeTile(x, y + 1, false);}
   }
 }
 bool CMap::keyPressed( const OIS::KeyEvent &arg ) {
@@ -306,4 +347,13 @@ void CMap::readSwitch(XMLElement *pSwitch) {
   }
   
   m_lSwitches.push_back(pNewSwitch);
+}
+void CMap::readEndangeredTiles(XMLElement *pTile) {
+  TileType tt = pTile->IntAttribute("targetTile");
+  size_t x = pTile->IntAttribute("x");
+  size_t y = pTile->IntAttribute("y");
+
+  m_gridTiles(x, y)->setEndangeredTileType(tt);
+  
+  Ogre::LogManager::getSingleton().logMessage("Parsed endangered tile at (" + Ogre::StringConverter::toString(x) + ", " + Ogre::StringConverter::toString(y) + ") with target tile type " + Ogre::StringConverter::toString(tt));
 }

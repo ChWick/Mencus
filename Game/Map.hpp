@@ -71,9 +71,23 @@ public:
   bool outOfMap(const CBoundingBox2d &bb) const;
   //! Function to check if a switch is hit and to activate it
   /**
-   * \param[in[ bb The bounding box to check for a hit
+   * \param[in] bb The bounding box to check for a hit
    */
   void activateSwitchOnHit(const CBoundingBox2d &bb);
+  //! Function to call if a bomb explodes
+  /** This function will search for tiles in a given radius,
+   * that are hit by this bomb.
+   * \param[in] vCenter the explosion center
+   * \param[in] r The radius of the explosion around the center
+   */
+  void explodeTiles(const Ogre::Vector2 &vCenter, Ogre::Real r);
+  //! Function to let a tile explode if it is endangered
+  /**
+   * \param[in] x The x coord of the tile
+   * \param[in] y The y coord of the tile
+   * \param[in] bExplodeNeighbours Let nighbours explode aswell
+   */ 
+  void explodeTile(size_t x, size_t y, bool bExplodeNeighbours);
 
   virtual bool frameStarted(const Ogre::FrameEvent& evt);
 
@@ -101,6 +115,7 @@ private:
 
   void readRow(tinyxml2::XMLElement *pRow, unsigned int uiRow);
   void readSwitch(tinyxml2::XMLElement *pSwitch);
+  void readEndangeredTiles(tinyxml2::XMLElement *pTile);
 };
 
 #endif
