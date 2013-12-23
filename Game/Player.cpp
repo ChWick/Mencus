@@ -67,6 +67,9 @@ void CPlayer::setupAnimations() {
   }
 }
 void CPlayer::update(Ogre::Real tpf) {
+  // ========================================================================
+  // Move the player
+  // ========================================================================
   if (m_bLeftPressed) {
     m_vCurrentSpeed.x = -m_fMaxWalkSpeed;
   }
@@ -126,6 +129,16 @@ void CPlayer::update(Ogre::Real tpf) {
       m_vCurrentSpeed.x = 0;
     }
   }
+  // Jump if key pressed and on ground
+  if (m_bJumpPressed && m_bOnGround) {
+    m_vCurrentSpeed.y = m_fInitialJumpSpeed;
+    m_bOnGround = false;
+    m_bJumping = true;
+  }
+
+  // ========================================================================
+  // Update animations
+  // ========================================================================
 
   if (m_uiCurrentAnimationSequence == ANIM_HOLD_LEFT || m_uiCurrentAnimationSequence == ANIM_HOLD_RIGHT) {
     if (!m_bAttackPressed) {
@@ -224,11 +237,6 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
   else if (arg.key == OIS::KC_UP) {
     m_bJumpPressed = true;
 
-    if (m_bOnGround) {
-      m_vCurrentSpeed.y = m_fInitialJumpSpeed;
-      m_bOnGround = false;
-      m_bJumping = true;
-    }
   }
   else if (arg.key == OIS::KC_SPACE) {
     m_fBombThrowStrength = PLAYER_BOMB_DEFAULT_THROW_STRENGTH;
