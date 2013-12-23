@@ -15,6 +15,7 @@ class CDebugDrawer : public Ogre::Singleton<CDebugDrawer> {
 public:
   enum EDebugTextures {
     DT_PINK,
+    DT_BLUE,
 
     DT_COUNT,
   };
@@ -29,7 +30,7 @@ public:
     Ogre2dManager *pSpriteManager);
   ~CDebugDrawer();
 
-  void draw(const CTile *pTile) const;
+  void draw(const CTile *pTile, EDebugTextures dt = DT_PINK) const;
   void draw(const CBoundingBox2d &bb) const;
 };
 

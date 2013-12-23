@@ -42,7 +42,7 @@
     <object type="3" posx="4819" posy="80"/>
   </objects>
   <endangeredTiles>
-    <endangeredTile targetTile="64" x="24" y="11"/>
-    <endangeredTile targetTile="63" x="24" y="10"/>
+    <endangeredTile targetTile="64" x="24" y="0"/>
+    <endangeredTile targetTile="63" x="24" y="1"/>
   </endangeredTiles>
 </map>

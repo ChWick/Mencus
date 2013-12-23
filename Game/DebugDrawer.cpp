@@ -15,6 +15,7 @@ CDebugDrawer &CDebugDrawer::getSingleton() {
 CDebugDrawer::CDebugDrawer(const CSpriteTransformPipeline *pTransformPipeline,
 			   Ogre2dManager *pSpriteManager) {
   m_DebugTextures[DT_PINK] = getTextureInGfx("debug_pink.png");
+  m_DebugTextures[DT_BLUE] = getTextureInGfx("debug_blue.png");
 
   m_pDebugSprite = new CSprite(pTransformPipeline,
 			       pSpriteManager,
@@ -25,8 +26,8 @@ CDebugDrawer::~CDebugDrawer() {
   delete m_pDebugSprite;
   m_pDebugSprite = NULL;
 }
-void CDebugDrawer::draw(const CTile *pTile) const {
-  m_pDebugSprite->setTexture(m_DebugTextures[DT_PINK]);
+void CDebugDrawer::draw(const CTile *pTile, EDebugTextures dt) const {
+  m_pDebugSprite->setTexture(m_DebugTextures[dt]);
   m_pDebugSprite->setPosition(pTile->getPosition());
   m_pDebugSprite->setSize(pTile->getSize());
   m_pDebugSprite->draw();

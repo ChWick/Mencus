@@ -1,5 +1,6 @@
 #include "Tile.hpp"
 #include "ogre2d-main.hpp"
+#include "DebugDrawer.hpp"
 
 CTile::CTile(CSpriteTransformPipeline *pTransformPipeline, Ogre2dManager* p2dManagerMap, const Ogre::Vector2 &vPosition, TileType ttTileType)
   : CSprite(pTransformPipeline, p2dManagerMap, vPosition, DEFAULT_TILE_SIZE),
@@ -13,7 +14,19 @@ CTile::CTile(const CTile &src)
     m_uiTileFlags(src.m_uiTileFlags),
     m_ttTileType(src.m_ttTileType) {
 }
+void CTile::update(Ogre::Real tpf) {
+  CSprite::update(tpf);
 
+#ifdef DEBUG_ENDANGERED_TILES
+  if ((m_uiTileFlags & TF_ENDANGERED) == TF_ENDANGERED) {
+    CDebugDrawer::getSingleton().draw(this, CDebugDrawer::DT_BLUE);
+  }
+#endif
+}
+void CTile::setEndangeredTileType(TileType tt) {
+  m_ttEndangeredTileType = tt;
+  m_uiTileFlags |= TF_ENDANGERED;
+}
 unsigned int CTile::getTileFlags(TileType tt) {
   unsigned int uiFlags = 0;
   switch (tt) {

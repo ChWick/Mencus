@@ -21,19 +21,26 @@ public:
     TF_LOCK          = 32,
     TF_DAMAGES       = 64,
     TF_CHANGEBLOCK   = 128,
+    TF_ENDANGERED    = 256,
   };
 private:
   static const Ogre::Vector2 DEFAULT_TILE_SIZE;
   static const string DEFAULT_TILE_TEXTURE_NAME;
 
-  const unsigned int m_uiTileFlags;
+  unsigned int m_uiTileFlags;
   const TileType m_ttTileType;
+
+  TileType m_ttEndangeredTileType;
 public:
   CTile(CSpriteTransformPipeline *pTransformPipeline, Ogre2dManager* p2dManagerMap, const Ogre::Vector2 &vPosition, TileType ttTileType);
   CTile(const CTile &src);
 
+  void update(Ogre::Real tpf);
   TileType getTileType() const {return m_ttTileType;}
   unsigned int getTileFlags() const {return m_uiTileFlags;}
+  
+  TileType getEndangeredTileType() const {return m_ttEndangeredTileType;}
+  void setEndangeredTileType(TileType tt);
 
 private:
   unsigned int getTileFlags(TileType tt);
