@@ -16,9 +16,12 @@ const Ogre::Real PLAYER_BOMB_DEFAULT_THROW_STRENGTH(0.3);
 const Ogre::Real PLAYER_BOMB_THROW_STRENGTH_INCREASE(3);
 const Ogre::Real PLAYER_BOMB_MAX_TRHOW_STRENGTH(5);
 
+const Ogre::Real PLAYER_LINK_FADE_TIME(1);
+
 CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager) 
  :
   CAnimatedSprite(pMap, pSpriteManager, Ogre::Vector2(0, 0), Ogre::Vector2(1, 2)),
+  m_Fader(this),
   m_pMap(pMap),
   m_bLeftPressed(false),
   m_bRightPressed(false),
@@ -143,20 +146,19 @@ void CPlayer::update(Ogre::Real tpf) {
     if (m_bActivateLinkPressed && m_bOnGround) {
       if (m_pMap->findLink(getWorldBoundingBox(), m_vLinkFromPos, m_vLinkToPos)) {
 	m_eGoToLinkStatus = GTLS_MOVE_TO_ENTRANCE;
+	m_Fader.startFadeOut(PLAYER_LINK_FADE_TIME);
       }
     }
   }
   else if (m_eGoToLinkStatus == GTLS_MOVE_TO_ENTRANCE) {
     Ogre::Real fOldDistanceSq = m_vPosition.squaredDistance(m_vLinkFromPos);
     Ogre::Vector2 vDir = (m_vLinkFromPos - m_vPosition).normalisedCopy();
-    m_vPosition += vDir * m_fMaxWalkSpeed;
+    m_vPosition += vDir * m_fMaxWalkSpeed * tpf;
     if (fOldDistanceSq <= m_vPosition.squaredDistance(m_vLinkFromPos)) {
-      m_vPosition = m_vLinkToPos;
-      m_eGoToLinkStatus = GTLS_COME_OUT_FROM_EXIT;
+      m_vPosition = m_vLinkFromPos;
     }
   }
   else if (m_eGoToLinkStatus == GTLS_COME_OUT_FROM_EXIT) {
-    m_eGoToLinkStatus = GTLS_NONE;
   }
 
   // ========================================================================
@@ -248,6 +250,8 @@ void CPlayer::update(Ogre::Real tpf) {
   CDebugDrawer::getSingleton().draw(getWorldBoundingBox());
 #endif
 
+  m_Fader.fade(tpf);
+
   CAnimatedSprite::update(tpf);
 }
 bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
@@ -309,5 +313,18 @@ void CPlayer::animationTextureChangedCallback(unsigned int uiOldText, unsigned i
     else if (m_uiCurrentAnimationSequence == ANIM_THROW_RIGHT) {
       changeCurrentAnimationSequence(ANIM_STAND_RIGHT);
     }
+  }
+}
+void CPlayer::fadeInCallback() {
+  if (m_eGoToLinkStatus == GTLS_COME_OUT_FROM_EXIT) {
+    m_eGoToLinkStatus = GTLS_NONE;
+  }
+  
+}
+void CPlayer::fadeOutCallback() {
+  if (m_eGoToLinkStatus == GTLS_MOVE_TO_ENTRANCE) {
+    m_vPosition = m_vLinkToPos;
+    m_eGoToLinkStatus = GTLS_COME_OUT_FROM_EXIT;
+    m_Fader.startFadeIn(PLAYER_LINK_FADE_TIME);
   }
 }

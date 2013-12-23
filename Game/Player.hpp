@@ -3,11 +3,15 @@
 
 #include "AnimatedSprite.hpp"
 #include "InputListener.hpp"
+#include "Fader.hpp"
 
 class CMap;
 class CShot;
 
-class CPlayer : public CAnimatedSprite, public CInputListener {
+class CPlayer : public CAnimatedSprite,
+		public CInputListener,
+		public CFaderCallback {
+
 private:
   enum ELastDirection {
     LD_LEFT,
@@ -48,6 +52,7 @@ private:
   };
 
 private:
+  CFader m_Fader;
   CMap *m_pMap;
   bool m_bRightPressed;
   bool m_bLeftPressed;
@@ -76,6 +81,9 @@ public:
 
   virtual bool keyPressed( const OIS::KeyEvent &arg );
   virtual bool keyReleased( const OIS::KeyEvent &arg );
+  
+  virtual void fadeInCallback();
+  virtual void fadeOutCallback();
 
 private:
   void setupAnimations();
