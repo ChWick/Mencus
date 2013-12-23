@@ -254,6 +254,10 @@ void CMap::explodeTile(size_t x, size_t y, bool bExplodeNeighbours) {
 }
 bool CMap::findLink(const CBoundingBox2d &bb, Ogre::Vector2 &vFromPos, Ogre::Vector2 &vToPos) const {
   for (const auto &link : m_lLinks) {
+    if (((m_gridTiles(link.getFirstX(), link.getFirstY())->getTileFlags() & (CTile::TF_DOOR1 | CTile::TF_DOOR2 | CTile::TF_DOOR3)) == 0) ||
+	((m_gridTiles(link.getSecondX(), link.getSecondY())->getTileFlags() & (CTile::TF_DOOR1 | CTile::TF_DOOR2 | CTile::TF_DOOR3)) == 0)) {
+      continue;
+    }
     if (m_gridTiles(link.getFirstX(), link.getFirstY())->getWorldBoundingBox().collidesWith(bb) != CCD_NONE) {
       vFromPos = Ogre::Vector2(link.getFirstX(), link.getFirstY());
       vToPos   = Ogre::Vector2(link.getSecondX(), link.getSecondY());
