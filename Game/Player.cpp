@@ -5,6 +5,7 @@
 #include "Constants.hpp"
 #include "DebugDrawer.hpp"
 #include "Shot.hpp"
+#include "BarIndicator.hpp"
 
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_RIGHT(0.2, 0.5);
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_LEFT(PLAYER_BOLT_OFFSET_RIGHT * Ogre::Vector2(-1, 1));
@@ -37,13 +38,16 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   m_uiCurrentWeapon(W_BOMB),
   m_pBomb(NULL),
   m_eGoToLinkStatus(GTLS_NONE) {
+
   CInputListenerManager::getSingleton().addInputListener(this);
   init(1, ANIM_COUNT);
   setupAnimations();
   m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.2, 0));
   m_bbRelativeBoundingBox.setSize(Ogre::Vector2(0.6, 1.8));
+  m_pThrowStrengthIndicator = new CBarIndicator(pMap, pSpriteManager);
 }
 CPlayer::~CPlayer() {
+  delete m_pThrowStrengthIndicator;
   CInputListenerManager::getSingleton().removeInputListener(this);
 }
 void CPlayer::setupAnimations() {
@@ -249,6 +253,9 @@ void CPlayer::update(Ogre::Real tpf) {
 #ifdef DEBUG_CHARACTER_BOUNDING_BOXES
   CDebugDrawer::getSingleton().draw(getWorldBoundingBox());
 #endif
+
+  m_pThrowStrengthIndicator->setCenter(getCenter() + 0.5 * getSize().y * Ogre::Vector2::UNIT_Y);
+  m_pThrowStrengthIndicator->update(tpf);
 
   m_Fader.fade(tpf);
 

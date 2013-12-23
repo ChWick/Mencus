@@ -3,6 +3,8 @@
 
 #include <string>
 
+
+std::string getHUDTexturePath(std::string sName);
 std::string getBombTexture(std::string sName, int index = -1);
 std::string getSwitchTexture(unsigned int uiSwitchID, bool on);
 std::string getTextureInGfx(std::string sTextureName);

@@ -1,6 +1,9 @@
 #include "Util.hpp"
 #include <Ogre.h>
 
+std::string getHUDTexturePath(std::string sName) {
+  return "../gfx/hud/" + sName + ".png";
+}
 std::string getBombTexture(std::string sName, int index) {
   if (index < 0) {
     return "../gfx/objects/bomb/" + sName + ".png";

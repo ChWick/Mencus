@@ -7,6 +7,7 @@
 
 class CMap;
 class CShot;
+class CBarIndicator;
 
 class CPlayer : public CAnimatedSprite,
 		public CInputListener,
@@ -69,6 +70,7 @@ private:
   unsigned int m_uiCurrentWeapon;
   CShot *m_pBomb;
   Ogre::Real m_fBombThrowStrength;
+  CBarIndicator *m_pThrowStrengthIndicator;
 
   Ogre::Vector2 m_vLinkFromPos;
   Ogre::Vector2 m_vLinkToPos;
