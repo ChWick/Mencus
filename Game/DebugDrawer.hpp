@@ -10,6 +10,7 @@ class CBoundingBox2d;
 class CSprite;
 class CSpriteTransformPipeline;
 class Ogre2dManager;
+class CLink;
 
 class CDebugDrawer : public Ogre::Singleton<CDebugDrawer> {
 public:
@@ -33,6 +34,7 @@ public:
 
   void draw(const CTile *pTile, EDebugTextures dt = DT_PINK) const;
   void draw(const CBoundingBox2d &bb) const;
+  void draw(const CLink &link) const;
 };
 
 #endif

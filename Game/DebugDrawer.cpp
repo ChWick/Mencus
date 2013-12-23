@@ -2,6 +2,7 @@
 #include "Tile.hpp"
 #include "BoundingBox2d.hpp"
 #include "Util.hpp"
+#include "Link.hpp"
 
 template<> CDebugDrawer *Ogre::Singleton<CDebugDrawer>::msSingleton = 0;
 
@@ -16,6 +17,7 @@ CDebugDrawer::CDebugDrawer(const CSpriteTransformPipeline *pTransformPipeline,
 			   Ogre2dManager *pSpriteManager) {
   m_DebugTextures[DT_PINK] = getTextureInGfx("debug_pink.png");
   m_DebugTextures[DT_BLUE] = getTextureInGfx("debug_blue.png");
+  m_DebugTextures[DT_GREEN] = getTextureInGfx("debug_green.png");
 
   m_pDebugSprite = new CSprite(pTransformPipeline,
 			       pSpriteManager,
@@ -36,5 +38,13 @@ void CDebugDrawer::draw(const CBoundingBox2d &bb) const {
   m_pDebugSprite->setTexture(m_DebugTextures[DT_PINK]);
   m_pDebugSprite->setPosition(bb.getPosition());
   m_pDebugSprite->setSize(bb.getSize());
+  m_pDebugSprite->draw();
+}
+void CDebugDrawer::draw(const CLink &link) const {
+  m_pDebugSprite->setTexture(m_DebugTextures[DT_GREEN]);
+  m_pDebugSprite->setSize(CTile::DEFAULT_TILE_SIZE);
+  m_pDebugSprite->setPosition(Ogre::Vector2(link.getFirstX(), link.getFirstY()));
+  m_pDebugSprite->draw();
+  m_pDebugSprite->setPosition(Ogre::Vector2(link.getSecondX(), link.getSecondY()));
   m_pDebugSprite->draw();
 }
