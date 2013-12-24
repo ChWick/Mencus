@@ -8,6 +8,7 @@
 #include "Switch.hpp"
 #include "Shot.hpp"
 #include "Explosion.hpp"
+#include "Enemy.hpp"
 
 using namespace tinyxml2;
 
@@ -49,12 +50,17 @@ void CMap::clearMap() {
   m_lLinks.clear();
   m_lShotsToDestroy.clear();
   m_lExplosionsToDestroy.clear();
+  m_lEnemiesToDestroy.clear();
   
   if (m_pBackgroundSprite) {
     delete m_pBackgroundSprite;
     m_pBackgroundSprite = NULL;
   }
   
+  while (m_lEnemies.size() > 0) {
+    delete m_lEnemies.front();
+    m_lEnemies.pop_front();
+  }
   while (m_lExplosions.size() > 0) {
     delete m_lExplosions.front();
     m_lExplosions.pop_front();
@@ -127,6 +133,11 @@ void CMap::loadMap(string sFilename) {
     else if (std::string(pElement->Value()) == "links") {
       for (XMLElement *pLink = pElement->FirstChildElement(); pLink; pLink = pLink->NextSiblingElement()) {
 	readLink(pLink);
+      }
+    }
+    else if (std::string(pElement->Value()) == "enemies") {
+      for (XMLElement *pEnemy = pElement->FirstChildElement(); pEnemy; pEnemy = pEnemy->NextSiblingElement()) {
+	readEnemy(pEnemy);
       }
     }
   }
@@ -299,6 +310,9 @@ bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
   for (auto pTile : m_gridTiles) {
     pTile->update(evt.timeSinceLastFrame);
   }
+  for (auto pEnemy : m_lEnemies) {
+    pEnemy->update(evt.timeSinceLastFrame);
+  }
   for (auto pSwitch : m_lSwitches) {
     pSwitch->update(evt.timeSinceLastFrame);
   }
@@ -330,6 +344,10 @@ bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
     m_lExplosions.remove(m_lExplosionsToDestroy.front());
     m_lExplosionsToDestroy.pop_front();
   }
+  while (m_lEnemiesToDestroy.size() > 0) {
+    delete m_lEnemiesToDestroy.front();
+    m_lEnemies.remove(m_lEnemiesToDestroy.front());
+    m_lEnemiesToDestroy.pop_front();
   return true;
 }
 void CMap::updateBackground(Ogre::Real tpf) {
@@ -401,4 +419,12 @@ void CMap::readLink(XMLElement *pLink) {
 			   pLink->IntAttribute("tox"),
 			   pLink->IntAttribute("toy")));
   Ogre::LogManager::getSingleton().logMessage("Parsed: " + m_lLinks.back().toString());
+}
+void CMap::readEnemy(XMLElement *pEnemy) {
+  CEnemy::EEnemyTypes eEnemyType = static_cast<CEnemy::EEnemyTypes>(pEnemy->IntAttribute("id"));
+  Ogre::Vector2 vPos(pEnemy->FloatAttribute("x"), pEnemy->FloatAttribute("y"));
+  Ogre::Real fDirection(pEnemy->FloatAttribute("direction"));
+
+  CEnemy *pNewEnemy = new CEnemy(*this, vPos, eEnemyType, fDirection);
+  m_lEnemies.push_back(pNewEnemy);
 }

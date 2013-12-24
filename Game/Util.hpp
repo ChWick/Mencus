@@ -2,8 +2,15 @@
 #define UTIL_HPP
 
 #include <string>
+#include <Ogre.h>
 
-
+template <unsigned int id>
+std::string getEnemyTexturePath(std::string sName, int index = -1) {
+  if (index < 0) {
+    return "../gfx/enemies/enemy" + Ogre::StringConverter::toString(id) + "/" + sName + ".png";
+  }
+  return "../gfx/enemies/enemy" + Ogre::StringConverter::toString(id) + "/" + sName + "_" + Ogre::StringConverter::toString(index) + ".png";
+}
 std::string getHUDTexturePath(std::string sName);
 std::string getBombTexture(std::string sName, int index = -1);
 std::string getSwitchTexture(unsigned int uiSwitchID, bool on);

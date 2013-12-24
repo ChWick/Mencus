@@ -19,15 +19,18 @@ class CPlayer;
 class CSwitch;
 class CShot;
 class CExplosion;
+class CEnemy;
 
 class CMap : Ogre::FrameListener, public CSpriteTransformPipeline, public CInputListener {
 public:
 private:
+  std::list<CEnemy*> m_lEnemiesToDestroy;
   std::list<CShot*> m_lShotsToDestroy;
   std::list<CExplosion*> m_lExplosionsToDestroy;
 
   Ogre2dManager* m_p2dManagerMap;
   grid2d<CTile*> m_gridTiles;
+  std::list<CEnemy*> m_lEnemies;
   std::list<CSwitch*> m_lSwitches;
   std::list<CShot*> m_lShots;
   std::list<CExplosion*> m_lExplosions;
@@ -118,6 +121,8 @@ public:
 
   CExplosion *addExplosion(CExplosion *pExplosion) {m_lExplosions.push_back(pExplosion); return pExplosion;}
   void destroyExplosion(CExplosion *pExplosion) {m_lExplosionsToDestroy.push_back(pExplosion);}
+  
+  void destroyEnemy(CEnemy *pEnemy) {m_lEnemiesToDestroy.push_back(pEnemy);}
 private:
   void updateBackground(Ogre::Real tpf);
   void updateCameraPos();
@@ -128,6 +133,7 @@ private:
   void readSwitch(tinyxml2::XMLElement *pSwitch);
   void readEndangeredTiles(tinyxml2::XMLElement *pTile);
   void readLink(tinyxml2::XMLElement *pLink);
+  void readEnemy(tinyxml2::XMLElement *pEnemy);
 };
 
 #endif
