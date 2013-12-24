@@ -348,6 +348,8 @@ bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
     delete m_lEnemiesToDestroy.front();
     m_lEnemies.remove(m_lEnemiesToDestroy.front());
     m_lEnemiesToDestroy.pop_front();
+  }
+
   return true;
 }
 void CMap::updateBackground(Ogre::Real tpf) {
