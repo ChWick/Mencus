@@ -2986,12 +2986,12 @@
         </StateImagery>
         <StateImagery name="NoFrameEnabledBackground">
             <Layer>
-                <Section section="noframe_background" look="OgreTray/StaticShared"/>
+ <!--               <Section section="noframe_background" look="OgreTray/StaticShared"/>-->
             </Layer>
         </StateImagery>
         <StateImagery name="NoFrameDisabledBackground">
             <Layer>
-                <Section section="noframe_background" look="OgreTray/StaticShared"/>
+<!--                <Section section="noframe_background" look="OgreTray/StaticShared"/>-->
             </Layer>
         </StateImagery>
         <StateImagery name="WithFrameImage">
