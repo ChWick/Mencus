@@ -249,8 +249,8 @@ bool CGame::go(void)
     //new CEGUI::Logger();
     //new CEGUI::WindowManager();
     //new CEGUI::SchemeManager();
-    CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
-    CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
+    CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
+    //CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
     new CGUIManager();
 
