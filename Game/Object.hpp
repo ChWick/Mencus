@@ -11,6 +11,8 @@ public:
     OT_BOMB,
     OT_HEALTH_POTION,
     OT_MANA_POTION,
+    OT_KEY,
+    OT_SCRATCH,
 
     OT_COUNT
   };

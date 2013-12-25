@@ -21,6 +21,21 @@ CObject::CObject(CMap &map,
   case OT_BOMB:
     addTextureToCurrentAnimationSequence(getBombTexture("bomb"));
     break;
+  case OT_HEALTH_POTION:
+    addTextureToCurrentAnimationSequence(getOtherObjectsTexturePath("health_potion"));
+    break;
+  case OT_MANA_POTION:
+    addTextureToCurrentAnimationSequence(getOtherObjectsTexturePath("mana_potion"));
+    break;
+  case OT_KEY:
+    addTextureToCurrentAnimationSequence(getOtherObjectsTexturePath("key"));
+    break;
+  case OT_SCRATCH:
+    addTextureToCurrentAnimationSequence(getOtherObjectsTexturePath("scratch"));
+    break;
+  default:
+    throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Object type '" + Ogre::StringConverter::toString(m_eObjectType) + "' is unknown!", __FILE__);
+    break;
   }
 }
 
