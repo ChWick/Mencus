@@ -30,7 +30,7 @@ public:
   void update(Ogre::Real tpf);
 
 private:
-  void setupAnimations();
+  void setup();
 };
 
 #endif

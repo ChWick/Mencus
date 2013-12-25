@@ -118,8 +118,6 @@ void CMap::loadMap(string sFilename) {
 	++uiRow;
       }
     }
-    else if (std::string(pElement->Value()) == "enemies") {
-    }
     else if (std::string(pElement->Value()) == "switches") {
       for (XMLElement *pSwitch = pElement->FirstChildElement(); pSwitch; pSwitch = pSwitch->NextSiblingElement()){
 	readSwitch(pSwitch);
@@ -423,10 +421,12 @@ void CMap::readLink(XMLElement *pLink) {
   Ogre::LogManager::getSingleton().logMessage("Parsed: " + m_lLinks.back().toString());
 }
 void CMap::readEnemy(XMLElement *pEnemy) {
-  CEnemy::EEnemyTypes eEnemyType = static_cast<CEnemy::EEnemyTypes>(pEnemy->IntAttribute("id"));
+  CEnemy::EEnemyTypes eEnemyType = static_cast<CEnemy::EEnemyTypes>(pEnemy->IntAttribute("id") - 1);
   Ogre::Vector2 vPos(pEnemy->FloatAttribute("x"), pEnemy->FloatAttribute("y"));
   Ogre::Real fDirection(pEnemy->FloatAttribute("direction"));
 
   CEnemy *pNewEnemy = new CEnemy(*this, vPos, eEnemyType, fDirection);
   m_lEnemies.push_back(pNewEnemy);
+
+  Ogre::LogManager::getSingleton().logMessage("Parsing Enemy at " + Ogre::StringConverter::toString(vPos));
 }

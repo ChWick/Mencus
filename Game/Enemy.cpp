@@ -17,17 +17,21 @@ CEnemy::CEnemy(CMap &map,
     m_Map(map),
     m_eEnemyType(eEnemyType),
     m_fSpeed(fDirection * ENEMY_SPEED[eEnemyType]) {
+  setup();
 }
 void CEnemy::update(Ogre::Real tpf) {
   m_vPosition.x += m_fSpeed * tpf;
   CAnimatedSprite::update(tpf);
 }
-void CEnemy::setupAnimations() {
+void CEnemy::setup() {
   switch (m_eEnemyType) {
   case ET_GREEN_MONSTER:
+    init(ENEMY_SPEED[m_eEnemyType], 2);
     setDefaultGetPath(&getEnemyTexturePath<1>);
     setupAnimation(AS_WALK_LEFT, "walk_right", 4, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", 4);
     break;
+  default:
+    throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Enemy type '" + Ogre::StringConverter::toString(m_eEnemyType) + "' is unknown", __FILE__);
   }
 }
