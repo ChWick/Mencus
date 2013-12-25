@@ -35,7 +35,7 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   m_bOnGround(true),
   m_bJumping(false),
   m_eLastDirection(LD_RIGHT),
-  m_uiCurrentWeapon(W_BOMB),
+  m_uiCurrentWeapon(W_BOLT),
   m_pBomb(NULL),
   m_eGoToLinkStatus(GTLS_NONE) {
 
@@ -290,6 +290,20 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
   }
   else if (arg.key == OIS::KC_RETURN) {
     m_pMap->activateSwitchOnHit(getWorldBoundingBox());
+  }
+  else if (arg.key == OIS::KC_COMMA) {
+    if (m_uiCurrentWeapon == 0) {
+      m_uiCurrentWeapon = W_COUNT - 1;
+    }
+    else {
+      --m_uiCurrentWeapon;
+    }
+  }
+  else if (arg.key == OIS::KC_PERIOD) {
+    ++m_uiCurrentWeapon;
+    if (m_uiCurrentWeapon >= W_COUNT) {
+      m_uiCurrentWeapon = 0;
+    }
   }
   return true;
 }
