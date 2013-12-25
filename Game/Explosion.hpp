@@ -10,6 +10,8 @@ public:
   enum EExplosionTypes {
     ET_BOLT,
     ET_BOMB,
+    ET_GREEN_MONSTER,
+
     ET_COUNT,    
   };
 private:

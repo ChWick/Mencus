@@ -3,6 +3,7 @@
 #include "Util.hpp"
 #include "Tile.hpp"
 #include "DebugDrawer.hpp"
+#include "Explosion.hpp"
 
 const Ogre::Vector2 ENEMY_SIZE[CEnemy::ET_COUNT] = {
   Ogre::Vector2(1, 1)
@@ -70,4 +71,5 @@ void CEnemy::setup() {
 }
 void CEnemy::killedByDamageCallback() {
   m_Map.destroyEnemy(this);
+  m_Map.addExplosion(new CExplosion(&m_Map, getCenter(), CExplosion::ET_GREEN_MONSTER));
 }
