@@ -121,6 +121,7 @@ public:
   CTile *getTile(unsigned int x, unsigned int y) const {return m_gridTiles(x, y);}
 
   Ogre2dManager *get2dManager() const {return m_p2dManagerMap;}
+  CPlayer *getPlayer() const {return m_pPlayer;}
 
   CShot *addShot(CShot *pShot) {m_lShots.push_back(pShot); return pShot;}
   void destroyShot(CShot *pShot) {m_lShotsToDestroy.push_back(pShot);}

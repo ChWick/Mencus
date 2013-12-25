@@ -4,6 +4,7 @@
 #include "Tile.hpp"
 #include "DebugDrawer.hpp"
 #include "Explosion.hpp"
+#include "Player.hpp"
 
 const Ogre::Vector2 ENEMY_SIZE[CEnemy::ET_COUNT] = {
   Ogre::Vector2(1, 1)
@@ -25,32 +26,38 @@ CEnemy::CEnemy(CMap &map,
   setup();
 }
 void CEnemy::update(Ogre::Real tpf) {
-  m_vPosition.x += m_fSpeed * tpf;
   CAnimatedSprite::update(tpf);
-
-  Ogre::Real fPenetration = 0;
-  if (m_fSpeed < 0) {
-    fPenetration = m_Map.hitsTile(CCD_LEFT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
-  }
-  else {
-    fPenetration = m_Map.hitsTile(CCD_RIGHT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
-  }
-
-  if (fPenetration != 0) {
-    m_vPosition.x -= fPenetration;
-    m_fSpeed *= -1;
-  }
   
-  if (m_Map.collidesWithMapMargin(getWorldBoundingBox())) {
-    m_vPosition.x -= m_fSpeed * tpf;
-    m_fSpeed *= -1;
-  }
-
-  if (m_fSpeed < 0) {
-    changeCurrentAnimationSequence(AS_WALK_LEFT);
+  unsigned int ccd = getWorldBoundingBox().collidesWith(m_Map.getPlayer()->getWorldBoundingBox());
+  if (ccd != CCD_NONE) {
+    changeCurrentAnimationSequence((ccd & CCD_LEFT) ? AS_ATTACK_LEFT : AS_ATTACK_RIGHT); 
   }
   else {
-    changeCurrentAnimationSequence(AS_WALK_RIGHT);
+    m_vPosition.x += m_fSpeed * tpf;
+
+    Ogre::Real fPenetration = 0;
+    if (m_fSpeed < 0) {
+      fPenetration = m_Map.hitsTile(CCD_LEFT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+    }
+    else {
+      fPenetration = m_Map.hitsTile(CCD_RIGHT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+    }
+
+    if (fPenetration != 0) {
+      m_vPosition.x -= fPenetration;
+      m_fSpeed *= -1;
+    }
+  
+    if (m_Map.collidesWithMapMargin(getWorldBoundingBox())) {
+      m_vPosition.x -= m_fSpeed * tpf;
+      m_fSpeed *= -1;
+    }
+    if (m_fSpeed < 0) {
+      changeCurrentAnimationSequence(AS_WALK_LEFT);
+    }
+    else {
+      changeCurrentAnimationSequence(AS_WALK_RIGHT);
+    }
   }
 
 #ifdef DEBUG_CHARACTER_BOUNDING_BOXES
@@ -60,10 +67,24 @@ void CEnemy::update(Ogre::Real tpf) {
 void CEnemy::setup() {
   switch (m_eEnemyType) {
   case ET_GREEN_MONSTER:
-    init(ENEMY_SPEED[m_eEnemyType], 2);
+    init(ENEMY_SPEED[m_eEnemyType], 4);
     setDefaultGetPath(&getEnemyTexturePath<1>);
     setupAnimation(AS_WALK_LEFT, "walk_right", 4, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", 4);
+    setCurrentAnimationSequence(AS_ATTACK_LEFT);
+    {
+      CSpriteTexture &attackLeft = addTextureToCurrentAnimationSequence(getEnemyTexturePath<1>("attack_right", 1));
+      attackLeft.mirror(CSpriteTexture::MIRROR_Y);
+      attackLeft.setSpriteOffset(Ogre::Vector2(-1, 0));
+      attackLeft.setSpriteScale(Ogre::Vector2(2, 1));
+      addTextureToCurrentAnimationSequence(getEnemyTexturePath<1>("walk_right", 1)).mirror(CSpriteTexture::MIRROR_Y);
+    }
+    {
+      setCurrentAnimationSequence(AS_ATTACK_RIGHT);
+      CSpriteTexture &attackRight = addTextureToCurrentAnimationSequence(getEnemyTexturePath<1>("attack_right", 1));
+      attackRight.setSpriteScale(Ogre::Vector2(2, 1));
+      addTextureToCurrentAnimationSequence(getEnemyTexturePath<1>("walk_right", 1));
+    }
     break;
   default:
     throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Enemy type '" + Ogre::StringConverter::toString(m_eEnemyType) + "' is unknown", __FILE__);
@@ -71,5 +92,6 @@ void CEnemy::setup() {
 }
 void CEnemy::killedByDamageCallback() {
   m_Map.destroyEnemy(this);
-  m_Map.addExplosion(new CExplosion(&m_Map, getCenter(), CExplosion::ET_GREEN_MONSTER));
+  m_Map.addExplosion(new CExplosion(&m_Map, getCenter(), static_cast<CExplosion::EExplosionTypes>(m_eEnemyType + CExplosion::ET_GREEN_MONSTER)));
 }
+

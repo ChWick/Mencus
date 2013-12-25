@@ -60,7 +60,6 @@ public:
 
   void setTexturePosTopLeft(const Ogre::Vector2 &vPos) {m_vTexturePosTopLeft = vPos;}
   void setTexturePosBottomRight(const Ogre::Vector2 &vPosition) {m_vTexturePosBottomRight = vPosition;}
-
   void setTexturePosRight(const Ogre::Real x) {m_vTexturePosBottomRight.x = x;} 
   void setTexture(Ogre::TexturePtr pTexture) {m_pTexture = pTexture;}
   void setSpriteOffset(const Ogre::Vector2 &vOffset) {m_vSpriteOffset = vOffset;}
