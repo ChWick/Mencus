@@ -28,6 +28,7 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot)
   m_pHudRoot->setAlpha(1);
   CEGUI::ImageManager::getSingleton().loadImageset("hud.imageset");
   ImageManager::getSingleton().loadImageset("white.imageset");
+  ImageManager::getSingleton().loadImageset("hud_weapons.imageset");
 
   CEGUI::Window *pMain = m_pHudRoot->createChild("OgreTray/StaticImage", "main");
   pMain->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
@@ -54,14 +55,20 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot)
   m_pManaBar = pMain->createChild("OgreTray/StaticImage", "manabar");
   m_pManaBar->setProperty("ImageColours", "FFFF00FF");
   m_pManaBar->setProperty("Image", "white/full_image");
-  m_pManaBar->setProperty("FrameEnabled","False");
-  m_pManaBar->setProperty("BackgroundEnabled","True");
+  m_pManaBar->setProperty("FrameEnabled", "False");
+  m_pManaBar->setProperty("BackgroundEnabled", "True");
   m_pManaBar->setPosition(UVector2(UDim(0.772460938, 0), UDim(0.026041667, 0)));
 
-
+  m_pWeapon = pMain->createChild("OgreTray/StaticImage", "weapon");
+  m_pWeapon->setProperty("FrameEnabled", "False");
+  m_pWeapon->setProperty("BackgroundEnabled", "True");
+  m_pWeapon->setPosition(UVector2(UDim(0.020507813, 0), UDim(0.936197917, 0)));
+  m_pWeapon->setSize(USize(UDim(0.028320313, 0), UDim(0.037760417, 0)));
+  
   // initialise hp, mp
   setHP(m_fHP);
   setMP(m_fMP);
+  setCurrentWeapon(0);
 }
 void CHUD::update(Ogre::Real tpf) {
   m_fTimer += tpf;
@@ -83,6 +90,14 @@ void CHUD::setMP(Ogre::Real fMP) {
 
   m_pManaBar->setProperty("ImageColours", getHexValue(getMPColourmap()));
   m_pManaBar->setSize(USize(UDim(0.204101563 * m_fMP, 0), UDim(0.009114583, 0)));
+}
+void CHUD::setCurrentWeapon(unsigned int uiWeaponId) {
+  if (uiWeaponId == 0) {
+    m_pWeapon->setProperty("Image", "hud_weapons/bolt");
+  }
+  else if (uiWeaponId == 1) {
+    m_pWeapon->setProperty("Image", "hud_weapons/bomb");
+  }
 }
 Ogre::ColourValue CHUD::getHPColourmap() const {
   if (m_fHP == 1.0f) {

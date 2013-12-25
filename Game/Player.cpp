@@ -300,12 +300,14 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
     else {
       --m_uiCurrentWeapon;
     }
+    CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
   }
   else if (arg.key == OIS::KC_PERIOD) {
     ++m_uiCurrentWeapon;
     if (m_uiCurrentWeapon >= W_COUNT) {
       m_uiCurrentWeapon = 0;
     }
+    CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
   }
   return true;
 }

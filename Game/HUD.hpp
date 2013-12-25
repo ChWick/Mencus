@@ -9,6 +9,7 @@ private:
   CEGUI::Window *m_pFpsText;
   CEGUI::Window *m_pHealthBar;
   CEGUI::Window *m_pManaBar;
+  CEGUI::Window *m_pWeapon;
   Ogre::Real m_fTimer;
   Ogre::Real m_fHP;		//!< Hp of the player as value [0,1]
   Ogre::Real m_fMP;		//!< Mp of the player as value [0,1]
@@ -22,6 +23,8 @@ public:
 
   void setHP(Ogre::Real fHP);
   void setMP(Ogre::Real fMP);
+
+  void setCurrentWeapon(unsigned int uiWeaponId);
 private:
   Ogre::ColourValue getHPColourmap() const;
   Ogre::ColourValue getMPColourmap() const;

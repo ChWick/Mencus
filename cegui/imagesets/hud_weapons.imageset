@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Imageset version="2" name="hud_weapons" imagefile="hud_weapons.png" autoScaled="vertical" >
+    <Image name="bolt" xPos="0" yPos="0" width="32" height="32" />
+    <Image name="bomb" xPos="32" yPos="0" width="32" height="32" />
+</Imageset>
