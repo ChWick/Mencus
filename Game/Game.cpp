@@ -4,6 +4,7 @@
 #include <CEGUI/RendererModules/Ogre/ResourceProvider.h>
 #include <OgreCodec.h>
 #include "MapManager.hpp"
+#include "GUIManager.hpp"
 
 using namespace Ogre;
 
@@ -40,6 +41,7 @@ CGame::~CGame(void) {
   if (m_pMapManager) delete m_pMapManager;
   if (CEGUI::System::getSingletonPtr()) {CEGUI::OgreRenderer::destroySystem();}
   if (CInputListenerManager::getSingletonPtr()) {delete CInputListenerManager::getSingletonPtr();}
+  if (CGUIManager::getSingletonPtr()) {delete CGUIManager::getSingletonPtr();}
 
   //Remove ourself as a Window listener
   Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);
@@ -250,6 +252,8 @@ bool CGame::go(void)
     CEGUI::SchemeManager::getSingleton().createFromFile("TaharezLook.scheme");
     CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
+    new CGUIManager();
+
     mRoot->addFrameListener(this);
     //-------------------------------------------------------------------------------------
     m_pMapManager = new CMapManager(mSceneMgr);
@@ -293,7 +297,7 @@ bool CGame::frameRenderingQueued(const Ogre::FrameEvent& evt)
   CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
   mCameraMan->frameRenderingQueued(evt);   // if dialog isn't up, then update the camera
 
-
+  CGUIManager::getSingleton().update(evt.timeSinceLastFrame);
   return true;
 }
 bool CGame::frameStarted(const Ogre::FrameEvent& evt) {
