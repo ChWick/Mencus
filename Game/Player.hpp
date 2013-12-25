@@ -77,6 +77,8 @@ private:
   Ogre::Vector2 m_vLinkFromPos;
   Ogre::Vector2 m_vLinkToPos;
   EGoToLinkStatus m_eGoToLinkStatus;
+
+  Ogre::Real m_fManaPoints;
 public:
   CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager);
   ~CPlayer();

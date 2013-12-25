@@ -20,6 +20,10 @@ const Ogre::Real PLAYER_BOMB_MAX_TRHOW_STRENGTH(5);
 
 const Ogre::Real PLAYER_LINK_FADE_TIME(1);
 
+const Ogre::Real PLAYER_MAX_MANA_POINTS(50);
+const Ogre::Real PLAYER_BOLT_MANA_COSTS(5);
+const Ogre::Real PLAYER_MANA_REGAIN_PER_SEC(0.5);
+
 CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager) 
  :
   CAnimatedSprite(pMap, pSpriteManager, Ogre::Vector2(0, 0), Ogre::Vector2(1, 2)),
@@ -39,7 +43,8 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   m_eLastDirection(LD_RIGHT),
   m_uiCurrentWeapon(W_BOLT),
   m_pBomb(NULL),
-  m_eGoToLinkStatus(GTLS_NONE) {
+  m_eGoToLinkStatus(GTLS_NONE),
+  m_fManaPoints(PLAYER_MAX_MANA_POINTS) {
 
   CInputListenerManager::getSingleton().addInputListener(this);
   init(1, ANIM_COUNT);
@@ -78,6 +83,10 @@ void CPlayer::setupAnimations() {
   }
 }
 void CPlayer::update(Ogre::Real tpf) {
+  // mana regain
+  m_fManaPoints = min(m_fManaPoints + tpf * PLAYER_MANA_REGAIN_PER_SEC, PLAYER_MAX_MANA_POINTS);
+  CHUD::getSingleton().setMP(m_fManaPoints / PLAYER_MAX_MANA_POINTS);
+
   // ========================================================================
   // Move the player
   // ========================================================================
@@ -331,11 +340,18 @@ bool CPlayer::keyReleased( const OIS::KeyEvent &arg ) {
 }
 void CPlayer::animationTextureChangedCallback(unsigned int uiOldText, unsigned int uiNewText) {
   if (uiOldText == 3 && uiNewText == 4) {
-    if (m_uiCurrentAnimationSequence == ANIM_ATTACK_LEFT) {
-      m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_LEFT, CShot::ST_BOLT, CShot::SD_LEFT))->launch(Ogre::Vector2(-1,0));
-    }
-    else if(m_uiCurrentAnimationSequence == ANIM_ATTACK_RIGHT) {
-      m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_RIGHT, CShot::ST_BOLT, CShot::SD_RIGHT))->launch(Ogre::Vector2(1,0));
+    if (m_uiCurrentAnimationSequence == ANIM_ATTACK_RIGHT || m_uiCurrentAnimationSequence == ANIM_ATTACK_LEFT) {
+      if (m_fManaPoints < PLAYER_BOLT_MANA_COSTS) {
+	return;
+      }
+      m_fManaPoints -= PLAYER_BOLT_MANA_COSTS;
+
+      if (m_uiCurrentAnimationSequence == ANIM_ATTACK_LEFT) {
+	m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_LEFT, CShot::ST_BOLT, CShot::SD_LEFT))->launch(Ogre::Vector2(-1,0));
+      }
+      else if(m_uiCurrentAnimationSequence == ANIM_ATTACK_RIGHT) {
+	m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_RIGHT, CShot::ST_BOLT, CShot::SD_RIGHT))->launch(Ogre::Vector2(1,0));
+      }
     }
   }
   else if (uiOldText == m_AnimationSequences[m_uiCurrentAnimationSequence].size() - 1 && uiNewText == 0) {
