@@ -17,6 +17,10 @@ const Ogre::Real SHOT_SPEED[CShot::ST_COUNT] = {
   10.0,
   1.0
 };
+const Ogre::Real CShot::SHOT_DAMAGE[CShot::ST_COUNT] = {
+  1,
+  2
+};
 const Ogre::Real BOMB_EXPLOSION_TIME = 5;
 const Ogre::Real BOMB_EXPLOSION_RADIUS = 1;
 
@@ -94,8 +98,7 @@ void CShot::update(Ogre::Real tpf) {
     else if (m_eShotType == ST_BOMB) {
       m_fTimer += tpf;
       if (m_fTimer > BOMB_EXPLOSION_TIME) {
-	m_pMap->explodeTiles(getCenter(), BOMB_EXPLOSION_RADIUS);
-	m_pMap->addExplosion(new CExplosion(m_pMap, getCenter(), CExplosion::ET_BOMB));
+	m_pMap->createExplosion(getCenter(), BOMB_EXPLOSION_RADIUS);
 	m_pMap->destroyShot(this);
       }
       else {

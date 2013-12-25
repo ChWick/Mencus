@@ -233,7 +233,17 @@ void CMap::activateSwitchOnHit(const CBoundingBox2d &bb) {
     }
   }
 }
-void CMap::explodeTiles(const Ogre::Vector2 &vCenter, Ogre::Real r) {
+void CMap::createExplosion(const Ogre::Vector2 &vCenter, Ogre::Real r) {
+  // create explosion
+  addExplosion(new CExplosion(this, vCenter, CExplosion::ET_BOMB));
+
+  // check enemies
+  for (auto pEnemy : m_lEnemies) {
+    if (vCenter.squaredDistance(pEnemy->getCenter()) < r * r) {
+      pEnemy->takeDamage(CShot::SHOT_DAMAGE[CExplosion::ET_BOMB]);
+    }
+  }
+  // check endangered tiles
   int minx = static_cast<int>(vCenter.x - r);
   int maxx = static_cast<int>(vCenter.x + r);
   int miny = static_cast<int>(vCenter.y - r);
@@ -432,8 +442,9 @@ void CMap::readEnemy(XMLElement *pEnemy) {
   CEnemy::EEnemyTypes eEnemyType = static_cast<CEnemy::EEnemyTypes>(pEnemy->IntAttribute("id") - 1);
   Ogre::Vector2 vPos(pEnemy->FloatAttribute("x"), pEnemy->FloatAttribute("y"));
   Ogre::Real fDirection(pEnemy->FloatAttribute("direction"));
+  Ogre::Real fHitpoints(pEnemy->FloatAttribute("hp"));
 
-  CEnemy *pNewEnemy = new CEnemy(*this, vPos, eEnemyType, fDirection);
+  CEnemy *pNewEnemy = new CEnemy(*this, vPos, eEnemyType, fDirection, fHitpoints);
   m_lEnemies.push_back(pNewEnemy);
 
   Ogre::LogManager::getSingleton().logMessage("Parsing Enemy at " + Ogre::StringConverter::toString(vPos));

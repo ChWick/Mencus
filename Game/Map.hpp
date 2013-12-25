@@ -92,7 +92,7 @@ public:
    * \param[in] vCenter the explosion center
    * \param[in] r The radius of the explosion around the center
    */
-  void explodeTiles(const Ogre::Vector2 &vCenter, Ogre::Real r);
+  void createExplosion(const Ogre::Vector2 &vCenter, Ogre::Real r);
   //! Function to let a tile explode if it is endangered
   /**
    * \param[in] x The x coord of the tile

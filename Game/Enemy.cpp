@@ -14,8 +14,10 @@ const Ogre::Real ENEMY_SPEED[CEnemy::ET_COUNT] = {
 CEnemy::CEnemy(CMap &map,
 	       const Ogre::Vector2 &vPosition,
 	       EEnemyTypes eEnemyType,
-	       Ogre::Real fDirection)
+	       Ogre::Real fDirection,
+	       Ogre::Real fHitpoints)
   : CAnimatedSprite(&map, map.get2dManager(), vPosition, ENEMY_SIZE[eEnemyType]),
+    CHitableObject(fHitpoints),
     m_Map(map),
     m_eEnemyType(eEnemyType),
     m_fSpeed(fDirection * ENEMY_SPEED[eEnemyType]) {
@@ -65,4 +67,7 @@ void CEnemy::setup() {
   default:
     throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Enemy type '" + Ogre::StringConverter::toString(m_eEnemyType) + "' is unknown", __FILE__);
   }
+}
+void CEnemy::killedByDamageCallback() {
+  m_Map.destroyEnemy(this);
 }

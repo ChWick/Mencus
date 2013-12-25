@@ -24,6 +24,7 @@ public:
     ST_COUNT,
   };
 
+  static const Ogre::Real SHOT_DAMAGE[ST_COUNT];
 private:
   CMap *m_pMap;
   const EShotTypes m_eShotType;

@@ -2,10 +2,11 @@
 #define ENEMY_HPP
 
 #include "AnimatedSprite.hpp"
+#include "HitableObject.hpp"
 
 class CMap;
 
-class CEnemy : public CAnimatedSprite {
+class CEnemy : public CAnimatedSprite, public CHitableObject {
 public:
   enum EEnemyTypes {
     ET_GREEN_MONSTER,
@@ -25,10 +26,13 @@ public:
   CEnemy(CMap &map,
 	 const Ogre::Vector2 &vPosition,
 	 EEnemyTypes eEnemyType,
-	 Ogre::Real fDirection);
+	 Ogre::Real fDirection,
+	 Ogre::Real fHitpoints);
 
   void update(Ogre::Real tpf);
 
+protected:
+  void killedByDamageCallback();
 private:
   void setup();
 };
