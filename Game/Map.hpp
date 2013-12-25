@@ -20,6 +20,7 @@ class CSwitch;
 class CShot;
 class CExplosion;
 class CEnemy;
+class CObject;
 
 class CMap : Ogre::FrameListener, public CSpriteTransformPipeline, public CInputListener {
 public:
@@ -27,6 +28,7 @@ private:
   std::list<CEnemy*> m_lEnemiesToDestroy;
   std::list<CShot*> m_lShotsToDestroy;
   std::list<CExplosion*> m_lExplosionsToDestroy;
+  std::list<CObject*> m_lObjectsToDestroy;
 
   Ogre2dManager* m_p2dManagerMap;
   grid2d<CTile*> m_gridTiles;
@@ -35,6 +37,7 @@ private:
   std::list<CShot*> m_lShots;
   std::list<CExplosion*> m_lExplosions;
   std::list<CLink> m_lLinks;
+  std::list<CObject*> m_lObjects;
   std::string m_sBackground;
   CSprite *m_pBackgroundSprite;
 
@@ -130,6 +133,8 @@ public:
   void destroyExplosion(CExplosion *pExplosion) {m_lExplosionsToDestroy.push_back(pExplosion);}
   
   void destroyEnemy(CEnemy *pEnemy) {m_lEnemiesToDestroy.push_back(pEnemy);}
+
+  void destroyObject(CObject *pObject) {m_lObjectsToDestroy.push_back(pObject);}
 private:
   void updateBackground(Ogre::Real tpf);
   void updateCameraPos();
@@ -141,6 +146,7 @@ private:
   void readEndangeredTiles(tinyxml2::XMLElement *pTile);
   void readLink(tinyxml2::XMLElement *pLink);
   void readEnemy(tinyxml2::XMLElement *pEnemy);
+  void readObject(tinyxml2::XMLElement *pObject);
 };
 
 #endif

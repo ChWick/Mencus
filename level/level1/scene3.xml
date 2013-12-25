@@ -40,7 +40,8 @@
     <link fromx="24" fromy="1" tox="148" toy="9"/>
   </links>
   <objects>
-    <object type="3" posx="4819" posy="80"/>
+    <object type="0" x="24" y="1"/>
+    <object type="0" x="24.5" y="1"/>
   </objects>
   <endangeredTiles>
     <endangeredTile targetTile="64" x="24" y="0"/>

@@ -9,6 +9,7 @@
 #include "Shot.hpp"
 #include "Explosion.hpp"
 #include "Enemy.hpp"
+#include "Object.hpp"
 
 using namespace tinyxml2;
 
@@ -51,6 +52,7 @@ void CMap::clearMap() {
   m_lShotsToDestroy.clear();
   m_lExplosionsToDestroy.clear();
   m_lEnemiesToDestroy.clear();
+  m_lObjectsToDestroy.clear();
   
   if (m_pBackgroundSprite) {
     delete m_pBackgroundSprite;
@@ -72,6 +74,10 @@ void CMap::clearMap() {
   while (m_lSwitches.size() > 0) {
     delete m_lSwitches.front();
     m_lSwitches.pop_front();
+  }
+  while (m_lEnemies.size() > 0) {
+    delete m_lEnemies.front();
+    m_lEnemies.pop_front();
   }
 
   for (auto pTile : m_gridTiles) {
@@ -136,6 +142,11 @@ void CMap::loadMap(string sFilename) {
     else if (std::string(pElement->Value()) == "enemies") {
       for (XMLElement *pEnemy = pElement->FirstChildElement(); pEnemy; pEnemy = pEnemy->NextSiblingElement()) {
 	readEnemy(pEnemy);
+      }
+    }
+    else if (std::string(pElement->Value()) == "objects") {
+      for (XMLElement *pObject = pElement->FirstChildElement(); pObject; pObject = pObject->NextSiblingElement()) {
+	readObject(pObject);
       }
     }
   }
@@ -326,6 +337,9 @@ bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
   for (auto pTile : m_gridTiles) {
     pTile->update(evt.timeSinceLastFrame);
   }
+  for (auto pObject : m_lObjects) {
+    pObject->update(evt.timeSinceLastFrame);
+  }
   for (auto pEnemy : m_lEnemies) {
     pEnemy->update(evt.timeSinceLastFrame);
   }
@@ -365,7 +379,12 @@ bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
     m_lEnemies.remove(m_lEnemiesToDestroy.front());
     m_lEnemiesToDestroy.pop_front();
   }
-
+  while (m_lObjectsToDestroy.size() > 0) {
+    delete m_lObjectsToDestroy.front();
+    m_lObjects.remove(m_lObjectsToDestroy.front());
+    m_lObjectsToDestroy.pop_front();
+  }
+  
   return true;
 }
 void CMap::updateBackground(Ogre::Real tpf) {
@@ -448,4 +467,10 @@ void CMap::readEnemy(XMLElement *pEnemy) {
   m_lEnemies.push_back(pNewEnemy);
 
   Ogre::LogManager::getSingleton().logMessage("Parsing Enemy at " + Ogre::StringConverter::toString(vPos));
+}
+void CMap::readObject(XMLElement *pObject) {
+  m_lObjects.push_back(new CObject(*this,
+				   Ogre::Vector2(pObject->FloatAttribute("x"),
+						 pObject->FloatAttribute("y")),
+				   static_cast<CObject::EObjectTypes>(pObject->IntAttribute("type"))));
 }
