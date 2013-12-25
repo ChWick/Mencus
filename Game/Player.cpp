@@ -6,6 +6,7 @@
 #include "DebugDrawer.hpp"
 #include "Shot.hpp"
 #include "BarIndicator.hpp"
+#include "HUD.hpp"
 
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_RIGHT(0.2, 0.5);
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_LEFT(PLAYER_BOLT_OFFSET_RIGHT * Ogre::Vector2(-1, 1));
@@ -22,6 +23,7 @@ const Ogre::Real PLAYER_LINK_FADE_TIME(1);
 CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager) 
  :
   CAnimatedSprite(pMap, pSpriteManager, Ogre::Vector2(0, 0), Ogre::Vector2(1, 2)),
+  CHitableObject(10),
   m_Fader(this),
   m_pMap(pMap),
   m_bLeftPressed(false),
@@ -356,4 +358,11 @@ void CPlayer::fadeOutCallback() {
     m_eGoToLinkStatus = GTLS_COME_OUT_FROM_EXIT;
     m_Fader.startFadeIn(PLAYER_LINK_FADE_TIME);
   }
+}
+
+void CPlayer::damageTakenCallback() {
+  CHUD::getSingleton().setHP(getHitpoints() / getMaximumHitpoints());
+}
+
+void CPlayer::killedByDamageCallback() {
 }

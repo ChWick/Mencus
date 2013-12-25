@@ -4,6 +4,7 @@
 #include "AnimatedSprite.hpp"
 #include "InputListener.hpp"
 #include "Fader.hpp"
+#include "HitableObject.hpp"
 
 class CMap;
 class CShot;
@@ -11,7 +12,8 @@ class CBarIndicator;
 
 class CPlayer : public CAnimatedSprite,
 		public CInputListener,
-		public CFaderCallback {
+		public CFaderCallback,
+		public CHitableObject {
 
 private:
   enum ELastDirection {
@@ -92,6 +94,8 @@ private:
 
 protected:
   virtual void animationTextureChangedCallback(unsigned int uiOldText, unsigned int uiNewText);
+  virtual void damageTakenCallback();
+  virtual void killedByDamageCallback();
 };
 
 #endif

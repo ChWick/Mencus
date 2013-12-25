@@ -95,3 +95,10 @@ void CEnemy::killedByDamageCallback() {
   m_Map.addExplosion(new CExplosion(&m_Map, getCenter(), static_cast<CExplosion::EExplosionTypes>(m_eEnemyType + CExplosion::ET_GREEN_MONSTER)));
 }
 
+void CEnemy::animationTextureChangedCallback(unsigned int uiOldText, unsigned uiNewText) {
+  if (uiOldText == m_AnimationSequences[m_uiCurrentAnimationSequence].size() - 1 && uiNewText == 0) {
+    if (m_uiCurrentAnimationSequence == AS_ATTACK_RIGHT || m_uiCurrentAnimationSequence == AS_ATTACK_LEFT) {
+      m_Map.getPlayer()->takeDamage(0.1);
+    }
+  }
+}

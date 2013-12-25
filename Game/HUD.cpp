@@ -73,13 +73,13 @@ void CHUD::update(Ogre::Real tpf) {
   }
 }
 void CHUD::setHP(Ogre::Real fHP) {
-  m_fHP = fHP;
+  m_fHP = max(0.0f, min(1.0f, fHP));
 
   m_pHealthBar->setProperty("ImageColours", getHexValue(getHPColourmap()));
   m_pHealthBar->setSize(USize(UDim(0.204101563 * m_fHP, 0), UDim(0.009114583, 0)));
 }
 void CHUD::setMP(Ogre::Real fMP) {
-  m_fMP = fMP;
+  m_fMP = max(0.0f, min(1.0f, fMP));
 
   m_pManaBar->setProperty("ImageColours", getHexValue(getMPColourmap()));
   m_pManaBar->setSize(USize(UDim(0.204101563 * m_fMP, 0), UDim(0.009114583, 0)));

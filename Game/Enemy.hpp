@@ -33,6 +33,7 @@ public:
 
 protected:
   void killedByDamageCallback();
+  void animationTextureChangedCallback(unsigned int uiOldText, unsigned uiNewText);
 private:
   void setup();
 };
