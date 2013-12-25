@@ -69,12 +69,18 @@ public:
 			const CBoundingBox2d &bb,
 			CBoundingBox2d *pbbOverlap = NULL,
 			CTile **ppTile = NULL) const;
-  //! Function to check weather a bounding box is out of the map
+  //! Function to check whether a bounding box is out of the map
   /**
    *  \param[in] bb The bounding box
-   *  \returns Weather the bb is out of the map
+   *  \returns Whether the bb is out of the map
    */
   bool outOfMap(const CBoundingBox2d &bb) const;
+  //! Function to check whether a bounding box collides with the map margin
+  /**
+   *  \param[in] bb The bounding box
+   *  \returns Whether the bb collides with the map margin
+   */
+  bool collidesWithMapMargin(const CBoundingBox2d &bb) const;
   //! Function to check if a switch is hit and to activate it
   /**
    * \param[in] bb The bounding box to check for a hit

@@ -1,12 +1,14 @@
 #include "Enemy.hpp"
 #include "Map.hpp"
 #include "Util.hpp"
+#include "Tile.hpp"
+#include "DebugDrawer.hpp"
 
 const Ogre::Vector2 ENEMY_SIZE[CEnemy::ET_COUNT] = {
   Ogre::Vector2(1, 1)
 };
 const Ogre::Real ENEMY_SPEED[CEnemy::ET_COUNT] = {
-  1.0
+  3.0
 };
 
 CEnemy::CEnemy(CMap &map,
@@ -22,6 +24,35 @@ CEnemy::CEnemy(CMap &map,
 void CEnemy::update(Ogre::Real tpf) {
   m_vPosition.x += m_fSpeed * tpf;
   CAnimatedSprite::update(tpf);
+
+  Ogre::Real fPenetration = 0;
+  if (m_fSpeed < 0) {
+    fPenetration = m_Map.hitsTile(CCD_LEFT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+  }
+  else {
+    fPenetration = m_Map.hitsTile(CCD_RIGHT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+  }
+
+  if (fPenetration != 0) {
+    m_vPosition.x -= fPenetration;
+    m_fSpeed *= -1;
+  }
+  
+  if (m_Map.collidesWithMapMargin(getWorldBoundingBox())) {
+    m_vPosition.x -= m_fSpeed * tpf;
+    m_fSpeed *= -1;
+  }
+
+  if (m_fSpeed < 0) {
+    changeCurrentAnimationSequence(AS_WALK_LEFT);
+  }
+  else {
+    changeCurrentAnimationSequence(AS_WALK_RIGHT);
+  }
+
+#ifdef DEBUG_CHARACTER_BOUNDING_BOXES
+  CDebugDrawer::getSingleton().draw(getWorldBoundingBox());
+#endif
 }
 void CEnemy::setup() {
   switch (m_eEnemyType) {

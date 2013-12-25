@@ -209,11 +209,19 @@ unsigned int CMap::hitsTile(unsigned int uiTileMask, const CBoundingBox2d &bb, C
   return CCD_NONE;
 }
 bool CMap::outOfMap(const CBoundingBox2d &bb) const {
-	  if (bb.getPosition().x + bb.getSize().x < 0) return true;
-	  if (bb.getPosition().y + bb.getSize().y < 0) return true;
-	  if (bb.getPosition().x > m_gridTiles.getSizeX()) return true;
-	  if (bb.getPosition().y > m_gridTiles.getSizeY()) return true;
-	  return false;
+  if (bb.getPosition().x + bb.getSize().x < 0) return true;
+  if (bb.getPosition().y + bb.getSize().y < 0) return true;
+  if (bb.getPosition().x > m_gridTiles.getSizeX()) return true;
+  if (bb.getPosition().y > m_gridTiles.getSizeY()) return true;
+  return false;
+}
+bool CMap::collidesWithMapMargin(const CBoundingBox2d &bb) const {
+  if (bb.getPosition().x < 0) return true;
+  if (bb.getPosition().y < 0) return true;
+  if (bb.getPosition().x + bb.getSize().x > m_gridTiles.getSizeX()) return true;
+  if (bb.getPosition().y + bb.getSize().y > m_gridTiles.getSizeY()) return true;
+
+  return false;
 }
 void CMap::activateSwitchOnHit(const CBoundingBox2d &bb) {
   for (auto pSwitch : m_lSwitches) {

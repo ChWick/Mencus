@@ -138,6 +138,11 @@ void CPlayer::update(Ogre::Real tpf) {
 	m_vPosition.x -= fPenetration;
 	m_vCurrentSpeed.x = 0;
       }
+
+      if (m_pMap->collidesWithMapMargin(getWorldBoundingBox())) {
+	m_vPosition.x -= m_vCurrentSpeed.x * tpf;
+	m_vCurrentSpeed.x = 0;
+      }
     }
     // Jump if key pressed and on ground
     if (m_bJumpPressed && m_bOnGround) {
