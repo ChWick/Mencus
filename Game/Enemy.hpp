@@ -3,6 +3,7 @@
 
 #include "AnimatedSprite.hpp"
 #include "HitableObject.hpp"
+#include "BarIndicator.hpp"
 
 class CMap;
 
@@ -29,6 +30,7 @@ private:
   CMap &m_Map;
   Ogre::Vector2 m_vSpeed;
   bool m_bOnGround;
+  CBarIndicator m_HPBar;
 public:
   CEnemy(CMap &map,
     const Ogre::Vector2 &vPosition,
@@ -39,6 +41,7 @@ public:
   void update(Ogre::Real tpf);
 
 protected:
+  void damageTakenCallback();
   void killedByDamageCallback();
   void animationTextureChangedCallback(unsigned int uiOldText, unsigned uiNewText);
 private:

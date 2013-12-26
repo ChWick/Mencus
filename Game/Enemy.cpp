@@ -30,6 +30,7 @@ CEnemy::CEnemy(CMap &map,
 	       Ogre::Real fHitpoints)
   : CAnimatedSprite(&map, map.get2dManager(), vPosition, ENEMY_SIZE[eEnemyType]),
     CHitableObject(fHitpoints),
+    m_HPBar(&map, map.get2dManager()),
     m_Map(map),
     m_eEnemyType(eEnemyType),
     m_vSpeed(Ogre::Vector2(fDirection * ENEMY_SPEED[eEnemyType], 0)),
@@ -100,6 +101,11 @@ void CEnemy::update(Ogre::Real tpf) {
 #ifdef DEBUG_CHARACTER_BOUNDING_BOXES
   CDebugDrawer::getSingleton().draw(getWorldBoundingBox());
 #endif
+
+  if (getMaximumHitpoints() > getHitpoints()) {
+    m_HPBar.setCenter(getCenter() + Ogre::Vector2(0, getSize().y / 2));
+    m_HPBar.update(tpf);
+  }
 }
 void CEnemy::updateKI() {
   if (m_bOnGround) {
@@ -179,6 +185,11 @@ void CEnemy::setup() {
     throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Enemy type '" + Ogre::StringConverter::toString(m_eEnemyType) + "' is unknown", __FILE__);
   }
 }
+void CEnemy::damageTakenCallback() {
+  m_HPBar.show();
+  m_HPBar.setValue(getHitpoints() / getMaximumHitpoints());
+}
+
 void CEnemy::killedByDamageCallback() {
   m_Map.destroyEnemy(this);
   m_Map.addExplosion(new CExplosion(&m_Map, getCenter(), static_cast<CExplosion::EExplosionTypes>(m_eEnemyType + CExplosion::ET_GREEN_MONSTER)));
