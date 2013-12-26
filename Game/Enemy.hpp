@@ -17,6 +17,8 @@ public:
     AS_WALK_RIGHT,
     AS_ATTACK_LEFT,
     AS_ATTACK_RIGHT,
+    AS_JUMP_LEFT,
+    AS_JUMP_RIGHT,
   };
 private:
   const EEnemyTypes m_eEnemyType;

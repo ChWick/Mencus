@@ -74,11 +74,17 @@ void CEnemy::update(Ogre::Real tpf) {
       m_vSpeed.x *= -1;
     }
 
-    if (m_vSpeed.x < 0) {
-      changeCurrentAnimationSequence(AS_WALK_LEFT);
+    if (m_bOnGround) {
+      if (m_vSpeed.x < 0) {
+        changeCurrentAnimationSequence(AS_WALK_LEFT);
+      }
+      else {
+        changeCurrentAnimationSequence(AS_WALK_RIGHT);
+      }
     }
     else {
-      changeCurrentAnimationSequence(AS_WALK_RIGHT);
+      if (m_vSpeed.x < 0) changeCurrentAnimationSequence(AS_JUMP_LEFT);
+      else changeCurrentAnimationSequence(AS_JUMP_RIGHT);
     }
   }
 
@@ -128,7 +134,7 @@ void CEnemy::updateKI() {
 void CEnemy::setup() {
   switch (m_eEnemyType) {
   case ET_GREEN_MONSTER:
-    init(ENEMY_SPEED[m_eEnemyType], 4);
+    init(ENEMY_SPEED[m_eEnemyType], 6);
     setDefaultGetPath(&getEnemyTexturePath<1>);
     setupAnimation(AS_WALK_LEFT, "walk_right", 4, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", 4);
@@ -146,6 +152,8 @@ void CEnemy::setup() {
       attackRight.setSpriteScale(Ogre::Vector2(2, 1));
       addTextureToCurrentAnimationSequence(getEnemyTexturePath<1>("walk_right", 1));
     }
+    setupAnimation(AS_JUMP_LEFT, "jump_right", 1, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_JUMP_RIGHT, "jump_right", 1);
     break;
   default:
     throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Enemy type '" + Ogre::StringConverter::toString(m_eEnemyType) + "' is unknown", __FILE__);
