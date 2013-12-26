@@ -38,7 +38,14 @@ public:
   CBoundingBox2d translate(const Ogre::Vector2 &vTranslation) const {
     return CBoundingBox2d(m_vPosition + vTranslation, m_vSize);
   }
+  bool contains(const Ogre::Vector2 &vPoint) const {
+    if ( vPoint.x > m_vPosition.x + m_vSize.x) {return false;}
+    if ( vPoint.x < m_vPosition.x ) { return false; }
+    if ( vPoint.y > m_vPosition.y + m_vSize.y) {return false; }
+    if ( vPoint.y < m_vPosition.y ) { return false; }
 
+    return true;
+  }
   unsigned int collidesWith(const CBoundingBox2d &other, CBoundingBox2d *pCollisionBox = NULL) const {
     if (m_vPosition.x + m_vSize.x < other.m_vPosition.x) {return CCD_NONE;}
     if (m_vPosition.x > other.m_vPosition.x + other.m_vSize.x) {return CCD_NONE;}

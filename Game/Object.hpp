@@ -19,6 +19,7 @@ public:
 private:
   const EObjectTypes m_eObjectType;
   CMap &m_Map;
+  bool m_bIsPickable;
 public:
   CObject(CMap &map,
 	  const Ogre::Vector2 &vPosition,

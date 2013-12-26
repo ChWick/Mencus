@@ -16,6 +16,7 @@
   </tiles>
   <enemies>
     <enemy id="1" x="13" y="1" direction="-1" hp="2"/>
+    <enemy id="1" x="14" y="6" direction="-1" hp="2"/>
   </enemies>
   <switches>
     <switch x="16.6" y="1" type="0">
