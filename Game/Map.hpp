@@ -101,7 +101,7 @@ public:
    * \param[in] x The x coord of the tile
    * \param[in] y The y coord of the tile
    * \param[in] bExplodeNeighbours Let nighbours explode aswell
-   */ 
+   */
   void explodeTile(size_t x, size_t y, bool bExplodeNeighbours);
   //! Function to find a link at the given position
   /**
@@ -123,6 +123,8 @@ public:
   CTile* &getTile(unsigned int x, unsigned int y) {return m_gridTiles(x, y);}
   CTile *getTile(unsigned int x, unsigned int y) const {return m_gridTiles(x, y);}
 
+  bool isInMap(unsigned int x, unsigned int y);
+
   Ogre2dManager *get2dManager() const {return m_p2dManagerMap;}
   CPlayer *getPlayer() const {return m_pPlayer;}
 
@@ -131,7 +133,7 @@ public:
 
   CExplosion *addExplosion(CExplosion *pExplosion) {m_lExplosions.push_back(pExplosion); return pExplosion;}
   void destroyExplosion(CExplosion *pExplosion) {m_lExplosionsToDestroy.push_back(pExplosion);}
-  
+
   void destroyEnemy(CEnemy *pEnemy) {m_lEnemiesToDestroy.push_back(pEnemy);}
 
   void destroyObject(CObject *pObject) {m_lObjectsToDestroy.push_back(pObject);}

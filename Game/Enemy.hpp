@@ -21,13 +21,14 @@ public:
 private:
   const EEnemyTypes m_eEnemyType;
   CMap &m_Map;
-  Ogre::Real m_fSpeed;
+  Ogre::Vector2 m_vSpeed;
+  bool m_bOnGround;
 public:
   CEnemy(CMap &map,
-	 const Ogre::Vector2 &vPosition,
-	 EEnemyTypes eEnemyType,
-	 Ogre::Real fDirection,
-	 Ogre::Real fHitpoints);
+    const Ogre::Vector2 &vPosition,
+    EEnemyTypes eEnemyType,
+    Ogre::Real fDirection,
+    Ogre::Real fHitpoints);
 
   void update(Ogre::Real tpf);
 
@@ -36,6 +37,7 @@ protected:
   void animationTextureChangedCallback(unsigned int uiOldText, unsigned uiNewText);
 private:
   void setup();
+  void updateKI();
 };
 
 #endif

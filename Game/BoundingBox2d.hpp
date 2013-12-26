@@ -31,6 +31,7 @@ public:
 
   const Ogre::Vector2 &getPosition() const {return m_vPosition;}
   const Ogre::Vector2 &getSize() const {return m_vSize;}
+  const Ogre::Vector2 &getCenter() const {return m_vPosition + m_vSize / 2;}
 
   void setPosition(const Ogre::Vector2 &vPosition) {m_vPosition = vPosition;}
   void setSize(const Ogre::Vector2 &vSize) {m_vSize = vSize;}
@@ -51,7 +52,7 @@ public:
     if (m_vPosition.x > other.m_vPosition.x + other.m_vSize.x) {return CCD_NONE;}
     if (m_vPosition.y + m_vSize.y < other.m_vPosition.y) {return CCD_NONE;}
     if (m_vPosition.y > other.m_vPosition.y + other.m_vSize.y) {return CCD_NONE;}
-    
+
     if (pCollisionBox) {
       pCollisionBox->m_vPosition.x = max(m_vPosition.x, other.m_vPosition.x);
       pCollisionBox->m_vPosition.y = max(m_vPosition.y, other.m_vPosition.y);
@@ -59,8 +60,8 @@ public:
       Ogre::Vector2 vTopRight = Ogre::Vector2(min(m_vPosition.x + m_vSize.x, other.m_vPosition.x + other.m_vSize.x), min(m_vPosition.y + m_vSize.y, other.m_vPosition.y + other.m_vSize.y));
       pCollisionBox->m_vSize = vTopRight - pCollisionBox->m_vPosition;
     }
-    
-    unsigned int uiColldir = CCD_NONE;    
+
+    unsigned int uiColldir = CCD_NONE;
     if (collidesWith(other.m_vPosition + other.m_vSize, CLD_VERTICAL)) {uiColldir |= CCD_LEFT;}
     if (collidesWith(other.m_vPosition + other.m_vSize, CLD_HORIZONTAL)) {uiColldir |= CCD_BOTTOM;}
     if (collidesWith(other.m_vPosition, CLD_VERTICAL)) {uiColldir |= CCD_RIGHT;}

@@ -53,12 +53,12 @@ void CMap::clearMap() {
   m_lExplosionsToDestroy.clear();
   m_lEnemiesToDestroy.clear();
   m_lObjectsToDestroy.clear();
-  
+
   if (m_pBackgroundSprite) {
     delete m_pBackgroundSprite;
     m_pBackgroundSprite = NULL;
   }
-  
+
   while (m_lEnemies.size() > 0) {
     delete m_lEnemies.front();
     m_lEnemies.pop_front();
@@ -87,7 +87,7 @@ void CMap::clearMap() {
 }
 void CMap::loadMap(string sFilename) {
   clearMap();
-  
+
   XMLDocument doc;
   if (doc.LoadFile(sFilename.c_str())) {
     throw Ogre::Exception(Ogre::Exception::ERR_FILE_NOT_FOUND, sFilename + " not found.", __FILE__);
@@ -162,7 +162,7 @@ Ogre::Real CMap::hitsTile(ECollisionCheckDirections eCollisionCheckDirection, un
   int startX = static_cast<int>(bb.getPosition().x + ((eCollisionCheckDirection == CCD_RIGHT) ? bb.getSize().x : 0)); // round down
   int startY = static_cast<int>(bb.getPosition().y + ((eCollisionCheckDirection == CCD_TOP) ? bb.getSize().y : 0)); // round down
 
- 
+
   if (eCollisionCheckDirection == CCD_TOP || eCollisionCheckDirection == CCD_BOTTOM) {
     int endX = static_cast<int>(bb.getPosition().x + bb.getSize().x + 0.99); // round up
 
@@ -207,7 +207,7 @@ unsigned int CMap::hitsTile(unsigned int uiTileMask, const CBoundingBox2d &bb, C
       CDebugDrawer::getSingleton().draw(m_gridTiles(x, y));
 #endif
       if ((m_gridTiles(x, y)->getTileFlags() & uiTileMask) == uiTileMask) {
-	unsigned int uiCCD = bb.collidesWith(m_gridTiles(x, y)->getWorldBoundingBox(), pbbOverlap); 
+	unsigned int uiCCD = bb.collidesWith(m_gridTiles(x, y)->getWorldBoundingBox(), pbbOverlap);
 	if (uiCCD != CCD_NONE) {
 	  if (ppTile) {
 	    *ppTile = m_gridTiles(x, y);
@@ -384,7 +384,7 @@ bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
     m_lObjects.remove(m_lObjectsToDestroy.front());
     m_lObjectsToDestroy.pop_front();
   }
-  
+
   return true;
 }
 void CMap::updateBackground(Ogre::Real tpf) {
@@ -405,6 +405,15 @@ void CMap::updateCameraPos() {
 Ogre::Vector2 CMap::transformPosition(const Ogre::Vector2 &vPosition) const {
   Ogre::Vector2 vOffset(m_vCameraPos + m_vCameraDebugOffset);
   return ((vPosition - vOffset) / TILES_PER_SCREEN * 2 - Ogre::Vector2(1, 1));
+}
+bool CMap::isInMap(unsigned int x, unsigned int y) {
+    if (x < 0) {return false;}
+    if (y < 0) {return false;}
+
+    if (x >= m_gridTiles.getSizeX()) {return false;}
+    if (y >= m_gridTiles.getSizeY()) {return false;}
+
+    return true;
 }
 void CMap::readRow(XMLElement *pRow, unsigned int uiRow) {
   std::string tiles = pRow->Attribute("tiles");
@@ -436,7 +445,7 @@ void CMap::readSwitch(XMLElement *pSwitch) {
 
     pNewSwitch->addEntry(entry);
   }
-  
+
   m_lSwitches.push_back(pNewSwitch);
 }
 void CMap::readEndangeredTiles(XMLElement *pTile) {
@@ -445,7 +454,7 @@ void CMap::readEndangeredTiles(XMLElement *pTile) {
   size_t y = pTile->IntAttribute("y");
 
   m_gridTiles(x, y)->setEndangeredTileType(tt);
-  
+
   Ogre::LogManager::getSingleton().logMessage("Parsed endangered tile at (" + Ogre::StringConverter::toString(x) + ", " + Ogre::StringConverter::toString(y) + ") with target tile type " + Ogre::StringConverter::toString(tt));
 }
 

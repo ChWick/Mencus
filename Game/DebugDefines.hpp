@@ -5,5 +5,6 @@
 #define DEBUG_CHARACTER_BOUNDING_BOXES
 #define DEBUG_ENDANGERED_TILES
 #define DEBUG_LINKS
+#define DEBUG_KI
 
 #endif

@@ -5,12 +5,13 @@
 #include "DebugDrawer.hpp"
 #include "Explosion.hpp"
 #include "Player.hpp"
+#include "Constants.hpp"
 
 const Ogre::Vector2 ENEMY_SIZE[CEnemy::ET_COUNT] = {
   Ogre::Vector2(1, 1)
 };
 const Ogre::Real ENEMY_SPEED[CEnemy::ET_COUNT] = {
-  3.0
+  6.0
 };
 
 CEnemy::CEnemy(CMap &map,
@@ -22,37 +23,58 @@ CEnemy::CEnemy(CMap &map,
     CHitableObject(fHitpoints),
     m_Map(map),
     m_eEnemyType(eEnemyType),
-    m_fSpeed(fDirection * ENEMY_SPEED[eEnemyType]) {
+    m_vSpeed(Ogre::Vector2(fDirection * ENEMY_SPEED[eEnemyType], 0)),
+    m_bOnGround(false) {
   setup();
 }
 void CEnemy::update(Ogre::Real tpf) {
   CAnimatedSprite::update(tpf);
-  
+
   unsigned int ccd = getWorldBoundingBox().collidesWith(m_Map.getPlayer()->getWorldBoundingBox());
-  if (ccd != CCD_NONE) {
-    changeCurrentAnimationSequence((ccd & CCD_LEFT) ? AS_ATTACK_LEFT : AS_ATTACK_RIGHT); 
+  if (m_bOnGround && ccd != CCD_NONE) {
+    // Player collision, attack him!
+    changeCurrentAnimationSequence((ccd & CCD_LEFT) ? AS_ATTACK_LEFT : AS_ATTACK_RIGHT);
   }
   else {
-    m_vPosition.x += m_fSpeed * tpf;
+    updateKI();
 
     Ogre::Real fPenetration = 0;
-    if (m_fSpeed < 0) {
+
+    m_vSpeed.y += c_fGravity * tpf;
+    m_vPosition.y += m_vSpeed.y * tpf;
+
+    m_bOnGround = false;
+    if (m_vSpeed.y < 0) {
+        fPenetration = m_Map.hitsTile(CCD_BOTTOM, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+        if (fPenetration != 0) {
+          m_bOnGround = true;
+        }
+    }
+
+    if (fPenetration != 0) {
+        m_vPosition.y -= fPenetration;
+        m_vSpeed.y = 0;
+    }
+    // move enemy
+    m_vPosition.x += m_vSpeed.x * tpf;
+
+    if (m_vSpeed.x < 0) {
       fPenetration = m_Map.hitsTile(CCD_LEFT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
     }
     else {
       fPenetration = m_Map.hitsTile(CCD_RIGHT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
     }
 
+    if (m_Map.collidesWithMapMargin(getWorldBoundingBox())) {
+      fPenetration = m_vSpeed.x * tpf;
+    }
+
     if (fPenetration != 0) {
       m_vPosition.x -= fPenetration;
-      m_fSpeed *= -1;
+      m_vSpeed.x *= -1;
     }
-  
-    if (m_Map.collidesWithMapMargin(getWorldBoundingBox())) {
-      m_vPosition.x -= m_fSpeed * tpf;
-      m_fSpeed *= -1;
-    }
-    if (m_fSpeed < 0) {
+
+    if (m_vSpeed.x < 0) {
       changeCurrentAnimationSequence(AS_WALK_LEFT);
     }
     else {
@@ -63,6 +85,45 @@ void CEnemy::update(Ogre::Real tpf) {
 #ifdef DEBUG_CHARACTER_BOUNDING_BOXES
   CDebugDrawer::getSingleton().draw(getWorldBoundingBox());
 #endif
+}
+void CEnemy::updateKI() {
+  if (m_bOnGround) {
+    CBoundingBox2d bb(getWorldBoundingBox());
+    bb = bb.translate(Ogre::Vector2(0, -0.01));
+    int x = static_cast<int>(bb.getCenter().x);
+    if (m_vSpeed.x > 0) {
+      //x = static_cast<int>(bb.getPosition().x + bb.getSize().x);
+    }
+    int y = static_cast<int>(bb.getPosition().y);
+    CTile *pTile(m_Map.getTile(x, y));
+    if (pTile->getTileFlags() & CTile::TF_PASSABLE) {
+      bool bFlipWalkDirection = true;
+      // search the next unpassable tile and apply jump speed in this case
+      for (int iDeltaJumpWidth = 1; iDeltaJumpWidth <= 3; iDeltaJumpWidth++) {
+        if (m_vSpeed.x < 0) {
+          x = static_cast<int>(bb.getPosition().x) - iDeltaJumpWidth;
+        }
+        else {
+          x = static_cast<int>(bb.getPosition().x + bb.getSize().x) + iDeltaJumpWidth;
+        }
+        if (!m_Map.isInMap(x, y)) {break;}
+        pTile = m_Map.getTile(x, y);
+#ifdef DEBUG_KI
+        CDebugDrawer::getSingleton().draw(pTile, CDebugDrawer::DT_BLUE);
+#endif
+        if (pTile->getTileFlags() & CTile::TF_UNPASSABLE) {
+          bFlipWalkDirection = false;
+          Ogre::Real t = (iDeltaJumpWidth + 0.1) / m_vSpeed.x;
+          m_vSpeed.y = abs(0.5 * c_fGravity * t);
+          break;
+        }
+      }
+
+      if (bFlipWalkDirection) {
+        m_vSpeed.x *= -1;
+      }
+    }
+  }
 }
 void CEnemy::setup() {
   switch (m_eEnemyType) {
