@@ -36,6 +36,7 @@ CEnemy::CEnemy(CMap &map,
     m_vSpeed(Ogre::Vector2(fDirection * ENEMY_SPEED[eEnemyType], 0)),
     m_bOnGround(false) {
   setup();
+  m_HPBar.setSize(Ogre::Vector2(m_vSize.x, m_HPBar.getSize().y));
 }
 void CEnemy::update(Ogre::Real tpf) {
   CAnimatedSprite::update(tpf);
@@ -110,7 +111,7 @@ void CEnemy::update(Ogre::Real tpf) {
 void CEnemy::updateKI() {
   if (m_bOnGround) {
     CBoundingBox2d bb(getWorldBoundingBox());
-    bb = bb.translate(Ogre::Vector2(0, -0.01));
+    bb = bb.translate(Ogre::Vector2(0, -0.1));
     int x = static_cast<int>(bb.getCenter().x);
     if (m_vSpeed.x > 0) {
       //x = static_cast<int>(bb.getPosition().x + bb.getSize().x);
@@ -134,7 +135,7 @@ void CEnemy::updateKI() {
 #endif
         if (pTile->getTileFlags() & CTile::TF_UNPASSABLE) {
           bFlipWalkDirection = false;
-          Ogre::Real t = (iDeltaJumpWidth + 0.1) / m_vSpeed.x;
+          Ogre::Real t = (iDeltaJumpWidth + 0.2) / m_vSpeed.x;
           m_vSpeed.y = abs(0.5 * c_fGravity * t);
           break;
         }
@@ -171,6 +172,13 @@ void CEnemy::setup() {
     setupAnimation(AS_JUMP_RIGHT, "jump_right", 1);
     break;
   case ET_KNIGHT:
+    setDefaultGetPath(&getEnemyTexturePath<2>);
+    setupAnimation(AS_WALK_LEFT, "walk_right", {0, 1, 2, 3, 0, 4, 5, 6}, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_WALK_RIGHT, "walk_right", {0, 1, 2, 3, 0, 4, 5, 6});
+    setupAnimation(AS_ATTACK_LEFT, "attack_right", {0, 1, 2, 1}, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_ATTACK_RIGHT, "attack_right", {0, 1, 2, 1});
+    setupAnimation(AS_JUMP_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_JUMP_RIGHT, "walk_right", 1);
     break;
   case ET_BEAR:
     setDefaultGetPath(&getEnemyTexturePath<3>);

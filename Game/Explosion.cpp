@@ -48,7 +48,7 @@ CExplosion::CExplosion(CMap *pMap, const Ogre::Vector2 &vCenter, EExplosionTypes
     setupAnimation(0, "explosion", 7, eMirrorType, &getEnemyTexturePath<1>);
   }
   else if (m_eExplosionType == ET_KNIGHT) {
-    setupAnimation(0, "", 5, eMirrorType, &getEnemyTexturePath<2>);
+    setupAnimation(0, "explosion_right", 5, eMirrorType, &getEnemyTexturePath<2>);
   }
   else if (m_eExplosionType == ET_BEAR) {
     setupAnimation(0, "explosion_right", 1, eMirrorType, &getEnemyTexturePath<3>);

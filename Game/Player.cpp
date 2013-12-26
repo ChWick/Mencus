@@ -22,10 +22,11 @@ const Ogre::Real PLAYER_LINK_FADE_TIME(1);
 
 const Ogre::Real PLAYER_MAX_MANA_POINTS(50);
 const Ogre::Real PLAYER_BOLT_MANA_COSTS(5);
+const Ogre::Real PLAYER_SHIELD_MANA_COSTS_PER_SEC(5);
 const Ogre::Real PLAYER_MANA_REGAIN_PER_SEC(0.5);
 
 CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
- :
+  :
   CAnimatedSprite(pMap, pSpriteManager, Ogre::Vector2(0, 0), Ogre::Vector2(1, 2)),
   CHitableObject(10),
   m_Fader(this),
@@ -98,11 +99,9 @@ void CPlayer::update(Ogre::Real tpf) {
   if (m_eGoToLinkStatus == GTLS_NONE) {
     if (m_bLeftPressed) {
       m_vCurrentSpeed.x = -m_fMaxWalkSpeed;
-    }
-    else if (m_bRightPressed) {
+    } else if (m_bRightPressed) {
       m_vCurrentSpeed.x = m_fMaxWalkSpeed;
-    }
-    else {
+    } else {
       m_vCurrentSpeed.x = 0;
     }
 
@@ -119,21 +118,20 @@ void CPlayer::update(Ogre::Real tpf) {
       m_vPosition.y += m_vCurrentSpeed.y * tpf;
 
       if (m_vCurrentSpeed.y < 0) {
-	m_bOnGround = false;
-	m_bJumping = true;
-	fPenetration = m_pMap->hitsTile(CCD_BOTTOM, CTile::TF_UNPASSABLE, getWorldBoundingBox());
-	if (fPenetration != 0) {
-	  m_bOnGround = true;
-	  m_bJumping = false;
-	}
-      }
-      else if (m_vCurrentSpeed.y > 0) {
-	fPenetration = m_pMap->hitsTile(CCD_TOP, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+        m_bOnGround = false;
+        m_bJumping = true;
+        fPenetration = m_pMap->hitsTile(CCD_BOTTOM, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+        if (fPenetration != 0) {
+          m_bOnGround = true;
+          m_bJumping = false;
+        }
+      } else if (m_vCurrentSpeed.y > 0) {
+        fPenetration = m_pMap->hitsTile(CCD_TOP, CTile::TF_UNPASSABLE, getWorldBoundingBox());
       }
 
       if (fPenetration != 0) {
-	m_vCurrentSpeed.y = 0;
-	m_vPosition.y -= fPenetration;
+        m_vCurrentSpeed.y = 0;
+        m_vPosition.y -= fPenetration;
       }
 
 
@@ -142,22 +140,21 @@ void CPlayer::update(Ogre::Real tpf) {
       m_vPosition.x += m_vCurrentSpeed.x * tpf;
 
       if (m_vCurrentSpeed.x < 0) {
-	fPenetration = m_pMap->hitsTile(CCD_LEFT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
-	m_eLastDirection = LD_LEFT;
-      }
-      else if (m_vCurrentSpeed.x > 0) {
-	fPenetration += m_pMap->hitsTile(CCD_RIGHT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
-	m_eLastDirection = LD_RIGHT;
+        fPenetration = m_pMap->hitsTile(CCD_LEFT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+        m_eLastDirection = LD_LEFT;
+      } else if (m_vCurrentSpeed.x > 0) {
+        fPenetration += m_pMap->hitsTile(CCD_RIGHT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+        m_eLastDirection = LD_RIGHT;
       }
 
       if (fPenetration != 0) {
-	m_vPosition.x -= fPenetration;
-	m_vCurrentSpeed.x = 0;
+        m_vPosition.x -= fPenetration;
+        m_vCurrentSpeed.x = 0;
       }
 
       if (m_pMap->collidesWithMapMargin(getWorldBoundingBox())) {
-	m_vPosition.x -= m_vCurrentSpeed.x * tpf;
-	m_vCurrentSpeed.x = 0;
+        m_vPosition.x -= m_vCurrentSpeed.x * tpf;
+        m_vCurrentSpeed.x = 0;
       }
     }
     // Jump if key pressed and on ground
@@ -170,20 +167,18 @@ void CPlayer::update(Ogre::Real tpf) {
     // if activate link and on ground
     if (m_bActivateLinkPressed && m_bOnGround) {
       if (m_pMap->findLink(getWorldBoundingBox(), m_vLinkFromPos, m_vLinkToPos)) {
-	m_eGoToLinkStatus = GTLS_MOVE_TO_ENTRANCE;
-	m_Fader.startFadeOut(PLAYER_LINK_FADE_TIME);
+        m_eGoToLinkStatus = GTLS_MOVE_TO_ENTRANCE;
+        m_Fader.startFadeOut(PLAYER_LINK_FADE_TIME);
       }
     }
-  }
-  else if (m_eGoToLinkStatus == GTLS_MOVE_TO_ENTRANCE) {
+  } else if (m_eGoToLinkStatus == GTLS_MOVE_TO_ENTRANCE) {
     Ogre::Real fOldDistanceSq = m_vPosition.squaredDistance(m_vLinkFromPos);
     Ogre::Vector2 vDir = (m_vLinkFromPos - m_vPosition).normalisedCopy();
     m_vPosition += vDir * m_fMaxWalkSpeed * tpf;
     if (fOldDistanceSq <= m_vPosition.squaredDistance(m_vLinkFromPos)) {
       m_vPosition = m_vLinkFromPos;
     }
-  }
-  else if (m_eGoToLinkStatus == GTLS_COME_OUT_FROM_EXIT) {
+  } else if (m_eGoToLinkStatus == GTLS_COME_OUT_FROM_EXIT) {
   }
 
   // ========================================================================
@@ -197,78 +192,63 @@ void CPlayer::update(Ogre::Real tpf) {
       m_pBomb = NULL;
       m_pThrowStrengthIndicator->hide();
       if (m_eLastDirection == LD_LEFT) {
-	changeCurrentAnimationSequence(ANIM_THROW_LEFT);
+        changeCurrentAnimationSequence(ANIM_THROW_LEFT);
+      } else {
+        changeCurrentAnimationSequence(ANIM_THROW_RIGHT);
       }
-      else {
-	changeCurrentAnimationSequence(ANIM_THROW_RIGHT);
-      }
-    }
-    else {
+    } else {
       // increase throw strength
       m_fBombThrowStrength += PLAYER_BOMB_THROW_STRENGTH_INCREASE * tpf;
       m_fBombThrowStrength = min(m_fBombThrowStrength, PLAYER_BOMB_MAX_TRHOW_STRENGTH);
     }
-  }
-  else if (m_uiCurrentAnimationSequence == ANIM_THROW_RIGHT || m_uiCurrentAnimationSequence == ANIM_THROW_LEFT){
+  } else if (m_uiCurrentAnimationSequence == ANIM_THROW_RIGHT || m_uiCurrentAnimationSequence == ANIM_THROW_LEFT) {
     // do nothing, wait for finished
-  }
-  else if (m_bOnGround) {
+  } else if (m_bOnGround) {
     if (m_bAttackPressed && m_vCurrentSpeed.x == 0) {
       if (m_uiCurrentWeapon == W_BOLT) {
-	if (m_eLastDirection == LD_LEFT) {
-	  changeCurrentAnimationSequence(ANIM_ATTACK_LEFT);
-	}
-	else {
-	  changeCurrentAnimationSequence(ANIM_ATTACK_RIGHT);
-	}
+        if (m_eLastDirection == LD_LEFT) {
+          changeCurrentAnimationSequence(ANIM_ATTACK_LEFT);
+        } else {
+          changeCurrentAnimationSequence(ANIM_ATTACK_RIGHT);
+        }
+      } else if (m_uiCurrentWeapon == W_BOMB) {
+        if (!m_pBomb) {
+          m_pThrowStrengthIndicator->show();
+          m_pBomb = new CShot(m_pMap, m_pSpriteManager, getCenter(), CShot::ST_BOMB, (m_eLastDirection == LD_LEFT) ? CShot::SD_LEFT : CShot::SD_RIGHT);
+          m_pMap->addShot(m_pBomb);
+        }
+        m_pBomb->setCenter(getCenter() + PLAYER_BOMB_OFFSET);
+        if (m_eLastDirection == LD_LEFT) {
+          changeCurrentAnimationSequence(ANIM_HOLD_LEFT);
+        } else {
+          changeCurrentAnimationSequence(ANIM_HOLD_RIGHT);
+        }
       }
-      else if (m_uiCurrentWeapon == W_BOMB) {
-	if (!m_pBomb) {
-	  m_pThrowStrengthIndicator->show();
-	  m_pBomb = new CShot(m_pMap, m_pSpriteManager, getCenter(), CShot::ST_BOMB, (m_eLastDirection == LD_LEFT) ? CShot::SD_LEFT : CShot::SD_RIGHT);
-	  m_pMap->addShot(m_pBomb);
-	}
-	m_pBomb->setCenter(getCenter() + PLAYER_BOMB_OFFSET);
-	if (m_eLastDirection == LD_LEFT) {
-	  changeCurrentAnimationSequence(ANIM_HOLD_LEFT);
-	}
-	else {
-	  changeCurrentAnimationSequence(ANIM_HOLD_RIGHT);
-	}
-      }
-    }
-    else {
+    } else {
       if (m_vCurrentSpeed.x < 0) {
-	changeCurrentAnimationSequence(ANIM_WALK_LEFT);
-      }
-      else if (m_vCurrentSpeed.x > 0) {
-	changeCurrentAnimationSequence(ANIM_WALK_RIGHT);
-      }
-      else {
-	if (m_eLastDirection == LD_LEFT) {
-	  changeCurrentAnimationSequence(ANIM_STAND_LEFT);
-	}
-	else {
-	  changeCurrentAnimationSequence(ANIM_STAND_RIGHT);
-	}
+        changeCurrentAnimationSequence(ANIM_WALK_LEFT);
+      } else if (m_vCurrentSpeed.x > 0) {
+        changeCurrentAnimationSequence(ANIM_WALK_RIGHT);
+      } else {
+        if (m_eLastDirection == LD_LEFT) {
+          changeCurrentAnimationSequence(ANIM_STAND_LEFT);
+        } else {
+          changeCurrentAnimationSequence(ANIM_STAND_RIGHT);
+        }
       }
     }
-  }
-  else if (m_bJumping) {
+  } else if (m_bJumping) {
     if (m_vCurrentSpeed.y > -5.0) { // fall animation appears at a certain fall speed
       if (m_eLastDirection == LD_LEFT) {
-	changeCurrentAnimationSequence(ANIM_JUMP_LEFT);
+        changeCurrentAnimationSequence(ANIM_JUMP_LEFT);
+      } else {
+        changeCurrentAnimationSequence(ANIM_JUMP_RIGHT);
       }
-      else {
-	changeCurrentAnimationSequence(ANIM_JUMP_RIGHT);
-      }
-    }
-    else {
+    } else {
       if (m_eLastDirection == LD_LEFT) {
-	changeCurrentAnimationSequence(ANIM_FALL_LEFT);
-      }
-      else {
-	changeCurrentAnimationSequence(ANIM_FALL_RIGHT);
+        changeCurrentAnimationSequence(ANIM_FALL_LEFT);
+      } else {
+        changeCurrentAnimationSequence(ANIM_FALL_RIGHT);
       }
     }
   }
@@ -285,48 +265,51 @@ void CPlayer::update(Ogre::Real tpf) {
 
   CAnimatedSprite::update(tpf);
   if (m_bShieldActive) {
-    m_Shield.setCenter(getCenter());
-    m_Shield.update(tpf);
+    m_fManaPoints -= PLAYER_SHIELD_MANA_COSTS_PER_SEC * tpf;
+    if (m_fManaPoints <= 0) {
+      m_bShieldActive = 0;
+      m_fManaPoints = 0;
+    } else {
+      m_Shield.setCenter(getCenter());
+      m_Shield.update(tpf);
+    }
   }
+
+  setInvunerable(m_bShieldActive);
 }
 bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
   if (arg.key == OIS::KC_RIGHT) {
     m_bRightPressed = true;
-  }
-  else if (arg.key == OIS::KC_LEFT) {
+  } else if (arg.key == OIS::KC_LEFT) {
     m_bLeftPressed = true;
-  }
-  else if (arg.key == OIS::KC_UP) {
+  } else if (arg.key == OIS::KC_UP) {
     m_bJumpPressed = true;
-  }
-  else if (arg.key == OIS::KC_DOWN) {
-    m_bActivateLinkPressed = true;
-  }
-  else if (arg.key == OIS::KC_SPACE) {
-    if (m_uiCurrentWeapon == W_BOMB) {
-      m_fBombThrowStrength = PLAYER_BOMB_DEFAULT_THROW_STRENGTH;
+  } else if (arg.key == OIS::KC_DOWN) {
+    if (!m_bAttackPressed) {
+      m_bActivateLinkPressed = true;
     }
-    else if (m_uiCurrentWeapon == W_SHIELD) {
-      m_bShieldActive = !m_bShieldActive;
-    }
+  } else if (arg.key == OIS::KC_SPACE) {
+    if (m_eGoToLinkStatus == GTLS_NONE) {
+      if (m_uiCurrentWeapon == W_BOMB) {
+        m_fBombThrowStrength = PLAYER_BOMB_DEFAULT_THROW_STRENGTH;
+      } else if (m_uiCurrentWeapon == W_SHIELD) {
+        m_bShieldActive = !m_bShieldActive;
+      }
 
-    if (m_bOnGround) {
-      m_bAttackPressed = true;
+      if (m_bOnGround) {
+        m_bAttackPressed = true;
+      }
     }
-  }
-  else if (arg.key == OIS::KC_RETURN) {
+  } else if (arg.key == OIS::KC_RETURN) {
     m_pMap->activateSwitchOnHit(getWorldBoundingBox());
-  }
-  else if (arg.key == OIS::KC_COMMA) {
+  } else if (arg.key == OIS::KC_COMMA) {
     if (m_uiCurrentWeapon == 0) {
       m_uiCurrentWeapon = W_COUNT - 1;
-    }
-    else {
+    } else {
       --m_uiCurrentWeapon;
     }
     CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
-  }
-  else if (arg.key == OIS::KC_PERIOD) {
+  } else if (arg.key == OIS::KC_PERIOD) {
     ++m_uiCurrentWeapon;
     if (m_uiCurrentWeapon >= W_COUNT) {
       m_uiCurrentWeapon = 0;
@@ -338,17 +321,13 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
 bool CPlayer::keyReleased( const OIS::KeyEvent &arg ) {
   if (arg.key == OIS::KC_RIGHT) {
     m_bRightPressed = false;
-  }
-  else if (arg.key == OIS::KC_LEFT) {
+  } else if (arg.key == OIS::KC_LEFT) {
     m_bLeftPressed = false;
-  }
-  else if (arg.key == OIS::KC_UP) {
+  } else if (arg.key == OIS::KC_UP) {
     m_bJumpPressed = false;
-  }
-  else if (arg.key ==OIS::KC_SPACE) {
+  } else if (arg.key ==OIS::KC_SPACE) {
     m_bAttackPressed = false;
-  }
-  else if (arg.key == OIS::KC_DOWN) {
+  } else if (arg.key == OIS::KC_DOWN) {
     m_bActivateLinkPressed = false;
   }
   return true;
@@ -357,24 +336,21 @@ void CPlayer::animationTextureChangedCallback(unsigned int uiOldText, unsigned i
   if (uiOldText == 3 && uiNewText == 4) {
     if (m_uiCurrentAnimationSequence == ANIM_ATTACK_RIGHT || m_uiCurrentAnimationSequence == ANIM_ATTACK_LEFT) {
       if (m_fManaPoints < PLAYER_BOLT_MANA_COSTS) {
-	return;
+        return;
       }
       m_fManaPoints -= PLAYER_BOLT_MANA_COSTS;
 
       if (m_uiCurrentAnimationSequence == ANIM_ATTACK_LEFT) {
-	m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_LEFT, CShot::ST_BOLT, CShot::SD_LEFT))->launch(Ogre::Vector2(-1,0));
-      }
-      else if(m_uiCurrentAnimationSequence == ANIM_ATTACK_RIGHT) {
-	m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_RIGHT, CShot::ST_BOLT, CShot::SD_RIGHT))->launch(Ogre::Vector2(1,0));
+        m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_LEFT, CShot::ST_BOLT, CShot::SD_LEFT))->launch(Ogre::Vector2(-1,0));
+      } else if(m_uiCurrentAnimationSequence == ANIM_ATTACK_RIGHT) {
+        m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_RIGHT, CShot::ST_BOLT, CShot::SD_RIGHT))->launch(Ogre::Vector2(1,0));
       }
     }
-  }
-  else if (uiOldText == m_AnimationSequences[m_uiCurrentAnimationSequence].size() - 1 && uiNewText == 0) {
+  } else if (uiOldText == m_AnimationSequences[m_uiCurrentAnimationSequence].size() - 1 && uiNewText == 0) {
     // new loop of animation
     if (m_uiCurrentAnimationSequence == ANIM_THROW_LEFT) {
       changeCurrentAnimationSequence(ANIM_STAND_LEFT);
-    }
-    else if (m_uiCurrentAnimationSequence == ANIM_THROW_RIGHT) {
+    } else if (m_uiCurrentAnimationSequence == ANIM_THROW_RIGHT) {
       changeCurrentAnimationSequence(ANIM_STAND_RIGHT);
     }
   }
