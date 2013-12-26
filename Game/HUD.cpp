@@ -18,7 +18,7 @@ CHUD &CHUD::getSingleton() {
   return *msSingleton;
 }
 
-CHUD::CHUD(CEGUI::Window *pGUIRoot) 
+CHUD::CHUD(CEGUI::Window *pGUIRoot)
   : m_fTimer(0),
     m_fHP(1),
     m_fMP(1)
@@ -64,7 +64,7 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot)
   m_pWeapon->setProperty("BackgroundEnabled", "True");
   m_pWeapon->setPosition(UVector2(UDim(0.020507813, 0), UDim(0.936197917, 0)));
   m_pWeapon->setSize(USize(UDim(0.028320313, 0), UDim(0.037760417, 0)));
-  
+
   // initialise hp, mp
   setHP(m_fHP);
   setMP(m_fMP);
@@ -97,6 +97,9 @@ void CHUD::setCurrentWeapon(unsigned int uiWeaponId) {
   }
   else if (uiWeaponId == 1) {
     m_pWeapon->setProperty("Image", "hud_weapons/bomb");
+  }
+  else if (uiWeaponId == 2) {
+    m_pWeapon->setProperty("Image", "hud_weapons/shield");
   }
 }
 Ogre::ColourValue CHUD::getHPColourmap() const {

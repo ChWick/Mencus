@@ -30,6 +30,7 @@ private:
   enum EWeapons {
     W_BOLT,
     W_BOMB,
+    W_SHIELD,
     W_COUNT,
   };
 
@@ -73,6 +74,8 @@ private:
   CShot *m_pBomb;
   Ogre::Real m_fBombThrowStrength;
   CBarIndicator *m_pThrowStrengthIndicator;
+  CAnimatedSprite m_Shield;
+  bool m_bShieldActive;
 
   Ogre::Vector2 m_vLinkFromPos;
   Ogre::Vector2 m_vLinkToPos;
@@ -87,7 +90,7 @@ public:
 
   virtual bool keyPressed( const OIS::KeyEvent &arg );
   virtual bool keyReleased( const OIS::KeyEvent &arg );
-  
+
   virtual void fadeInCallback();
   virtual void fadeOutCallback();
 

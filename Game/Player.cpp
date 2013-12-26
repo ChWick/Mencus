@@ -24,7 +24,7 @@ const Ogre::Real PLAYER_MAX_MANA_POINTS(50);
 const Ogre::Real PLAYER_BOLT_MANA_COSTS(5);
 const Ogre::Real PLAYER_MANA_REGAIN_PER_SEC(0.5);
 
-CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager) 
+CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
  :
   CAnimatedSprite(pMap, pSpriteManager, Ogre::Vector2(0, 0), Ogre::Vector2(1, 2)),
   CHitableObject(10),
@@ -43,6 +43,8 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   m_eLastDirection(LD_RIGHT),
   m_uiCurrentWeapon(W_BOLT),
   m_pBomb(NULL),
+  m_Shield(pMap, pSpriteManager, Ogre::Vector2::ZERO, Ogre::Vector2(2, 2)),
+  m_bShieldActive(false),
   m_eGoToLinkStatus(GTLS_NONE),
   m_fManaPoints(PLAYER_MAX_MANA_POINTS) {
 
@@ -52,6 +54,9 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.2, 0));
   m_bbRelativeBoundingBox.setSize(Ogre::Vector2(0.6, 1.8));
   m_pThrowStrengthIndicator = new CBarIndicator(pMap, pSpriteManager);
+
+  m_Shield.init(1, 1);
+  m_Shield.setupAnimation(0, "shield", 5, CSpriteTexture::MIRROR_NONE, &getPlayerTexturePath);
 }
 CPlayer::~CPlayer() {
   delete m_pThrowStrengthIndicator;
@@ -102,7 +107,7 @@ void CPlayer::update(Ogre::Real tpf) {
     }
 
     m_vCurrentSpeed.y += c_fGravity * tpf;
-  
+
     if (m_vCurrentSpeed.y > 0 && !m_bJumpPressed) {
       // If the user wants to cancel the jump, do a higher acceleration
       m_vCurrentSpeed.y += c_fGravity * tpf; // twice gravity now
@@ -135,7 +140,7 @@ void CPlayer::update(Ogre::Real tpf) {
       // move and check here only x direction movement
       fPenetration = 0;
       m_vPosition.x += m_vCurrentSpeed.x * tpf;
-  
+
       if (m_vCurrentSpeed.x < 0) {
 	fPenetration = m_pMap->hitsTile(CCD_LEFT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
 	m_eLastDirection = LD_LEFT;
@@ -279,6 +284,10 @@ void CPlayer::update(Ogre::Real tpf) {
   m_Fader.fade(tpf);
 
   CAnimatedSprite::update(tpf);
+  if (m_bShieldActive) {
+    m_Shield.setCenter(getCenter());
+    m_Shield.update(tpf);
+  }
 }
 bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
   if (arg.key == OIS::KC_RIGHT) {
@@ -294,7 +303,13 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
     m_bActivateLinkPressed = true;
   }
   else if (arg.key == OIS::KC_SPACE) {
-    m_fBombThrowStrength = PLAYER_BOMB_DEFAULT_THROW_STRENGTH;
+    if (m_uiCurrentWeapon == W_BOMB) {
+      m_fBombThrowStrength = PLAYER_BOMB_DEFAULT_THROW_STRENGTH;
+    }
+    else if (m_uiCurrentWeapon == W_SHIELD) {
+      m_bShieldActive = !m_bShieldActive;
+    }
+
     if (m_bOnGround) {
       m_bAttackPressed = true;
     }
@@ -368,7 +383,7 @@ void CPlayer::fadeInCallback() {
   if (m_eGoToLinkStatus == GTLS_COME_OUT_FROM_EXIT) {
     m_eGoToLinkStatus = GTLS_NONE;
   }
-  
+
 }
 void CPlayer::fadeOutCallback() {
   if (m_eGoToLinkStatus == GTLS_MOVE_TO_ENTRANCE) {
