@@ -8,7 +8,7 @@
 #include "BarIndicator.hpp"
 #include "HUD.hpp"
 
-const Ogre::Vector2 PLAYER_BOLT_OFFSET_RIGHT(0.2, 0.5);
+const Ogre::Vector2 PLAYER_BOLT_OFFSET_RIGHT(0.2, 0.0);
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_LEFT(PLAYER_BOLT_OFFSET_RIGHT * Ogre::Vector2(-1, 1));
 
 const Ogre::Vector2 PLAYER_BOMB_OFFSET(0, 0.9);
