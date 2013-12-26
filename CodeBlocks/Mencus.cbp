@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Mencus" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="../bin/Game" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../bin" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="../bin/Game" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="../bin" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-std=c++11" />
+			<Add option="-Wall" />
+			<Add directory="../" />
+		</Compiler>
+		<Linker>
+			<Add library="boost_system" />
+		</Linker>
+		<Unit filename="../Game/AnimatedSprite.cpp" />
+		<Unit filename="../Game/AnimatedSprite.hpp" />
+		<Unit filename="../Game/BarIndicator.hpp" />
+		<Unit filename="../Game/BoundingBox2d.hpp" />
+		<Unit filename="../Game/CollisionDefines.hpp" />
+		<Unit filename="../Game/Constants.hpp" />
+		<Unit filename="../Game/DebugDefines.hpp" />
+		<Unit filename="../Game/DebugDrawer.cpp" />
+		<Unit filename="../Game/DebugDrawer.hpp" />
+		<Unit filename="../Game/Enemy.cpp" />
+		<Unit filename="../Game/Enemy.hpp" />
+		<Unit filename="../Game/Explosion.cpp" />
+		<Unit filename="../Game/Explosion.hpp" />
+		<Unit filename="../Game/Fader.hpp" />
+		<Unit filename="../Game/GUIManager.cpp" />
+		<Unit filename="../Game/GUIManager.hpp" />
+		<Unit filename="../Game/Game.cpp" />
+		<Unit filename="../Game/Game.hpp" />
+		<Unit filename="../Game/Grid2d.hpp" />
+		<Unit filename="../Game/HUD.cpp" />
+		<Unit filename="../Game/HUD.hpp" />
+		<Unit filename="../Game/HitableObject.hpp" />
+		<Unit filename="../Game/InputListener.cpp" />
+		<Unit filename="../Game/InputListener.hpp" />
+		<Unit filename="../Game/Link.hpp" />
+		<Unit filename="../Game/Map.cpp" />
+		<Unit filename="../Game/Map.hpp" />
+		<Unit filename="../Game/MapManager.cpp" />
+		<Unit filename="../Game/MapManager.hpp" />
+		<Unit filename="../Game/Object.cpp" />
+		<Unit filename="../Game/Object.hpp" />
+		<Unit filename="../Game/Player.cpp" />
+		<Unit filename="../Game/Player.hpp" />
+		<Unit filename="../Game/Shot.cpp" />
+		<Unit filename="../Game/Shot.hpp" />
+		<Unit filename="../Game/Sprite.cpp" />
+		<Unit filename="../Game/Sprite.hpp" />
+		<Unit filename="../Game/SpriteTexture.hpp" />
+		<Unit filename="../Game/SpriteTransformPipeline.cpp" />
+		<Unit filename="../Game/SpriteTransformPipeline.hpp" />
+		<Unit filename="../Game/Switch.cpp" />
+		<Unit filename="../Game/Switch.hpp" />
+		<Unit filename="../Game/Tile.cpp" />
+		<Unit filename="../Game/Tile.hpp" />
+		<Unit filename="../Game/Util.cpp" />
+		<Unit filename="../Game/Util.hpp" />
+		<Unit filename="../Game/main.cpp" />
+		<Unit filename="../Game/ogre2d-main.cpp" />
+		<Unit filename="../Game/ogre2d-main.hpp" />
+		<Extensions>
+			<envvars />
+			<code_completion />
+			<debugger />
+			<lib_finder>
+				<lib name="OIS" />
+				<lib name="OGRE" />
+				<lib name="CEGUI-0" />
+				<lib name="CEGUI-0-OGRE" />
+				<lib name="tinyxml2" />
+			</lib_finder>
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
