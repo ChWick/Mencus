@@ -10,6 +10,8 @@ class CEnemy : public CAnimatedSprite, public CHitableObject {
 public:
   enum EEnemyTypes {
     ET_GREEN_MONSTER,
+    ET_KNIGHT,
+    ET_BEAR,
     ET_COUNT,
   };
   enum EAttackSequences {
@@ -19,6 +21,8 @@ public:
     AS_ATTACK_RIGHT,
     AS_JUMP_LEFT,
     AS_JUMP_RIGHT,
+
+    AS_COUNT
   };
 private:
   const EEnemyTypes m_eEnemyType;

@@ -8,10 +8,19 @@
 #include "Constants.hpp"
 
 const Ogre::Vector2 ENEMY_SIZE[CEnemy::ET_COUNT] = {
-  Ogre::Vector2(1, 1)
+  Ogre::Vector2(1, 1),
+  Ogre::Vector2(1, 2),
+  Ogre::Vector2(4, 2)
 };
 const Ogre::Real ENEMY_SPEED[CEnemy::ET_COUNT] = {
+  6.0,
+  2.0,
   6.0
+};
+const Ogre::Real ENEMY_DAMAGE[CEnemy::ET_COUNT] = {
+  0.1,
+  0.2,
+  0.3
 };
 
 CEnemy::CEnemy(CMap &map,
@@ -132,9 +141,9 @@ void CEnemy::updateKI() {
   }
 }
 void CEnemy::setup() {
+  init(ENEMY_SPEED[m_eEnemyType], AS_COUNT);
   switch (m_eEnemyType) {
   case ET_GREEN_MONSTER:
-    init(ENEMY_SPEED[m_eEnemyType], 6);
     setDefaultGetPath(&getEnemyTexturePath<1>);
     setupAnimation(AS_WALK_LEFT, "walk_right", 4, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", 4);
@@ -155,6 +164,17 @@ void CEnemy::setup() {
     setupAnimation(AS_JUMP_LEFT, "jump_right", 1, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_JUMP_RIGHT, "jump_right", 1);
     break;
+  case ET_KNIGHT:
+    break;
+  case ET_BEAR:
+    setDefaultGetPath(&getEnemyTexturePath<3>);
+    setupAnimation(AS_WALK_LEFT, "walk_right", 6, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_WALK_RIGHT, "walk_right", 6);
+    setupAnimation(AS_ATTACK_LEFT, "attack_right", {0, 1, 2, 1}, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_ATTACK_RIGHT, "attack_right", {0, 1, 2, 1});
+    setupAnimation(AS_JUMP_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_JUMP_RIGHT, "walk_right", 1);
+    break;
   default:
     throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Enemy type '" + Ogre::StringConverter::toString(m_eEnemyType) + "' is unknown", __FILE__);
   }
@@ -167,7 +187,7 @@ void CEnemy::killedByDamageCallback() {
 void CEnemy::animationTextureChangedCallback(unsigned int uiOldText, unsigned uiNewText) {
   if (uiOldText == m_AnimationSequences[m_uiCurrentAnimationSequence].size() - 1 && uiNewText == 0) {
     if (m_uiCurrentAnimationSequence == AS_ATTACK_RIGHT || m_uiCurrentAnimationSequence == AS_ATTACK_LEFT) {
-      m_Map.getPlayer()->takeDamage(0.1);
+      m_Map.getPlayer()->takeDamage(ENEMY_DAMAGE[m_eEnemyType]);
     }
   }
 }
