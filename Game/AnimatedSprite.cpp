@@ -3,7 +3,8 @@
 CAnimatedSprite::CAnimatedSprite(const CSpriteTransformPipeline *pTransformPipeline, Ogre2dManager *pSpriteManager, const Ogre::Vector2 &vPosition, const Ogre::Vector2 &vSize, const Ogre::Vector2 &vScale, const Ogre::Radian radRotation)
   : CSprite(pTransformPipeline, pSpriteManager, vPosition, vSize, vScale, radRotation),
     m_uiCurrentAnimationTexture(0),
-    m_uiCurrentAnimationSequence(0) {
+    m_uiCurrentAnimationSequence(0),
+    m_bAnimationPaused(false) {
   m_fAnimationTimer = 0;
   m_fAnimationSpeed = 1.0 / 20;
 }
@@ -73,17 +74,19 @@ void CAnimatedSprite::setupAnimation(unsigned int uiAnimSequence,
   }
 }
 void CAnimatedSprite::update(Ogre::Real tpf) {
-  m_fAnimationTimer += tpf;
-  if (m_fAnimationTimer >= m_fAnimationSpeed) {
-    unsigned int uiOldTexture = m_uiCurrentAnimationTexture;
-    ++m_uiCurrentAnimationTexture;
-    if (m_uiCurrentAnimationTexture >= m_AnimationSequences[m_uiCurrentAnimationSequence].size()) {
-      m_uiCurrentAnimationTexture = 0;
+  if (!m_bAnimationPaused) {
+    m_fAnimationTimer += tpf;
+    if (m_fAnimationTimer >= m_fAnimationSpeed) {
+      unsigned int uiOldTexture = m_uiCurrentAnimationTexture;
+      ++m_uiCurrentAnimationTexture;
+      if (m_uiCurrentAnimationTexture >= m_AnimationSequences[m_uiCurrentAnimationSequence].size()) {
+        m_uiCurrentAnimationTexture = 0;
+      }
+
+      animationTextureChangedCallback(uiOldTexture, m_uiCurrentAnimationTexture);
+
+      m_fAnimationTimer = 0;
     }
-
-    animationTextureChangedCallback(uiOldTexture, m_uiCurrentAnimationTexture);
-
-    m_fAnimationTimer = 0;
   }
 
   setTextureToDraw(&m_AnimationSequences[m_uiCurrentAnimationSequence][m_uiCurrentAnimationTexture]);

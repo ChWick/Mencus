@@ -137,6 +137,8 @@ public:
   void destroyEnemy(CEnemy *pEnemy) {m_lEnemiesToDestroy.push_back(pEnemy);}
 
   void destroyObject(CObject *pObject) {m_lObjectsToDestroy.push_back(pObject);}
+
+  const std::list<CEnemy*> &getEnemies() const {return m_lEnemies;}
 private:
   void updateBackground(Ogre::Real tpf);
   void updateCameraPos();

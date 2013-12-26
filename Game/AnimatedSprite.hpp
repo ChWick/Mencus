@@ -8,6 +8,8 @@ typedef vector<tAnimationSequence> tAnimationSequences;
 typedef std::string (*tGetPathFunctionType)(std::string, int);
 
 class CAnimatedSprite : public CSprite {
+private:
+  bool m_bAnimationPaused;
 protected:
   tAnimationSequences m_AnimationSequences;
   unsigned int m_uiCurrentAnimationSequence;
@@ -25,7 +27,7 @@ public:
   unsigned int getCurrentAnimationSequence() const {return m_uiCurrentAnimationSequence;}
   unsigned int getCurrentAnimationTexture() const {return m_uiCurrentAnimationTexture;}
 
-  
+
   void setDefaultGetPath(tGetPathFunctionType pFunc) {m_pDefaultGetPathFunction = pFunc;}
   void setNumberOfAnimationSquences(unsigned int size);
   unsigned int addAnimationSequence();
@@ -33,7 +35,7 @@ public:
   CSpriteTexture &addTextureToCurrentAnimationSequence(Ogre::TexturePtr pTexture);
   CSpriteTexture &addTextureToCurrentAnimationSequence(string sFilename);
   void setCurrentAnimationTexture(unsigned int uiTextIndex);
-  
+
   void setupAnimation(unsigned int uiAnimSequence,
 		      const std::string &sName,
 		      int uiCount,
@@ -50,6 +52,8 @@ public:
   CSpriteTexture &getTexture(unsigned int uiCurrentAnimationSequence, unsigned int uiTextIndex) {return m_AnimationSequences[uiCurrentAnimationSequence][uiTextIndex];}
 
   virtual void update(Ogre::Real tpf);
+
+  void setPauseAnimation(bool b) {m_bAnimationPaused = b;}
 
 protected:
   virtual void animationTextureChangedCallback(unsigned int uiOldText, unsigned int uiNewText) {}

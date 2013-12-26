@@ -10,7 +10,7 @@ public:
   enum EShotAnimations {
     SA_DEFAULT = 0,
     SA_LAUNCHED,
-    
+
     SA_COUNT
   };
   enum EShotDirections {
@@ -47,6 +47,8 @@ public:
   void launch(const Ogre::Vector2 &vInitialSpeed, unsigned int uiNewAnimationSequence = SA_COUNT);
 
   void update(Ogre::Real tpf);
+private:
+  void hitEnemy();
 };
 
 #endif

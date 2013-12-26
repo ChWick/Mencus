@@ -11,12 +11,15 @@ public:
     ET_BOLT,
     ET_BOMB,
     ET_GREEN_MONSTER,
+    ET_KNIGHT,
+    ET_BEAR,
 
-    ET_COUNT,    
+    ET_COUNT,
   };
 private:
   CMap *m_pMap;
   const EExplosionTypes m_eExplosionType;
+  Ogre::Real m_fFadingTimer;                 //!< after the last image the fading timer (alpha blending)
 public:
   CExplosion(CMap *pMap, const Ogre::Vector2 &vCenter, EExplosionTypes eExplosionType);
 
