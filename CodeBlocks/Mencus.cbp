@@ -71,6 +71,8 @@
 		<Unit filename="../Game/Object.hpp" />
 		<Unit filename="../Game/Player.cpp" />
 		<Unit filename="../Game/Player.hpp" />
+		<Unit filename="../Game/Sceenplay.cpp" />
+		<Unit filename="../Game/Sceenplay.hpp" />
 		<Unit filename="../Game/Shot.cpp" />
 		<Unit filename="../Game/Shot.hpp" />
 		<Unit filename="../Game/Sprite.cpp" />
