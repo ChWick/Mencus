@@ -20,12 +20,14 @@ const string CTile::DEFAULT_TILE_TEXTURE_NAME = "../gfx/tiles/Tile";
 const Ogre::Vector2 TILES_PER_SCREEN(16, 12);
 const Ogre::Real SCREEN_RATIO = TILES_PER_SCREEN.y / TILES_PER_SCREEN.x;
 
-CMap::CMap(Ogre::SceneManager *pSceneManager)
+CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayListener)
   : m_p2dManagerMap(NULL),
     m_pBackgroundSprite(NULL),
     m_pPlayer(NULL),
     m_vCameraDebugOffset(Ogre::Vector2::ZERO),
-    m_vCameraPos(Ogre::Vector2::ZERO) {
+    m_vCameraPos(Ogre::Vector2::ZERO),
+    m_pExit(NULL),
+    m_pScreenplayListener(pScreenplayListener) {
   m_p2dManagerMap = new Ogre2dManager();
   m_p2dManagerMap->init(pSceneManager, Ogre::RENDER_QUEUE_BACKGROUND, true);
   Ogre::Root::getSingleton().addFrameListener(this);
@@ -42,6 +44,8 @@ CMap::CMap(Ogre::SceneManager *pSceneManager)
   CHUD::getSingleton().show();
 }
 CMap::~CMap() {
+  if (m_pExit) {delete m_pExit; m_pExit = NULL;}
+
   CHUD::getSingleton().hide();
   clearMap();
 
@@ -153,6 +157,9 @@ void CMap::loadMap(string sFilename) {
       for (XMLElement *pObject = pElement->FirstChildElement(); pObject; pObject = pObject->NextSiblingElement()) {
 	readObject(pObject);
       }
+    }
+    else if (std::string(pElement->Value()) == "exit") {
+      readExit(pElement);
     }
   }
 
@@ -367,6 +374,14 @@ bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
     CDebugDrawer::getSingleton().draw(link);
   }
 #endif
+  if (m_pExit) {
+    if (m_pExit->isInExit(m_pPlayer)) {
+      m_pScreenplayListener->playerExitsMap();
+    }
+#ifdef DEBUG_EXIT
+    m_pExit->debugDraw();
+#endif // DEBUG_EXIT
+  }
 
   // tidy up
   while (m_lShotsToDestroy.size() > 0) {
@@ -488,3 +503,33 @@ void CMap::readObject(XMLElement *pObject) {
 						 pObject->FloatAttribute("y")),
 				   static_cast<CObject::EObjectTypes>(pObject->IntAttribute("type"))));
 }
+void CMap::readExit(XMLElement *pExitElem) {
+  Ogre::String sType = pExitElem->Attribute("type");
+
+  if (sType == "region") {
+    CBoundingBox2d bb(Ogre::Vector2(pExitElem->FloatAttribute("posx"),
+                                    pExitElem->FloatAttribute("posy")),
+                      Ogre::Vector2(pExitElem->FloatAttribute("sizex"),
+                                    pExitElem->FloatAttribute("sizey")));
+    m_pExit = new CExit(EXIT_REGION, bb);
+  }
+}
+bool CMap::CExit::isInExit(CPlayer *pPlayer) {
+  switch (m_eExitType) {
+  case CMap::EXIT_REGION:
+    if (m_BoundingBox.collidesWith(pPlayer->getWorldBoundingBox()) != CCD_NONE) {
+      return true;
+    }
+    break;
+  }
+  return false;
+}
+#ifdef DEBUG_EXIT
+void CMap::CExit::debugDraw() {
+  switch (m_eExitType) {
+  case CMap::EXIT_REGION:
+    CDebugDrawer::getSingleton().draw(m_BoundingBox);
+    break;
+  }
+}
+#endif // DEBUG_EXIT

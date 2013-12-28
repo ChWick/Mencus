@@ -41,6 +41,23 @@ CGUIInstructions::CGUIInstructions(CEGUI::Window *pGUIRoot) {
   m_pText->setProperty("BackgroundEnabled","False");
   m_pText->setFont("diploma15");
 
+  m_pPressKeyText = m_pInstructionsRoot->createChild("OgreTray/StaticText", "Instructions/Root/Text");
+  m_pPressKeyText->setPosition(UVector2(UDim(0.35, 0), UDim(0.9, 0)));
+  m_pPressKeyText->setSize(USize(UDim(0.4, 0), UDim(0.1, 0)));
+  m_pPressKeyText->setProperty("FrameEnabled","False");
+  m_pPressKeyText->setProperty("BackgroundEnabled","False");
+  m_pPressKeyText->setProperty("HorzFormatting", "HorzCentred");
+  m_pPressKeyText->setText("- beliebige Taste zum Fortfahren -");
+
+  CInputListenerManager::getSingleton().addInputListener(this);
 
   hide();
+}
+CGUIInstructions::~CGUIInstructions() {
+  CInputListenerManager::getSingleton().removeInputListener(this);
+}
+bool CGUIInstructions::keyPressed( const OIS::KeyEvent &arg ) {
+  m_pScreenplayListener->keyForContinueInstructionsPressed();
+
+  return true;
 }

@@ -22,7 +22,7 @@ CLevel::~CLevel() {
   }
 }
 void CLevel::start() {
-  m_pMap = new CMap(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"));
+  m_pMap = new CMap(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"), m_pScreenplayListener);
   m_pMap->loadMap(m_sFilename);
 }
 void CLevel::stop() {
@@ -50,6 +50,7 @@ CScreenplay::CScreenplay()
     m_uiCurrentAct(0),
     m_uiCurrentScene(0),
     m_pOldScene(NULL) {
+  CGUIInstructions::getSingleton().setScreenplayListener(this);
   parse("../level/screenplay.xml");
 
   loadAct(1, 1);
@@ -101,7 +102,7 @@ void CScreenplay::parse(const Ogre::String &sFilename) {
       if (type == "level") {
         XMLElement *pLevelElem = pSceneElem->FirstChildElement("level");
         Ogre::String file = pLevelElem->Attribute("file");
-        pScene = new CLevel(id, m_sLevelDir + dir + "/" + file);
+        pScene = new CLevel(id, m_sLevelDir + dir + "/" + file, this);
       }
       else if (type == "instructions") {
         XMLElement *pInstructionsElem = pSceneElem->FirstChildElement("instructions");
@@ -122,4 +123,9 @@ void CScreenplay::parse(const Ogre::String &sFilename) {
 
     m_mapActs[id] = pAct;
   }
+}
+void CScreenplay::playerExitsMap() {
+}
+void CScreenplay::keyForContinueInstructionsPressed() {
+    loadAct(m_uiCurrentAct, m_uiCurrentScene + 1);
 }

@@ -52,6 +52,8 @@
 		<Unit filename="../Game/Explosion.cpp" />
 		<Unit filename="../Game/Explosion.hpp" />
 		<Unit filename="../Game/Fader.hpp" />
+		<Unit filename="../Game/GUIInstructions.cpp" />
+		<Unit filename="../Game/GUIInstructions.hpp" />
 		<Unit filename="../Game/GUIManager.cpp" />
 		<Unit filename="../Game/GUIManager.hpp" />
 		<Unit filename="../Game/Game.cpp" />
@@ -73,6 +75,7 @@
 		<Unit filename="../Game/Player.hpp" />
 		<Unit filename="../Game/Screenplay.cpp" />
 		<Unit filename="../Game/Screenplay.hpp" />
+		<Unit filename="../Game/ScreenplayListener.hpp" />
 		<Unit filename="../Game/Shot.cpp" />
 		<Unit filename="../Game/Shot.hpp" />
 		<Unit filename="../Game/Sprite.cpp" />
@@ -89,6 +92,8 @@
 		<Unit filename="../Game/main.cpp" />
 		<Unit filename="../Game/ogre2d-main.cpp" />
 		<Unit filename="../Game/ogre2d-main.hpp" />
+		<Unit filename="../level/level1/instructions.txt" />
+		<Unit filename="../level/level1/scene3.xml" />
 		<Unit filename="../level/screenplay.xml" />
 		<Extensions>
 			<envvars />

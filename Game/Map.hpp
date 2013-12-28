@@ -13,6 +13,7 @@
 #include "BoundingBox2d.hpp"
 #include "CollisionDefines.hpp"
 #include "Link.hpp"
+#include "ScreenplayListener.hpp"
 
 class CTile;
 class CPlayer;
@@ -23,6 +24,23 @@ class CEnemy;
 class CObject;
 
 class CMap : Ogre::FrameListener, public CSpriteTransformPipeline, public CInputListener {
+private:
+  enum EExitTypes {
+    EXIT_REGION,
+  };
+  class CExit {
+  private:
+    EExitTypes m_eExitType;
+    CBoundingBox2d m_BoundingBox;
+  public:
+    CExit(EExitTypes eExitType, const CBoundingBox2d &bb)
+    : m_eExitType(eExitType), m_BoundingBox(bb) {
+    }
+    bool isInExit(CPlayer *pPlayer);
+#ifdef DEBUG_EXIT
+    void debugDraw();
+#endif
+  };
 public:
 private:
   std::list<CEnemy*> m_lEnemiesToDestroy;
@@ -45,9 +63,12 @@ private:
   Ogre::Vector2 m_vCameraDebugOffset;
 
   CPlayer *m_pPlayer;
+  CExit *m_pExit;
+
+  CScreenplayListener *m_pScreenplayListener;
 
 public:
-  CMap(Ogre::SceneManager *pSceneManager);
+  CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayListener);
   ~CMap();
 
   void loadMap(string sFilename);
@@ -151,6 +172,7 @@ private:
   void readLink(tinyxml2::XMLElement *pLink);
   void readEnemy(tinyxml2::XMLElement *pEnemy);
   void readObject(tinyxml2::XMLElement *pObject);
+  void readExit(tinyxml2::XMLElement *pExit);
 };
 
 #endif

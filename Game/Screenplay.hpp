@@ -4,6 +4,7 @@
 #include <tinyxml2.h>
 #include <OgreString.h>
 #include <CEGUI/String.h>
+#include "ScreenplayListener.hpp"
 
 class CMap;
 
@@ -51,12 +52,14 @@ class CLevel : public CScene {
 private:
   const Ogre::String m_sFilename;
   CMap *m_pMap;
+  CScreenplayListener *m_pScreenplayListener;
 
 public:
-  CLevel(unsigned int uiID, const Ogre::String &sFilename)
+  CLevel(unsigned int uiID, const Ogre::String &sFilename, CScreenplayListener *pScreenplayListener)
     : CScene(uiID, ST_LEVEL),
       m_sFilename(sFilename),
-      m_pMap(NULL) {
+      m_pMap(NULL),
+      m_pScreenplayListener(pScreenplayListener) {
   }
   virtual ~CLevel();
 
@@ -90,7 +93,7 @@ public:
   virtual void stop();
 };
 
-class CScreenplay {
+class CScreenplay : public CScreenplayListener {
 private:
   const Ogre::String m_sLevelDir;
 
@@ -105,6 +108,8 @@ public:
   ~CScreenplay();
 
   void loadAct(unsigned int uiActId, unsigned int uiSceneId = 1);
+  void keyForContinueInstructionsPressed();
+  void playerExitsMap();
 private:
   void parse(const Ogre::String &sFilename);
 };
