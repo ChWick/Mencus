@@ -71,8 +71,8 @@
 		<Unit filename="../Game/Object.hpp" />
 		<Unit filename="../Game/Player.cpp" />
 		<Unit filename="../Game/Player.hpp" />
-		<Unit filename="../Game/Sceenplay.cpp" />
-		<Unit filename="../Game/Sceenplay.hpp" />
+		<Unit filename="../Game/Screenplay.cpp" />
+		<Unit filename="../Game/Screenplay.hpp" />
 		<Unit filename="../Game/Shot.cpp" />
 		<Unit filename="../Game/Shot.hpp" />
 		<Unit filename="../Game/Sprite.cpp" />
@@ -89,6 +89,7 @@
 		<Unit filename="../Game/main.cpp" />
 		<Unit filename="../Game/ogre2d-main.cpp" />
 		<Unit filename="../Game/ogre2d-main.hpp" />
+		<Unit filename="../level/screenplay.xml" />
 		<Extensions>
 			<envvars />
 			<code_completion />

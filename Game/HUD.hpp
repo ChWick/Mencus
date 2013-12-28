@@ -25,6 +25,9 @@ public:
   void setMP(Ogre::Real fMP);
 
   void setCurrentWeapon(unsigned int uiWeaponId);
+
+  void show() {m_pHudRoot->setVisible(true);}
+  void hide() {m_pHudRoot->setVisible(false);}
 private:
   Ogre::ColourValue getHPColourmap() const;
   Ogre::ColourValue getMPColourmap() const;

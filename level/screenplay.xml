@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<screenplay>
+  <act id="1" dir="level1">
+    <scene id="1" type="level">
+      <level file="scene3.xml" />
+    </scene>
+  </act>
+</screenplay>

@@ -8,11 +8,11 @@
 #include "dependencies/OgreSdkUtil/SdkCameraMan.h"
 #include "dependencies/OgreSdkUtil/SdkTrays.h"
 
-class CMapManager;
+class CScreenplay;
 
 class CGame : public CInputListener, public Ogre::FrameListener, public Ogre::WindowEventListener, OgreBites::SdkTrayListener, public Ogre::Singleton<CGame> {
 private:
-  CMapManager *m_pMapManager;
+  CScreenplay *m_pScreenplay;
 
   CEGUI::Renderer* m_pCEGuiOgreRenderer;
   //! ImageCodec to use.  Set in subclass constructor, may be 0.

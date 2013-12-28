@@ -1,6 +1,11 @@
 #ifndef SCREENPLAY_HPP
 #define SCREENPLAY_HPP
 
+#include <tinyxml2.h>
+#include <OgreString.h>
+
+class CMap;
+
 class CScene {
 public:
   enum ESceneTypes {
@@ -29,12 +34,15 @@ public:
 class CLevel : public CScene {
 private:
   const Ogre::String m_sFilename;
+  CMap *m_pMap;
 
 public:
   CLevel(unsigned int uiID, const Ogre::String &sFilename)
     : CScene(uiID, ST_LEVEL),
-      m_sFilename(sFilemame) {
+      m_sFilename(sFilename),
+      m_pMap(NULL) {
   }
+  virtual ~CLevel();
 
   virtual void start();
   virtual void stop();
@@ -44,6 +52,7 @@ class CAct {
 private:
   const unsigned int m_uiID;
   const Ogre::String m_sDirectory;
+  std::map<unsigned int, CScene *> m_mapScenes;
 
 public:
   CAct(unsigned int uiID, const Ogre::String &sDirectory)
@@ -54,6 +63,12 @@ public:
     : m_uiID(src.m_uiID),
       m_sDirectory(src.m_sDirectory) {
   }
+  ~CAct();
+
+  void addScene(CScene *pScene) {m_mapScenes[pScene->getID()] = pScene;}
+
+  CScene *getScene(unsigned int id) {return m_mapScenes.at(id);}
+  CScene *operator[](unsigned int id) {return m_mapScenes[id];}
 
   virtual void start();
   virtual void stop();
@@ -61,9 +76,19 @@ public:
 
 class CScreenplay {
 private:
-  std::map<unsigned int, CAct> m_mapActs;
+  const Ogre::String m_sLevelDir;
+
+  std::map<unsigned int, CAct*> m_mapActs;
+
+  unsigned int m_uiCurrentAct;
+  unsigned int m_uiCurrentScene;
+
+  CScene *m_pOldScene;
 public:
   CScreenplay();
+  ~CScreenplay();
+
+  void loadAct(unsigned int uiActId, unsigned int uiSceneId = 1);
 private:
   void parse(const Ogre::String &sFilename);
 };

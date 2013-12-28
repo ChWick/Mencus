@@ -3,7 +3,7 @@
 #include <CEGUI/RendererModules/Ogre/ImageCodec.h>
 #include <CEGUI/RendererModules/Ogre/ResourceProvider.h>
 #include <OgreCodec.h>
-#include "MapManager.hpp"
+#include "Screenplay.hpp"
 #include "GUIManager.hpp"
 
 using namespace Ogre;
@@ -32,13 +32,13 @@ CGame::CGame(void)
     mCursorWasVisible(false),
     mShutDown(false),
     mKeyboard(0),
-    m_pMapManager(NULL) {
+    m_pScreenplay(NULL) {
 }
 //-------------------------------------------------------------------------------------
 CGame::~CGame(void) {
   if (mTrayMgr) delete mTrayMgr;
   if (mCameraMan) delete mCameraMan;
-  if (m_pMapManager) delete m_pMapManager;
+  if (m_pScreenplay) delete m_pScreenplay;
   if (CEGUI::System::getSingletonPtr()) {CEGUI::OgreRenderer::destroySystem();}
   if (CInputListenerManager::getSingletonPtr()) {delete CInputListenerManager::getSingletonPtr();}
   if (CGUIManager::getSingletonPtr()) {delete CGUIManager::getSingletonPtr();}
@@ -116,7 +116,7 @@ bool CGame::go(void)
   // choose scenemanager
   // Get the SceneManager, in this case a generic one
   //	mSceneMgr = mRoot->createSceneManager(ST_EXTERIOR_CLOSE, "MainSceneManager");
-  mSceneMgr = mRoot->createSceneManager(ST_GENERIC);
+  mSceneMgr = mRoot->createSceneManager(ST_GENERIC, "MainSceneManager");
   //mSceneMgr->addLodListener(new CTestLOD());
   //mSceneMgr->setShadowUseInfiniteFarPlane(false);
   //-------------------------------------------------------------------------------------
@@ -256,7 +256,7 @@ bool CGame::go(void)
 
     mRoot->addFrameListener(this);
     //-------------------------------------------------------------------------------------
-    m_pMapManager = new CMapManager(mSceneMgr);
+    m_pScreenplay = new CScreenplay();
 
     mRoot->startRendering();
 

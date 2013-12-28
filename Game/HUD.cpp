@@ -69,6 +69,8 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot)
   setHP(m_fHP);
   setMP(m_fMP);
   setCurrentWeapon(0);
+
+  hide();
 }
 void CHUD::update(Ogre::Real tpf) {
   m_fTimer += tpf;

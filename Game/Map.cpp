@@ -10,6 +10,7 @@
 #include "Explosion.hpp"
 #include "Enemy.hpp"
 #include "Object.hpp"
+#include "HUD.hpp"
 
 using namespace tinyxml2;
 
@@ -28,7 +29,8 @@ CMap::CMap(Ogre::SceneManager *pSceneManager)
   m_p2dManagerMap = new Ogre2dManager();
   m_p2dManagerMap->init(pSceneManager, Ogre::RENDER_QUEUE_BACKGROUND, true);
   Ogre::Root::getSingleton().addFrameListener(this);
-  loadMap("../level/level1/scene3.xml");
+
+  //loadMap("../level/level1/scene3.xml");
 
   CInputListenerManager::getSingleton().addInputListener(this);
 
@@ -36,8 +38,11 @@ CMap::CMap(Ogre::SceneManager *pSceneManager)
   m_pPlayer->setPosition(Ogre::Vector2(0, 2));
 
   new CDebugDrawer(this, m_p2dManagerMap);
+
+  CHUD::getSingleton().show();
 }
 CMap::~CMap() {
+  CHUD::getSingleton().hide();
   clearMap();
 
   if (CDebugDrawer::getSingletonPtr()) {delete CDebugDrawer::getSingletonPtr();}
