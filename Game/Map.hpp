@@ -23,7 +23,7 @@ class CExplosion;
 class CEnemy;
 class CObject;
 
-class CMap : Ogre::FrameListener, public CSpriteTransformPipeline, public CInputListener {
+class CMap : public CSpriteTransformPipeline, public CInputListener {
 private:
   enum EExitTypes {
     EXIT_REGION,

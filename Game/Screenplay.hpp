@@ -5,6 +5,7 @@
 #include <OgreString.h>
 #include <CEGUI/String.h>
 #include "ScreenplayListener.hpp"
+#include <OgreFrameListener.h>
 
 class CMap;
 
@@ -29,6 +30,8 @@ protected:
 public:
   virtual void start() = 0;
   virtual void stop() = 0;
+
+  virtual bool frameStarted(const Ogre::FrameEvent& evt) {return true;}
 
   unsigned int getID() const {return m_uiID;}
   ESceneTypes getType() const {return m_eSceneType;}
@@ -65,6 +68,7 @@ public:
 
   virtual void start();
   virtual void stop();
+  bool frameStarted(const Ogre::FrameEvent& evt);
 };
 
 class CAct {
@@ -93,7 +97,7 @@ public:
   virtual void stop();
 };
 
-class CScreenplay : public CScreenplayListener {
+class CScreenplay : public CScreenplayListener, public Ogre::FrameListener {
 private:
   const Ogre::String m_sLevelDir;
 
@@ -102,15 +106,25 @@ private:
   unsigned int m_uiCurrentAct;
   unsigned int m_uiCurrentScene;
 
+  unsigned int m_uiNextAct;
+  unsigned int m_uiNextScene;
+
+  CScene *m_pCurrentScene;
   CScene *m_pOldScene;
 public:
   CScreenplay();
   ~CScreenplay();
 
-  void loadAct(unsigned int uiActId, unsigned int uiSceneId = 1);
+  void setNextAct(unsigned int uiActId, unsigned int uiSceneId) {m_uiNextAct = uiActId; m_uiNextScene = uiSceneId;}
+
   void keyForContinueInstructionsPressed();
   void playerExitsMap();
+
+  bool frameStarted(const Ogre::FrameEvent& evt);
+  bool frameEnded(const Ogre::FrameEvent &evt);
 private:
+
+  void loadAct(unsigned int uiActId, unsigned int uiSceneId = 1);
   void parse(const Ogre::String &sFilename);
 };
 #endif // SCREENPLAY_HPP

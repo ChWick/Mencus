@@ -39,9 +39,9 @@ CGame::~CGame(void) {
   if (mTrayMgr) delete mTrayMgr;
   if (mCameraMan) delete mCameraMan;
   if (m_pScreenplay) delete m_pScreenplay;
+  if (CGUIManager::getSingletonPtr()) {delete CGUIManager::getSingletonPtr();}
   if (CEGUI::System::getSingletonPtr()) {CEGUI::OgreRenderer::destroySystem();}
   if (CInputListenerManager::getSingletonPtr()) {delete CInputListenerManager::getSingletonPtr();}
-  if (CGUIManager::getSingletonPtr()) {delete CGUIManager::getSingletonPtr();}
 
   //Remove ourself as a Window listener
   Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);

@@ -30,8 +30,6 @@ CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayLi
     m_pScreenplayListener(pScreenplayListener) {
   m_p2dManagerMap = new Ogre2dManager();
   m_p2dManagerMap->init(pSceneManager, Ogre::RENDER_QUEUE_BACKGROUND, true);
-  Ogre::Root::getSingleton().addFrameListener(this);
-
   //loadMap("../level/level1/scene3.xml");
 
   CInputListenerManager::getSingleton().addInputListener(this);
@@ -52,7 +50,6 @@ CMap::~CMap() {
   if (CDebugDrawer::getSingletonPtr()) {delete CDebugDrawer::getSingletonPtr();}
   if (m_pPlayer) {delete m_pPlayer; m_pPlayer = NULL;}
   CInputListenerManager::getSingleton().removeInputListener(this);
-  Ogre::Root::getSingleton().removeFrameListener(this);
   m_p2dManagerMap->end();
   delete m_p2dManagerMap;
 }

@@ -31,6 +31,9 @@ void CLevel::stop() {
     m_pMap = 0;
   }
 }
+bool CLevel::frameStarted(const Ogre::FrameEvent& evt) {
+  return m_pMap->frameStarted(evt);
+}
 
 
 CAct::~CAct() {
@@ -49,13 +52,18 @@ CScreenplay::CScreenplay()
   : m_sLevelDir("../level/"),
     m_uiCurrentAct(0),
     m_uiCurrentScene(0),
+    m_uiNextAct(0),
+    m_uiNextScene(0),
+    m_pCurrentScene(NULL),
     m_pOldScene(NULL) {
+  Ogre::Root::getSingleton().addFrameListener(this);
   CGUIInstructions::getSingleton().setScreenplayListener(this);
   parse("../level/screenplay.xml");
 
-  loadAct(1, 1);
+  setNextAct(1, 1);
 }
 CScreenplay::~CScreenplay() {
+  Ogre::Root::getSingleton().removeFrameListener(this);
   for (auto &p : m_mapActs) {
     delete p.second;
   }
@@ -76,7 +84,7 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   case CScene::ST_LEVEL:
     break;
   }
-
+  m_pCurrentScene = pScene;
   m_pOldScene = pScene;
 }
 void CScreenplay::parse(const Ogre::String &sFilename) {
@@ -124,8 +132,22 @@ void CScreenplay::parse(const Ogre::String &sFilename) {
     m_mapActs[id] = pAct;
   }
 }
+bool CScreenplay::frameStarted(const Ogre::FrameEvent& evt) {
+  if (m_pCurrentScene) {
+    m_pCurrentScene->frameStarted(evt);
+  }
+  return true;
+}
+bool CScreenplay::frameEnded(const Ogre::FrameEvent &evt) {
+  if (m_uiCurrentAct != m_uiNextAct || m_uiCurrentScene != m_uiNextScene) {
+    loadAct(m_uiNextAct, m_uiNextScene);
+  }
+
+  return true;
+}
 void CScreenplay::playerExitsMap() {
+  m_uiNextScene = m_uiNextAct = 1;
 }
 void CScreenplay::keyForContinueInstructionsPressed() {
-    loadAct(m_uiCurrentAct, m_uiCurrentScene + 1);
+    m_uiNextScene++;
 }
