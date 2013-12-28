@@ -3,6 +3,7 @@
 
 #include <tinyxml2.h>
 #include <OgreString.h>
+#include <CEGUI/String.h>
 
 class CMap;
 
@@ -10,6 +11,7 @@ class CScene {
 public:
   enum ESceneTypes {
     ST_LEVEL,
+    ST_INSTRUCTION,
 
     ST_COUNT
   };
@@ -29,6 +31,20 @@ public:
 
   unsigned int getID() const {return m_uiID;}
   ESceneTypes getType() const {return m_eSceneType;}
+};
+
+class CInstructions : public CScene {
+private:
+  const CEGUI::String m_sText;
+
+public:
+  CInstructions(unsigned int uiID, const CEGUI::String &sText)
+    : CScene(uiID, ST_INSTRUCTION),
+      m_sText(sText) {
+    }
+
+    virtual void start();
+    virtual void stop();
 };
 
 class CLevel : public CScene {

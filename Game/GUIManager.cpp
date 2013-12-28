@@ -1,5 +1,6 @@
 #include "GUIManager.hpp"
 #include "HUD.hpp"
+#include "GUIInstructions.hpp"
 #include <CEGUI/CEGUI.h>
 
 template<> CGUIManager* Ogre::Singleton<CGUIManager>::msSingleton = 0;
@@ -20,9 +21,11 @@ CGUIManager::CGUIManager() {
   CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(guiRoot);
 
   new CHUD(guiRoot);
+  new CGUIInstructions(guiRoot);
 }
 CGUIManager::~CGUIManager() {
   delete CHUD::getSingletonPtr();
+  delete CGUIInstructions::getSingletonPtr();
 }
 void CGUIManager::update(Ogre::Real tpf) {
   CHUD::getSingleton().update(tpf);

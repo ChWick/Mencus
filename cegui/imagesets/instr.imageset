@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Imageset version="2" name="instructions" imagefile="instr_scroll.jpg" autoScaled="vertical" >
+    <Image name="full_image" xPos="0" yPos="0" width="1024" height="768" />
+</Imageset>

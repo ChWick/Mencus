@@ -2,10 +2,20 @@
 #include <OgreException.h>
 #include <OgreRoot.h>
 #include "Map.hpp"
+#include <fstream>
+#include "GUIInstructions.hpp"
 
 using namespace tinyxml2;
 
- CLevel::~CLevel() {
+void CInstructions::start() {
+  CGUIInstructions::getSingleton().setText(m_sText);
+  CGUIInstructions::getSingleton().show();
+}
+void CInstructions::stop() {
+  CGUIInstructions::getSingleton().hide();
+}
+
+CLevel::~CLevel() {
   if (m_pMap) {
     delete m_pMap;
     m_pMap = NULL;
@@ -92,6 +102,20 @@ void CScreenplay::parse(const Ogre::String &sFilename) {
         XMLElement *pLevelElem = pSceneElem->FirstChildElement("level");
         Ogre::String file = pLevelElem->Attribute("file");
         pScene = new CLevel(id, m_sLevelDir + dir + "/" + file);
+      }
+      else if (type == "instructions") {
+        XMLElement *pInstructionsElem = pSceneElem->FirstChildElement("instructions");
+        Ogre::String sFile = pInstructionsElem->Attribute("file");
+        std::ifstream file(m_sLevelDir + dir + "/" + sFile);
+        if (!file) {throw Ogre::Exception(Ogre::Exception::ERR_FILE_NOT_FOUND, "'" + m_sLevelDir + dir + "/" + sFile + "' was not found.", __FILE__);}
+
+        file.seekg(0,std::ios::end);
+        std::streampos length = file.tellg();
+        file.seekg(0,std::ios::beg);
+        std::vector<CEGUI::utf8> buffer(length);
+        file.read((char*)(&buffer[0]), length);
+
+        pScene = new CInstructions(id, &buffer[0]);
       }
       pAct->addScene(pScene);
     }
