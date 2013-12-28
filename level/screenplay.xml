@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <screenplay>
   <act id="1" dir="level1">
-    <scene id="1" type="level">
+    <scene id="1" type="instructions">
+      <instructions file="instructions.txt"/>
+    </scene>
+    <scene id="2" type="level">
       <level file="scene3.xml" />
     </scene>
   </act>
