@@ -108,9 +108,13 @@ void CVideo::nextPart() {
   }
 }
 bool CVideo::frameStarted(const Ogre::FrameEvent& evt) {
-  m_vParts[m_iCurrentPart]->update(evt.timeSinceLastFrame);
+  if (m_iCurrentPart == m_vParts.size()) {return true;}
+
   if (m_vParts[m_iCurrentPart]->isFinished()) {
     nextPart();
+  }
+  else {
+    m_vParts[m_iCurrentPart]->update(evt.timeSinceLastFrame);
   }
   return true;
 }

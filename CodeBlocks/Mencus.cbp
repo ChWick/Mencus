@@ -89,6 +89,8 @@
 		<Unit filename="../Game/Tile.hpp" />
 		<Unit filename="../Game/Util.cpp" />
 		<Unit filename="../Game/Util.hpp" />
+		<Unit filename="../Game/Video.cpp" />
+		<Unit filename="../Game/Video.hpp" />
 		<Unit filename="../Game/main.cpp" />
 		<Unit filename="../Game/ogre2d-main.cpp" />
 		<Unit filename="../Game/ogre2d-main.hpp" />
