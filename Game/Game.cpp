@@ -31,8 +31,8 @@ CGame::CGame(void)
     mDetailsPanel(0),
     mCursorWasVisible(false),
     mShutDown(false),
-    mKeyboard(0),
-    m_pScreenplay(NULL) {
+    m_pScreenplay(NULL),
+    mKeyboard(0) {
 }
 //-------------------------------------------------------------------------------------
 CGame::~CGame(void) {

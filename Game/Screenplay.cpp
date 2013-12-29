@@ -4,6 +4,7 @@
 #include "Map.hpp"
 #include <fstream>
 #include "GUIInstructions.hpp"
+#include "Video.hpp"
 
 using namespace tinyxml2;
 
@@ -83,6 +84,12 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   switch (pScene->getType()) {
   case CScene::ST_LEVEL:
     break;
+  case CScene::ST_INSTRUCTION:
+    break;
+  case CScene::ST_VIDEO:
+    break;
+  default:
+    break;
   }
   m_pCurrentScene = pScene;
   m_pOldScene = pScene;
@@ -126,6 +133,38 @@ void CScreenplay::parse(const Ogre::String &sFilename) {
 
         pScene = new CInstructions(id, &buffer[0]);
       }
+      else if (type == "video") {
+        XMLElement *pVideoElem = pSceneElem->FirstChildElement("video");
+        CVideo *pVideo = new CVideo(id, this);
+
+        for (XMLElement *pPartElem = pVideoElem->FirstChildElement(); pPartElem; pPartElem = pPartElem->NextSiblingElement()) {
+          Ogre::String sAudioFile = pPartElem->Attribute("audio");
+
+          CVideo::CPart *pPart = new CVideo::CPart(sAudioFile);
+          pVideo->addPart(pPart);
+
+          for (XMLElement *pPictureElem = pPartElem->FirstChildElement(); pPictureElem; pPictureElem = pPictureElem->NextSiblingElement()) {
+            Ogre::String sFile = pPictureElem->Attribute("file");
+            Ogre::Real fDuration = pPictureElem->FloatAttribute("duration");
+            CVideo::CPicture *pPicture = new CVideo::CPicture(sFile, fDuration, pVideo->getSpriteManager());
+            pPart->addPicture(pPicture);
+            for (XMLElement *pChildElem = pPictureElem->FirstChildElement(); pChildElem; pChildElem = pChildElem->NextSiblingElement()) {
+              if (std::string(pChildElem->Value()) == "effect") {
+                Ogre::String type(pChildElem->Attribute("type"));
+                if (type == "scale") {
+                  Ogre::Vector2 vCenter(Ogre::StringConverter::parseVector2(pChildElem->Attribute("center")));
+                  Ogre::Vector2 vStartScale(Ogre::StringConverter::parseVector2(pChildElem->Attribute("startScale")));
+                  Ogre::Vector2 vEndScale(Ogre::StringConverter::parseVector2(pChildElem->Attribute("endScale")));
+
+                  pPicture->addEffect(new CVideo::CPicture::CEffectScale(vCenter, vStartScale, vEndScale));
+                }
+              }
+            }
+          }
+        }
+
+        pScene = pVideo;
+      }
       pAct->addScene(pScene);
     }
 
@@ -149,5 +188,8 @@ void CScreenplay::playerExitsMap() {
   m_uiNextScene = m_uiNextAct = 1;
 }
 void CScreenplay::keyForContinueInstructionsPressed() {
-    m_uiNextScene++;
+  m_uiNextScene++;
+}
+void CScreenplay::videoFinished() {
+  m_uiNextScene++;
 }

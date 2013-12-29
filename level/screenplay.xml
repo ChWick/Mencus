@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <screenplay>
   <act id="1" dir="level1">
-    <scene id="1" type="instructions">
+    <scene id="1" type="video">
+      <video>
+        <part audio="audio_1.mp3">
+          <picture file="castle_1.jpg" duration="5">
+            <effect type="scale" center="0, 0" startScale="1, 1" endScale="0.5, 0.5"/>
+          </picture>
+          <picture file="castle_2.jpg" duration="1">
+            <effect type="scale" center="0, 0" startScale="1, 1" endScale="0.5, 0.5"/>
+          </picture>
+          <picture file="castle_3.jpg" duration="1">
+          </picture>
+        </part>
+      </video>
+    </scene>
+    <scene id="2" type="instructions">
       <instructions file="instructions.txt"/>
     </scene>
-    <scene id="2" type="level">
+    <scene id="3" type="level">
       <level file="scene3.xml" />
     </scene>
   </act>

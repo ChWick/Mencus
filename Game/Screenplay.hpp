@@ -14,6 +14,7 @@ public:
   enum ESceneTypes {
     ST_LEVEL,
     ST_INSTRUCTION,
+    ST_VIDEO,
 
     ST_COUNT
   };
@@ -28,6 +29,8 @@ protected:
   }
 
 public:
+  virtual ~CScene() {}
+
   virtual void start() = 0;
   virtual void stop() = 0;
 
@@ -86,7 +89,7 @@ public:
     : m_uiID(src.m_uiID),
       m_sDirectory(src.m_sDirectory) {
   }
-  ~CAct();
+  virtual ~CAct();
 
   void addScene(CScene *pScene) {m_mapScenes[pScene->getID()] = pScene;}
 
@@ -119,6 +122,7 @@ public:
 
   void keyForContinueInstructionsPressed();
   void playerExitsMap();
+  void videoFinished();
 
   bool frameStarted(const Ogre::FrameEvent& evt);
   bool frameEnded(const Ogre::FrameEvent &evt);

@@ -29,19 +29,19 @@ public:
     :
     m_vTexturePosTopLeft(vTexturePosTopLeft),
     m_vTexturePosBottomRight(vTexturePosBottomRight),
-    m_pTexture(pTexture),
     m_vSpriteOffset(vSpriteOffset),
-    m_vSpriteScale(vSpriteScale) {
+    m_vSpriteScale(vSpriteScale),
+    m_pTexture(pTexture) {
   }
   CSpriteTexture(const CSpriteTexture &src)
   :
   m_vTexturePosTopLeft(src.m_vTexturePosTopLeft),
   m_vTexturePosBottomRight(src.m_vTexturePosBottomRight),
-  m_pTexture(src.m_pTexture),
   m_vSpriteOffset(src.m_vSpriteOffset),
-  m_vSpriteScale(src.m_vSpriteScale) {
+  m_vSpriteScale(src.m_vSpriteScale),
+  m_pTexture(src.m_pTexture) {
   }
-  
+
   const CSpriteTexture &operator=(const CSpriteTexture &src) {
     m_vTexturePosTopLeft = src.m_vTexturePosTopLeft;
     m_vTexturePosBottomRight = src.m_vTexturePosBottomRight;
@@ -60,11 +60,11 @@ public:
 
   void setTexturePosTopLeft(const Ogre::Vector2 &vPos) {m_vTexturePosTopLeft = vPos;}
   void setTexturePosBottomRight(const Ogre::Vector2 &vPosition) {m_vTexturePosBottomRight = vPosition;}
-  void setTexturePosRight(const Ogre::Real x) {m_vTexturePosBottomRight.x = x;} 
+  void setTexturePosRight(const Ogre::Real x) {m_vTexturePosBottomRight.x = x;}
   void setTexture(Ogre::TexturePtr pTexture) {m_pTexture = pTexture;}
   void setSpriteOffset(const Ogre::Vector2 &vOffset) {m_vSpriteOffset = vOffset;}
   void setSpriteScale(const Ogre::Vector2 &vScale) {m_vSpriteScale = vScale;}
-  
+
   void mirror(EMirrorTypes mt) {
     switch (mt) {
     case MIRROR_Y:
@@ -76,6 +76,8 @@ public:
     case MIRROR_XY:
       swap(m_vTexturePosTopLeft.x, m_vTexturePosBottomRight.x);
       swap(m_vTexturePosTopLeft.y, m_vTexturePosBottomRight.y);
+      break;
+    default:
       break;
     }
   }

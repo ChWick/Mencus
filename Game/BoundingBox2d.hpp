@@ -31,7 +31,7 @@ public:
 
   const Ogre::Vector2 &getPosition() const {return m_vPosition;}
   const Ogre::Vector2 &getSize() const {return m_vSize;}
-  const Ogre::Vector2 &getCenter() const {return m_vPosition + m_vSize / 2;}
+  Ogre::Vector2 getCenter() const {return m_vPosition + m_vSize / 2;}
 
   void setPosition(const Ogre::Vector2 &vPosition) {m_vPosition = vPosition;}
   void setSize(const Ogre::Vector2 &vSize) {m_vSize = vSize;}
