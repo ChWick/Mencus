@@ -8,8 +8,9 @@
 #include "Sprite.hpp"
 #include "SpriteTransformPipeline.hpp"
 #include "ogre2d-main.hpp"
+#include "InputListener.hpp"
 
-class CVideo : public CScene {
+class CVideo : public CScene, public CInputListener {
 public:
   class CPicture {
   public:
@@ -44,9 +45,11 @@ public:
     Ogre::Vector2 m_vDrawSize;
   public:
     CPicture(const Ogre::String &sFile, const Ogre::Real fDuration, Ogre2dManager *p2dManager);
-    ~CPicture() {
-      for (auto pEffect : m_vEffects) {delete pEffect;}
-    }
+    ~CPicture();
+
+    void start();
+    void stop();
+
     void addEffect(CEffect *pEffect) {m_vEffects.push_back(pEffect);}
     Ogre::Real getDuration() const {return m_fDuration;}
     void update(Ogre::Real tpf, Ogre::Real fPassedTime);
@@ -59,27 +62,17 @@ public:
     std::vector<CPicture*> m_vPictures;
     size_t m_iCurrentPicture;
     Ogre::Real m_fTimer;
+    CVideo *m_pVideo;
   public:
-    CPart(const Ogre::String &sAudioFile)
-      : m_sAudioFile(sAudioFile), m_iCurrentPicture(0), m_fTimer(0) {
-    }
-    ~CPart() {
-      for (auto pPicture : m_vPictures) {delete pPicture;}
-    }
-    void addPicture(CPicture *pPicture) {m_vPictures.push_back(pPicture);}
-    void update(Ogre::Real tpf) {
-      m_fTimer += tpf;
-      m_vPictures[m_iCurrentPicture]->update(tpf, m_fTimer);
+    CPart(CVideo *pVideo, const Ogre::String &sAudioFile);
+    ~CPart();
 
-      if (m_fTimer >= m_vPictures[m_iCurrentPicture]->getDuration()) {
-        m_iCurrentPicture++;
-        m_fTimer = 0;
-      }
-    }
+    void addPicture(CPicture *pPicture) {m_vPictures.push_back(pPicture);}
+    void update(Ogre::Real tpf);
     bool isFinished() const {return m_iCurrentPicture == m_vPictures.size();}
 
-    void start() {m_iCurrentPicture = 0; m_fTimer = 0;}
-    void stop() {}
+    void start();
+    void stop();
   };
 private:
   std::vector<CPart*> m_vParts;
@@ -96,7 +89,10 @@ public:
   virtual void start();
   virtual void stop();
 
+  void nextPart();
   virtual bool frameStarted(const Ogre::FrameEvent& evt);
+
+  bool keyPressed( const OIS::KeyEvent &arg );
 
   Ogre2dManager *getSpriteManager() {return &m_SpriteManager;}
 };

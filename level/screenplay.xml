@@ -5,12 +5,21 @@
       <video>
         <part audio="audio_1.mp3">
           <picture file="castle_1.jpg" duration="5">
-            <effect type="scale" center="0, 0" startScale="1, 1" endScale="0.5, 0.5"/>
+            <effect type="scale" center="-0.4, 0" startScale="1, 1" endScale="4, 4" scaling="quadratic"/>
           </picture>
-          <picture file="castle_2.jpg" duration="1">
-            <effect type="scale" center="0, 0" startScale="1, 1" endScale="0.5, 0.5"/>
+          <picture file="castle_2.jpg" duration="3">
+            <effect type="scale" center="-0.04, 0" startScale="1, 1" endScale="1.5, 1.5" scaling="linear"/>
           </picture>
-          <picture file="castle_3.jpg" duration="1">
+          <picture file="castle_3.jpg" duration="4">
+            <effect type="scale" center="0, 0" startScale="1, 1" endScale="2, 2" scaling="quadratic"/>
+          </picture>
+          <picture file="castle_4.jpg" duration="6">
+            <effect type="scale" center="0, 0" startScale="1, 1" endScale="1.1, 1.1"/>
+          </picture>
+        </part>
+        <part audio="audio_1.mp3">
+          <picture file="castle_5.jpg" duration="10">
+
           </picture>
         </part>
       </video>

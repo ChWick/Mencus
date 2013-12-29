@@ -140,7 +140,7 @@ void CScreenplay::parse(const Ogre::String &sFilename) {
         for (XMLElement *pPartElem = pVideoElem->FirstChildElement(); pPartElem; pPartElem = pPartElem->NextSiblingElement()) {
           Ogre::String sAudioFile = pPartElem->Attribute("audio");
 
-          CVideo::CPart *pPart = new CVideo::CPart(sAudioFile);
+          CVideo::CPart *pPart = new CVideo::CPart(pVideo, sAudioFile);
           pVideo->addPart(pPart);
 
           for (XMLElement *pPictureElem = pPartElem->FirstChildElement(); pPictureElem; pPictureElem = pPictureElem->NextSiblingElement()) {
