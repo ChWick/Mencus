@@ -35,18 +35,13 @@ public:
     const Ogre::String m_sFile;
     CSprite m_Sprite;
   public:
-    CPicture(const Ogre::String &sFile, const Ogre::Real fDuration, Ogre2dManager *p2dManager)
-      : m_fDuration(fDuration), m_sFile(sFile), m_Sprite(&CBackgroundSpriteTransformPipeline::INSTANCE, p2dManager, Ogre::Vector2(-1, -1), Ogre::Vector2(2, 2)) {
-    }
+    CPicture(const Ogre::String &sFile, const Ogre::Real fDuration, Ogre2dManager *p2dManager);
     ~CPicture() {
       for (auto pEffect : m_vEffects) {delete pEffect;}
     }
     void addEffect(CEffect *pEffect) {m_vEffects.push_back(pEffect);}
     Ogre::Real getDuration() const {return m_fDuration;}
-    void update(Ogre::Real tpf, Ogre::Real fPassedTime) {
-      for (auto pEffect : m_vEffects) {pEffect->update(tpf, fPassedTime / m_fDuration);}
-    }
-
+    void update(Ogre::Real tpf, Ogre::Real fPassedTime);
   };
   class CPart {
   private:
@@ -83,9 +78,7 @@ private:
   Ogre2dManager m_SpriteManager;
 public:
   CVideo(unsigned int uiID, CScreenplayListener *pListener);
-  ~CVideo() {
-    for (auto pPart : m_vParts) {delete pPart;}
-  }
+  ~CVideo();
 
   void addPart(CPart *pPart) {m_vParts.push_back(pPart);}
 

@@ -146,7 +146,7 @@ void CScreenplay::parse(const Ogre::String &sFilename) {
           for (XMLElement *pPictureElem = pPartElem->FirstChildElement(); pPictureElem; pPictureElem = pPictureElem->NextSiblingElement()) {
             Ogre::String sFile = pPictureElem->Attribute("file");
             Ogre::Real fDuration = pPictureElem->FloatAttribute("duration");
-            CVideo::CPicture *pPicture = new CVideo::CPicture(sFile, fDuration, pVideo->getSpriteManager());
+            CVideo::CPicture *pPicture = new CVideo::CPicture(m_sLevelDir + dir + "/" + sFile, fDuration, pVideo->getSpriteManager());
             pPart->addPicture(pPicture);
             for (XMLElement *pChildElem = pPictureElem->FirstChildElement(); pChildElem; pChildElem = pChildElem->NextSiblingElement()) {
               if (std::string(pChildElem->Value()) == "effect") {
