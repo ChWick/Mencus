@@ -1,8 +1,20 @@
 #include "Video.hpp"
 #include "OgreRoot.h"
 
-void CVideo::CPicture::CEffectScale::update(Ogre::Real tpf, Ogre::Real fTimePos) {
+void CVideo::CPicture::CEffectScale::update(Ogre::Real tpf, Ogre::Real fTimePos, CPicture *pPicture) {
+  Ogre::Real fScaleFactor = fTimePos;
+  switch (m_eScaleType) {
+  case ST_LEVEL:
+    break;
+  case ST_QUADRATIC:
+    fScaleFactor *= fTimePos;
+    break;
+  }
+  Ogre::Vector2 vScale(m_vStartScale + (m_vEndScale - m_vStartScale) * fScaleFactor);
 
+  pPicture->m_vDrawSize *= vScale;
+  pPicture->m_vDrawPos *= vScale;
+  pPicture->m_vDrawPos -= m_vCenter * fScaleFactor;
 }
 
 
@@ -13,9 +25,13 @@ CVideo::CPicture::CPicture(const Ogre::String &sFile, const Ogre::Real fDuration
   m_Sprite.setTexture(sFile);
 }
 void CVideo::CPicture::update(Ogre::Real tpf, Ogre::Real fPassedTime) {
+  m_vDrawPos = Ogre::Vector2(-1, -1);
+  m_vDrawSize = Ogre::Vector2(2, 2);
   for (auto pEffect : m_vEffects) {
-      pEffect->update(tpf, fPassedTime / m_fDuration);
+      pEffect->update(tpf, fPassedTime / m_fDuration, this);
   }
+  m_Sprite.setPosition(m_vDrawPos);
+  m_Sprite.setSize(m_vDrawSize);
   m_Sprite.update(tpf);
 }
 

@@ -16,24 +16,32 @@ public:
     class CEffect {
     public:
       virtual ~CEffect() {}
-      virtual void update(Ogre::Real tpf, Ogre::Real fTimePos) = 0;
+      virtual void update(Ogre::Real tpf, Ogre::Real fTimePos, CPicture *pPicture) = 0;
     };
     class CEffectScale : public CEffect {
+    public:
+      enum EScaleType {
+        ST_LINEAR,
+        ST_QUADRATIC,
+      };
     private:
       const Ogre::Vector2 m_vCenter;
       const Ogre::Vector2 m_vStartScale;
       const Ogre::Vector2 m_vEndScale;
+      EScaleType m_eScaleType;
     public:
-      CEffectScale(const Ogre::Vector2 &vCenter, const Ogre::Vector2 &vStartScale, const Ogre::Vector2 &vEndScale)
-        : m_vCenter(vCenter), m_vStartScale(vStartScale), m_vEndScale(vEndScale) {
+      CEffectScale(const Ogre::Vector2 &vCenter, const Ogre::Vector2 &vStartScale, const Ogre::Vector2 &vEndScale, EScaleType eScaleType)
+        : m_vCenter(vCenter), m_vStartScale(vStartScale), m_vEndScale(vEndScale), m_eScaleType(eScaleType) {
       }
-      virtual void update(Ogre::Real tpf, Ogre::Real fTimePos);
+      virtual void update(Ogre::Real tpf, Ogre::Real fTimePos, CPicture *pPicture);
     };
   private:
     std::vector<CEffect*> m_vEffects;
     const Ogre::Real m_fDuration;
     const Ogre::String m_sFile;
     CSprite m_Sprite;
+    Ogre::Vector2 m_vDrawPos;
+    Ogre::Vector2 m_vDrawSize;
   public:
     CPicture(const Ogre::String &sFile, const Ogre::Real fDuration, Ogre2dManager *p2dManager);
     ~CPicture() {
@@ -42,6 +50,8 @@ public:
     void addEffect(CEffect *pEffect) {m_vEffects.push_back(pEffect);}
     Ogre::Real getDuration() const {return m_fDuration;}
     void update(Ogre::Real tpf, Ogre::Real fPassedTime);
+
+    friend CEffectScale;
   };
   class CPart {
   private:

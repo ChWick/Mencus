@@ -155,8 +155,21 @@ void CScreenplay::parse(const Ogre::String &sFilename) {
                   Ogre::Vector2 vCenter(Ogre::StringConverter::parseVector2(pChildElem->Attribute("center")));
                   Ogre::Vector2 vStartScale(Ogre::StringConverter::parseVector2(pChildElem->Attribute("startScale")));
                   Ogre::Vector2 vEndScale(Ogre::StringConverter::parseVector2(pChildElem->Attribute("endScale")));
+                  CVideo::CPicture::CEffectScale::EScaleType eScaleType = CVideo::CPicture::CEffectScale::ST_LINEAR;
+                  if (pChildElem->Attribute("scaling")) {
+                    Ogre::String sScaling = pChildElem->Attribute("scaling");
+                    if (sScaling == "linear") {
+                      eScaleType = CVideo::CPicture::CEffectScale::ST_LINEAR;
+                    }
+                    else if (sScaling == "quadratic") {
+                      eScaleType = CVideo::CPicture::CEffectScale::ST_QUADRATIC;
+                    }
+                    else {
+                      throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, sScaling + " is unknown as a scaling type!", __FILE__);
+                    }
+                  }
 
-                  pPicture->addEffect(new CVideo::CPicture::CEffectScale(vCenter, vStartScale, vEndScale));
+                  pPicture->addEffect(new CVideo::CPicture::CEffectScale(vCenter, vStartScale, vEndScale, eScaleType));
                 }
               }
             }
