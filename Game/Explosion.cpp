@@ -42,7 +42,8 @@ CExplosion::CExplosion(CMap *pMap, const Ogre::Vector2 &vCenter, EExplosionTypes
     setupAnimation(0, "bolt_explosion", 5, eMirrorType, &getPlayerTexturePath);
   }
   else if (m_eExplosionType == ET_BOMB) {
-    setupAnimation(0, "bomb_explosion", 7, eMirrorType, &getBombTexture);
+    m_vPosition += Ogre::Vector2(0, 0.4);
+    setupAnimation(0, "bomb_explosion", 14, eMirrorType, &getBombTexture);
   }
   else if (m_eExplosionType == ET_GREEN_MONSTER) {
     setupAnimation(0, "explosion", 7, eMirrorType, &getEnemyTexturePath<1>);

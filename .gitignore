@@ -48,3 +48,4 @@ cmake_install.cmake
 cotire*
 CMakeCache.txt
 *.blend[0-9]
+blendcache_*
