@@ -13,6 +13,7 @@ public:
     OT_MANA_POTION,
     OT_KEY,
     OT_SCRATCH,
+    OT_TORCH,
 
     OT_COUNT
   };

@@ -19,5 +19,6 @@ std::string getPlayerTexturePath(std::string sName, int index = -1);
 std::string getTileTexturePath(unsigned int uiTileID);
 std::string getBackgroundTexturePath(std::string sName);
 std::string getOtherObjectsTexturePath(std::string sName);
+std::string getTorchTexturePath(std::string sName, int index = -1);
 
 #endif

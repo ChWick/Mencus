@@ -39,6 +39,9 @@ CObject::CObject(CMap &map,
   case OT_SCRATCH:
     addTextureToCurrentAnimationSequence(getOtherObjectsTexturePath("scratch"));
     break;
+  case OT_TORCH:
+    setupAnimation(0, "torch1", 14, CSpriteTexture::MIRROR_NONE, &getTorchTexturePath);
+    break;
   default:
     throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Object type '" + Ogre::StringConverter::toString(m_eObjectType) + "' is unknown!", __FILE__);
     break;

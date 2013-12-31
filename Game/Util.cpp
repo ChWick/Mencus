@@ -35,3 +35,9 @@ std::string getBackgroundTexturePath(std::string sName) {
 std::string getOtherObjectsTexturePath(std::string sName) {
   return "../gfx/objects/other/" + sName + ".png";
 }
+std::string getTorchTexturePath(std::string sName, int index) {
+  if (index < 0) {
+    return "../gfx/objects/torch/" + sName + ".png";
+  }
+  return "../gfx/objects/torch/" + sName + "_" + Ogre::StringConverter::toString(index) + ".png";
+}
