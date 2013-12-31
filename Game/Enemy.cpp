@@ -151,6 +151,8 @@ void CEnemy::setup() {
   init(ENEMY_SPEED[m_eEnemyType], AS_COUNT);
   switch (m_eEnemyType) {
   case ET_GREEN_MONSTER:
+    m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.1, 0));
+    m_bbRelativeBoundingBox.setSize(Ogre::Vector2(0.8, 0.9));
     setDefaultGetPath(&getEnemyTexturePath<1>);
     setupAnimation(AS_WALK_LEFT, "walk_right", 4, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", 4);
