@@ -37,8 +37,8 @@ int convertEnemyId(int id) {
 }
 int convertObjectId(int id) {
   if (id == 3) {return 0;}
-  if (id == 4) {return 1;}
-  if (id == 5) {return 2;}
+  if (id == 5) {return 1;}
+  if (id == 6) {return 2;}
   return id;
 }
 
