@@ -298,7 +298,7 @@ int main(int argc, const char* argv[]) {
   pMapElem->InsertEndChild(pETsElem);
 
   for (int i = 0; i < endangeredTilesCount; i++) {
-    XMLElement *pETElem = doc.NewElement("endangeredTilee");
+    XMLElement *pETElem = doc.NewElement("endangeredTile");
     pETsElem->InsertEndChild(pETElem);
 
     readLine(inputfile, buffer);
