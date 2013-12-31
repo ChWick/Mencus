@@ -86,6 +86,8 @@ public:
   CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager);
   ~CPlayer();
 
+  void startup(const Ogre::Vector2 &vPosition, Ogre::Real fDirection);
+
   virtual void update(Ogre::Real tpf);
 
   virtual bool keyPressed( const OIS::KeyEvent &arg );

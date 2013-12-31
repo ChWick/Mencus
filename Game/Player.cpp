@@ -63,6 +63,10 @@ CPlayer::~CPlayer() {
   delete m_pThrowStrengthIndicator;
   CInputListenerManager::getSingleton().removeInputListener(this);
 }
+void CPlayer::startup(const Ogre::Vector2 &vPosition, Ogre::Real fDirection) {
+  setPosition(vPosition);
+  m_eLastDirection = (fDirection > 0) ? LD_RIGHT : LD_LEFT;
+}
 void CPlayer::setupAnimations() {
   setDefaultGetPath(&getPlayerTexturePath);
   setupAnimation(ANIM_WALK_RIGHT, "walk_right", 4);

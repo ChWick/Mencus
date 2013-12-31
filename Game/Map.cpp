@@ -158,6 +158,9 @@ void CMap::loadMap(string sFilename) {
     else if (std::string(pElement->Value()) == "exit") {
       readExit(pElement);
     }
+    else if (std::string(pElement->Value()) == "player") {
+      readPlayer(pElement);
+    }
   }
 
 
@@ -510,6 +513,11 @@ void CMap::readExit(XMLElement *pExitElem) {
                                     pExitElem->FloatAttribute("sizey")));
     m_pExit = new CExit(EXIT_REGION, bb);
   }
+}
+void CMap::readPlayer(XMLElement *pPlayerElem) {
+  m_pPlayer->startup(Ogre::Vector2(pPlayerElem->FloatAttribute("posx"),
+                                   pPlayerElem->FloatAttribute("posy")),
+                     pPlayerElem->FloatAttribute("direction"));
 }
 bool CMap::CExit::isInExit(CPlayer *pPlayer) {
   switch (m_eExitType) {

@@ -173,6 +173,7 @@ private:
   void readEnemy(tinyxml2::XMLElement *pEnemy);
   void readObject(tinyxml2::XMLElement *pObject);
   void readExit(tinyxml2::XMLElement *pExit);
+  void readPlayer(tinyxml2::XMLElement *pPlayerElem);
 };
 
 #endif
