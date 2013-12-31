@@ -5,8 +5,8 @@
 
 const Ogre::Vector2 OBJECT_SIZES[CObject::OT_COUNT] = {
   Ogre::Vector2(0.5, 0.5),
-  Ogre::Vector2(1, 1),
-  Ogre::Vector2(1, 1)
+  Ogre::Vector2(0.5, 0.5),
+  Ogre::Vector2(0.5, 0.5)
 };
 
 CObject::CObject(CMap &map,
