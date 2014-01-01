@@ -22,6 +22,16 @@ const float OBJECT_HEIGHTS[] = {
   1,
   1
 };
+const float SWITCH_HEIGHTS[] = {
+  0.25,
+  1
+};
+const float PLAYER_HEIGHT = 2;
+const float ENEMY_HEIGHTS[] = {
+  1,
+  2,
+  2
+};
 
 float toNewX(int x) {
   return static_cast<float>(x) / 32.f;
@@ -35,7 +45,13 @@ int toNewTileY(int y) {
 int toDirection(int i) {
   return (i == 1) ? 1 : -1;
 }
-string toBool(const string &s) {
+string toBool(const string &s, bool invert = false) {
+  if (invert) {
+    if (s == "0") {
+      return "true";
+    }
+    return "false";
+  }
   if (s == "1") {
     return "true";
   }
@@ -189,7 +205,7 @@ int main(int argc, const char* argv[]) {
   readLine(inputfile, buffer);
   split(splitted, buffer, is_any_of(" \r\n\t"), token_compress_on);
   pPlayerElem->SetAttribute("posx", toNewX(atoi(splitted[1].c_str())));
-  pPlayerElem->SetAttribute("posy", toNewY(atoi(splitted[2].c_str())));
+  pPlayerElem->SetAttribute("posy", toNewY(atoi(splitted[2].c_str())) - PLAYER_HEIGHT);
   pPlayerElem->SetAttribute("direction", toDirection(atoi(splitted[3].c_str())));
 
   for (int i = 0; i < enemycount; i++) {
@@ -199,9 +215,10 @@ int main(int argc, const char* argv[]) {
     readLine(inputfile, buffer);
     split(splitted, buffer, is_any_of(" \r\n\t"), token_compress_on);
 
-    pEnemyElem->SetAttribute("id", convertEnemyId(atoi(splitted[0].c_str())));
+    int id = convertEnemyId(atoi(splitted[0].c_str()));
+    pEnemyElem->SetAttribute("id", id);
     pEnemyElem->SetAttribute("x", toNewX(atoi(splitted[1].c_str())));
-    pEnemyElem->SetAttribute("y", toNewY(atoi(splitted[2].c_str())));
+    pEnemyElem->SetAttribute("y", toNewY(atoi(splitted[2].c_str())) - ENEMY_HEIGHTS[id]);
     pEnemyElem->SetAttribute("direction", toDirection(atoi(splitted[3].c_str())));
     pEnemyElem->SetAttribute("jumps", atoi(splitted[4].c_str()));
     pEnemyElem->SetAttribute("hp", atof(splitted[7].c_str()));
@@ -228,9 +245,10 @@ int main(int argc, const char* argv[]) {
     readLine(inputfile, buffer);
     split(splitted, buffer, is_any_of(" \r\n\t"), token_compress_on);
 
+    int id = atoi(splitted[0].c_str()) - 1;
     pSwitchElem->SetAttribute("type", atoi(splitted[0].c_str()) - 1);
     pSwitchElem->SetAttribute("x", toNewX(atoi(splitted[1].c_str())));
-    pSwitchElem->SetAttribute("y", toNewY(atoi(splitted[2].c_str())));
+    pSwitchElem->SetAttribute("y", toNewY(atoi(splitted[2].c_str())) - SWITCH_HEIGHTS[id]);
 
     int tileChanges = atoi(splitted[3].c_str());
     for (int t = 0; t < tileChanges; t++) {
@@ -241,7 +259,7 @@ int main(int argc, const char* argv[]) {
       pTileChangeElem->SetAttribute("id", atoi(splitted[6 + t * 3].c_str()));
     }
 
-    pSwitchElem->SetAttribute("affectsBlocks", toBool(splitted[4 + 3 * tileChanges]).c_str());
+    pSwitchElem->SetAttribute("affectsBlocks", toBool(splitted[4 + 3 * tileChanges], true).c_str());
   }
 
   if (switchescount != 0) {
