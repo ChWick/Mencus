@@ -92,6 +92,7 @@ public:
   virtual ~CAct();
 
   void addScene(CScene *pScene) {m_mapScenes[pScene->getID()] = pScene;}
+  size_t getSceneCount() const {return m_mapScenes.size();}
 
   CScene *getScene(unsigned int id) {return m_mapScenes.at(id);}
   CScene *operator[](unsigned int id) {return m_mapScenes[id];}

@@ -280,7 +280,7 @@ void CMap::createExplosion(const Ogre::Vector2 &vCenter, Ogre::Real r) {
   for (int cx = minx; cx < maxx; cx++) {
     for (int cy = miny; cy < maxy; cy++) {
       if (m_gridTiles(cx, cy)->getCenter().squaredDistance(vCenter) < r * r) {
-	explodeTile(cx, cy, true);
+        explodeTile(cx, cy, true);
       }
     }
   }
@@ -293,6 +293,13 @@ void CMap::explodeTile(size_t x, size_t y, bool bExplodeNeighbours) {
   TileType tt = tile->getEndangeredTileType();
   delete tile;
   tile = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), tt);
+
+  // remove all scratches that collides with this tile
+  for (CObject* pObject : m_lObjects) {
+    if (pObject->getWorldBoundingBox().collidesWith(tile->getWorldBoundingBox()) != CCD_NONE) {
+      destroyObject(pObject);
+    }
+  }
 
   if (bExplodeNeighbours) {
     // explode neighbours only left top bottom right

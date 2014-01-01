@@ -23,7 +23,7 @@ const Ogre::Real CShot::SHOT_DAMAGE[CShot::ST_COUNT] = {
   2
 };
 const Ogre::Real BOMB_EXPLOSION_TIME = 5;
-const Ogre::Real BOMB_EXPLOSION_RADIUS = 1;
+const Ogre::Real BOMB_EXPLOSION_RADIUS = 1.75;
 
 CShot::CShot(CMap *pMap,
              Ogre2dManager *pSpriteManager,

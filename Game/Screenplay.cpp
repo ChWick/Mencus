@@ -61,7 +61,7 @@ CScreenplay::CScreenplay()
   CGUIInstructions::getSingleton().setScreenplayListener(this);
   parse("../level/screenplay.xml");
 
-  setNextAct(1, 1);
+  setNextAct(2, 1);
 }
 CScreenplay::~CScreenplay() {
   Ogre::Root::getSingleton().removeFrameListener(this);
@@ -198,7 +198,7 @@ bool CScreenplay::frameEnded(const Ogre::FrameEvent &evt) {
   return true;
 }
 void CScreenplay::playerExitsMap() {
-  m_uiNextScene = m_uiNextAct = 1;
+  m_uiNextScene++;
 }
 void CScreenplay::keyForContinueInstructionsPressed() {
   m_uiNextScene++;

@@ -6,7 +6,10 @@
 const Ogre::Vector2 OBJECT_SIZES[CObject::OT_COUNT] = {
   Ogre::Vector2(0.5, 0.5),
   Ogre::Vector2(0.5, 0.5),
-  Ogre::Vector2(0.5, 0.5)
+  Ogre::Vector2(0.5, 0.5),
+  Ogre::Vector2(0.5, 0.25),
+  Ogre::Vector2(1, 1),
+  Ogre::Vector2(0.5, 1)
 };
 
 CObject::CObject(CMap &map,
@@ -17,7 +20,7 @@ CObject::CObject(CMap &map,
     m_Map(map),
     m_bIsPickable(false)
 {
-  init(1, 1);
+  init(0.2, 1);
 
   switch (m_eObjectType) {
   case OT_BOMB:
@@ -40,7 +43,7 @@ CObject::CObject(CMap &map,
     addTextureToCurrentAnimationSequence(getOtherObjectsTexturePath("scratch"));
     break;
   case OT_TORCH:
-    setupAnimation(0, "torch1", 14, CSpriteTexture::MIRROR_NONE, &getTorchTexturePath);
+    setupAnimation(0, "torch1", 10, CSpriteTexture::MIRROR_NONE, &getTorchTexturePath);
     break;
   default:
     throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Object type '" + Ogre::StringConverter::toString(m_eObjectType) + "' is unknown!", __FILE__);

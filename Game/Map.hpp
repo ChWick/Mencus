@@ -157,7 +157,7 @@ public:
 
   void destroyEnemy(CEnemy *pEnemy) {m_lEnemiesToDestroy.push_back(pEnemy);}
 
-  void destroyObject(CObject *pObject) {m_lObjectsToDestroy.push_back(pObject);}
+  void destroyObject(CObject *pObject) {m_lObjectsToDestroy.push_back(pObject); m_lObjectsToDestroy.unique();}
 
   const std::list<CEnemy*> &getEnemies() const {return m_lEnemies;}
 private:
