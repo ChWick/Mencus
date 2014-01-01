@@ -141,6 +141,11 @@ void CPlayer::update(Ogre::Real tpf) {
       } else if (m_vCurrentSpeed.y > 0) {
         fPenetration = m_pMap->hitsTile(CCD_TOP, CTile::TF_UNPASSABLE, getWorldBoundingBox(), &pTile);
       }
+      if (fPenetration == 0) {
+        if (m_pMap->outOfMap(getWorldBoundingBox())) {
+          fPenetration = m_vCurrentSpeed.y * tpf;
+        }
+      }
 
       if (fPenetration != 0) {
         m_vCurrentSpeed.y = 0;
@@ -164,6 +169,12 @@ void CPlayer::update(Ogre::Real tpf) {
       } else if (m_vCurrentSpeed.x > 0) {
         fPenetration += m_pMap->hitsTile(CCD_RIGHT, CTile::TF_UNPASSABLE, getWorldBoundingBox());
         m_eLastDirection = LD_RIGHT;
+      }
+
+      if (fPenetration == 0) {
+        if (m_pMap->outOfMap(getWorldBoundingBox())) {
+          fPenetration = m_vCurrentSpeed.x * tpf;
+        }
       }
 
       if (fPenetration != 0) {
