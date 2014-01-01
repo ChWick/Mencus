@@ -11,6 +11,7 @@
 #include "Enemy.hpp"
 #include "Object.hpp"
 #include "HUD.hpp"
+#include "Game.hpp"
 
 using namespace tinyxml2;
 
@@ -437,6 +438,11 @@ bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
     m_pExit->debugDraw();
 #endif // DEBUG_EXIT
   }
+
+  CGame::getSingleton().getDetailsPanel()->setParamValue(0, Ogre::StringConverter::toString(m_vCameraPos.x));
+  CGame::getSingleton().getDetailsPanel()->setParamValue(1, Ogre::StringConverter::toString(m_vCameraPos.y));
+  CGame::getSingleton().getDetailsPanel()->setParamValue(2, Ogre::StringConverter::toString(m_pPlayer->getPosition().x));
+  CGame::getSingleton().getDetailsPanel()->setParamValue(3, Ogre::StringConverter::toString(m_pPlayer->getPosition().y));
 
   // tidy up
   while (m_lShotsToDestroy.size() > 0) {

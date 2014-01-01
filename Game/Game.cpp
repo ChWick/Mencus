@@ -219,14 +219,14 @@ bool CGame::go(void)
 
     // create a params panel for displaying sample details
     Ogre::StringVector items;
-    items.push_back("cam.pX");
-    items.push_back("cam.pY");
-    items.push_back("cam.pZ");
+    items.push_back("cam.x");
+    items.push_back("cam.y");
+    items.push_back("player.x");
+    items.push_back("player.y");
     items.push_back("");
-    items.push_back("cam.oW");
-    items.push_back("cam.oX");
-    items.push_back("cam.oY");
-    items.push_back("cam.oZ");
+    items.push_back("");
+    items.push_back("");
+    items.push_back("");
     items.push_back("");
     items.push_back("Filtering");
     items.push_back("Poly Mode");
@@ -279,20 +279,6 @@ bool CGame::frameRenderingQueued(const Ogre::FrameEvent& evt)
   mKeyboard->capture();
 
   mTrayMgr->frameRenderingQueued(evt);
-
-  if (!mTrayMgr->isDialogVisible())
-    {
-      if (mDetailsPanel->isVisible())   // if details panel is visible, then update its contents
-        {
-	  mDetailsPanel->setParamValue(0, Ogre::StringConverter::toString(mCamera->getDerivedPosition().x));
-	  mDetailsPanel->setParamValue(1, Ogre::StringConverter::toString(mCamera->getDerivedPosition().y));
-	  mDetailsPanel->setParamValue(2, Ogre::StringConverter::toString(mCamera->getDerivedPosition().z));
-	  mDetailsPanel->setParamValue(4, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().w));
-	  mDetailsPanel->setParamValue(5, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().x));
-	  mDetailsPanel->setParamValue(6, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().y));
-	  mDetailsPanel->setParamValue(7, Ogre::StringConverter::toString(mCamera->getDerivedOrientation().z));
-        }
-    }
 
   CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
   mCameraMan->frameRenderingQueued(evt);   // if dialog isn't up, then update the camera

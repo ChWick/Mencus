@@ -29,6 +29,7 @@ public:
 
   OIS::Keyboard* getKeyboard() {return mKeyboard;}
   OIS::Mouse *getMouse() {return mMouse;}
+  OgreBites::ParamsPanel* getDetailsPanel() {return mDetailsPanel;}
 protected:
   Ogre::Root *mRoot;
   Ogre::Camera* mCamera;
