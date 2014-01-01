@@ -30,11 +30,11 @@ CEnemy::CEnemy(CMap &map,
 	       Ogre::Real fHitpoints)
   : CAnimatedSprite(&map, map.get2dManager(), vPosition, ENEMY_SIZE[eEnemyType]),
     CHitableObject(fHitpoints),
-    m_HPBar(&map, map.get2dManager()),
-    m_Map(map),
     m_eEnemyType(eEnemyType),
+    m_Map(map),
     m_vSpeed(Ogre::Vector2(fDirection * ENEMY_SPEED[eEnemyType], 0)),
-    m_bOnGround(false) {
+    m_bOnGround(false),
+    m_HPBar(&map, map.get2dManager()) {
   setup();
   m_HPBar.setSize(Ogre::Vector2(m_vSize.x, m_HPBar.getSize().y));
 }
@@ -179,6 +179,11 @@ void CEnemy::setup() {
     setupAnimation(AS_WALK_RIGHT, "walk_right", {0, 1, 2, 3, 0, 4, 5, 6});
     setupAnimation(AS_ATTACK_LEFT, "attack_right", {0, 1, 2, 1}, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_ATTACK_RIGHT, "attack_right", {0, 1, 2, 1});
+    for (int i = 0; i < 4; i++) {
+      getTexture(AS_ATTACK_LEFT, i).setSpriteScale(Ogre::Vector2(2, 1));
+      getTexture(AS_ATTACK_LEFT, i).setSpriteOffset(Ogre::Vector2(-1, 0));
+      getTexture(AS_ATTACK_RIGHT, i).setSpriteScale(Ogre::Vector2(2, 1));
+    }
     setupAnimation(AS_JUMP_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_JUMP_RIGHT, "walk_right", 1);
     break;
