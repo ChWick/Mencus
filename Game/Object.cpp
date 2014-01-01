@@ -20,7 +20,7 @@ CObject::CObject(CMap &map,
     m_Map(map),
     m_bIsPickable(false)
 {
-  init(0.2, 1);
+  init(0.4, 1);
 
   switch (m_eObjectType) {
   case OT_BOMB:
