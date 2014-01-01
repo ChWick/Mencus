@@ -155,7 +155,7 @@ int main(int argc, const char* argv[]) {
 
   // invert order and print to xml
   cout << "Writing to xml file..." << endl;
-  pTilesElem->SetAttribute("invert", "false");
+  pTilesElem->SetAttribute("invert", "true");
   for (int y = sizey - 1; y >= 0; y--) {
     stringstream ss;
     for (int x = 0; x < sizex - 1; x++) {
@@ -163,7 +163,7 @@ int main(int argc, const char* argv[]) {
     }
     ss << tiles(sizex - 1, y);
     XMLElement *pRowElem = doc.NewElement("row");
-    pTilesElem->InsertEndChild(pRowElem);
+    pTilesElem->InsertFirstChild(pRowElem);
     pRowElem->SetAttribute("tiles", ss.str().c_str());
   }
   cout << "Done" << endl;
