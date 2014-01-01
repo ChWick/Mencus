@@ -26,6 +26,8 @@ const Ogre::Real PLAYER_BOLT_MANA_COSTS(5);
 const Ogre::Real PLAYER_SHIELD_MANA_COSTS_PER_SEC(5);
 const Ogre::Real PLAYER_MANA_REGAIN_PER_SEC(0.5);
 
+const Ogre::Real SPIKES_DAMANGE_PER_HIT(1);
+
 CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   :
   CAnimatedSprite(pMap, pSpriteManager, Ogre::Vector2(0, 0), Ogre::Vector2(1, 2)),
@@ -126,16 +128,17 @@ void CPlayer::update(Ogre::Real tpf) {
       // move and check here only y direction movement
       m_vPosition.y += m_vCurrentSpeed.y * tpf;
 
+      CTile *pTile(NULL);
       if (m_vCurrentSpeed.y < 0) {
         m_bOnGround = false;
         m_bJumping = true;
-        fPenetration = m_pMap->hitsTile(CCD_BOTTOM, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+        fPenetration = m_pMap->hitsTile(CCD_BOTTOM, CTile::TF_UNPASSABLE, getWorldBoundingBox(), &pTile);
         if (fPenetration != 0) {
           m_bOnGround = true;
           m_bJumping = false;
         }
       } else if (m_vCurrentSpeed.y > 0) {
-        fPenetration = m_pMap->hitsTile(CCD_TOP, CTile::TF_UNPASSABLE, getWorldBoundingBox());
+        fPenetration = m_pMap->hitsTile(CCD_TOP, CTile::TF_UNPASSABLE, getWorldBoundingBox(), &pTile);
       }
 
       if (fPenetration != 0) {
@@ -143,6 +146,12 @@ void CPlayer::update(Ogre::Real tpf) {
         m_vPosition.y -= fPenetration;
       }
 
+      if (pTile && (pTile->getTileFlags() & CTile::TF_DAMAGES)) {
+        takeDamage(SPIKES_DAMANGE_PER_HIT);
+        m_bOnGround = false;
+        m_bJumping = true;
+        m_vCurrentSpeed.y = m_fInitialJumpSpeed;
+      }
 
       // move and check here only x direction movement
       fPenetration = 0;
