@@ -570,8 +570,9 @@ void CMap::readEnemy(XMLElement *pEnemy) {
   Ogre::Vector2 vPos(pEnemy->FloatAttribute("x"), pEnemy->FloatAttribute("y"));
   Ogre::Real fDirection(pEnemy->FloatAttribute("direction"));
   Ogre::Real fHitpoints(pEnemy->FloatAttribute("hp"));
+  bool bJumps = pEnemy->BoolAttribute("jumps");
 
-  CEnemy *pNewEnemy = new CEnemy(*this, vPos, eEnemyType, fDirection, fHitpoints, sID);
+  CEnemy *pNewEnemy = new CEnemy(*this, vPos, eEnemyType, fDirection, fHitpoints, bJumps, sID);
   m_lEnemies.push_back(pNewEnemy);
 
   Ogre::LogManager::getSingleton().logMessage("Parsing Enemy at " + Ogre::StringConverter::toString(vPos));

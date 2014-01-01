@@ -31,6 +31,7 @@ private:
   Ogre::Vector2 m_vSpeed;
   bool m_bOnGround;
   CBarIndicator m_HPBar;
+  const bool m_bJumps;
   const Ogre::String m_sID;
 public:
   CEnemy(CMap &map,
@@ -38,6 +39,7 @@ public:
     EEnemyTypes eEnemyType,
     Ogre::Real fDirection,
     Ogre::Real fHitpoints,
+    bool bJumps,
     const Ogre::String &sID);
 
   void update(Ogre::Real tpf);

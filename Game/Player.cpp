@@ -153,10 +153,17 @@ void CPlayer::update(Ogre::Real tpf) {
       }
 
       if (pTile && (pTile->getTileFlags() & CTile::TF_DAMAGES)) {
-        takeDamage(SPIKES_DAMANGE_PER_HIT);
-        m_bOnGround = false;
-        m_bJumping = true;
-        m_vCurrentSpeed.y = m_fInitialJumpSpeed;
+        // last hope check if the tile right of the damage tile hits the player 2 and is not damaging him
+        CTile *pRightTile = m_pMap->getTile(static_cast<int>(getWorldBoundingBox().getRight() - 0.01), pTile->getMapPosY());
+        if (pRightTile && pRightTile->getWorldBoundingBox().collidesWith(getWorldBoundingBox()) != CCD_NONE && (pRightTile->getTileFlags() & CTile::TF_DAMAGES) == 0) {
+
+        }
+        else {
+          takeDamage(SPIKES_DAMANGE_PER_HIT);
+          m_bOnGround = false;
+          m_bJumping = true;
+          m_vCurrentSpeed.y = m_fInitialJumpSpeed;
+        }
       }
 
       // move and check here only x direction movement

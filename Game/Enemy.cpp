@@ -28,6 +28,7 @@ CEnemy::CEnemy(CMap &map,
 	       EEnemyTypes eEnemyType,
 	       Ogre::Real fDirection,
 	       Ogre::Real fHitpoints,
+	       bool bJumps,
 	       const Ogre::String &sID)
   : CAnimatedSprite(&map, map.get2dManager(), vPosition, ENEMY_SIZE[eEnemyType]),
     CHitableObject(fHitpoints),
@@ -36,6 +37,7 @@ CEnemy::CEnemy(CMap &map,
     m_vSpeed(Ogre::Vector2(fDirection * ENEMY_SPEED[eEnemyType], 0)),
     m_bOnGround(false),
     m_HPBar(&map, map.get2dManager()),
+    m_bJumps(bJumps),
     m_sID(sID) {
   setup();
   m_HPBar.setSize(Ogre::Vector2(m_vSize.x, m_HPBar.getSize().y));
@@ -122,24 +124,26 @@ void CEnemy::updateKI() {
     CTile *pTile(m_Map.getTile(x, y));
     if (pTile->getTileFlags() & CTile::TF_PASSABLE) {
       bool bFlipWalkDirection = true;
-      // search the next unpassable tile and apply jump speed in this case
-      for (int iDeltaJumpWidth = 1; iDeltaJumpWidth <= 3; iDeltaJumpWidth++) {
-        if (m_vSpeed.x < 0) {
-          x = static_cast<int>(bb.getPosition().x) - iDeltaJumpWidth;
-        }
-        else {
-          x = static_cast<int>(bb.getPosition().x + bb.getSize().x) + iDeltaJumpWidth;
-        }
-        if (!m_Map.isInMap(x, y)) {break;}
-        pTile = m_Map.getTile(x, y);
+      if (m_bJumps) {
+        // search the next unpassable tile and apply jump speed in this case
+        for (int iDeltaJumpWidth = 1; iDeltaJumpWidth <= 3; iDeltaJumpWidth++) {
+          if (m_vSpeed.x < 0) {
+            x = static_cast<int>(bb.getPosition().x) - iDeltaJumpWidth;
+          }
+          else {
+            x = static_cast<int>(bb.getPosition().x + bb.getSize().x) + iDeltaJumpWidth;
+          }
+          if (!m_Map.isInMap(x, y)) {break;}
+          pTile = m_Map.getTile(x, y);
 #ifdef DEBUG_KI
-        CDebugDrawer::getSingleton().draw(pTile, CDebugDrawer::DT_BLUE);
+          CDebugDrawer::getSingleton().draw(pTile, CDebugDrawer::DT_BLUE);
 #endif
-        if (pTile->getTileFlags() & CTile::TF_UNPASSABLE) {
-          bFlipWalkDirection = false;
-          Ogre::Real t = (iDeltaJumpWidth + 0.2) / m_vSpeed.x;
-          m_vSpeed.y = abs(0.5 * c_fGravity * t);
-          break;
+          if (pTile->getTileFlags() & CTile::TF_UNPASSABLE) {
+            bFlipWalkDirection = false;
+            Ogre::Real t = (iDeltaJumpWidth + 0.2) / m_vSpeed.x;
+            m_vSpeed.y = abs(0.5 * c_fGravity * t);
+            break;
+          }
         }
       }
 
