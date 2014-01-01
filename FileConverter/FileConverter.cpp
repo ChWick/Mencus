@@ -36,9 +36,15 @@ int convertEnemyId(int id) {
   return id;
 }
 int convertObjectId(int id) {
-  if (id == 3) {return 0;}
-  if (id == 5) {return 1;}
-  if (id == 6) {return 2;}
+  if (id == 0) {return 3;} // Key
+  if (id == 3) {return 0;} // bomb
+  if (id == 5) {return 1;} // health potion
+  if (id == 6) {return 2;} // mana potion
+  if (id == 1) {return 5;} // torch 1
+  if (id == 2) {return 5;} // torch 2 idendical
+  if (id == 4) {return 4;} // scratch
+
+  cout << "Object id " << id << "is unknown!" << endl;
   return id;
 }
 
@@ -90,6 +96,9 @@ int main(int argc, const char* argv[]) {
   if (buffer == "Wald") {
     pMapElem->SetAttribute("background", "forest");
   }
+  else if (buffer == "Nebel") {
+    pMapElem->SetAttribute("background", "fog");
+  }
   else {
     cout << buffer << " was not yet set as background type" << endl;
     return -1;
@@ -124,7 +133,7 @@ int main(int argc, const char* argv[]) {
     vector<string> splitted;
     readLine(inputfile, buffer);
     split(splitted, buffer, is_any_of(" \r\n\t"), token_compress_on);
-    if (splitted.size() != sizex + 1) {
+    if (splitted.size() != static_cast<size_t>(sizex + 1)) {
       cout << "Wrong line count at y = " << y << ". Given size was " << splitted.size() << endl;
       return -1;
     }
