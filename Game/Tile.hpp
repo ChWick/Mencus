@@ -27,6 +27,9 @@ public:
 private:
   static const string DEFAULT_TILE_TEXTURE_NAME;
 
+  const unsigned int m_uiMapPosX;
+  const unsigned int m_uiMapPosY;
+
   unsigned int m_uiTileFlags;
   const TileType m_ttTileType;
 
@@ -38,9 +41,12 @@ public:
   void update(Ogre::Real tpf);
   TileType getTileType() const {return m_ttTileType;}
   unsigned int getTileFlags() const {return m_uiTileFlags;}
-  
+
   TileType getEndangeredTileType() const {return m_ttEndangeredTileType;}
   void setEndangeredTileType(TileType tt);
+
+  unsigned int getMapPosX() const {return m_uiMapPosX;}
+  unsigned int getMapPosY() const {return m_uiMapPosY;}
 
 private:
   unsigned int getTileFlags(TileType tt);

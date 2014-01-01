@@ -78,9 +78,10 @@ public:
    * @param[in] uiCollisionCheckDirection in which direchtion to check
    * @param[in] uiTileMask a mask for tiles to match
    * @param[in] bb The bounding box to check for a hit
+   * @param[in] ppTile the collided Tile
    * @return returns the penetration depth
    */
-  Ogre::Real hitsTile(ECollisionCheckDirections eCollisionCheckDirection, unsigned int uiTileMask, const CBoundingBox2d &bb) const;
+  Ogre::Real hitsTile(ECollisionCheckDirections eCollisionCheckDirection, unsigned int uiTileMask, const CBoundingBox2d &bb, CTile **ppTile = NULL) const;
   //! Function to check if a bounding box hits a tile's bounding box
   /**
    *  \param[in] uiTileMask a mask for tiles to match
@@ -133,6 +134,8 @@ public:
    */
   bool findLink(const CBoundingBox2d &bb, Ogre::Vector2 &vFromPos, Ogre::Vector2 &vToPos) const;
 
+  void unlock(unsigned int x, unsigned int y);
+
   virtual bool frameStarted(const Ogre::FrameEvent& evt);
 
   // OIS::KeyListener
@@ -155,9 +158,10 @@ public:
   CExplosion *addExplosion(CExplosion *pExplosion) {m_lExplosions.push_back(pExplosion); return pExplosion;}
   void destroyExplosion(CExplosion *pExplosion) {m_lExplosionsToDestroy.push_back(pExplosion);}
 
+
   void destroyEnemy(CEnemy *pEnemy) {m_lEnemiesToDestroy.push_back(pEnemy);}
 
-  void destroyObject(CObject *pObject) {m_lObjectsToDestroy.push_back(pObject); m_lObjectsToDestroy.unique();}
+  void destroyObject(CObject *pObject) {if (find(m_lObjectsToDestroy.begin(), m_lObjectsToDestroy.end(), pObject) == m_lObjectsToDestroy.end()) m_lObjectsToDestroy.push_back(pObject);}
 
   const std::list<CEnemy*> &getEnemies() const {return m_lEnemies;}
 private:

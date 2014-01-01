@@ -7,6 +7,7 @@
 #include "Shot.hpp"
 #include "BarIndicator.hpp"
 #include "HUD.hpp"
+#include "Object.hpp"
 
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_RIGHT(0.2, 0.0);
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_LEFT(PLAYER_BOLT_OFFSET_RIGHT * Ogre::Vector2(-1, 1));
@@ -47,7 +48,11 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   m_Shield(pMap, pSpriteManager, Ogre::Vector2::ZERO, Ogre::Vector2(2, 2)),
   m_bShieldActive(false),
   m_eGoToLinkStatus(GTLS_NONE),
-  m_fManaPoints(PLAYER_MAX_MANA_POINTS) {
+  m_fManaPoints(PLAYER_MAX_MANA_POINTS),
+  m_uiKeyCount(0),
+  m_uiHealthPotionsCount(0),
+  m_uiManaPotionsCount(0),
+  m_uiBombCount(0) {
 
   CInputListenerManager::getSingleton().addInputListener(this);
   init(1, ANIM_COUNT);
@@ -152,6 +157,20 @@ void CPlayer::update(Ogre::Real tpf) {
       }
 
       if (fPenetration != 0) {
+        // check if collision with door
+        if (m_uiKeyCount > 0) {
+          Ogre::Real fLockPenetration = 0;
+          CTile *pTile(NULL);
+          if (m_vCurrentSpeed.x < 0) {
+            fLockPenetration = m_pMap->hitsTile(CCD_LEFT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
+          } else if (m_vCurrentSpeed.x > 0) {
+            fLockPenetration += m_pMap->hitsTile(CCD_RIGHT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
+          }
+          if (fLockPenetration != 0) {
+            m_uiKeyCount--;
+            m_pMap->unlock(pTile->getMapPosX(), pTile->getMapPosY());
+          }
+        }
         m_vPosition.x -= fPenetration;
         m_vCurrentSpeed.x = 0;
       }
@@ -280,6 +299,24 @@ void CPlayer::update(Ogre::Real tpf) {
   }
 
   setInvunerable(m_bShieldActive);
+}
+void CPlayer::pickobject(unsigned int uiObjectId) {
+  switch (uiObjectId) {
+  case CObject::OT_BOMB:
+    m_uiBombCount++;
+    break;
+  case CObject::OT_MANA_POTION:
+    m_uiManaPotionsCount++;
+    break;
+  case CObject::OT_HEALTH_POTION:
+    ++m_uiHealthPotionsCount;
+    break;
+  case CObject::OT_KEY:
+    ++m_uiKeyCount;
+    break;
+  default:
+    break;
+  }
 }
 bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
   if (arg.key == OIS::KC_RIGHT) {

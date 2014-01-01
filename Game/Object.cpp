@@ -55,6 +55,7 @@ void CObject::update(Ogre::Real tpf) {
   if (m_bIsPickable) {
     if (m_Map.getPlayer()->getWorldBoundingBox().contains(getCenter()) ) {
       m_Map.destroyObject(this);
+      m_Map.getPlayer()->pickobject(m_eObjectType);
     }
   }
 

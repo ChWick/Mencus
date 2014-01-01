@@ -82,6 +82,10 @@ private:
   EGoToLinkStatus m_eGoToLinkStatus;
 
   Ogre::Real m_fManaPoints;
+  unsigned int m_uiKeyCount;
+  unsigned int m_uiHealthPotionsCount;
+  unsigned int m_uiManaPotionsCount;
+  unsigned int m_uiBombCount;
 public:
   CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager);
   ~CPlayer();
@@ -89,6 +93,8 @@ public:
   void startup(const Ogre::Vector2 &vPosition, Ogre::Real fDirection);
 
   virtual void update(Ogre::Real tpf);
+
+  void pickobject(unsigned int uiObjectId);
 
   virtual bool keyPressed( const OIS::KeyEvent &arg );
   virtual bool keyReleased( const OIS::KeyEvent &arg );

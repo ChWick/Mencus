@@ -169,7 +169,7 @@ void CMap::loadMap(string sFilename) {
     pSwitch->initialize(this);
   }
 }
-Ogre::Real CMap::hitsTile(ECollisionCheckDirections eCollisionCheckDirection, unsigned uiTileMask, const CBoundingBox2d &bb) const {
+Ogre::Real CMap::hitsTile(ECollisionCheckDirections eCollisionCheckDirection, unsigned uiTileMask, const CBoundingBox2d &bb, CTile **ppTile) const {
   // loop trough tiles that could be hit
   int startX = static_cast<int>(bb.getPosition().x + ((eCollisionCheckDirection == CCD_RIGHT) ? bb.getSize().x : 0)); // round down
   int startY = static_cast<int>(bb.getPosition().y + ((eCollisionCheckDirection == CCD_TOP) ? bb.getSize().y : 0)); // round down
@@ -181,9 +181,12 @@ Ogre::Real CMap::hitsTile(ECollisionCheckDirections eCollisionCheckDirection, un
     for (int x = startX; x < endX; ++x) {
       if ((m_gridTiles(x, startY)->getTileFlags() & uiTileMask) == uiTileMask) {
 #ifdef DEBUG_COLLISION_WITH_TILES
-	CDebugDrawer::getSingleton().draw(m_gridTiles(x, startY));
+        CDebugDrawer::getSingleton().draw(m_gridTiles(x, startY));
 #endif
-	return bb.getPosition().y - startY - ((eCollisionCheckDirection == CCD_BOTTOM) ? 1 : -bb.getSize().y); // Collision, so penetration
+        if (ppTile) {
+          *ppTile = m_gridTiles(x, startY);
+        }
+        return bb.getPosition().y - startY - ((eCollisionCheckDirection == CCD_BOTTOM) ? 1 : -bb.getSize().y); // Collision, so penetration
       }
     }
   }
@@ -193,12 +196,19 @@ Ogre::Real CMap::hitsTile(ECollisionCheckDirections eCollisionCheckDirection, un
     for (int y = startY; y < endY; ++y) {
       if ((m_gridTiles(startX, y)->getTileFlags() & uiTileMask) == uiTileMask) {
 #ifdef DEBUG_COLLISION_WITH_TILES
-	CDebugDrawer::getSingleton().draw(m_gridTiles(startX, y));
+        CDebugDrawer::getSingleton().draw(m_gridTiles(startX, y));
 #endif
-	return bb.getPosition().x - startX - ((eCollisionCheckDirection == CCD_LEFT) ? 1 : -bb.getSize().x); // Collision, so penetration
+        if (ppTile) {
+          *ppTile = m_gridTiles(startX, y);
+        }
+        return bb.getPosition().x - startX - ((eCollisionCheckDirection == CCD_LEFT) ? 1 : -bb.getSize().x); // Collision, so penetration
       }
     }
   }
+
+    if (ppTile) {
+	    *ppTile = NULL;
+	  }
 
   return 0;			// No collision
 }
@@ -328,6 +338,23 @@ bool CMap::findLink(const CBoundingBox2d &bb, Ogre::Vector2 &vFromPos, Ogre::Vec
   }
 
   return false;
+}
+void CMap::unlock(unsigned int x, unsigned int y) {
+  TileType id = m_gridTiles(x, y)->getTileType();
+  if (id == 49) {
+    delete m_gridTiles(x, y);
+    delete m_gridTiles(x, y + 1);
+
+    m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), 2);
+    m_gridTiles(x, y + 1) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y + 1), 51);
+  }
+  else if (id == 50) {
+    delete m_gridTiles(x, y);
+    delete m_gridTiles(x, y - 1);
+
+    m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), 51);
+    m_gridTiles(x, y - 1) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y - 1), 2);
+  }
 }
 bool CMap::keyPressed( const OIS::KeyEvent &arg ) {
   if (arg.key == OIS::KC_H) {

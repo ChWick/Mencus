@@ -4,6 +4,8 @@
 
 CTile::CTile(CSpriteTransformPipeline *pTransformPipeline, Ogre2dManager* p2dManagerMap, const Ogre::Vector2 &vPosition, TileType ttTileType)
   : CSprite(pTransformPipeline, p2dManagerMap, vPosition, DEFAULT_TILE_SIZE),
+    m_uiMapPosX(static_cast<unsigned int>(vPosition.x + 0.5)),
+    m_uiMapPosY(static_cast<unsigned int>(vPosition.y + 0.5)),
     m_uiTileFlags(getTileFlags(ttTileType)),
     m_ttTileType(ttTileType) {
   setTexture(DEFAULT_TILE_TEXTURE_NAME + Ogre::StringConverter::toString(ttTileType) + ".png");
@@ -11,6 +13,8 @@ CTile::CTile(CSpriteTransformPipeline *pTransformPipeline, Ogre2dManager* p2dMan
 
 CTile::CTile(const CTile &src)
   : CSprite(src),
+    m_uiMapPosX(src.m_uiMapPosX),
+    m_uiMapPosY(src.m_uiMapPosY),
     m_uiTileFlags(src.m_uiTileFlags),
     m_ttTileType(src.m_ttTileType) {
 }
