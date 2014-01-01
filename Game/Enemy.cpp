@@ -174,18 +174,29 @@ void CEnemy::setup() {
     setupAnimation(AS_JUMP_RIGHT, "jump_right", 1);
     break;
   case ET_KNIGHT:
+    m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.2, 0));
+    m_bbRelativeBoundingBox.setSize(Ogre::Vector2(0.6, 1.9));
     setDefaultGetPath(&getEnemyTexturePath<2>);
     setupAnimation(AS_WALK_LEFT, "walk_right", {0, 1, 2, 3, 0, 4, 5, 6}, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", {0, 1, 2, 3, 0, 4, 5, 6});
+    for (int i = 0; i < 8; i++) {
+      getTexture(AS_WALK_LEFT, i).setSpriteOffset(Ogre::Vector2(-0.2, 0));
+      getTexture(AS_WALK_RIGHT, i).setSpriteOffset(Ogre::Vector2(0.2, 0));
+    }
     setupAnimation(AS_ATTACK_LEFT, "attack_right", {0, 1, 2, 1}, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_ATTACK_RIGHT, "attack_right", {0, 1, 2, 1});
     for (int i = 0; i < 4; i++) {
       getTexture(AS_ATTACK_LEFT, i).setSpriteScale(Ogre::Vector2(2, 1));
-      getTexture(AS_ATTACK_LEFT, i).setSpriteOffset(Ogre::Vector2(-1, 0));
+      getTexture(AS_ATTACK_LEFT, i).setSpriteOffset(Ogre::Vector2(-1.2, 0));
       getTexture(AS_ATTACK_RIGHT, i).setSpriteScale(Ogre::Vector2(2, 1));
+      getTexture(AS_ATTACK_RIGHT, i).setSpriteOffset(Ogre::Vector2(0.2, 0));
     }
     setupAnimation(AS_JUMP_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_JUMP_RIGHT, "walk_right", 1);
+    for (int i = 0; i < 1; i++) {
+      getTexture(AS_JUMP_LEFT, i).setSpriteOffset(Ogre::Vector2(-0.2, 0));
+      getTexture(AS_JUMP_RIGHT, i).setSpriteOffset(Ogre::Vector2(0.2, 0));
+    }
     break;
   case ET_BEAR:
     setDefaultGetPath(&getEnemyTexturePath<3>);
