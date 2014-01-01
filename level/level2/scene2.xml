@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map background="fog" sizex="16" sizey="24">
+    <player posx="0.156250" posy="16.000000" direction="1"/>
+    <tiles invert="false">
+        <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="1 1 1 1 5 5 5 5 5 5 5 5 5 5 5 1"/>
+        <row tiles="1 1 1 4 2 2 2 2 2 43 2 2 2 2 2 3"/>
+        <row tiles="1 1 1 4 2 2 2 2 2 43 2 2 2 2 2 3"/>
+        <row tiles="1 1 1 4 2 18 6 6 6 1 6 6 6 6 6 1"/>
+        <row tiles="1 1 1 4 2 2 3 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="1 1 1 4 2 2 3 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="1 1 1 12 19 2 3 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="1 1 1 4 2 2 3 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="1 1 1 4 2 2 3 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="1 1 1 4 2 18 11 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="1 1 1 4 52 52 3 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="5 5 5 8 2 2 7 5 5 5 5 5 5 5 5 5"/>
+        <row tiles="23 23 23 23 23 23 2 49 2 2 2 43 2 22 2 43"/>
+        <row tiles="23 23 23 23 23 23 2 50 2 2 2 43 2 21 2 43"/>
+        <row tiles="23 23 23 23 23 23 13 1 6 6 6 1 6 6 6 1"/>
+        <row tiles="23 23 23 23 23 23 3 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="23 23 23 23 23 23 3 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="23 23 23 23 23 23 3 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="23 23 23 23 23 23 3 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="23 23 23 23 23 23 3 1 1 1 1 1 1 1 1 1"/>
+        <row tiles="23 23 23 23 23 23 47 48 48 48 48 48 48 48 48 48"/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23"/>
+    </tiles>
+    <enemies>
+        <enemy id="2" x="8.437500" y="16.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy id="2" x="12.062500" y="5.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+    </enemies>
+    <switches/>
+    <links>
+        <link fromx="9" fromy="14" tox="13" toy="14"/>
+    </links>
+    <objects>
+        <object type="5" x="10.093750" y="16.000000"/>
+        <object type="5" x="14.218750" y="16.000000"/>
+        <object type="5" x="6.156250" y="16.000000"/>
+        <object type="3" x="13.875000" y="3.250000"/>
+        <object type="5" x="11.437500" y="5.000000"/>
+        <object type="5" x="4.750000" y="5.000000"/>
+        <object type="5" x="4.687500" y="8.000000"/>
+        <object type="5" x="4.593750" y="11.000000"/>
+        <object type="5" x="12.281250" y="16.000000"/>
+        <object type="0" x="7.750000" y="3.500000"/>
+        <object type="0" x="2.218750" y="14.500000"/>
+        <object type="0" x="2.468750" y="14.500000"/>
+        <object type="0" x="2.218750" y="14.625000"/>
+        <object type="0" x="1.968750" y="14.500000"/>
+        <object type="0" x="13.968750" y="14.500000"/>
+        <object type="0" x="9.593750" y="14.500000"/>
+        <object type="4" x="9.187500" y="15.312500"/>
+        <object type="4" x="9.375000" y="15.312500"/>
+        <object type="4" x="9.312500" y="15.156250"/>
+        <object type="4" x="9.281250" y="14.843750"/>
+        <object type="4" x="9.250000" y="15.875000"/>
+        <object type="4" x="14.875000" y="15.093750"/>
+        <object type="4" x="14.843750" y="15.906250"/>
+        <object type="4" x="9.343750" y="4.281250"/>
+        <object type="4" x="8.781250" y="5.218750"/>
+    </objects>
+    <endangeredTiles>
+        <endangeredTile x="4" y="12" targetTile="2"/>
+        <endangeredTile x="5" y="12" targetTile="2"/>
+        <endangeredTile x="9" y="3" targetTile="2"/>
+        <endangeredTile x="9" y="4" targetTile="51"/>
+        <endangeredTile x="9" y="14" targetTile="22"/>
+        <endangeredTile x="9" y="15" targetTile="21"/>
+        <endangeredTile x="15" y="14" targetTile="2"/>
+        <endangeredTile x="15" y="15" targetTile="51"/>
+    </endangeredTiles>
+</map>

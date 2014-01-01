@@ -31,4 +31,15 @@
       <level file="scene3.xml" />
     </scene>
   </act>
+  <act id="2" dir="level2">
+    <scene id="1" type="instructions">
+      <instructions file="instructions.txt"/>
+    </scene>
+    <scene id="2" type="level">
+      <level file="scene2.xml" />
+    </scene>
+    <scene id="3" type="level">
+      <level file="scene3.xml" />
+    </scene>
+  </act>
 </screenplay>
