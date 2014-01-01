@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map background="fog" sizex="54" sizey="100">
+    <exit type="enemyDeath" id="boss" />
     <player posx="0.406250" posy="5.000000" direction="1"/>
     <tiles invert="true">
         <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23"/>
@@ -104,39 +105,39 @@
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 5 5 5 5 5 5 1 1 1 1 1 1 1 4 52 52 52 52 52 52 52 52 52 52 3 4 2 2"/>
     </tiles>
     <enemies>
-        <enemy id="2" x="13.562500" y="5.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="18.593750" y="5.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="14.250000" y="17.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="23.875000" y="20.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="29.062500" y="20.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="10.000000" y="36.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="4.687500" y="37.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="10.500000" y="40.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="14.281250" y="38.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="7.312500" y="47.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="5.031250" y="47.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="5.500000" y="59.000000" direction="-1" jumps="0" hp="4.000000" rank="2"/>
-        <enemy id="2" x="5.312500" y="66.000000" direction="-1" jumps="0" hp="4.000000" rank="1"/>
-        <enemy id="2" x="2.812500" y="66.000000" direction="-1" jumps="0" hp="3.000000" rank="1"/>
-        <enemy id="2" x="13.687500" y="61.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="23.593750" y="76.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="22.000000" y="76.000000" direction="-1" jumps="0" hp="10.000000" rank="1"/>
-        <enemy id="2" x="15.656250" y="73.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="13.781250" y="77.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="13.125000" y="73.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="11.281250" y="77.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="14.312500" y="73.000000" direction="1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="12.250000" y="77.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="13.062500" y="65.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="14.781250" y="69.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="10.531250" y="69.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="12.718750" y="69.000000" direction="1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="16.281250" y="65.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="13.875000" y="65.000000" direction="1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="41.625000" y="70.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="50.437500" y="78.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="41.500000" y="86.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
-        <enemy id="2" x="44.031250" y="91.000000" direction="-1" jumps="0" hp="20.000000" rank="3"/>
+        <enemy type="2" x="13.562500" y="5.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="18.593750" y="5.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="14.250000" y="17.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="23.875000" y="20.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="29.062500" y="20.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="10.000000" y="36.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="4.687500" y="37.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="10.500000" y="40.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="14.281250" y="38.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="7.312500" y="47.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="5.031250" y="47.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="5.500000" y="59.000000" direction="-1" jumps="0" hp="4.000000" rank="2"/>
+        <enemy type="2" x="5.312500" y="66.000000" direction="-1" jumps="0" hp="4.000000" rank="1"/>
+        <enemy type="2" x="2.812500" y="66.000000" direction="-1" jumps="0" hp="3.000000" rank="1"/>
+        <enemy type="2" x="13.687500" y="61.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="23.593750" y="76.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="22.000000" y="76.000000" direction="-1" jumps="0" hp="10.000000" rank="1"/>
+        <enemy type="2" x="15.656250" y="73.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="13.781250" y="77.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="13.125000" y="73.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="11.281250" y="77.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="14.312500" y="73.000000" direction="1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="12.250000" y="77.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="13.062500" y="65.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="14.781250" y="69.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="10.531250" y="69.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="12.718750" y="69.000000" direction="1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="16.281250" y="65.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="13.875000" y="65.000000" direction="1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="41.625000" y="70.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="50.437500" y="78.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy type="2" x="41.500000" y="86.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
+        <enemy id="boss" type="2" x="44.031250" y="91.000000" direction="-1" jumps="0" hp="20.000000" rank="3"/>
     </enemies>
     <switches>
         <switch type="1" x="11.156250" y="13.000000" affectsBlocks="false">

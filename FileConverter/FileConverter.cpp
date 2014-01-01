@@ -216,7 +216,7 @@ int main(int argc, const char* argv[]) {
     split(splitted, buffer, is_any_of(" \r\n\t"), token_compress_on);
 
     int id = convertEnemyId(atoi(splitted[0].c_str()));
-    pEnemyElem->SetAttribute("id", id);
+    pEnemyElem->SetAttribute("type", id);
     pEnemyElem->SetAttribute("x", toNewX(atoi(splitted[1].c_str())));
     pEnemyElem->SetAttribute("y", toNewY(atoi(splitted[2].c_str())) - ENEMY_HEIGHTS[id]);
     pEnemyElem->SetAttribute("direction", toDirection(atoi(splitted[3].c_str())));
