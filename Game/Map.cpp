@@ -431,7 +431,7 @@ bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
   }
 #endif
   if (m_pExit) {
-    if (m_pExit->isInExit(m_pPlayer)) {
+    if (m_pExit->isInExit(m_pPlayer, this)) {
       m_pScreenplayListener->playerExitsMap();
     }
 #ifdef DEBUG_EXIT
@@ -562,12 +562,16 @@ void CMap::readLink(XMLElement *pLink) {
   Ogre::LogManager::getSingleton().logMessage("Parsed: " + m_lLinks.back().toString());
 }
 void CMap::readEnemy(XMLElement *pEnemy) {
-  CEnemy::EEnemyTypes eEnemyType = static_cast<CEnemy::EEnemyTypes>(pEnemy->IntAttribute("id") - 1);
+  Ogre::String sID(Ogre::StringUtil::BLANK);
+  if (pEnemy->Attribute("id")) {
+    sID = pEnemy->Attribute("id");
+  }
+  CEnemy::EEnemyTypes eEnemyType = static_cast<CEnemy::EEnemyTypes>(pEnemy->IntAttribute("type") - 1);
   Ogre::Vector2 vPos(pEnemy->FloatAttribute("x"), pEnemy->FloatAttribute("y"));
   Ogre::Real fDirection(pEnemy->FloatAttribute("direction"));
   Ogre::Real fHitpoints(pEnemy->FloatAttribute("hp"));
 
-  CEnemy *pNewEnemy = new CEnemy(*this, vPos, eEnemyType, fDirection, fHitpoints);
+  CEnemy *pNewEnemy = new CEnemy(*this, vPos, eEnemyType, fDirection, fHitpoints, sID);
   m_lEnemies.push_back(pNewEnemy);
 
   Ogre::LogManager::getSingleton().logMessage("Parsing Enemy at " + Ogre::StringConverter::toString(vPos));
@@ -586,7 +590,10 @@ void CMap::readExit(XMLElement *pExitElem) {
                                     pExitElem->FloatAttribute("posy")),
                       Ogre::Vector2(pExitElem->FloatAttribute("sizex"),
                                     pExitElem->FloatAttribute("sizey")));
-    m_pExit = new CExit(EXIT_REGION, bb);
+    m_pExit = CExit::newRegion(bb);
+  }
+  else if (sType == "enemyDeath") {
+    m_pExit = CExit::newEnemyDeath(pExitElem->Attribute("id"));
   }
 }
 void CMap::readPlayer(XMLElement *pPlayerElem) {
@@ -602,13 +609,25 @@ CLink *CMap::getLinkById(const Ogre::String &id) {
   }
   return NULL;
 }
+CEnemy *CMap::getEnemyById(const Ogre::String &id) {
+  for (CEnemy *pEnemy : m_lEnemies) {
+    if (pEnemy->getID() == id) {
+      return pEnemy;
+    }
+  }
+  return NULL;
+}
 
 
-
-bool CMap::CExit::isInExit(CPlayer *pPlayer) {
+bool CMap::CExit::isInExit(CPlayer *pPlayer, CMap *pMap) {
   switch (m_eExitType) {
   case CMap::EXIT_REGION:
     if (m_BoundingBox.collidesWith(pPlayer->getWorldBoundingBox()) != CCD_NONE) {
+      return true;
+    }
+    break;
+  case CMap::EXIT_ENEMY_DEATH:
+    if (pMap->getEnemyById(m_sID) == NULL) {
       return true;
     }
     break;

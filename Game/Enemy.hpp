@@ -31,14 +31,18 @@ private:
   Ogre::Vector2 m_vSpeed;
   bool m_bOnGround;
   CBarIndicator m_HPBar;
+  const Ogre::String m_sID;
 public:
   CEnemy(CMap &map,
     const Ogre::Vector2 &vPosition,
     EEnemyTypes eEnemyType,
     Ogre::Real fDirection,
-    Ogre::Real fHitpoints);
+    Ogre::Real fHitpoints,
+    const Ogre::String &sID);
 
   void update(Ogre::Real tpf);
+
+  const Ogre::String &getID() const {return m_sID;}
 
 protected:
   void damageTakenCallback();

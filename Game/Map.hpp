@@ -27,16 +27,22 @@ class CMap : public CSpriteTransformPipeline, public CInputListener {
 private:
   enum EExitTypes {
     EXIT_REGION,
+    EXIT_ENEMY_DEATH,
   };
   class CExit {
   private:
     EExitTypes m_eExitType;
     CBoundingBox2d m_BoundingBox;
+    const Ogre::String m_sID;
   public:
-    CExit(EExitTypes eExitType, const CBoundingBox2d &bb)
-    : m_eExitType(eExitType), m_BoundingBox(bb) {
+    static CExit *newRegion(const CBoundingBox2d &bb) {return new CExit(EXIT_REGION, bb, Ogre::StringUtil::BLANK);}
+    static CExit *newEnemyDeath(const Ogre::String &sID) {return new CExit(EXIT_ENEMY_DEATH, CBoundingBox2d(), sID);}
+  private:
+    CExit(EExitTypes eExitType, const CBoundingBox2d &bb, const Ogre::String &sID)
+    : m_eExitType(eExitType), m_BoundingBox(bb), m_sID(sID) {
     }
-    bool isInExit(CPlayer *pPlayer);
+  public:
+    bool isInExit(CPlayer *pPlayer, CMap *pMap);
 #ifdef DEBUG_EXIT
     void debugDraw();
 #endif
@@ -148,6 +154,7 @@ public:
   CTile* &getTile(unsigned int x, unsigned int y) {return m_gridTiles(x, y);}
   CTile *getTile(unsigned int x, unsigned int y) const {return m_gridTiles(x, y);}
   CLink *getLinkById(const Ogre::String &id);
+  CEnemy *getEnemyById(const Ogre::String &id);
 
   bool isInMap(unsigned int x, unsigned int y);
 

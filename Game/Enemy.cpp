@@ -27,14 +27,16 @@ CEnemy::CEnemy(CMap &map,
 	       const Ogre::Vector2 &vPosition,
 	       EEnemyTypes eEnemyType,
 	       Ogre::Real fDirection,
-	       Ogre::Real fHitpoints)
+	       Ogre::Real fHitpoints,
+	       const Ogre::String &sID)
   : CAnimatedSprite(&map, map.get2dManager(), vPosition, ENEMY_SIZE[eEnemyType]),
     CHitableObject(fHitpoints),
     m_eEnemyType(eEnemyType),
     m_Map(map),
     m_vSpeed(Ogre::Vector2(fDirection * ENEMY_SPEED[eEnemyType], 0)),
     m_bOnGround(false),
-    m_HPBar(&map, map.get2dManager()) {
+    m_HPBar(&map, map.get2dManager()),
+    m_sID(sID) {
   setup();
   m_HPBar.setSize(Ogre::Vector2(m_vSize.x, m_HPBar.getSize().y));
 }
