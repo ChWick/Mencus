@@ -42,6 +42,7 @@
 		<Unit filename="../Game/AnimatedSprite.hpp" />
 		<Unit filename="../Game/BarIndicator.hpp" />
 		<Unit filename="../Game/BoundingBox2d.hpp" />
+		<Unit filename="../Game/CheatDefines.hpp" />
 		<Unit filename="../Game/CollisionDefines.hpp" />
 		<Unit filename="../Game/Constants.hpp" />
 		<Unit filename="../Game/DebugDefines.hpp" />
