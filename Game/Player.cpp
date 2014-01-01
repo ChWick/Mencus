@@ -41,7 +41,7 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   m_bJumpPressed(false),
   m_bActivateLinkPressed(false),
   m_fMaxWalkSpeed(4),
-  m_fInitialJumpSpeed(10),
+  m_fInitialJumpSpeed(11.5),
   m_vCurrentSpeed(0, 0),
   m_bOnGround(true),
   m_bJumping(false),
