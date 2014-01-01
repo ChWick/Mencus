@@ -14,6 +14,10 @@ struct SSwitchEntry {
   unsigned int uiTilePosX;
   unsigned int uiTilePosY;
 };
+struct STogglesLinkEntry {
+  Ogre::String sLinkID;
+  bool bInitialState;
+};
 
 class CSwitch : public CSprite {
 public:
@@ -29,22 +33,25 @@ public:
   const SwitchType m_stSwitchType;
   ESwitchStates m_eSwitchState;
   vector<SSwitchEntry> m_vEntries;
+  vector<STogglesLinkEntry> m_vLinkEntries;
   bool m_bChangeBlocks;
 public:
   CSwitch(const CSpriteTransformPipeline *pTransformPipeline,
 	  Ogre2dManager *pSpriteManager,
 	  const Ogre::Vector2 &vPosition,
-	  SwitchType stSwitchType);
+	  SwitchType stSwitchType,
+	  bool bChangeBlocks);
   ~CSwitch();
 
-  void initialize(const CMap *pMap);
+  void initialize(CMap *pMap);
 
   void addEntry(const SSwitchEntry &entry) {m_vEntries.push_back(entry);}
-  void setChangeBlocks(bool b) {m_bChangeBlocks;}
+  void addEntry(const STogglesLinkEntry &entry) {m_vLinkEntries.push_back(entry);}
+  void setChangeBlocks(bool b) {m_bChangeBlocks = b;}
 
   bool doesChangeBlocks() const {return m_bChangeBlocks;}
   const vector<SSwitchEntry> &getEntries() const {return m_vEntries;}
-  
+
   void activate(CMap *pMap);
 
 private:

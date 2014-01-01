@@ -1,0 +1,6 @@
+#ifndef CHEAT_DEFINES_HPP
+#define CHEAT_DEFINES_HPP
+
+#define CHEAT_ADD_KEYS
+
+#endif // CHEAT_DEFINES_HPP

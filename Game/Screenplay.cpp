@@ -61,7 +61,7 @@ CScreenplay::CScreenplay()
   CGUIInstructions::getSingleton().setScreenplayListener(this);
   parse("../level/screenplay.xml");
 
-  setNextAct(2, 1);
+  setNextAct(2, 3);
 }
 CScreenplay::~CScreenplay() {
   Ogre::Root::getSingleton().removeFrameListener(this);

@@ -8,6 +8,7 @@
 #include "BarIndicator.hpp"
 #include "HUD.hpp"
 #include "Object.hpp"
+#include "CheatDefines.hpp"
 
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_RIGHT(0.2, 0.0);
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_LEFT(PLAYER_BOLT_OFFSET_RIGHT * Ogre::Vector2(-1, 1));
@@ -366,6 +367,12 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
     }
     CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
   }
+#ifdef CHEAT_ADD_KEYS
+  else if (arg.key == OIS::KC_F7) {
+    ++m_uiKeyCount;
+  }
+#endif // CHEAT_ADD_KEYS
+
   return true;
 }
 bool CPlayer::keyReleased( const OIS::KeyEvent &arg ) {

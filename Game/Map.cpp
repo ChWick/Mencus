@@ -321,6 +321,9 @@ void CMap::explodeTile(size_t x, size_t y, bool bExplodeNeighbours) {
 }
 bool CMap::findLink(const CBoundingBox2d &bb, Ogre::Vector2 &vFromPos, Ogre::Vector2 &vToPos) const {
   for (const auto &link : m_lLinks) {
+    if (link.isActivated() == false) {
+      continue;
+    }
     if (((m_gridTiles(link.getFirstX(), link.getFirstY())->getTileFlags() & (CTile::TF_DOOR1 | CTile::TF_DOOR2 | CTile::TF_DOOR3)) == 0) ||
 	((m_gridTiles(link.getSecondX(), link.getSecondY())->getTileFlags() & (CTile::TF_DOOR1 | CTile::TF_DOOR2 | CTile::TF_DOOR3)) == 0)) {
       continue;
@@ -354,6 +357,24 @@ void CMap::unlock(unsigned int x, unsigned int y) {
 
     m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), 51);
     m_gridTiles(x, y - 1) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y - 1), 2);
+  }
+}
+void CMap::swapBoxes() {
+  for (int x = m_gridTiles.getSizeX() - 1; x >= 0; --x) {
+    for (int y = m_gridTiles.getSizeY() - 1; y >= 0; --y) {
+      if (m_gridTiles(x, y)->getTileFlags() & CTile::TF_CHANGEBLOCK) {
+        TileType ttEndangered = m_gridTiles(x, y)->getEndangeredTileType();
+        if (m_gridTiles(x, y)->getTileType() == 67) {
+          delete m_gridTiles(x, y);
+          m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), 68);
+        }
+        else if (m_gridTiles(x, y)->getTileType() == 68) {
+          delete m_gridTiles(x, y);
+          m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), 67);
+        }
+        m_gridTiles(x, y)->setEndangeredTileType(ttEndangered);
+      }
+    }
   }
 }
 bool CMap::keyPressed( const OIS::KeyEvent &arg ) {
@@ -487,17 +508,27 @@ void CMap::readRow(XMLElement *pRow, unsigned int uiRow) {
 }
 void CMap::readSwitch(XMLElement *pSwitch) {
   CSwitch *pNewSwitch = new CSwitch(this,
-				 m_p2dManagerMap,
-				 Ogre::Vector2(pSwitch->FloatAttribute("x"),
-					       pSwitch->FloatAttribute("y")),
-				 pSwitch->IntAttribute("type"));
+                                    m_p2dManagerMap,
+                                    Ogre::Vector2(pSwitch->FloatAttribute("x"),
+                                                  pSwitch->FloatAttribute("y")),
+                                    pSwitch->IntAttribute("type"),
+                                    strcmp(pSwitch->Attribute("affectsBlocks"), "true") == 0);
   for (XMLElement *pChange = pSwitch->FirstChildElement(); pChange; pChange = pChange->NextSiblingElement()) {
-    SSwitchEntry entry;
-    entry.uiTileType = pChange->IntAttribute("id");
-    entry.uiTilePosX = pChange->IntAttribute("x");
-    entry.uiTilePosY = pChange->IntAttribute("y");
+    if (strcmp(pChange->Value(), "changes") == 0) {
+      SSwitchEntry entry;
+      entry.uiTileType = pChange->IntAttribute("id");
+      entry.uiTilePosX = pChange->IntAttribute("x");
+      entry.uiTilePosY = pChange->IntAttribute("y");
 
-    pNewSwitch->addEntry(entry);
+      pNewSwitch->addEntry(entry);
+    }
+    else if (strcmp(pChange->Value(), "togglesLink") == 0) {
+      STogglesLinkEntry entry;
+      entry.sLinkID = pChange->Attribute("id");
+      entry.bInitialState = strcmp(pChange->Attribute("initial"), "false") != 0;
+
+      pNewSwitch->addEntry(entry);
+    }
   }
 
   m_lSwitches.push_back(pNewSwitch);
@@ -513,11 +544,15 @@ void CMap::readEndangeredTiles(XMLElement *pTile) {
 }
 
 void CMap::readLink(XMLElement *pLink) {
+  Ogre::String sID(Ogre::StringUtil::BLANK);
+  if (pLink->Attribute("id")) {sID = pLink->Attribute("id");}
+
   m_lLinks.push_back(CLink(
-			   pLink->IntAttribute("fromx"),
-			   pLink->IntAttribute("fromy"),
-			   pLink->IntAttribute("tox"),
-			   pLink->IntAttribute("toy")));
+                           pLink->IntAttribute("fromx"),
+                           pLink->IntAttribute("fromy"),
+                           pLink->IntAttribute("tox"),
+                           pLink->IntAttribute("toy"),
+                           sID));
   Ogre::LogManager::getSingleton().logMessage("Parsed: " + m_lLinks.back().toString());
 }
 void CMap::readEnemy(XMLElement *pEnemy) {
@@ -553,6 +588,17 @@ void CMap::readPlayer(XMLElement *pPlayerElem) {
                                    pPlayerElem->FloatAttribute("posy")),
                      pPlayerElem->FloatAttribute("direction"));
 }
+CLink *CMap::getLinkById(const Ogre::String &id) {
+  for (CLink &link : m_lLinks) {
+    if (link.getID() == id) {
+      return &link;
+    }
+  }
+  return NULL;
+}
+
+
+
 bool CMap::CExit::isInExit(CPlayer *pPlayer) {
   switch (m_eExitType) {
   case CMap::EXIT_REGION:

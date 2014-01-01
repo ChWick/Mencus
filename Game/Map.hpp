@@ -135,6 +135,7 @@ public:
   bool findLink(const CBoundingBox2d &bb, Ogre::Vector2 &vFromPos, Ogre::Vector2 &vToPos) const;
 
   void unlock(unsigned int x, unsigned int y);
+  void swapBoxes();
 
   virtual bool frameStarted(const Ogre::FrameEvent& evt);
 
@@ -146,6 +147,7 @@ public:
 
   CTile* &getTile(unsigned int x, unsigned int y) {return m_gridTiles(x, y);}
   CTile *getTile(unsigned int x, unsigned int y) const {return m_gridTiles(x, y);}
+  CLink *getLinkById(const Ogre::String &id);
 
   bool isInMap(unsigned int x, unsigned int y);
 

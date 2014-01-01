@@ -15,23 +15,39 @@ const bool SWITCH_REUSABLE[CSwitch::SWITCH_COUNT] = {
 CSwitch::CSwitch(const CSpriteTransformPipeline *pTransformPipeline,
 		 Ogre2dManager *pSpriteManager,
 		 const Ogre::Vector2 &vPosition,
-		 SwitchType stSwitchType)
+		 SwitchType stSwitchType,
+		 bool bChangeBlocks)
   : CSprite(pTransformPipeline, pSpriteManager, vPosition, SWITCH_SIZES[stSwitchType]),
     m_stSwitchType(stSwitchType),
     m_eSwitchState(SS_DEACTIVATED),
-    m_bChangeBlocks(false) {
+    m_bChangeBlocks(bChangeBlocks) {
 
   setTexture(getSwitchTexture(stSwitchType, false));
 }
 CSwitch::~CSwitch() {
 }
-void CSwitch::initialize(const CMap *pMap) {
+void CSwitch::initialize(CMap *pMap) {
   for (auto &entry : m_vEntries) {
     entry.uiOldTileType = pMap->getTile(entry.uiTilePosX, entry.uiTilePosY)->getTileType();
   }
+
+  for (auto &entry : m_vLinkEntries) {
+    if (!pMap->getLinkById(entry.sLinkID)) {
+      Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Link with id " + entry.sLinkID + " was not found.");
+      continue;
+    }
+    pMap->getLinkById(entry.sLinkID)->setActivated(entry.bInitialState);
+  }
+
+  Ogre::LogManager::getSingleton().logMessage("Created switch at (" + Ogre::StringConverter::toString(m_vPosition)
+                                              + ") that affects " + Ogre::StringConverter::toString(m_vEntries.size())
+                                              + " tiles" + Ogre::String((m_bChangeBlocks) ? " and blocks." : "."));
 }
 void CSwitch::activate(CMap *pMap) {
-  if (m_eSwitchState == SS_DEACTIVATED) {  
+  if (m_bChangeBlocks) {
+    pMap->swapBoxes();
+  }
+  if (m_eSwitchState == SS_DEACTIVATED) {
     setTexture(getSwitchTexture(m_stSwitchType, true));
     m_eSwitchState = SS_ACTIVATED;
   }
@@ -46,6 +62,9 @@ void CSwitch::activate(CMap *pMap) {
   }
   for (auto &entry : m_vEntries) {
     place(pMap, entry);
+  }
+  for (auto &entry : m_vLinkEntries) {
+    pMap->getLinkById(entry.sLinkID)->setActivated((m_eSwitchState == SS_ACTIVATED) ? !entry.bInitialState : entry.bInitialState);
   }
 }
 void CSwitch::place(CMap *pMap, const SSwitchEntry &entry) {
