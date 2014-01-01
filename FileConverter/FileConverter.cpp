@@ -14,6 +14,15 @@ using namespace std;
 int sizex;
 int sizey;
 
+const float OBJECT_HEIGHTS[] = {
+  0.5,
+  0.5,
+  0.5,
+  0.25,
+  1,
+  1
+};
+
 float toNewX(int x) {
   return static_cast<float>(x) / 32.f;
 }
@@ -287,9 +296,10 @@ int main(int argc, const char* argv[]) {
     readLine(inputfile, buffer);
     split(splitted, buffer, is_any_of(" \r\n\t"), token_compress_on);
 
-    pObjectElem->SetAttribute("type", convertObjectId(atoi(splitted[0].c_str())));
+    int objectid = convertObjectId(atoi(splitted[0].c_str()));
+    pObjectElem->SetAttribute("type", objectid);
     pObjectElem->SetAttribute("x", toNewX(atoi(splitted[1].c_str())));
-    pObjectElem->SetAttribute("y", toNewY(atoi(splitted[2].c_str())));
+    pObjectElem->SetAttribute("y", toNewY(atoi(splitted[2].c_str())) - OBJECT_HEIGHTS[objectid]);
   }
 
   if (objectscount != 0) {
