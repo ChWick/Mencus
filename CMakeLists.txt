@@ -11,7 +11,6 @@ find_package(CEGUI)
 find_package(tinyxml2)
 
 add_subdirectory(Game)
+add_subdirectory(FileConverter)
 #add_subdirectory(MapEditor)
-
-#install(TARGETS zelda RUNTIME DESTINATION bin)
 
