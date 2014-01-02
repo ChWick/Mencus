@@ -1,7 +1,7 @@
 project(Game)
 
 file(GLOB Game_source_files *.cpp)
-file(GLOB Game_include_files *.h)
+file(GLOB Game_include_files *.hpp)
 
 ADD_DEFINITIONS(-std=c++11)
 
