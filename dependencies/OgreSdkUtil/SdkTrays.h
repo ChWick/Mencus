@@ -42,6 +42,7 @@
 #if OGRE_VERSION >= ((1 << 16) | (9 << 8) | 0)
 #include <Overlay/OgreOverlay.h>
 #include <Overlay/OgreOverlayManager.h>
+#include <Overlay/OgreOverlaySystem.h>
 #endif
 
 #if OGRE_COMPILER == OGRE_COMPILER_MSVC
