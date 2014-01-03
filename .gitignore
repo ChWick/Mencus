@@ -37,6 +37,10 @@
 ehthumbs.db
 Thumbs.db
 
+# Visual Studio created files #
+###############################
+*.ilk
+
 # Temporary files #
 ###################
 *#
