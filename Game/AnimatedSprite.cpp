@@ -17,6 +17,7 @@ void CAnimatedSprite::setNumberOfAnimationSquences(unsigned int size) {
 }
 unsigned int CAnimatedSprite::addAnimationSequence() {
   m_AnimationSequences.resize(m_AnimationSequences.size() + 1);
+  return m_AnimationSequences.size();
 }
 void CAnimatedSprite::setCurrentAnimationSequence(unsigned int uiCurrentAnimationSequence) {
   m_uiCurrentAnimationSequence = uiCurrentAnimationSequence;
