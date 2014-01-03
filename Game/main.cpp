@@ -1,6 +1,7 @@
 #include "Game.hpp"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#define WIN32_DEFAULT_LIBS
 #define WIN32_LEAN_AND_MEAN
 #include "windows.h"
 #endif
