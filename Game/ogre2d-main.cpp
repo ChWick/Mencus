@@ -190,7 +190,11 @@ void Ogre2dManager::renderBuffer()
    for (currChunk=chunks.begin(); currChunk!=endChunk; currChunk++)
    {
       renderOp.vertexData->vertexCount=currChunk->vertexCount;
-      tp=Ogre::TextureManager::getSingleton().getByHandle(currChunk->texHandle);
+#if OGRE_VERSION >= ((1 << 16) | (9 << 8) | 0)
+      tp = Ogre::TextureManager::getSingleton().getByHandle(currChunk->texHandle).dynamicCast<Ogre::Texture>();
+#else
+	  tp = Ogre::TextureManager::getSingleton().getByHandle(currChunk->texHandle);
+#endif
       rs->_setTexture(0, true, tp->getName());
       rs->_render(renderOp);
       renderOp.vertexData->vertexStart+=currChunk->vertexCount;
