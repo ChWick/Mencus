@@ -95,7 +95,7 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   m_pOldScene = pScene;
 }
 void CScreenplay::parse(const Ogre::String &sFilename) {
-  XMLDocument doc;
+  tinyxml2::XMLDocument doc; // namespace required for windoof...
   if (doc.LoadFile(sFilename.c_str())) {
     throw Ogre::Exception(Ogre::Exception::ERR_FILE_NOT_FOUND, sFilename + " not found.", __FILE__);
   }
@@ -185,6 +185,10 @@ void CScreenplay::parse(const Ogre::String &sFilename) {
   }
 }
 bool CScreenplay::frameStarted(const Ogre::FrameEvent& evt) {
+  if (evt.timeSinceLastFrame > 0.2) {
+    // Probably loading causes this fps, next time step update
+    return true;
+  }
   if (m_pCurrentScene) {
     m_pCurrentScene->frameStarted(evt);
   }

@@ -10,6 +10,10 @@ using namespace Ogre;
 
 template<> CGame *Ogre::Singleton<CGame>::msSingleton = 0;
 
+#ifdef _DEBUG
+#define USE_DEBUG_PLUGINS
+#endif
+
 CGame *CGame::getSingletonPtr() {
   return msSingleton;
 }
@@ -32,6 +36,7 @@ CGame::CGame(void)
     mCursorWasVisible(false),
     mShutDown(false),
     m_pScreenplay(NULL),
+	mInputManager(NULL),
     mKeyboard(0) {
 }
 //-------------------------------------------------------------------------------------

@@ -125,9 +125,8 @@ Ogre::ColourValue CHUD::getMPColourmap() const {
   return Ogre::ColourValue(0.423529412 * m_fMP, 0.380392157 + 0.529411765 * m_fMP, 0.337254902 + 0.623529412 * m_fMP);
 }
 std::string CHUD::getHexValue(const Ogre::ColourValue &c) const {
-  char str[6];
-  sprintf( str, "FF%02x%02x%02x", min(255, static_cast<int>(c.r * 255)), min(255, static_cast<int>(c.g * 255)), min(255, static_cast<int>(c.b * 255)));
-  std::string out(str);
+  std::string out("FFFFFFFF");
+  sprintf( &out[0], "FF%02x%02x%02x", min(255, static_cast<int>(c.r * 255)), min(255, static_cast<int>(c.g * 255)), min(255, static_cast<int>(c.b * 255)));
   Ogre::StringUtil::toUpperCase(out);
   return out;
 }

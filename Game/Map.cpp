@@ -95,7 +95,7 @@ void CMap::clearMap() {
 void CMap::loadMap(string sFilename) {
   clearMap();
 
-  XMLDocument doc;
+  tinyxml2::XMLDocument doc; // namespace required for windoof (conflicts)
   if (doc.LoadFile(sFilename.c_str())) {
     throw Ogre::Exception(Ogre::Exception::ERR_FILE_NOT_FOUND, sFilename + " not found.", __FILE__);
   }
@@ -171,6 +171,8 @@ void CMap::loadMap(string sFilename) {
   }
 }
 Ogre::Real CMap::hitsTile(ECollisionCheckDirections eCollisionCheckDirection, unsigned uiTileMask, const CBoundingBox2d &bb, CTile **ppTile) const {
+  if (outOfMap(bb)) { return 0; } // check if out of map
+
   // loop trough tiles that could be hit
   int startX = static_cast<int>(bb.getPosition().x + ((eCollisionCheckDirection == CCD_RIGHT) ? bb.getSize().x : 0)); // round down
   int startY = static_cast<int>(bb.getPosition().y + ((eCollisionCheckDirection == CCD_TOP) ? bb.getSize().y : 0)); // round down

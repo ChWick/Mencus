@@ -4,13 +4,14 @@
 #define WIN32_DEFAULT_LIBS
 #define WIN32_LEAN_AND_MEAN
 #include "windows.h"
+#pragma comment(lib,"user32.lib")
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#if OGRE_PLATFORM == sOGRE_PLATFORM_WIN32
     INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
 #else
     int main(int argc, char *argv[])
@@ -23,7 +24,7 @@ extern "C" {
 	app->go();
       } catch( Ogre::Exception& e ) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-            MessageBoxA( NULL, e.getFullDescription().c_str(), "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
+            MessageBox( NULL, e.getFullDescription().c_str(), "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
             std::cerr << "An exception has occured: " <<
                 e.getFullDescription().c_str() << std::endl;
@@ -33,7 +34,7 @@ extern "C" {
         }
 		catch (CEGUI::Exception &e) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-            MessageBoxA( NULL, e.getMessage().c_str(), "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
+            MessageBox( NULL, e.getMessage().c_str(), "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
             std::cerr << "An exception has occured: " <<
                 e.getMessage().c_str() << std::endl;
@@ -41,7 +42,7 @@ extern "C" {
 		}
 		 catch (...) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-            MessageBoxA( NULL, "Unknown Error", "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
+            MessageBox( NULL, "Unknown Error", "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
             std::cerr << "An exception has occured: " <<
                 "Unknown Error" << std::endl;
