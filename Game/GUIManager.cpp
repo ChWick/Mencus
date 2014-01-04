@@ -1,5 +1,6 @@
 #include "GUIManager.hpp"
 #include "HUD.hpp"
+#include "MainMenu.hpp"
 #include "GUIInstructions.hpp"
 #include <CEGUI/CEGUI.h>
 
@@ -22,11 +23,14 @@ CGUIManager::CGUIManager() {
 
   new CHUD(guiRoot);
   new CGUIInstructions(guiRoot);
+  new CMainMenu(guiRoot);
 }
 CGUIManager::~CGUIManager() {
   delete CHUD::getSingletonPtr();
   delete CGUIInstructions::getSingletonPtr();
+  delete CMainMenu::getSingletonPtr();
 }
 void CGUIManager::update(Ogre::Real tpf) {
   CHUD::getSingleton().update(tpf);
+  CMainMenu::getSingleton().update(tpf);
 }
