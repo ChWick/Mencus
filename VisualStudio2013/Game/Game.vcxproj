@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|Win32">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|Win32">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGUID>{864E89D1-0B0F-4E55-BFA6-129012562455}</ProjectGUID>
+    <Keyword>Win32Proj</Keyword>
+    <Platform>Win32</Platform>
+    <ProjectName>Game</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
+    <Import Project="..\..\..\ogre_src_v1-8-1\OGRE.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="..\..\..\ogre_src_v1-8-1\OGRE.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
+    <Import Project="..\..\..\ogre_src_v1-8-1\OGRE.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="..\..\..\ogre_src_v1-8-1\OGRE.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\bin</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Game.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Game</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\bin</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Game.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Game</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\bin</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Game.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Game</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">true</GenerateManifest>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\bin</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Game.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Game</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">.exe</TargetExt>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</LinkIncremental>
+    <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">true</GenerateManifest>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LibraryPath>C:\Users\Christoph\Documents\Visual Studio 2012\Projects\tinyxml2\tinyxml2\bin\Win32-Debug-Lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <AdditionalOptions> -std=c++11 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/..;C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Debug/</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;_DEBUG;CMAKE_INTDIR="Debug";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;CMAKE_INTDIR=\"Debug\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/..;C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/..;C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 /debug %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>OIS_d.lib;cg.lib;libboost_system-vc120-mt-1_55.lib;OgreMain_d.lib;tinyxml2_d.lib;CEGUIBase-0_d.lib;CEGUIOgreRenderer-0_d.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/VisualStudio2013/bin/Debug/Game.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/VisualStudio2013/bin/Debug/Game.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <AdditionalOptions> -std=c++11 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/..;C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>Release/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_CONSOLE;NDEBUG;CMAKE_INTDIR="Release";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"Release\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/..;C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/..;C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>OIS.lib;cg.lib;libboost_system-vc120-mt-1_55.lib;OgreMain.lib;tinyxml2.lib;CEGUIBase-0.lib;CEGUIOgreRenderer-0.lib;user32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <ImportLibrary>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/VisualStudio2013/bin/Release/Game.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/VisualStudio2013/bin/Release/Game.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">
+    <ClCompile>
+      <AdditionalOptions> -std=c++11 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/..;C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>MinSizeRel/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="MinSizeRel";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"MinSizeRel\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/..;C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/..;C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>OIS.lib;cg.lib;libboost_system-vc120-mt-1_55.lib;OgreMain.lib;tinyxml2.lib;CEGUIBase-0.lib;CEGUIOgreRenderer-0.lib;OgreOverlay.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <ImportLibrary>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/VisualStudio2013/bin/MinSizeRel/Game.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/VisualStudio2013/bin/MinSizeRel/Game.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">
+    <ClCompile>
+      <AdditionalOptions> -std=c++11 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/..;C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>RelWithDebInfo/</AssemblerListingLocation>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR="RelWithDebInfo";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;CMAKE_INTDIR=\"RelWithDebInfo\";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/..;C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/..;C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Link>
+      <AdditionalOptions> /machine:X86 /debug %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>OIS.lib;cg.lib;libboost_system-vc120-mt-1_55.lib;OgreMain.lib;tinyxml2.lib;CEGUIBase-0.lib;CEGUIOgreRenderer-0.lib;OgreOverlay.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ImportLibrary>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/VisualStudio2013/bin/RelWithDebInfo/Game.lib</ImportLibrary>
+      <ProgramDataBaseFile>C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/VisualStudio2013/bin/RelWithDebInfo/Game.pdb</ProgramDataBaseFile>
+      <SubSystem>Console</SubSystem>
+      <Version>
+      </Version>
+    </Link>
+    <ProjectReference>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\Game\CMakeLists.txt">
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Building Custom Rule C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">setlocal
+"C:\Program Files (x86)\CMake 2.8\bin\cmake.exe" "-HC:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus" "-BC:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/VisualStudio2013" --check-stamp-file "C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\VisualStudio2013\Game\CMakeFiles\generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/CMakeLists.txt;C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\Game\CMakeLists.txt;C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\Game\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\VisualStudio2013\Game\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Building Custom Rule C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">setlocal
+"C:\Program Files (x86)\CMake 2.8\bin\cmake.exe" "-HC:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus" "-BC:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/VisualStudio2013" --check-stamp-file "C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\VisualStudio2013\Game\CMakeFiles\generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/CMakeLists.txt;C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\Game\CMakeLists.txt;C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\Game\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\VisualStudio2013\Game\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">Building Custom Rule C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">setlocal
+"C:\Program Files (x86)\CMake 2.8\bin\cmake.exe" "-HC:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus" "-BC:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/VisualStudio2013" --check-stamp-file "C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\VisualStudio2013\Game\CMakeFiles\generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/CMakeLists.txt;C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\Game\CMakeLists.txt;C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\Game\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\VisualStudio2013\Game\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|Win32'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">Building Custom Rule C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">setlocal
+"C:\Program Files (x86)\CMake 2.8\bin\cmake.exe" "-HC:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus" "-BC:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/VisualStudio2013" --check-stamp-file "C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\VisualStudio2013\Game\CMakeFiles\generate.stamp"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/Game/CMakeLists.txt;C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\Game\CMakeLists.txt;C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\Game\CMakeLists.txt;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">C:\Users\Christoph\Documents\Visual Studio 2013\Projects\Mencus\VisualStudio2013\Game\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|Win32'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Game\AnimatedSprite.hpp" />
+    <ClInclude Include="..\..\Game\BarIndicator.hpp" />
+    <ClInclude Include="..\..\Game\BoundingBox2d.hpp" />
+    <ClInclude Include="..\..\Game\CheatDefines.hpp" />
+    <ClInclude Include="..\..\Game\CollisionDefines.hpp" />
+    <ClInclude Include="..\..\Game\Constants.hpp" />
+    <ClInclude Include="..\..\Game\DebugDefines.hpp" />
+    <ClInclude Include="..\..\Game\DebugDrawer.hpp" />
+    <ClInclude Include="..\..\Game\Enemy.hpp" />
+    <ClInclude Include="..\..\Game\Explosion.hpp" />
+    <ClInclude Include="..\..\Game\Fader.hpp" />
+    <ClInclude Include="..\..\Game\Game.hpp" />
+    <ClInclude Include="..\..\Game\Grid2d.hpp" />
+    <ClInclude Include="..\..\Game\GUIInstructions.hpp" />
+    <ClInclude Include="..\..\Game\GUIManager.hpp" />
+    <ClInclude Include="..\..\Game\HitableObject.hpp" />
+    <ClInclude Include="..\..\Game\HUD.hpp" />
+    <ClInclude Include="..\..\Game\InputListener.hpp" />
+    <ClInclude Include="..\..\Game\Link.hpp" />
+    <ClInclude Include="..\..\Game\MainMenu.hpp" />
+    <ClInclude Include="..\..\Game\Map.hpp" />
+    <ClInclude Include="..\..\Game\MapManager.hpp" />
+    <ClInclude Include="..\..\Game\Object.hpp" />
+    <ClInclude Include="..\..\Game\ogre2d-main.hpp" />
+    <ClInclude Include="..\..\Game\Player.hpp" />
+    <ClInclude Include="..\..\Game\Screenplay.hpp" />
+    <ClInclude Include="..\..\Game\ScreenplayListener.hpp" />
+    <ClInclude Include="..\..\Game\Shot.hpp" />
+    <ClInclude Include="..\..\Game\Sprite.hpp" />
+    <ClInclude Include="..\..\Game\SpriteTexture.hpp" />
+    <ClInclude Include="..\..\Game\SpriteTransformPipeline.hpp" />
+    <ClInclude Include="..\..\Game\Switch.hpp" />
+    <ClInclude Include="..\..\Game\Tile.hpp" />
+    <ClInclude Include="..\..\Game\Util.hpp" />
+    <ClInclude Include="..\..\Game\Video.hpp" />
+    <ClCompile Include="..\..\Game\AnimatedSprite.cpp" />
+    <ClCompile Include="..\..\Game\DebugDrawer.cpp" />
+    <ClCompile Include="..\..\Game\Enemy.cpp" />
+    <ClCompile Include="..\..\Game\Explosion.cpp" />
+    <ClCompile Include="..\..\Game\Game.cpp" />
+    <ClCompile Include="..\..\Game\GUIInstructions.cpp" />
+    <ClCompile Include="..\..\Game\GUIManager.cpp" />
+    <ClCompile Include="..\..\Game\HUD.cpp" />
+    <ClCompile Include="..\..\Game\InputListener.cpp" />
+    <ClCompile Include="..\..\Game\main.cpp" />
+    <ClCompile Include="..\..\Game\MainMenu.cpp" />
+    <ClCompile Include="..\..\Game\Map.cpp" />
+    <ClCompile Include="..\..\Game\MapManager.cpp" />
+    <ClCompile Include="..\..\Game\Object.cpp" />
+    <ClCompile Include="..\..\Game\ogre2d-main.cpp" />
+    <ClCompile Include="..\..\Game\Player.cpp" />
+    <ClCompile Include="..\..\Game\Screenplay.cpp" />
+    <ClCompile Include="..\..\Game\Shot.cpp" />
+    <ClCompile Include="..\..\Game\Sprite.cpp" />
+    <ClCompile Include="..\..\Game\SpriteTransformPipeline.cpp" />
+    <ClCompile Include="..\..\Game\Switch.cpp" />
+    <ClCompile Include="..\..\Game\Tile.cpp" />
+    <ClCompile Include="..\..\Game\Util.cpp" />
+    <ClCompile Include="..\..\Game\Video.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:/Users/Christoph/Documents/Visual Studio 2013/Projects/Mencus/VisualStudio2013/ZERO_CHECK.vcxproj">
+      <Project>95DB9B9F-26CA-47B2-98F6-C669053EC47F</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

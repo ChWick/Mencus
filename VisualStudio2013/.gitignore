@@ -1,0 +1,12 @@
+bin
+CMakeFiles
+Debug
+*.dir
+Release
+Win32
+cmake_install.cmake
+CMakeCache.txt
+*.sdf
+*.opensdf
+*.user
+*.suo
