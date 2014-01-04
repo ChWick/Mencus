@@ -66,6 +66,8 @@
 		<Unit filename="../Game/InputListener.cpp" />
 		<Unit filename="../Game/InputListener.hpp" />
 		<Unit filename="../Game/Link.hpp" />
+		<Unit filename="../Game/MainMenu.cpp" />
+		<Unit filename="../Game/MainMenu.hpp" />
 		<Unit filename="../Game/Map.cpp" />
 		<Unit filename="../Game/Map.hpp" />
 		<Unit filename="../Game/MapManager.cpp" />
