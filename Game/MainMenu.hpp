@@ -52,8 +52,8 @@ public:
 
   virtual bool keyPressed(const OIS::KeyEvent &arg);
 
-  void show() { m_pMMRoot->setVisible(true); }
-  void hide() { m_pMMRoot->setVisible(false); }
+  void show() { m_pMMRoot->setVisible(true); setInputListenerEnabled(true); }
+  void hide() { m_pMMRoot->setVisible(false); setInputListenerEnabled(false); }
 };
 
 #endif // MAIN_MENU_HPP
