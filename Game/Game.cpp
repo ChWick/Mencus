@@ -288,14 +288,15 @@ bool CGame::frameRenderingQueued(const Ogre::FrameEvent& evt)
   CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
   mCameraMan->frameRenderingQueued(evt);   // if dialog isn't up, then update the camera
 
-  CGUIManager::getSingleton().update(evt.timeSinceLastFrame);
-  m_pGameState->update(evt.timeSinceLastFrame);
   return true;
 }
 bool CGame::frameStarted(const Ogre::FrameEvent& evt) {
   if (evt.timeSinceLastFrame > 0.1) {
     return true;
   }
+
+  CGUIManager::getSingleton().update(evt.timeSinceLastFrame);
+  m_pGameState->update(evt.timeSinceLastFrame);
   return true;
 }
 bool CGame::frameEnded(const Ogre::FrameEvent& evt) {
