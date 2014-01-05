@@ -346,6 +346,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="..\..\Game\Explosion.hpp" />
     <ClInclude Include="..\..\Game\Fader.hpp" />
     <ClInclude Include="..\..\Game\Game.hpp" />
+    <ClInclude Include="..\..\Game\GameState.hpp" />
     <ClInclude Include="..\..\Game\Grid2d.hpp" />
     <ClInclude Include="..\..\Game\GUIInstructions.hpp" />
     <ClInclude Include="..\..\Game\GUIManager.hpp" />
@@ -374,6 +375,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="..\..\Game\Enemy.cpp" />
     <ClCompile Include="..\..\Game\Explosion.cpp" />
     <ClCompile Include="..\..\Game\Game.cpp" />
+    <ClCompile Include="..\..\Game\GameState.cpp" />
     <ClCompile Include="..\..\Game\GUIInstructions.cpp" />
     <ClCompile Include="..\..\Game\GUIManager.cpp" />
     <ClCompile Include="..\..\Game\HUD.cpp" />
