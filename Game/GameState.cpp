@@ -50,5 +50,11 @@ void CGameState::changeGameState(EGameStates eNewGameState) {
   }
 }
 void CGameState::update(Ogre::Real tpf) {
-
+  switch (m_eCurrentGameState) {
+  case GS_GAME:
+    m_pScreenplay->update(tpf);
+    break;
+  default:
+    break;
+  }
 }
