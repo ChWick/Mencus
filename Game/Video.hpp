@@ -90,7 +90,7 @@ public:
   virtual void stop();
 
   void nextPart();
-  virtual bool frameStarted(const Ogre::FrameEvent& evt);
+  void update(Ogre::Real tpf);
 
   bool keyPressed( const OIS::KeyEvent &arg );
 

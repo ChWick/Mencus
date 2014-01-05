@@ -107,16 +107,15 @@ void CVideo::nextPart() {
     m_vParts[m_iCurrentPart]->start();
   }
 }
-bool CVideo::frameStarted(const Ogre::FrameEvent& evt) {
-  if (m_iCurrentPart == m_vParts.size()) {return true;}
+void CVideo::update(Ogre::Real tpf) {
+  if (m_iCurrentPart == m_vParts.size()) { return; }
 
   if (m_vParts[m_iCurrentPart]->isFinished()) {
     nextPart();
   }
   else {
-    m_vParts[m_iCurrentPart]->update(evt.timeSinceLastFrame);
+    m_vParts[m_iCurrentPart]->update(tpf);
   }
-  return true;
 }
 bool CVideo::keyPressed( const OIS::KeyEvent &arg ) {
   nextPart();
