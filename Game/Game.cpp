@@ -3,8 +3,8 @@
 #include <CEGUI/RendererModules/Ogre/ImageCodec.h>
 #include <CEGUI/RendererModules/Ogre/ResourceProvider.h>
 #include <OgreCodec.h>
-#include "Screenplay.hpp"
 #include "GUIManager.hpp"
+#include "GameState.hpp"
 
 using namespace Ogre;
 
@@ -35,15 +35,15 @@ CGame::CGame(void)
     mDetailsPanel(0),
     mCursorWasVisible(false),
     mShutDown(false),
-    m_pScreenplay(NULL),
-	mInputManager(NULL),
+    m_pGameState(NULL),
+	  mInputManager(NULL),
     mKeyboard(0) {
 }
 //-------------------------------------------------------------------------------------
 CGame::~CGame(void) {
   if (mTrayMgr) delete mTrayMgr;
   if (mCameraMan) delete mCameraMan;
-  if (m_pScreenplay) delete m_pScreenplay;
+  if (CGameState::getSingletonPtr()) { delete CGameState::getSingletonPtr(); }
   if (CGUIManager::getSingletonPtr()) {delete CGUIManager::getSingletonPtr();}
   if (CEGUI::System::getSingletonPtr()) {CEGUI::OgreRenderer::destroySystem();}
   if (CInputListenerManager::getSingletonPtr()) {delete CInputListenerManager::getSingletonPtr();}
@@ -261,7 +261,7 @@ bool CGame::go(void)
 
     mRoot->addFrameListener(this);
     //-------------------------------------------------------------------------------------
-    m_pScreenplay = new CScreenplay();
+    m_pGameState = new CGameState();
 
     mRoot->startRendering();
 
@@ -289,6 +289,7 @@ bool CGame::frameRenderingQueued(const Ogre::FrameEvent& evt)
   mCameraMan->frameRenderingQueued(evt);   // if dialog isn't up, then update the camera
 
   CGUIManager::getSingleton().update(evt.timeSinceLastFrame);
+  m_pGameState->update(evt.timeSinceLastFrame);
   return true;
 }
 bool CGame::frameStarted(const Ogre::FrameEvent& evt) {

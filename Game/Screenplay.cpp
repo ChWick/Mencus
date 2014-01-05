@@ -32,8 +32,8 @@ void CLevel::stop() {
     m_pMap = 0;
   }
 }
-bool CLevel::frameStarted(const Ogre::FrameEvent& evt) {
-  return m_pMap->frameStarted(evt);
+void CLevel::update(Ogre::Real tpf) {
+  m_pMap->update(evt);
 }
 
 
@@ -57,14 +57,12 @@ CScreenplay::CScreenplay()
     m_uiNextScene(0),
     m_pCurrentScene(NULL),
     m_pOldScene(NULL) {
-  Ogre::Root::getSingleton().addFrameListener(this);
   CGUIInstructions::getSingleton().setScreenplayListener(this);
   parse("../level/screenplay.xml");
 
   setNextAct(2, 3);
 }
 CScreenplay::~CScreenplay() {
-  Ogre::Root::getSingleton().removeFrameListener(this);
   for (auto &p : m_mapActs) {
     delete p.second;
   }
@@ -184,22 +182,19 @@ void CScreenplay::parse(const Ogre::String &sFilename) {
     m_mapActs[id] = pAct;
   }
 }
-bool CScreenplay::frameStarted(const Ogre::FrameEvent& evt) {
-  if (evt.timeSinceLastFrame > 0.2) {
+void CScreenplay::update(Ogre::Real tpf) {
+  if (tpf > 0.2) {
     // Probably loading causes this fps, next time step update
-    return true;
+    return;
   }
   if (m_pCurrentScene) {
-    m_pCurrentScene->frameStarted(evt);
+    m_pCurrentScene->update(tpf);
   }
-  return true;
-}
-bool CScreenplay::frameEnded(const Ogre::FrameEvent &evt) {
+
+
   if (m_uiCurrentAct != m_uiNextAct || m_uiCurrentScene != m_uiNextScene) {
     loadAct(m_uiNextAct, m_uiNextScene);
   }
-
-  return true;
 }
 void CScreenplay::playerExitsMap() {
   m_uiNextScene++;

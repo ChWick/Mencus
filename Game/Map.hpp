@@ -143,7 +143,7 @@ public:
   void unlock(unsigned int x, unsigned int y);
   void swapBoxes();
 
-  virtual bool frameStarted(const Ogre::FrameEvent& evt);
+  void update(Ogre::Real tpf);
 
   // OIS::KeyListener
   virtual bool keyPressed( const OIS::KeyEvent &arg );

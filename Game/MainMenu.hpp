@@ -51,6 +51,9 @@ public:
   void changeState(EMainMenuState eState);
 
   virtual bool keyPressed(const OIS::KeyEvent &arg);
+
+  void show() { m_pMMRoot->setVisible(true); }
+  void hide() { m_pMMRoot->setVisible(false); }
 };
 
 #endif // MAIN_MENU_HPP

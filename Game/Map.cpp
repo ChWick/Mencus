@@ -399,31 +399,31 @@ bool CMap::keyPressed( const OIS::KeyEvent &arg ) {
 bool CMap::keyReleased( const OIS::KeyEvent &arg ) {
   return true;
 }
-bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
+void CMap::update(Ogre::Real tpf) {
   updateCameraPos();
 
   // order of updates exquates drawing order, last one will be on top
-  updateBackground(evt.timeSinceLastFrame);
+  updateBackground(tpf);
   for (auto pTile : m_gridTiles) {
-    pTile->update(evt.timeSinceLastFrame);
+    pTile->update(tpf);
   }
   for (auto pObject : m_lObjects) {
-    pObject->update(evt.timeSinceLastFrame);
+    pObject->update(tpf);
   }
   for (auto pEnemy : m_lEnemies) {
-    pEnemy->update(evt.timeSinceLastFrame);
+    pEnemy->update(tpf);
   }
   for (auto pSwitch : m_lSwitches) {
-    pSwitch->update(evt.timeSinceLastFrame);
+    pSwitch->update(tpf);
   }
   for (auto pShot : m_lShots) {
-    pShot->update(evt.timeSinceLastFrame);
+    pShot->update(tpf);
   }
 
-  m_pPlayer->update(evt.timeSinceLastFrame);
+  m_pPlayer->update(tpf);
 
   for (auto pExplosion : m_lExplosions) {
-    pExplosion->update(evt.timeSinceLastFrame);
+    pExplosion->update(tpf);
   }
 
   // draw links if debug
@@ -467,8 +467,6 @@ bool CMap::frameStarted(const Ogre::FrameEvent& evt) {
     m_lObjects.remove(m_lObjectsToDestroy.front());
     m_lObjectsToDestroy.pop_front();
   }
-
-  return true;
 }
 void CMap::updateBackground(Ogre::Real tpf) {
   if (m_pBackgroundSprite) {

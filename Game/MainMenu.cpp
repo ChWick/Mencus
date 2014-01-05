@@ -1,5 +1,6 @@
 #include "MainMenu.hpp"
 #include "Game.hpp"
+#include "GameState.hpp"
 
 #include <OgreStringConverter.h>
 #include <iostream>
@@ -63,6 +64,8 @@ CMainMenu::~CMainMenu() {
   CInputListenerManager::getSingleton().removeInputListener(this);
 }
 void CMainMenu::update(Ogre::Real tpf) {
+  if (!m_pMMRoot->isVisible()) { return; }
+
   for (int i = 0; i < NUM_SLOTS; i++) {
     if (i == m_iSelectedSlot) {
       m_vSlots[i]->setAlpha(min(m_vSlots[i]->getAlpha() + tpf * BUTTON_ALPHA_CHANGE_PER_SEC, 1.0f));
@@ -78,8 +81,10 @@ void CMainMenu::changeState(EMainMenuState eState) {
 
   switch (eState) {
   case MMS_NEW_GAME:
+    CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
     break;
   case MMS_LOAD_GAME:
+    CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
     break;
   case MMS_EXIT:
     CGame::getSingleton().shutDown();

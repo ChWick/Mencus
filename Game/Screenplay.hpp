@@ -5,7 +5,6 @@
 #include <OgreString.h>
 #include <CEGUI/String.h>
 #include "ScreenplayListener.hpp"
-#include <OgreFrameListener.h>
 
 class CMap;
 
@@ -34,7 +33,7 @@ public:
   virtual void start() = 0;
   virtual void stop() = 0;
 
-  virtual bool frameStarted(const Ogre::FrameEvent& evt) {return true;}
+  virtual void update(Ogre::Real tpf) {}
 
   unsigned int getID() const {return m_uiID;}
   ESceneTypes getType() const {return m_eSceneType;}
@@ -71,7 +70,7 @@ public:
 
   virtual void start();
   virtual void stop();
-  bool frameStarted(const Ogre::FrameEvent& evt);
+  void update(Ogre::Real tpf) {}
 };
 
 class CAct {
@@ -101,7 +100,7 @@ public:
   virtual void stop();
 };
 
-class CScreenplay : public CScreenplayListener, public Ogre::FrameListener {
+class CScreenplay : public CScreenplayListener {
 private:
   const Ogre::String m_sLevelDir;
 
@@ -125,8 +124,8 @@ public:
   void playerExitsMap();
   void videoFinished();
 
-  bool frameStarted(const Ogre::FrameEvent& evt);
-  bool frameEnded(const Ogre::FrameEvent &evt);
+  void update(Ogre::Real tpf);
+
 private:
 
   void loadAct(unsigned int uiActId, unsigned int uiSceneId = 1);
