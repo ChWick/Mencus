@@ -33,7 +33,7 @@ void CLevel::stop() {
   }
 }
 void CLevel::update(Ogre::Real tpf) {
-  m_pMap->update(evt);
+  m_pMap->update(tpf);
 }
 
 
