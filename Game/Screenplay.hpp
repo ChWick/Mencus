@@ -70,7 +70,7 @@ public:
 
   virtual void start();
   virtual void stop();
-  void update(Ogre::Real tpf) {}
+  void update(Ogre::Real tpf);
 };
 
 class CAct {
