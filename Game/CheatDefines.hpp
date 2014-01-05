@@ -2,5 +2,6 @@
 #define CHEAT_DEFINES_HPP
 
 #define CHEAT_ADD_KEYS
+#define CHEAT_MEGA_JUMP
 
 #endif // CHEAT_DEFINES_HPP

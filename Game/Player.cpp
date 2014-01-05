@@ -390,6 +390,11 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
     ++m_uiKeyCount;
   }
 #endif // CHEAT_ADD_KEYS
+#ifdef CHEAT_MEGA_JUMP
+  else if (arg.key == OIS::KC_LCONTROL) {
+    m_vCurrentSpeed.y += m_fInitialJumpSpeed;
+  }
+#endif // CHEAT_MEGA_JUMP
 
   return true;
 }
