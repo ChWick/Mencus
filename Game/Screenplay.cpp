@@ -60,7 +60,7 @@ CScreenplay::CScreenplay()
   CGUIInstructions::getSingleton().setScreenplayListener(this);
   parse("../level/screenplay.xml");
 
-  setNextAct(2, 3);
+  setNextAct(1, 1);
 }
 CScreenplay::~CScreenplay() {
   for (auto &p : m_mapActs) {
@@ -197,11 +197,18 @@ void CScreenplay::update(Ogre::Real tpf) {
   }
 }
 void CScreenplay::playerExitsMap() {
-  m_uiNextScene++;
+  toNextScene();
 }
 void CScreenplay::keyForContinueInstructionsPressed() {
-  m_uiNextScene++;
+  toNextScene();
 }
 void CScreenplay::videoFinished() {
+  toNextScene();
+}
+void CScreenplay::toNextScene() {
   m_uiNextScene++;
+  if (m_uiNextScene > m_mapActs[m_uiCurrentAct]->getSceneCount()) {
+    m_uiNextScene = 1;
+    m_uiNextAct++;
+  }
 }

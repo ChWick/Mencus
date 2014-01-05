@@ -130,5 +130,7 @@ private:
 
   void loadAct(unsigned int uiActId, unsigned int uiSceneId = 1);
   void parse(const Ogre::String &sFilename);
+
+  void toNextScene();
 };
 #endif // SCREENPLAY_HPP
