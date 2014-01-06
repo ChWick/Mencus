@@ -2,7 +2,7 @@
 #include "MainMenu.hpp"
 #include "Screenplay.hpp"
 
-CGameState *Ogre::Singleton<CGameState>::msSingleton = 0;
+template<> CGameState *Ogre::Singleton<CGameState>::msSingleton = 0;
 
 CGameState &CGameState::getSingleton() {
   assert(msSingleton);
@@ -12,7 +12,7 @@ CGameState *CGameState::getSingletonPtr() {
   return msSingleton;
 }
 
-CGameState::CGameState() 
+CGameState::CGameState()
 : m_eCurrentGameState(GS_COUNT),
   m_pMainMenu(CMainMenu::getSingletonPtr()),
   m_pScreenplay(NULL) {
