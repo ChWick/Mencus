@@ -59,6 +59,8 @@
 		<Unit filename="../Game/GUIManager.hpp" />
 		<Unit filename="../Game/Game.cpp" />
 		<Unit filename="../Game/Game.hpp" />
+		<Unit filename="../Game/GameState.cpp" />
+		<Unit filename="../Game/GameState.hpp" />
 		<Unit filename="../Game/Grid2d.hpp" />
 		<Unit filename="../Game/HUD.cpp" />
 		<Unit filename="../Game/HUD.hpp" />
