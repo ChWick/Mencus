@@ -24,6 +24,7 @@ CMainMenu &CMainMenu::getSingleton() {
 CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   : m_vSlots(NUM_SLOTS) {
   CInputListenerManager::getSingleton().addInputListener(this);
+  ImageManager::getSingleton().loadImageset("main_menu_background.imageset");
 
   for (int i = 0; i < MMS_COUNT; i++) {
     for (int j = 0; j < NUM_SLOTS; j++) {
@@ -47,9 +48,14 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_sButtonLabels[MMS_GAME][GAME_BACK] = "Back";
 
   // create cegui windows/buttons
-  m_pMMRoot = pGUIRoot->createChild("DefaultWindow", "MainMenuRoot");
+  m_pMMRoot = pGUIRoot->createChild("OgreTray/StaticImage", "MainMenuRoot");
+  m_pMMRoot->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
+  m_pMMRoot->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(1, 0)));
   m_pMMRoot->setInheritsAlpha(false);
   m_pMMRoot->setAlpha(1);
+  m_pMMRoot->setProperty("Image", "main_menu_background/full_image");
+  m_pMMRoot->setProperty("FrameEnabled", "False");
+  m_pMMRoot->setProperty("BackgroundEnabled", "True");
 
   for (int i = 0; i < NUM_SLOTS; i++) {
     m_vSlots[i] = m_pMMRoot->createChild("OgreTray/Button", "Slot" + CEGUI::PropertyHelper<int>::toString(i));
