@@ -6,6 +6,7 @@
 #include <CEGUI/String.h>
 #include "ScreenplayListener.hpp"
 #include "Fader.hpp"
+#include "PauseCaller.hpp"
 
 class CMap;
 
@@ -101,7 +102,7 @@ public:
   virtual void stop();
 };
 
-class CScreenplay : public CScreenplayListener, public CFaderCallback {
+class CScreenplay : public CScreenplayListener, public CFaderCallback, public CPauseCaller {
 private:
   const Ogre::String m_sLevelDir;
 

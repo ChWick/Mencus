@@ -3,6 +3,7 @@
 #include <CEGUI/RendererModules/Ogre/ImageCodec.h>
 #include <CEGUI/RendererModules/Ogre/ResourceProvider.h>
 #include <OgreCodec.h>
+#include "PauseManager.hpp"
 #include "GUIManager.hpp"
 #include "GameState.hpp"
 
@@ -45,6 +46,7 @@ CGame::~CGame(void) {
   if (mCameraMan) delete mCameraMan;
   if (CGameState::getSingletonPtr()) { delete CGameState::getSingletonPtr(); }
   if (CGUIManager::getSingletonPtr()) {delete CGUIManager::getSingletonPtr();}
+  if (CPauseManager::getSingletonPtr()) {delete CPauseManager::getSingletonPtr();}
   if (CEGUI::System::getSingletonPtr()) {CEGUI::OgreRenderer::destroySystem();}
   if (CInputListenerManager::getSingletonPtr()) {delete CInputListenerManager::getSingletonPtr();}
 
@@ -257,6 +259,7 @@ bool CGame::go(void)
     CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
     //CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
+    new CPauseManager();
     new CGUIManager();
 
     mRoot->addFrameListener(this);
@@ -296,6 +299,7 @@ bool CGame::frameStarted(const Ogre::FrameEvent& evt) {
   }
 
   CGUIManager::getSingleton().update(evt.timeSinceLastFrame);
+  CPauseManager::getSingleton().update();
   m_pGameState->update(evt.timeSinceLastFrame);
   return true;
 }

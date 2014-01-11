@@ -458,3 +458,7 @@ void CPlayer::damageTakenCallback() {
 
 void CPlayer::killedByDamageCallback() {
 }
+
+void CPlayer::playerInputPauseChanged(bool bPause) {
+  setInputListenerEnabled(!bPause);
+}

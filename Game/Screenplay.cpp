@@ -217,10 +217,13 @@ void CScreenplay::toNextScene() {
   m_Fader.startFadeOut(SCREENPLAY_FADE_DURATION);
 }
 void CScreenplay::fadeInCallback() {
+  unpause(PAUSE_ALL);
 }
 void CScreenplay::fadeOutCallback() {
   if (m_uiCurrentAct != m_uiNextAct || m_uiCurrentScene != m_uiNextScene) {
     loadAct(m_uiNextAct, m_uiNextScene);
   }
+  pause(PAUSE_PLAYER_INPUT);
+  pause(PAUSE_GLOABL_MOVEMENT);
   m_Fader.startFadeIn(SCREENPLAY_FADE_DURATION);
 }

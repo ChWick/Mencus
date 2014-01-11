@@ -5,6 +5,7 @@
 #include "InputListener.hpp"
 #include "Fader.hpp"
 #include "HitableObject.hpp"
+#include "PauseListener.hpp"
 
 class CMap;
 class CShot;
@@ -13,7 +14,8 @@ class CBarIndicator;
 class CPlayer : public CAnimatedSprite,
 		public CInputListener,
 		public CFaderCallback,
-		public CHitableObject {
+		public CHitableObject,
+		public CPauseListener {
 
 private:
   enum ELastDirection {
@@ -101,6 +103,8 @@ public:
 
   virtual void fadeInCallback();
   virtual void fadeOutCallback();
+
+  virtual void playerInputPauseChanged(bool bPause);
 
 private:
   void setupAnimations();
