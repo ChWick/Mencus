@@ -76,6 +76,10 @@
 		<Unit filename="../Game/MapManager.hpp" />
 		<Unit filename="../Game/Object.cpp" />
 		<Unit filename="../Game/Object.hpp" />
+		<Unit filename="../Game/PauseCaller.hpp" />
+		<Unit filename="../Game/PauseListener.hpp" />
+		<Unit filename="../Game/PauseManager.cpp" />
+		<Unit filename="../Game/PauseManager.hpp" />
 		<Unit filename="../Game/Player.cpp" />
 		<Unit filename="../Game/Player.hpp" />
 		<Unit filename="../Game/Screenplay.cpp" />
