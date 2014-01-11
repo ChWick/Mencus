@@ -8,6 +8,8 @@
 
 using namespace tinyxml2;
 
+const Ogre::Real SCREENPLAY_FADE_DURATION = 5;
+
 void CInstructions::start() {
   CGUIInstructions::getSingleton().setText(m_sText);
   CGUIInstructions::getSingleton().show();
@@ -56,11 +58,14 @@ CScreenplay::CScreenplay()
     m_uiNextAct(0),
     m_uiNextScene(0),
     m_pCurrentScene(NULL),
-    m_pOldScene(NULL) {
+    m_pOldScene(NULL),
+    m_Fader(this) {
   CGUIInstructions::getSingleton().setScreenplayListener(this);
   parse("../level/screenplay.xml");
 
-  setNextAct(1, 1);
+  m_uiNextAct = 1;
+  m_uiNextScene = 1;
+  m_Fader.startFadeOut(0);
 }
 CScreenplay::~CScreenplay() {
   for (auto &p : m_mapActs) {
@@ -184,6 +189,7 @@ void CScreenplay::parse(const Ogre::String &sFilename) {
 }
 void CScreenplay::update(Ogre::Real tpf) {
   if (tpf > 0.2) {
+    m_Fader.fade(0);
     // Probably loading causes this fps, next time step update
     return;
   }
@@ -191,10 +197,7 @@ void CScreenplay::update(Ogre::Real tpf) {
     m_pCurrentScene->update(tpf);
   }
 
-
-  if (m_uiCurrentAct != m_uiNextAct || m_uiCurrentScene != m_uiNextScene) {
-    loadAct(m_uiNextAct, m_uiNextScene);
-  }
+  m_Fader.fade(tpf);
 }
 void CScreenplay::playerExitsMap() {
   toNextScene();
@@ -211,4 +214,13 @@ void CScreenplay::toNextScene() {
     m_uiNextScene = 1;
     m_uiNextAct++;
   }
+  m_Fader.startFadeOut(SCREENPLAY_FADE_DURATION);
+}
+void CScreenplay::fadeInCallback() {
+}
+void CScreenplay::fadeOutCallback() {
+  if (m_uiCurrentAct != m_uiNextAct || m_uiCurrentScene != m_uiNextScene) {
+    loadAct(m_uiNextAct, m_uiNextScene);
+  }
+  m_Fader.startFadeIn(SCREENPLAY_FADE_DURATION);
 }

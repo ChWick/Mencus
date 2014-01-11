@@ -5,6 +5,7 @@
 #include <OgreString.h>
 #include <CEGUI/String.h>
 #include "ScreenplayListener.hpp"
+#include "Fader.hpp"
 
 class CMap;
 
@@ -100,7 +101,7 @@ public:
   virtual void stop();
 };
 
-class CScreenplay : public CScreenplayListener {
+class CScreenplay : public CScreenplayListener, public CFaderCallback {
 private:
   const Ogre::String m_sLevelDir;
 
@@ -114,6 +115,8 @@ private:
 
   CScene *m_pCurrentScene;
   CScene *m_pOldScene;
+
+  CFader m_Fader;
 public:
   CScreenplay();
   ~CScreenplay();
@@ -125,6 +128,10 @@ public:
   void videoFinished();
 
   void update(Ogre::Real tpf);
+
+
+  void fadeInCallback();
+  void fadeOutCallback();
 
 private:
 

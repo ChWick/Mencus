@@ -66,6 +66,9 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
 
   m_Shield.init(1, 1);
   m_Shield.setupAnimation(0, "shield", 5, CSpriteTexture::MIRROR_NONE, &getPlayerTexturePath);
+
+
+  CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
 }
 CPlayer::~CPlayer() {
   delete m_pThrowStrengthIndicator;

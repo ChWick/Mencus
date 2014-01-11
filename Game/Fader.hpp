@@ -31,7 +31,7 @@ private:
   Ogre::Overlay *m_pOverlay;
   EFadeOperation m_eFadeOperation;
 public:
-  CFader(CFaderCallback *pCallback = NULL) 
+  CFader(CFaderCallback *pCallback = NULL)
     :
     m_fAlpha(0),
     m_fCurrentDuration(0),
@@ -39,7 +39,6 @@ public:
     m_pFaderCallback(pCallback),
     m_eFadeOperation(FADE_NONE) {
     Ogre::MaterialPtr matptr = Ogre::MaterialManager::getSingleton().getByName("FadeMaterial");
-    
     m_pTextUnitState = matptr->getTechnique(0)->getPass(0)->getTextureUnitState(0);
     m_pOverlay = Ogre::OverlayManager::getSingleton().getByName("FadeOverlay");
     m_pOverlay->hide();
@@ -55,7 +54,7 @@ public:
   }
   void startFadeOut(Ogre::Real fDuration) {
     if (fDuration < 0) fDuration = -fDuration;
-    
+
     m_fAlpha = 0;
     m_fTotalDuration = fDuration;
     m_fCurrentDuration = 0;
