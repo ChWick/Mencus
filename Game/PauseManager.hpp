@@ -3,6 +3,7 @@
 
 #include <OgreSingleton.h>
 #include <list>
+#include <map>
 
 class CPauseCaller;
 class CPauseListener;
@@ -21,10 +22,15 @@ enum EPauseTypes {
 class CPauseManager : public Ogre::Singleton<CPauseManager> {
 private:
   std::list<CPauseCaller *> m_lPauseCallers;
-  std::list<CPauseListeners *> m_lPauseListeners;
+  std::list<CPauseListener *> m_lPauseListeners;
+  std::map<EPauseTypes, void (CPauseListener::*)(bool)> m_mapPauseListener;
+
+  unsigned int m_uiOldPauseFlags;
 public:
   static CPauseManager& getSingleton(void);
   static CPauseManager* getSingletonPtr(void);
+
+  CPauseManager();
 
   void update();
 

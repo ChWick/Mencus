@@ -17,12 +17,12 @@ public:
     m_uiPausedFlags |= uiPauseFlags;
   }
   void unpause(unsigned int uiPauseFlags = PAUSE_ALL) {
-    m_uiPausedFlags -= uiPauseFlags & m_uiPausedFlags;
+    m_uiPausedFlags ^= uiPauseFlags & m_uiPausedFlags;
   }
   void setPause(unsigned int uiPauseFlags) {
     m_uiPausedFlags = uiPauseFlags;
   }
-  unsigned int getPause() const {return m_uiPauseFlags;}
+  unsigned int getPause() const {return m_uiPausedFlags;}
 };
 
 #endif // PAUSE_CALLER_HPP
