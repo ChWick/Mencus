@@ -32,6 +32,10 @@ protected:
 public:
   virtual ~CScene() {}
 
+
+  virtual void init() = 0;
+  virtual void exit() = 0;
+
   virtual void start() = 0;
   virtual void stop() = 0;
 
@@ -53,6 +57,8 @@ public:
 
     virtual void start();
     virtual void stop();
+    virtual void init() {}
+    virtual void exit() {}
 };
 
 class CLevel : public CScene {
@@ -72,6 +78,8 @@ public:
 
   virtual void start();
   virtual void stop();
+  virtual void init() {}
+  virtual void exit() {}
   void update(Ogre::Real tpf);
 };
 

@@ -9,8 +9,9 @@
 #include "SpriteTransformPipeline.hpp"
 #include "ogre2d-main.hpp"
 #include "InputListener.hpp"
+#include "PauseListener.hpp"
 
-class CVideo : public CScene, public CInputListener {
+class CVideo : public CScene, public CInputListener, public CPauseListener {
 public:
   class CPicture {
   public:
@@ -47,12 +48,16 @@ public:
     CPicture(const Ogre::String &sFile, const Ogre::Real fDuration, Ogre2dManager *p2dManager);
     ~CPicture();
 
+    void init();
+    void exit();
+
     void start();
     void stop();
 
     void addEffect(CEffect *pEffect) {m_vEffects.push_back(pEffect);}
     Ogre::Real getDuration() const {return m_fDuration;}
     void update(Ogre::Real tpf, Ogre::Real fPassedTime);
+    void render();
 
     friend CEffectScale;
   };
@@ -69,7 +74,11 @@ public:
 
     void addPicture(CPicture *pPicture) {m_vPictures.push_back(pPicture);}
     void update(Ogre::Real tpf);
+    void render();
     bool isFinished() const {return m_iCurrentPicture == m_vPictures.size();}
+
+    void init();
+    void exit();
 
     void start();
     void stop();
@@ -79,6 +88,8 @@ private:
   size_t m_iCurrentPart;
   CScreenplayListener *m_pListener;
   Ogre2dManager m_SpriteManager;
+
+  bool m_bPaused;
 public:
   CVideo(unsigned int uiID, CScreenplayListener *pListener);
   ~CVideo();
@@ -86,6 +97,9 @@ public:
   void addPart(CPart *pPart) {m_vParts.push_back(pPart);}
 
 public:
+  void init();
+  void exit();
+
   virtual void start();
   virtual void stop();
 
@@ -95,6 +109,8 @@ public:
   bool keyPressed( const OIS::KeyEvent &arg );
 
   Ogre2dManager *getSpriteManager() {return &m_SpriteManager;}
+
+  void videoPauseChanged(bool bPause);
 };
 
 #endif // VIDEO_HPP

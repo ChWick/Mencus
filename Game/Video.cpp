@@ -1,6 +1,7 @@
 #include "Video.hpp"
 #include "OgreRoot.h"
 #include <OgreTextureManager.h>
+#include "PauseManager.hpp"
 
 void CVideo::CPicture::CEffectScale::update(Ogre::Real tpf, Ogre::Real fTimePos, CPicture *pPicture) {
   Ogre::Real fScaleFactor = fTimePos;
@@ -28,10 +29,14 @@ CVideo::CPicture::~CPicture() {
   for (auto pEffect : m_vEffects) {delete pEffect;}
 }
 void CVideo::CPicture::start() {
+}
+void CVideo::CPicture::stop() {
+}
+void CVideo::CPicture::init() {
   // set texture
   m_Sprite.setTexture(m_sFile);
 }
-void CVideo::CPicture::stop() {
+void CVideo::CPicture::exit() {
   // delete video texutre
   Ogre::TextureManager::getSingleton().remove(m_sFile);
 }
@@ -43,7 +48,10 @@ void CVideo::CPicture::update(Ogre::Real tpf, Ogre::Real fPassedTime) {
   }
   m_Sprite.setPosition(m_vDrawPos);
   m_Sprite.setSize(m_vDrawSize);
-  m_Sprite.update(tpf);
+  //m_Sprite.update(tpf);
+}
+void CVideo::CPicture::render() {
+  m_Sprite.draw();
 }
 
 CVideo::CPart::CPart(CVideo *pVideo, const Ogre::String &sAudioFile)
@@ -61,6 +69,10 @@ void CVideo::CPart::update(Ogre::Real tpf) {
     m_fTimer = 0;
   }
 }
+void CVideo::CPart::render() {
+  if (m_iCurrentPicture < m_vPictures.size())
+    m_vPictures[m_iCurrentPicture]->render();
+}
 void CVideo::CPart::start() {
   m_iCurrentPicture = 0;
   m_fTimer = 0;
@@ -73,18 +85,38 @@ void CVideo::CPart::stop() {
     pPicture->stop();
   }
 }
+void CVideo::CPart::init() {
+  for (auto pPicture : m_vPictures) {
+    pPicture->init();
+  }
+}
+void CVideo::CPart::exit() {
+  for (auto pPicture : m_vPictures) {
+    pPicture->exit();
+  }
+}
 
 CVideo::CVideo(unsigned int uiID, CScreenplayListener *pListener)
   : CScene(uiID, ST_VIDEO),
-    m_pListener(pListener) {
-  m_SpriteManager.init(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"), Ogre::RENDER_QUEUE_OVERLAY, true);
+    m_pListener(pListener),
+    m_bPaused(false) {
+  CPauseManager::getSingleton().addListener(this);
+  m_SpriteManager.init(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"), Ogre::RENDER_QUEUE_OVERLAY, false);
   CInputListenerManager::getSingleton().addInputListener(this);
   setInputListenerEnabled(false);
 }
 CVideo::~CVideo() {
+  exit();
+  CPauseManager::getSingleton().removeListener(this);
   CInputListenerManager::getSingleton().removeInputListener(this);
   for (auto pPart : m_vParts) {delete pPart;}
   m_SpriteManager.end();
+}
+void CVideo::init() {
+  for (auto pPart : m_vParts) {pPart->init();}
+}
+void CVideo::exit() {
+  for (auto pPart : m_vParts) {pPart->exit();}
 }
 void CVideo::start() {
   setInputListenerEnabled(true);
@@ -108,17 +140,29 @@ void CVideo::nextPart() {
   }
 }
 void CVideo::update(Ogre::Real tpf) {
-  if (m_iCurrentPart == m_vParts.size()) { return; }
+  if (m_iCurrentPart == m_vParts.size()) {
+      // draw last part
+      m_vParts.back()->render();
+      return;
+  }
+
+  m_vParts[m_iCurrentPart]->render();
 
   if (m_vParts[m_iCurrentPart]->isFinished()) {
     nextPart();
   }
   else {
-    m_vParts[m_iCurrentPart]->update(tpf);
+    if (!m_bPaused) {
+      m_vParts[m_iCurrentPart]->update(tpf);
+    }
   }
 }
 bool CVideo::keyPressed( const OIS::KeyEvent &arg ) {
   nextPart();
 
   return true;
+}
+void CVideo::videoPauseChanged(bool bPause) {
+  m_bPaused = bPause;
+  setInputListenerEnabled(!bPause);
 }

@@ -73,7 +73,7 @@ CScreenplay::~CScreenplay() {
   }
 }
 void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
-  if (m_pOldScene) {m_pOldScene->stop();}
+  if (m_pOldScene) {m_pOldScene->stop(); m_pOldScene->exit();}
 
   m_uiCurrentAct = uiActId;
   m_uiCurrentScene = uiSceneId;
@@ -83,6 +83,7 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   CScene *pScene = pAct->getScene(uiSceneId);
   if (!pScene) {throw Ogre::Exception(0, Ogre::StringConverter::toString(uiSceneId) + " is no valid scene id in act " + Ogre::StringConverter::toString(uiActId) + "!", __FILE__);}
 
+  pScene->init();
   pScene->start();
   switch (pScene->getType()) {
   case CScene::ST_LEVEL:
@@ -215,6 +216,7 @@ void CScreenplay::toNextScene() {
     m_uiNextAct++;
   }
   m_Fader.startFadeOut(SCREENPLAY_FADE_DURATION);
+  pause(PAUSE_ALL);
 }
 void CScreenplay::fadeInCallback() {
   unpause(PAUSE_ALL);
@@ -223,7 +225,6 @@ void CScreenplay::fadeOutCallback() {
   if (m_uiCurrentAct != m_uiNextAct || m_uiCurrentScene != m_uiNextScene) {
     loadAct(m_uiNextAct, m_uiNextScene);
   }
-  pause(PAUSE_PLAYER_INPUT);
-  pause(PAUSE_GLOABL_MOVEMENT);
+  pause(PAUSE_ALL);
   m_Fader.startFadeIn(SCREENPLAY_FADE_DURATION);
 }
