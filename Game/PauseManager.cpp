@@ -19,6 +19,7 @@ CPauseManager::CPauseManager()
   m_mapPauseListener[PAUSE_PLAYER_INPUT] = &CPauseListener::playerInputPauseChanged;
   m_mapPauseListener[PAUSE_PLAYER_MOVEMENT] = &CPauseListener::playerMovePauseChanged;
   m_mapPauseListener[PAUSE_ENEMY_MOVEMENT] = &CPauseListener::enemyMovePauseChanged;
+  m_mapPauseListener[PAUSE_VIDEO] = &CPauseListener::videoPauseChanged;
 }
 
 void CPauseManager::update() {

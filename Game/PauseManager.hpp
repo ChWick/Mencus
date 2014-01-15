@@ -16,6 +16,8 @@ enum EPauseTypes {
   PAUSE_ENEMY_MOVEMENT    = 4,
   PAUSE_GLOABL_MOVEMENT   = 6,
 
+  PAUSE_VIDEO             = 8,
+
   PAUSE_ALL               = 511,
 };
 
