@@ -197,7 +197,7 @@ bool CGame::go(void)
     pl.insert(std::make_pair(std::string("x11_mouse_grab"), std::string("false")));
     pl.insert(std::make_pair(std::string("x11_mouse_hide"), std::string("false")));
     pl.insert(std::make_pair(std::string("x11_keyboard_grab"), std::string("false")));
-    pl.insert(std::make_pair(std::string("XAutoRepeatOn"), std::string("true")));
+    pl.insert(std::make_pair(std::string("XAutoRepeatOnm_pSceneManager"), std::string("true")));
 #endif
     size_t windowHnd = 0;
     std::ostringstream windowHndStr;
@@ -245,6 +245,7 @@ bool CGame::go(void)
 
 
     m_pCEGuiOgreRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
+    m_pCEGuiOgreRenderer->setFrameControlExecutionEnabled(false);
     //m_pCEGuiImageCodec = &CEGUI::OgreRenderer::createOgreImageCodec();
     //m_pCEGuiResourceProvider = &CEGUI::OgreRenderer::createOgreResourceProvider();*/
     CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
@@ -260,7 +261,7 @@ bool CGame::go(void)
     //CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
     new CPauseManager();
-    new CGUIManager();
+    new CGUIManager(mSceneMgr);
 
     mRoot->addFrameListener(this);
     //-------------------------------------------------------------------------------------
@@ -306,6 +307,7 @@ bool CGame::frameStarted(const Ogre::FrameEvent& evt) {
 bool CGame::frameEnded(const Ogre::FrameEvent& evt) {
   return true;
 }
+
 //-------------------------------------------------------------------------------------
 bool CGame::keyPressed( const OIS::KeyEvent &arg )
 {

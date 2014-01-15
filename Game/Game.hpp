@@ -4,17 +4,22 @@
 #include <Ogre.h>
 #include <OgreSingleton.h>
 #include <CEGUI/CEGUI.h>
+#include <CEGUI/RendererModules/Ogre/Renderer.h>
 #include "InputListener.hpp"
 #include "dependencies/OgreSdkUtil/SdkCameraMan.h"
 #include "dependencies/OgreSdkUtil/SdkTrays.h"
 
 class CGameState;
 
-class CGame : public CInputListener, public Ogre::FrameListener, public Ogre::WindowEventListener, OgreBites::SdkTrayListener, public Ogre::Singleton<CGame> {
+class CGame : public CInputListener,
+              public Ogre::FrameListener,
+              public Ogre::WindowEventListener,
+              protected OgreBites::SdkTrayListener,
+              public Ogre::Singleton<CGame> {
 private:
   CGameState *m_pGameState;
 
-  CEGUI::Renderer* m_pCEGuiOgreRenderer;
+  CEGUI::OgreRenderer* m_pCEGuiOgreRenderer;
   //! ImageCodec to use.  Set in subclass constructor, may be 0.
   CEGUI::ImageCodec* m_pCEGuiImageCodec;
   //! ResourceProvider to use.  Set in subclass constructor, may be 0.
