@@ -82,6 +82,8 @@
 		<Unit filename="../Game/PauseManager.hpp" />
 		<Unit filename="../Game/Player.cpp" />
 		<Unit filename="../Game/Player.hpp" />
+		<Unit filename="../Game/SaveStateManager.cpp" />
+		<Unit filename="../Game/SaveStateManager.hpp" />
 		<Unit filename="../Game/Screenplay.cpp" />
 		<Unit filename="../Game/Screenplay.hpp" />
 		<Unit filename="../Game/ScreenplayListener.hpp" />
