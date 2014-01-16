@@ -44,6 +44,7 @@ public:
     CSprite m_Sprite;
     Ogre::Vector2 m_vDrawPos;
     Ogre::Vector2 m_vDrawSize;
+    bool m_bStopped;
   public:
     CPicture(const Ogre::String &sFile, const Ogre::Real fDuration, Ogre2dManager *p2dManager);
     ~CPicture();

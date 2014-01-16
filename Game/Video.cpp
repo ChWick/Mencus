@@ -23,14 +23,17 @@ void CVideo::CPicture::CEffectScale::update(Ogre::Real tpf, Ogre::Real fTimePos,
 CVideo::CPicture::CPicture(const Ogre::String &sFile, const Ogre::Real fDuration, Ogre2dManager *p2dManager)
   : m_fDuration(fDuration),
     m_sFile(sFile),
-    m_Sprite(&CDefaultSpriteTransformPipeline::INSTANCE, p2dManager, Ogre::Vector2(-1, -1), Ogre::Vector2(2, 2)) {
+    m_Sprite(&CDefaultSpriteTransformPipeline::INSTANCE, p2dManager, Ogre::Vector2(-1, -1), Ogre::Vector2(2, 2)),
+    m_bStopped(true) {
 }
 CVideo::CPicture::~CPicture() {
   for (auto pEffect : m_vEffects) {delete pEffect;}
 }
 void CVideo::CPicture::start() {
+  m_bStopped = false;
 }
 void CVideo::CPicture::stop() {
+  m_bStopped = true;
 }
 void CVideo::CPicture::init() {
   // set texture
@@ -41,6 +44,8 @@ void CVideo::CPicture::exit() {
   Ogre::TextureManager::getSingleton().remove(m_sFile);
 }
 void CVideo::CPicture::update(Ogre::Real tpf, Ogre::Real fPassedTime) {
+  if (m_bStopped) {return;}
+
   m_vDrawPos = Ogre::Vector2(-1, -1);
   m_vDrawSize = Ogre::Vector2(2, 2);
   for (auto pEffect : m_vEffects) {
@@ -100,23 +105,23 @@ CVideo::CVideo(unsigned int uiID, CScreenplayListener *pListener)
   : CScene(uiID, ST_VIDEO),
     m_pListener(pListener),
     m_bPaused(false) {
+}
+CVideo::~CVideo() {
+  exit();
+  for (auto pPart : m_vParts) {delete pPart;}
+}
+void CVideo::init() {
   CPauseManager::getSingleton().addListener(this);
   m_SpriteManager.init(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"), Ogre::RENDER_QUEUE_OVERLAY, false);
   CInputListenerManager::getSingleton().addInputListener(this);
   setInputListenerEnabled(false);
-}
-CVideo::~CVideo() {
-  exit();
-  CPauseManager::getSingleton().removeListener(this);
-  CInputListenerManager::getSingleton().removeInputListener(this);
-  for (auto pPart : m_vParts) {delete pPart;}
-  m_SpriteManager.end();
-}
-void CVideo::init() {
   for (auto pPart : m_vParts) {pPart->init();}
 }
 void CVideo::exit() {
   for (auto pPart : m_vParts) {pPart->exit();}
+  CPauseManager::getSingleton().removeListener(this);
+  CInputListenerManager::getSingleton().removeInputListener(this);
+  m_SpriteManager.end();
 }
 void CVideo::start() {
   setInputListenerEnabled(true);
@@ -131,11 +136,11 @@ void CVideo::stop() {
 }
 void CVideo::nextPart() {
   m_vParts[m_iCurrentPart]->stop();
-  ++m_iCurrentPart;
-  if (m_iCurrentPart == m_vParts.size()) {
+  if (m_iCurrentPart + 1 == m_vParts.size()) {
     m_pListener->videoFinished();
   }
   else {
+    ++m_iCurrentPart;
     m_vParts[m_iCurrentPart]->start();
   }
 }

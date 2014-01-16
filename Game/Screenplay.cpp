@@ -8,7 +8,7 @@
 
 using namespace tinyxml2;
 
-const Ogre::Real SCREENPLAY_FADE_DURATION = 5;
+const Ogre::Real SCREENPLAY_FADE_DURATION = 0.5;
 
 void CInstructions::start() {
   CGUIInstructions::getSingleton().setText(m_sText);
@@ -73,6 +73,7 @@ CScreenplay::~CScreenplay() {
   }
 }
 void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
+  Ogre::LogManager::getSingleton().logMessage("Switching to act " + Ogre::StringConverter::toString(uiActId) + " at scene " + Ogre::StringConverter::toString(uiSceneId));
   if (m_pOldScene) {m_pOldScene->stop(); m_pOldScene->exit();}
 
   m_uiCurrentAct = uiActId;
@@ -194,11 +195,13 @@ void CScreenplay::update(Ogre::Real tpf) {
     // Probably loading causes this fps, next time step update
     return;
   }
+
+  m_Fader.fade(tpf);
+
   if (m_pCurrentScene) {
     m_pCurrentScene->update(tpf);
   }
 
-  m_Fader.fade(tpf);
 }
 void CScreenplay::playerExitsMap() {
   toNextScene();
@@ -210,8 +213,11 @@ void CScreenplay::videoFinished() {
   toNextScene();
 }
 void CScreenplay::toNextScene() {
+  if (m_Fader.isFading()) {return;}
+
   m_uiNextScene++;
   if (m_uiNextScene > m_mapActs[m_uiCurrentAct]->getSceneCount()) {
+    Ogre::LogManager::getSingleton().logMessage("Switching to new act: " + Ogre::StringConverter::toString(m_uiNextAct));
     m_uiNextScene = 1;
     m_uiNextAct++;
   }
