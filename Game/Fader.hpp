@@ -43,6 +43,7 @@ public:
     m_pOverlay = Ogre::OverlayManager::getSingleton().getByName("FadeOverlay");
     m_pOverlay->hide();
   }
+  bool isFading() const {return m_eFadeOperation != FADE_NONE;}
   void startFadeIn(Ogre::Real fDuration) {
     if (fDuration < 0) fDuration = -fDuration;
 
