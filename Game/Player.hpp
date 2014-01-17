@@ -106,6 +106,9 @@ public:
 
   virtual void playerInputPauseChanged(bool bPause);
 
+  Ogre::Real getManapoints() const {return m_fManaPoints;}
+  void setManapoints(Ogre::Real fManapoints) {m_fManaPoints = fManapoints;}
+
 private:
   void setupAnimations();
 
