@@ -1,6 +1,7 @@
 #include "SaveStateManager.hpp"
 #include "Player.hpp"
 #include "OgreException.h"
+#include <time.h>
 
 CSaveStateManager::CSaveStateManager() {
   using namespace tinyxml2;
@@ -24,7 +25,9 @@ CSaveStateManager::CSaveStateManager() {
     float fMP = pSaveStateElem->FloatAttribute("mp");
     bool bAccessible = pSaveStateElem->BoolAttribute("accessible");
 
-    m_vSaveStates.push_back(CSaveState(uiActID, uiSceneID, fHP, fMP, bAccessible));
+    tm tmTime;
+
+    m_vSaveStates.push_back(CSaveState(uiActID, uiSceneID, fHP, fMP, bAccessible, tmTime));
   }
 }
 CSaveStateManager::~CSaveStateManager() {
@@ -33,7 +36,13 @@ CSaveStateManager::~CSaveStateManager() {
 void CSaveStateManager::write(unsigned int uiAct, unsigned int uiScene, CPlayer *pPlayer) {
   if (hasSaveState(uiAct, uiScene)) {eraseSaveState(uiAct, uiScene);}
 
-  m_vSaveStates.push_back(CSaveState(uiAct, uiScene, pPlayer->getHitpoints(), pPlayer->getManapoints(), true));
+  time_t rawtime;
+  struct tm *ptm;
+  time(&rawtime);
+  ptm = gmtime(&rawtime);
+
+
+  m_vSaveStates.push_back(CSaveState(uiAct, uiScene, pPlayer->getHitpoints(), pPlayer->getManapoints(), true, *ptm));
   writeXMLFile();
 }
 bool CSaveStateManager::hasSaveState(unsigned int uiAct, unsigned int uiScene) const {
@@ -45,7 +54,7 @@ bool CSaveStateManager::hasSaveState(unsigned int uiAct, unsigned int uiScene) c
   return false;
 }
 void CSaveStateManager::eraseSaveState(unsigned int uiAct, unsigned int uiScene) {
-  for (auto it = std::begin(m_vSaveStates); it != std::end(m_vSaveStates); it++) {
+  for (auto it = m_vSaveStates.begin(); it != std::end(m_vSaveStates); it++) {
     if (it->getActID() == uiAct && it->getSceneID() == uiScene) {
       m_vSaveStates.erase(it);
       return;
@@ -75,5 +84,6 @@ void CSaveStateManager::writeXMLFile() {
     pStateElem->SetAttribute("hp", state.getPlayerHP());
     pStateElem->SetAttribute("mp", state.getPlayerMP());
     pStateElem->SetAttribute("accessible", state.isAccessible());
+    pStateElem->SetAttribute("tm_sec", state.getTime().tm_sec);
   }
 }

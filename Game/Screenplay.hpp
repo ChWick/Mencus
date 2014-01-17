@@ -7,6 +7,7 @@
 #include "ScreenplayListener.hpp"
 #include "Fader.hpp"
 #include "PauseCaller.hpp"
+#include "SaveStateManager.hpp"
 
 class CMap;
 
@@ -126,6 +127,7 @@ private:
   CScene *m_pOldScene;
 
   CFader m_Fader;
+  CSaveStateManager m_SaveStateManager;
 public:
   CScreenplay();
   ~CScreenplay();

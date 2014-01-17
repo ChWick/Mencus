@@ -3,6 +3,8 @@
 
 #include <tinyxml2.h>
 #include <vector>
+#include <list>
+#include <time.h>
 
 class CPlayer;
 
@@ -16,18 +18,22 @@ private:
 
   const bool m_bAccessible;
 
+  const tm m_tmTime;
+
 public:
   CSaveState(unsigned int uiActID,
              unsigned int uiSceneID,
              float fHP,
              float fMP,
-             bool bAccessible)
+             bool bAccessible,
+             tm tmTime)
              :
                m_uiActID(uiActID),
                m_uiSceneID(uiSceneID),
                m_fPlayerHitpoints(fHP),
                m_fPlayerManapoints(fMP),
-               m_bAccessible(bAccessible) {
+               m_bAccessible(bAccessible),
+               m_tmTime(tmTime) {
   }
   CSaveState(const CSaveState &s)
   :
@@ -35,7 +41,8 @@ public:
     m_uiSceneID(s.m_uiSceneID),
     m_fPlayerHitpoints(s.m_fPlayerHitpoints),
     m_fPlayerManapoints(s.m_fPlayerManapoints),
-    m_bAccessible(s.m_bAccessible) {
+    m_bAccessible(s.m_bAccessible),
+    m_tmTime(s.m_tmTime) {
   }
 
   unsigned int getActID() const {return m_uiActID;}
@@ -43,15 +50,17 @@ public:
   float getPlayerHP() const {return m_fPlayerHitpoints;}
   float getPlayerMP() const {return m_fPlayerManapoints;}
   bool isAccessible() const {return m_bAccessible;}
-
+  const tm &getTime() const {return m_tmTime;}
 };
 
 class CSaveStateManager {
 private:
-  std::vector<CSaveState> m_vSaveStates;
+  std::list<CSaveState> m_vSaveStates;
 public:
   CSaveStateManager();
   ~CSaveStateManager();
+
+  void clear() {m_vSaveStates.clear(); writeXMLFile();}
 
   void write(unsigned int uiAct, unsigned int uiScene, CPlayer *pPlayer);
   const CSaveState *read(unsigned int uiAct, unsigned int uiScene) const;
