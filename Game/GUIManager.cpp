@@ -24,9 +24,18 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager)
   pSceneManager->addRenderQueueListener(this);
 
   CEGUI::Window *guiRoot = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "MasterRoot");
+
   guiRoot->setAlpha(0);
   //guiRoot->setProperty("BackgroundEnabled", "false");
   CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(guiRoot);
+
+
+  CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans12", 12, true, "DejaVuSans.ttf" );
+  CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans8", 8, true, "DejaVuSans.ttf" );
+  CEGUI::FontManager::getSingleton().createFreeTypeFont("diploma15", 15, true, "diploma.ttf" );
+  CEGUI::FontManager::getSingleton().createFreeTypeFont("diploma20", 20, true, "diploma.ttf" );
+  CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans20", 20, true, "DejaVuSans.ttf" );
+  guiRoot->setFont("dejavusans12");
 
   new CHUD(guiRoot);
   new CGUIInstructions(guiRoot);

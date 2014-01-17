@@ -7,7 +7,6 @@
 #include "ScreenplayListener.hpp"
 #include "Fader.hpp"
 #include "PauseCaller.hpp"
-#include "SaveStateManager.hpp"
 
 class CMap;
 
@@ -82,6 +81,8 @@ public:
   virtual void init() {}
   virtual void exit() {}
   void update(Ogre::Real tpf);
+
+  CMap *getMap() {return m_pMap;}
 };
 
 class CAct {
@@ -127,7 +128,6 @@ private:
   CScene *m_pOldScene;
 
   CFader m_Fader;
-  CSaveStateManager m_SaveStateManager;
 public:
   CScreenplay();
   ~CScreenplay();

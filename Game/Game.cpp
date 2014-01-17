@@ -6,6 +6,7 @@
 #include "PauseManager.hpp"
 #include "GUIManager.hpp"
 #include "GameState.hpp"
+#include "SaveStateManager.hpp"
 
 using namespace Ogre;
 
@@ -49,6 +50,7 @@ CGame::~CGame(void) {
   if (CPauseManager::getSingletonPtr()) {delete CPauseManager::getSingletonPtr();}
   if (CEGUI::System::getSingletonPtr()) {CEGUI::OgreRenderer::destroySystem();}
   if (CInputListenerManager::getSingletonPtr()) {delete CInputListenerManager::getSingletonPtr();}
+  if (CSaveStateManager::getSingletonPtr()) {delete CSaveStateManager::getSingletonPtr();}
 
   //Remove ourself as a Window listener
   Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);
@@ -261,6 +263,7 @@ bool CGame::go(void)
     //CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
     new CPauseManager();
+    new CSaveStateManager();
     new CGUIManager(mSceneMgr);
 
     mRoot->addFrameListener(this);

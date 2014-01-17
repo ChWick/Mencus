@@ -15,8 +15,6 @@ CGUIInstructions::CGUIInstructions(CEGUI::Window *pGUIRoot) {
   using namespace CEGUI;
 
   ImageManager::getSingleton().loadImageset("instr.imageset");
-  FontManager::getSingleton().createFreeTypeFont("diploma15", 15, true, "diploma.ttf" );
-  FontManager::getSingleton().createFreeTypeFont("diploma20", 20, true, "diploma.ttf" );
 
   m_pInstructionsRoot = pGUIRoot->createChild("OgreTray/StaticImage", "Instructions/Root");
   m_pInstructionsRoot->setInheritsAlpha(false);

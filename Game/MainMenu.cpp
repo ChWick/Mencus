@@ -1,6 +1,7 @@
 #include "MainMenu.hpp"
 #include "Game.hpp"
 #include "GameState.hpp"
+#include "SaveStateManager.hpp"
 
 #include <OgreStringConverter.h>
 #include <iostream>
@@ -22,7 +23,9 @@ CMainMenu &CMainMenu::getSingleton() {
 }
 
 CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
-  : m_vSlots(NUM_SLOTS) {
+  : m_vSlots(NUM_SLOTS),
+  m_bSaveListSelected(false),
+  m_iSelectedLoadState(0) {
   CInputListenerManager::getSingleton().addInputListener(this);
   ImageManager::getSingleton().loadImageset("main_menu_background.imageset");
 
@@ -35,17 +38,23 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   // setup slots for the pages
   m_iTargetState[MMS_START][START_START_GAME] = MMS_GAME;
   m_iTargetState[MMS_START][START_OPTIONS] = MMS_OPTIONS;
-  m_iTargetState[MMS_START][START_EXIT] = MMS_EXIT;
+  m_iTargetState[MMS_START][START_EXIT] = MMS_RESULT_EXIT;
   m_sButtonLabels[MMS_START][START_START_GAME] = "Start game";
   m_sButtonLabels[MMS_START][START_OPTIONS] = "Options";
   m_sButtonLabels[MMS_START][START_EXIT] = "Exit";
 
-  m_iTargetState[MMS_GAME][GAME_NEW_GAME] = MMS_NEW_GAME;
+  m_iTargetState[MMS_GAME][GAME_NEW_GAME] = MMS_RESULT_NEW_GAME;
   m_iTargetState[MMS_GAME][GAME_LOAD_GAME] = MMS_LOAD_GAME;
   m_iTargetState[MMS_GAME][GAME_BACK] = MMS_START;
   m_sButtonLabels[MMS_GAME][GAME_NEW_GAME] = "New game";
   m_sButtonLabels[MMS_GAME][GAME_LOAD_GAME] = "Load game";
   m_sButtonLabels[MMS_GAME][GAME_BACK] = "Back";
+
+  m_iTargetState[MMS_LOAD_GAME][LOAD_GAME_BACK] = MMS_GAME;
+  m_sButtonLabels[MMS_LOAD_GAME][LOAD_GAME_BACK] = "Back";
+
+  m_iTargetState[MMS_OPTIONS][OPTIONS_BACK] = MMS_START;
+  m_sButtonLabels[MMS_OPTIONS][OPTIONS_BACK] = "Back";
 
   // create cegui windows/buttons
   m_pMMRoot = pGUIRoot->createChild("OgreTray/StaticImage", "MainMenuRoot");
@@ -62,8 +71,13 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
     m_vSlots[i]->setSize(USize(UDim(0.2f, 0), UDim(0.07f, 0)));
     m_vSlots[i]->setPosition(UVector2(UDim(0.2f, 0), UDim(0.5f + 0.10f * i, 0)));
     m_vSlots[i]->setAlpha(BUTTON_MIN_ALPHA);
+    m_vSlots[i]->setFont("dejavusans12");
   }
 
+  m_pSaveStatesWindow = dynamic_cast<CEGUI::Listbox*>(m_pMMRoot->createChild("OgreTray/Listbox", "SaveStatesBox"));
+  m_pSaveStatesWindow->setPosition(UVector2(UDim(0.2f, 0), UDim(0.5f, 0)));
+  m_pSaveStatesWindow->setSize(USize(UDim(0.3f, 0), UDim(0.07f + 2 * 0.1f, 0)));
+  m_pSaveStatesWindow->setFont("dejavusans8");
   changeState(MMS_START);
 }
 CMainMenu::~CMainMenu() {
@@ -79,20 +93,41 @@ void CMainMenu::update(Ogre::Real tpf) {
     else {
       m_vSlots[i]->setAlpha(max(m_vSlots[i]->getAlpha() - tpf * BUTTON_ALPHA_CHANGE_PER_SEC, BUTTON_MIN_ALPHA));
     }
+    if (m_bSaveListSelected){
+      m_pSaveStatesWindow->setAlpha(min(m_pSaveStatesWindow->getAlpha() + tpf * BUTTON_ALPHA_CHANGE_PER_SEC, 1.0f));
+    }
+    else {
+      m_pSaveStatesWindow->setAlpha(max(m_pSaveStatesWindow->getAlpha() - tpf * BUTTON_ALPHA_CHANGE_PER_SEC, BUTTON_MIN_ALPHA));
+    }
+
+    for (int i = 0; i < m_pSaveStatesWindow->getItemCount(); ++i) {
+      if (m_iSelectedLoadState == i) {
+        dynamic_cast<ListboxTextItem*>(m_pSaveStatesWindow->getListboxItemFromIndex(i))->setTextColours(Colour(1, 1, 1));
+      }
+      else {
+        dynamic_cast<ListboxTextItem*>(m_pSaveStatesWindow->getListboxItemFromIndex(i))->setTextColours(Colour(0, 0, 0));
+      }
+    }
   }
 }
 void CMainMenu::changeState(EMainMenuState eState) {
+  switch (m_eCurrentState) {
+  case MMS_RESULT_NEW_GAME:
+    break;
+  default:
+    break;
+  }
+
   m_eCurrentState = eState;
   m_iSelectedSlot = 0;
 
   switch (eState) {
-  case MMS_NEW_GAME:
+  case MMS_RESULT_NEW_GAME:
     CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
     break;
-  case MMS_LOAD_GAME:
-    CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
+  case MMS_RESULT_LOAD_GAME:
     break;
-  case MMS_EXIT:
+  case MMS_RESULT_EXIT:
     CGame::getSingleton().shutDown();
     break;
   default:
@@ -106,35 +141,98 @@ void CMainMenu::changeState(EMainMenuState eState) {
         m_vSlots[i]->setVisible(false);
       }
     }
+    for (int i = 0; i < NUM_SLOTS; i++) {
+      if(m_iTargetState[m_eCurrentState][i] != MMS_STATE_NONE) {
+        m_iSelectedSlot = i;
+        break;
+      }
+    }
     break;
+  }
+
+  if (eState == MMS_LOAD_GAME) {
+    m_pSaveStatesWindow->setVisible(true);
+
+    while (m_pSaveStatesWindow->getItemCount() > 0) {
+      m_pSaveStatesWindow->removeItem(m_pSaveStatesWindow->getListboxItemFromIndex(0));
+    }
+
+    for (const CSaveState &state : CSaveStateManager::getSingleton().listSaveState()) {
+      m_pSaveStatesWindow->addItem(new ListboxTextItem("Act " + PropertyHelper<int>::toString(state.getActID()) +
+                                                       " Scene " + PropertyHelper<int>::toString(state.getSceneID()) + ": " +
+                                                       PropertyHelper<int>::toString(state.getTime().tm_year) + "/" +
+                                                       PropertyHelper<int>::toString(state.getTime().tm_mon) + "/" +
+                                                       PropertyHelper<int>::toString(state.getTime().tm_mday) + " " +
+                                                       PropertyHelper<int>::toString(state.getTime().tm_hour) + ":" +
+                                                       PropertyHelper<int>::toString(state.getTime().tm_min) + ":" +
+                                                       PropertyHelper<int>::toString(state.getTime().tm_sec)
+                                                       ));
+    }
+  }
+  else {
+    m_pSaveStatesWindow->setVisible(false);
   }
 }
 bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
   switch (arg.key) {
   case OIS::KC_DOWN:
-    ++m_iSelectedSlot;
-    while (m_iSelectedSlot >= NUM_SLOTS || m_iTargetState[m_eCurrentState][m_iSelectedSlot] == MMS_STATE_NONE) {
-      if (m_iSelectedSlot >= NUM_SLOTS) {
-        m_iSelectedSlot = 0;
-      }
-      else {
-        ++m_iSelectedSlot;
+    if (m_bSaveListSelected) {
+        ++m_iSelectedLoadState;
+        if (m_iSelectedLoadState >= m_pSaveStatesWindow->getItemCount()) {
+          m_iSelectedLoadState = m_pSaveStatesWindow->getItemCount() - 1;
+        }
+    }
+    else {
+      ++m_iSelectedSlot;
+      while (m_iSelectedSlot >= NUM_SLOTS || m_iTargetState[m_eCurrentState][m_iSelectedSlot] == MMS_STATE_NONE) {
+        if (m_iSelectedSlot >= NUM_SLOTS) {
+          m_iSelectedSlot = 0;
+        }
+        else {
+          ++m_iSelectedSlot;
+        }
       }
     }
     break;
   case OIS::KC_UP:
-    --m_iSelectedSlot;
-    while (m_iSelectedSlot < 0 || m_iTargetState[m_eCurrentState][m_iSelectedSlot] == MMS_STATE_NONE) {
-      if (m_iSelectedSlot < 0) {
-        m_iSelectedSlot = NUM_SLOTS - 1;
-      }
-      else {
-        --m_iSelectedSlot;
+    if (m_bSaveListSelected) {
+        --m_iSelectedLoadState;
+        if (m_iSelectedLoadState < 0) {
+          m_iSelectedLoadState = 0;
+        }
+    }
+    else {
+      --m_iSelectedSlot;
+      while (m_iSelectedSlot < 0 || m_iTargetState[m_eCurrentState][m_iSelectedSlot] == MMS_STATE_NONE) {
+        if (m_iSelectedSlot < 0) {
+          m_iSelectedSlot = NUM_SLOTS - 1;
+        }
+        else {
+          --m_iSelectedSlot;
+        }
       }
     }
     break;
   case OIS::KC_RETURN:
-    changeState(m_iTargetState[m_eCurrentState][m_iSelectedSlot]);
+    if (m_bSaveListSelected) {
+
+    }
+    else {
+      changeState(m_iTargetState[m_eCurrentState][m_iSelectedSlot]);
+    }
+    break;
+  case OIS::KC_TAB:
+    if (m_eCurrentState == MMS_LOAD_GAME) {
+      m_bSaveListSelected = !m_bSaveListSelected;
+      if (m_bSaveListSelected) {
+        m_iSelectedSlot = -1;
+      }
+      else {
+        m_iSelectedSlot = LOAD_GAME_BACK;
+      }
+    }
+    break;
+  default:
     break;
   }
   return true;

@@ -5,6 +5,7 @@
 #include <fstream>
 #include "GUIInstructions.hpp"
 #include "Video.hpp"
+#include "SaveStateManager.hpp"
 
 using namespace tinyxml2;
 
@@ -84,10 +85,13 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   CScene *pScene = pAct->getScene(uiSceneId);
   if (!pScene) {throw Ogre::Exception(0, Ogre::StringConverter::toString(uiSceneId) + " is no valid scene id in act " + Ogre::StringConverter::toString(uiActId) + "!", __FILE__);}
 
+  CPlayer *pPlayer(NULL);
+
   pScene->init();
   pScene->start();
   switch (pScene->getType()) {
   case CScene::ST_LEVEL:
+    pPlayer = dynamic_cast<CLevel*>(pScene)->getMap()->getPlayer();
     break;
   case CScene::ST_INSTRUCTION:
     break;
@@ -96,6 +100,10 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   default:
     break;
   }
+
+  // create save state
+  CSaveStateManager::getSingleton().write(m_uiCurrentAct, m_uiCurrentScene, pPlayer);
+
   m_pCurrentScene = pScene;
   m_pOldScene = pScene;
 }

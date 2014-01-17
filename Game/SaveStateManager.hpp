@@ -5,6 +5,7 @@
 #include <vector>
 #include <list>
 #include <time.h>
+#include <OgreSingleton.h>
 
 class CPlayer;
 
@@ -53,10 +54,13 @@ public:
   const tm &getTime() const {return m_tmTime;}
 };
 
-class CSaveStateManager {
+class CSaveStateManager : public Ogre::Singleton<CSaveStateManager> {
 private:
   std::list<CSaveState> m_vSaveStates;
 public:
+  static CSaveStateManager &getSingleton();
+  static CSaveStateManager *getSingletonPtr();
+
   CSaveStateManager();
   ~CSaveStateManager();
 
@@ -66,6 +70,8 @@ public:
   const CSaveState *read(unsigned int uiAct, unsigned int uiScene) const;
   bool hasSaveState(unsigned int uiAct, unsigned int uiScene) const;
   void eraseSaveState(unsigned int uiAct, unsigned int uiScene);
+
+  const std::list<CSaveState> &listSaveState() const {return m_vSaveStates;}
 private:
   void writeXMLFile();
 };

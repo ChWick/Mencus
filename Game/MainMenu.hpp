@@ -14,13 +14,14 @@ public:
 
     MMS_START = 0,
     MMS_GAME,
+    MMS_LOAD_GAME,
     MMS_OPTIONS,
 
     MMS_COUNT,
 
-    MMS_EXIT,
-    MMS_NEW_GAME,
-    MMS_LOAD_GAME
+    MMS_RESULT_EXIT,
+    MMS_RESULT_NEW_GAME,
+    MMS_RESULT_LOAD_GAME,
   };
   enum EStartSlots {
     START_START_GAME  = 0,
@@ -32,6 +33,12 @@ public:
     GAME_LOAD_GAME    = 1,
     GAME_BACK         = NUM_SLOTS - 1,
   };
+  enum ELoadGameSlots {
+    LOAD_GAME_BACK    = NUM_SLOTS - 1,
+  };
+  enum EOptionsSlots {
+    OPTIONS_BACK    = NUM_SLOTS - 1,
+  };
 private:
   CEGUI::Window *m_pMMRoot;
   std::vector<CEGUI::Window *> m_vSlots;
@@ -39,6 +46,9 @@ private:
   CEGUI::String m_sButtonLabels[MMS_COUNT][NUM_SLOTS];
   EMainMenuState m_eCurrentState;
   int m_iSelectedSlot;
+  CEGUI::Listbox *m_pSaveStatesWindow;
+  bool m_bSaveListSelected;
+  int m_iSelectedLoadState;
 public:
   static CMainMenu &getSingleton();
   static CMainMenu *getSingletonPtr();
