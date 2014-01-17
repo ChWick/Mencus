@@ -14,46 +14,49 @@ private:
   const float m_fPlayerHitpoints;
   const float m_fPlayerManapoints;
 
-  const bool m_bAccessable;
+  const bool m_bAccessible;
 
 public:
   CSaveState(unsigned int uiActID,
              unsigned int uiSceneID,
              float fHP,
              float fMP,
-             bool bAccessable)
+             bool bAccessible)
              :
                m_uiActID(uiActID),
                m_uiSceneID(uiSceneID),
                m_fPlayerHitpoints(fHP),
                m_fPlayerManapoints(fMP),
-               m_bAccessable(bAccessable) {
+               m_bAccessible(bAccessible) {
   }
   CSaveState(const CSaveState &s)
   :
     m_uiActID(s.m_uiActID),
     m_uiSceneID(s.m_uiSceneID),
-    m_fPlayerHitpoints(s.m_fPlayerHP),
-    m_fPlayerManapoints(s.m_fPlayerMP),
-    m_bAccessable(s.m_bAccessable) {
+    m_fPlayerHitpoints(s.m_fPlayerHitpoints),
+    m_fPlayerManapoints(s.m_fPlayerManapoints),
+    m_bAccessible(s.m_bAccessible) {
   }
 
   unsigned int getActID() const {return m_uiActID;}
   unsigned int getSceneID() const {return m_uiSceneID;}
   float getPlayerHP() const {return m_fPlayerHitpoints;}
-  float getPlayerMP() const {return m_fPlayerManapoints}
-  bool isAccessable() const {return m_bAccessable;}
+  float getPlayerMP() const {return m_fPlayerManapoints;}
+  bool isAccessible() const {return m_bAccessible;}
 
-}
+};
+
 class CSaveStateManager {
 private:
-  std::vector<CSaveState> m_vSafeStates;
+  std::vector<CSaveState> m_vSaveStates;
 public:
   CSaveStateManager();
   ~CSaveStateManager();
 
   void write(unsigned int uiAct, unsigned int uiScene, CPlayer *pPlayer);
   const CSaveState *read(unsigned int uiAct, unsigned int uiScene) const;
+  bool hasSaveState(unsigned int uiAct, unsigned int uiScene) const;
+  void eraseSaveState(unsigned int uiAct, unsigned int uiScene);
 private:
   void writeXMLFile();
 };
