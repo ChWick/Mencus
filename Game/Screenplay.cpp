@@ -6,6 +6,8 @@
 #include "GUIInstructions.hpp"
 #include "Video.hpp"
 #include "SaveStateManager.hpp"
+#include "SaveStateManager.hpp"
+#include "GameState.hpp"
 
 using namespace tinyxml2;
 
@@ -66,6 +68,11 @@ CScreenplay::CScreenplay()
 
   m_uiNextAct = 1;
   m_uiNextScene = 1;
+  const CSaveState *pSaveState = CGameState::getSingleton().getSaveState();
+  if (pSaveState) {
+    m_uiNextAct = pSaveState->getActID();
+    m_uiNextScene = pSaveState->getSceneID();
+  }
   m_Fader.startFadeOut(0);
 }
 CScreenplay::~CScreenplay() {

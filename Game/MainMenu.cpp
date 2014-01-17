@@ -25,7 +25,8 @@ CMainMenu &CMainMenu::getSingleton() {
 CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   : m_vSlots(NUM_SLOTS),
   m_bSaveListSelected(false),
-  m_iSelectedLoadState(0) {
+  m_iSelectedLoadState(0),
+  m_pStateToLoad(NULL) {
   CInputListenerManager::getSingleton().addInputListener(this);
   ImageManager::getSingleton().loadImageset("main_menu_background.imageset");
 
@@ -123,9 +124,12 @@ void CMainMenu::changeState(EMainMenuState eState) {
 
   switch (eState) {
   case MMS_RESULT_NEW_GAME:
+    CGameState::getSingleton().setSaveState(NULL);
     CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
     break;
   case MMS_RESULT_LOAD_GAME:
+    CGameState::getSingleton().setSaveState(m_pStateToLoad);
+    CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
     break;
   case MMS_RESULT_EXIT:
     CGame::getSingleton().shutDown();
@@ -158,15 +162,17 @@ void CMainMenu::changeState(EMainMenuState eState) {
     }
 
     for (const CSaveState &state : CSaveStateManager::getSingleton().listSaveState()) {
-      m_pSaveStatesWindow->addItem(new ListboxTextItem("Act " + PropertyHelper<int>::toString(state.getActID()) +
-                                                       " Scene " + PropertyHelper<int>::toString(state.getSceneID()) + ": " +
-                                                       PropertyHelper<int>::toString(state.getTime().tm_year) + "/" +
-                                                       PropertyHelper<int>::toString(state.getTime().tm_mon) + "/" +
-                                                       PropertyHelper<int>::toString(state.getTime().tm_mday) + " " +
-                                                       PropertyHelper<int>::toString(state.getTime().tm_hour) + ":" +
-                                                       PropertyHelper<int>::toString(state.getTime().tm_min) + ":" +
-                                                       PropertyHelper<int>::toString(state.getTime().tm_sec)
-                                                       ));
+      ListboxTextItem *pItem = new ListboxTextItem("Act " + PropertyHelper<int>::toString(state.getActID()) +
+                                                   " Scene " + PropertyHelper<int>::toString(state.getSceneID()) + ": " +
+                                                   PropertyHelper<int>::toString(state.getTime().tm_year) + "/" +
+                                                   PropertyHelper<int>::toString(state.getTime().tm_mon) + "/" +
+                                                   PropertyHelper<int>::toString(state.getTime().tm_mday) + " " +
+                                                   PropertyHelper<int>::toString(state.getTime().tm_hour) + ":" +
+                                                   PropertyHelper<int>::toString(state.getTime().tm_min) + ":" +
+                                                   PropertyHelper<int>::toString(state.getTime().tm_sec)
+                                                   );
+      m_pSaveStatesWindow->addItem(pItem);
+      pItem->setUserData(const_cast<CSaveState*>(&state));
     }
   }
   else {
@@ -215,7 +221,10 @@ bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
     break;
   case OIS::KC_RETURN:
     if (m_bSaveListSelected) {
-
+      if (m_iSelectedLoadState > 0 && m_iSelectedLoadState < m_pSaveStatesWindow->getItemCount()) {
+        m_pStateToLoad = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
+        changeState(MMS_RESULT_LOAD_GAME);
+      }
     }
     else {
       changeState(m_iTargetState[m_eCurrentState][m_iSelectedSlot]);

@@ -5,6 +5,7 @@
 
 class CMainMenu;
 class CScreenplay;
+class CSaveState;
 
 class CGameState : public Ogre::Singleton<CGameState> {
 public:
@@ -20,6 +21,7 @@ private:
   EGameStates m_eCurrentGameState;
   CMainMenu *m_pMainMenu;
   CScreenplay *m_pScreenplay;
+  const CSaveState *m_pSaveState;
 
 public:
   static CGameState &getSingleton();
@@ -31,6 +33,8 @@ public:
   void update(Ogre::Real tpf);
 
   void changeGameState(EGameStates eNewGameState);
+  void setSaveState(const CSaveState *pState) {m_pSaveState = pState;}
+  const CSaveState *getSaveState() const {return m_pSaveState;}
 };
 
 #endif

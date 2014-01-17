@@ -6,6 +6,8 @@
 #include <vector>
 #include "InputListener.hpp"
 
+class CSaveState;
+
 class CMainMenu : public Ogre::Singleton<CMainMenu>, public CInputListener {
 public:
   static const int NUM_SLOTS = 4;
@@ -49,6 +51,7 @@ private:
   CEGUI::Listbox *m_pSaveStatesWindow;
   bool m_bSaveListSelected;
   int m_iSelectedLoadState;
+  const CSaveState *m_pStateToLoad;
 public:
   static CMainMenu &getSingleton();
   static CMainMenu *getSingletonPtr();

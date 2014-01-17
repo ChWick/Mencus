@@ -15,7 +15,8 @@ CGameState *CGameState::getSingletonPtr() {
 CGameState::CGameState()
 : m_eCurrentGameState(GS_COUNT),
   m_pMainMenu(CMainMenu::getSingletonPtr()),
-  m_pScreenplay(NULL) {
+  m_pScreenplay(NULL),
+  m_pSaveState(NULL) {
   changeGameState(GS_MAIN_MENU);
 }
 CGameState::~CGameState() {
