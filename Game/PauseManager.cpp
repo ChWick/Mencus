@@ -22,6 +22,7 @@ CPauseManager::CPauseManager()
   m_mapPauseListener[PAUSE_VIDEO] = &CPauseListener::videoPauseChanged;
   m_mapPauseListener[PAUSE_MAP_UPDATE] = &CPauseListener::mapUpdatePauseChanged;
   m_mapPauseListener[PAUSE_MAP_RENDER] = &CPauseListener::mapRenderPauseChanged;
+  m_mapPauseListener[PAUSE_SCREENPLAY] = &CPauseListener::screenplayPauseChanged;
 }
 
 void CPauseManager::update() {

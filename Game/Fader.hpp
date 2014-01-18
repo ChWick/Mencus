@@ -44,6 +44,8 @@ public:
     m_pOverlay->hide();
   }
   bool isFading() const {return m_eFadeOperation != FADE_NONE;}
+  void setVisible(bool bShow) {if (bShow){m_pOverlay->show();} else {m_pOverlay->hide();}}
+
   void startFadeIn(Ogre::Real fDuration) {
     if (fDuration < 0) fDuration = -fDuration;
 

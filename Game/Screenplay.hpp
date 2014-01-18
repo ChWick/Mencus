@@ -157,7 +157,7 @@ public:
   virtual bool keyReleased( const OIS::KeyEvent &arg );
 
   // CPauseListener
-  virtual void screenplayPauseChanged(bool bPause) {m_bPaused = bPause; setInputListenerEnabled(bPause);}
+  virtual void screenplayPauseChanged(bool bPause) {m_bPaused = bPause; setInputListenerEnabled(!bPause);}
 
 private:
 

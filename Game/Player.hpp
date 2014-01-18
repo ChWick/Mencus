@@ -105,6 +105,7 @@ public:
   virtual void fadeOutCallback();
 
   virtual void playerInputPauseChanged(bool bPause);
+  virtual void mapRenderPauseChanged(bool bPause) {m_Fader.setVisible(!bPause);}
 
   Ogre::Real getManapoints() const {return m_fManaPoints;}
   void setManapoints(Ogre::Real fManapoints) {m_fManaPoints = fManapoints;}
