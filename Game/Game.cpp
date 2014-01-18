@@ -26,7 +26,9 @@ CGame &CGame::getSingleton() {
 
 //-------------------------------------------------------------------------------------
 CGame::CGame(void)
-  : mRoot(0),
+  :
+    m_pGameState(NULL),
+    mRoot(0),
     mCamera(0),
     mSceneMgr(0),
     mWindow(0),
@@ -37,7 +39,6 @@ CGame::CGame(void)
     mDetailsPanel(0),
     mCursorWasVisible(false),
     mShutDown(false),
-    m_pGameState(NULL),
 	  mInputManager(NULL),
     mKeyboard(0) {
 }
@@ -262,13 +263,15 @@ bool CGame::go(void)
     CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
     //CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
 
-    new CPauseManager();
-    new CSaveStateManager();
-    new CGUIManager(mSceneMgr);
 
     mRoot->addFrameListener(this);
     //-------------------------------------------------------------------------------------
     m_pGameState = new CGameState();
+    new CPauseManager();
+    new CSaveStateManager();
+    new CGUIManager(mSceneMgr);
+    m_pGameState->init();
+    m_pGameState->changeGameState(CGameState::GS_MAIN_MENU);
 
     mRoot->startRendering();
 
@@ -404,10 +407,6 @@ bool CGame::keyPressed( const OIS::KeyEvent &arg )
   else if (arg.key == OIS::KC_SYSRQ)   // take a screenshot
     {
       mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
-    }
-  else if (arg.key == OIS::KC_ESCAPE)
-    {
-      mShutDown = true;
     }
 
   CEGUI::System &sys = CEGUI::System::getSingleton();

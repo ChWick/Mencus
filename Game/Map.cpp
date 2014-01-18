@@ -24,11 +24,13 @@ const Ogre::Real SCREEN_RATIO = TILES_PER_SCREEN.y / TILES_PER_SCREEN.x;
 CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayListener)
   : m_p2dManagerMap(NULL),
     m_pBackgroundSprite(NULL),
-    m_pPlayer(NULL),
-    m_vCameraDebugOffset(Ogre::Vector2::ZERO),
     m_vCameraPos(Ogre::Vector2::ZERO),
+    m_vCameraDebugOffset(Ogre::Vector2::ZERO),
+    m_pPlayer(NULL),
     m_pExit(NULL),
-    m_pScreenplayListener(pScreenplayListener) {
+    m_pScreenplayListener(pScreenplayListener),
+    m_bUpdatePause(false),
+    m_bRenderPause(false) {
   m_p2dManagerMap = new Ogre2dManager();
   m_p2dManagerMap->init(pSceneManager, Ogre::RENDER_QUEUE_BACKGROUND, true);
   //loadMap("../level/level1/scene3.xml");
@@ -400,72 +402,78 @@ bool CMap::keyReleased( const OIS::KeyEvent &arg ) {
   return true;
 }
 void CMap::update(Ogre::Real tpf) {
-  updateCameraPos();
+  if (!m_bUpdatePause) {
+    updateCameraPos();
 
-  // order of updates exquates drawing order, last one will be on top
-  updateBackground(tpf);
-  for (auto pTile : m_gridTiles) {
-    pTile->update(tpf);
-  }
-  for (auto pObject : m_lObjects) {
-    pObject->update(tpf);
-  }
-  for (auto pEnemy : m_lEnemies) {
-    pEnemy->update(tpf);
-  }
-  for (auto pSwitch : m_lSwitches) {
-    pSwitch->update(tpf);
-  }
-  for (auto pShot : m_lShots) {
-    pShot->update(tpf);
-  }
+    // order of updates exquates drawing order, last one will be on top
+    updateBackground(tpf);
+    for (auto pTile : m_gridTiles) {
+      pTile->update(tpf);
+    }
+    for (auto pObject : m_lObjects) {
+      pObject->update(tpf);
+    }
+    for (auto pEnemy : m_lEnemies) {
+      pEnemy->update(tpf);
+    }
+    for (auto pSwitch : m_lSwitches) {
+      pSwitch->update(tpf);
+    }
+    for (auto pShot : m_lShots) {
+      pShot->update(tpf);
+    }
 
-  m_pPlayer->update(tpf);
+    m_pPlayer->update(tpf);
 
-  for (auto pExplosion : m_lExplosions) {
-    pExplosion->update(tpf);
+    for (auto pExplosion : m_lExplosions) {
+      pExplosion->update(tpf);
+    }
+
+    if (m_pExit) {
+      if (m_pExit->isInExit(m_pPlayer, this)) {
+        m_pScreenplayListener->playerExitsMap();
+      }
+    }
+
+    CGame::getSingleton().getDetailsPanel()->setParamValue(0, Ogre::StringConverter::toString(m_vCameraPos.x));
+    CGame::getSingleton().getDetailsPanel()->setParamValue(1, Ogre::StringConverter::toString(m_vCameraPos.y));
+    CGame::getSingleton().getDetailsPanel()->setParamValue(2, Ogre::StringConverter::toString(m_pPlayer->getPosition().x));
+    CGame::getSingleton().getDetailsPanel()->setParamValue(3, Ogre::StringConverter::toString(m_pPlayer->getPosition().y));
+
+    // tidy up
+    while (m_lShotsToDestroy.size() > 0) {
+      delete m_lShotsToDestroy.front();
+      m_lShots.remove(m_lShotsToDestroy.front());
+      m_lShotsToDestroy.pop_front();
+    }
+    while(m_lExplosionsToDestroy.size() > 0) {
+      delete m_lExplosionsToDestroy.front();
+      m_lExplosions.remove(m_lExplosionsToDestroy.front());
+      m_lExplosionsToDestroy.pop_front();
+    }
+    while (m_lEnemiesToDestroy.size() > 0) {
+      delete m_lEnemiesToDestroy.front();
+      m_lEnemies.remove(m_lEnemiesToDestroy.front());
+      m_lEnemiesToDestroy.pop_front();
+    }
+    while (m_lObjectsToDestroy.size() > 0) {
+      delete m_lObjectsToDestroy.front();
+      m_lObjects.remove(m_lObjectsToDestroy.front());
+      m_lObjectsToDestroy.pop_front();
+    }
   }
-
+  if (!m_bRenderPause) {
   // draw links if debug
 #ifdef DEBUG_LINKS
-  for (auto &link : m_lLinks) {
-    CDebugDrawer::getSingleton().draw(link);
-  }
-#endif
-  if (m_pExit) {
-    if (m_pExit->isInExit(m_pPlayer, this)) {
-      m_pScreenplayListener->playerExitsMap();
+    for (auto &link : m_lLinks) {
+      CDebugDrawer::getSingleton().draw(link);
     }
+#endif
+    if (m_pExit) {
 #ifdef DEBUG_EXIT
-    m_pExit->debugDraw();
+      m_pExit->debugDraw();
 #endif // DEBUG_EXIT
-  }
-
-  CGame::getSingleton().getDetailsPanel()->setParamValue(0, Ogre::StringConverter::toString(m_vCameraPos.x));
-  CGame::getSingleton().getDetailsPanel()->setParamValue(1, Ogre::StringConverter::toString(m_vCameraPos.y));
-  CGame::getSingleton().getDetailsPanel()->setParamValue(2, Ogre::StringConverter::toString(m_pPlayer->getPosition().x));
-  CGame::getSingleton().getDetailsPanel()->setParamValue(3, Ogre::StringConverter::toString(m_pPlayer->getPosition().y));
-
-  // tidy up
-  while (m_lShotsToDestroy.size() > 0) {
-    delete m_lShotsToDestroy.front();
-    m_lShots.remove(m_lShotsToDestroy.front());
-    m_lShotsToDestroy.pop_front();
-  }
-  while(m_lExplosionsToDestroy.size() > 0) {
-    delete m_lExplosionsToDestroy.front();
-    m_lExplosions.remove(m_lExplosionsToDestroy.front());
-    m_lExplosionsToDestroy.pop_front();
-  }
-  while (m_lEnemiesToDestroy.size() > 0) {
-    delete m_lEnemiesToDestroy.front();
-    m_lEnemies.remove(m_lEnemiesToDestroy.front());
-    m_lEnemiesToDestroy.pop_front();
-  }
-  while (m_lObjectsToDestroy.size() > 0) {
-    delete m_lObjectsToDestroy.front();
-    m_lObjects.remove(m_lObjectsToDestroy.front());
-    m_lObjectsToDestroy.pop_front();
+    }
   }
 }
 void CMap::updateBackground(Ogre::Real tpf) {
@@ -640,6 +648,8 @@ void CMap::CExit::debugDraw() {
   switch (m_eExitType) {
   case CMap::EXIT_REGION:
     CDebugDrawer::getSingleton().draw(m_BoundingBox);
+    break;
+  default:
     break;
   }
 }

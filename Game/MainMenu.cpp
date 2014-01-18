@@ -57,6 +57,11 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_iTargetState[MMS_OPTIONS][OPTIONS_BACK] = MMS_START;
   m_sButtonLabels[MMS_OPTIONS][OPTIONS_BACK] = "Back";
 
+  m_iTargetState[MMS_GAME_ESCAPE][GAMES_ESCAPE_BACK_TO_GAME] = MMS_RESULT_BACK_TO_GAME;
+  m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_BACK_TO_GAME] = "Back to game";
+  m_iTargetState[MMS_GAME_ESCAPE][GAMES_ESCAPE_EXIT_GAME] = MMS_START;
+  m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_EXIT_GAME] = "Exit game";
+
   // create cegui windows/buttons
   m_pMMRoot = pGUIRoot->createChild("OgreTray/StaticImage", "MainMenuRoot");
   m_pMMRoot->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
@@ -79,7 +84,6 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pSaveStatesWindow->setPosition(UVector2(UDim(0.2f, 0), UDim(0.5f, 0)));
   m_pSaveStatesWindow->setSize(USize(UDim(0.3f, 0), UDim(0.07f + 2 * 0.1f, 0)));
   m_pSaveStatesWindow->setFont("dejavusans8");
-  changeState(MMS_START);
 }
 CMainMenu::~CMainMenu() {
   CInputListenerManager::getSingleton().removeInputListener(this);
@@ -101,7 +105,7 @@ void CMainMenu::update(Ogre::Real tpf) {
       m_pSaveStatesWindow->setAlpha(max(m_pSaveStatesWindow->getAlpha() - tpf * BUTTON_ALPHA_CHANGE_PER_SEC, BUTTON_MIN_ALPHA));
     }
 
-    for (int i = 0; i < m_pSaveStatesWindow->getItemCount(); ++i) {
+    for (int i = 0; i < static_cast<int>(m_pSaveStatesWindow->getItemCount()); ++i) {
       if (m_iSelectedLoadState == i) {
         dynamic_cast<ListboxTextItem*>(m_pSaveStatesWindow->getListboxItemFromIndex(i))->setTextColours(Colour(1, 1, 1));
       }
@@ -119,6 +123,7 @@ void CMainMenu::changeState(EMainMenuState eState) {
     break;
   }
 
+  m_bSaveListSelected = false;
   m_eCurrentState = eState;
   m_iSelectedSlot = 0;
 
@@ -133,6 +138,10 @@ void CMainMenu::changeState(EMainMenuState eState) {
     break;
   case MMS_RESULT_EXIT:
     CGame::getSingleton().shutDown();
+    break;
+  case MMS_RESULT_BACK_TO_GAME:
+    hide();
+    unpause(PAUSE_ALL);
     break;
   default:
     for (int i = 0; i < NUM_SLOTS; i++) {
@@ -178,13 +187,20 @@ void CMainMenu::changeState(EMainMenuState eState) {
   else {
     m_pSaveStatesWindow->setVisible(false);
   }
+
+  if (eState == MMS_GAME_ESCAPE) {
+    setPause(PAUSE_ALL);
+  }
+  if (eState == MMS_START) {
+    CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);
+  }
 }
 bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
   switch (arg.key) {
   case OIS::KC_DOWN:
     if (m_bSaveListSelected) {
         ++m_iSelectedLoadState;
-        if (m_iSelectedLoadState >= m_pSaveStatesWindow->getItemCount()) {
+        if (m_iSelectedLoadState >= static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
           m_iSelectedLoadState = m_pSaveStatesWindow->getItemCount() - 1;
         }
     }
@@ -221,7 +237,7 @@ bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
     break;
   case OIS::KC_RETURN:
     if (m_bSaveListSelected) {
-      if (m_iSelectedLoadState > 0 && m_iSelectedLoadState < m_pSaveStatesWindow->getItemCount()) {
+      if (m_iSelectedLoadState >= 0 && m_iSelectedLoadState < static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
         m_pStateToLoad = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
         changeState(MMS_RESULT_LOAD_GAME);
       }

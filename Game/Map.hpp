@@ -14,6 +14,7 @@
 #include "CollisionDefines.hpp"
 #include "Link.hpp"
 #include "ScreenplayListener.hpp"
+#include "PauseListener.hpp"
 
 class CTile;
 class CPlayer;
@@ -23,7 +24,7 @@ class CExplosion;
 class CEnemy;
 class CObject;
 
-class CMap : public CSpriteTransformPipeline, public CInputListener {
+class CMap : public CSpriteTransformPipeline, public CInputListener, public CPauseListener {
 private:
   enum EExitTypes {
     EXIT_REGION,
@@ -72,7 +73,8 @@ private:
   CExit *m_pExit;
 
   CScreenplayListener *m_pScreenplayListener;
-
+  bool m_bUpdatePause;
+  bool m_bRenderPause;
 public:
   CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayListener);
   ~CMap();
@@ -173,6 +175,10 @@ public:
   void destroyObject(CObject *pObject) {if (find(m_lObjectsToDestroy.begin(), m_lObjectsToDestroy.end(), pObject) == m_lObjectsToDestroy.end()) m_lObjectsToDestroy.push_back(pObject);}
 
   const std::list<CEnemy*> &getEnemies() const {return m_lEnemies;}
+
+  // PauseListener
+  virtual void mapUpdatePauseChanged(bool bPause) {m_bUpdatePause = bPause;}
+  virtual void mapRenderPauseChanged(bool bPause) {m_bRenderPause = bPause;}
 private:
   void updateBackground(Ogre::Real tpf);
   void updateCameraPos();

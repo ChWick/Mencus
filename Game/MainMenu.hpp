@@ -5,10 +5,11 @@
 #include <OgreSingleton.h>
 #include <vector>
 #include "InputListener.hpp"
+#include "PauseCaller.hpp"
 
 class CSaveState;
 
-class CMainMenu : public Ogre::Singleton<CMainMenu>, public CInputListener {
+class CMainMenu : public Ogre::Singleton<CMainMenu>, public CInputListener, public CPauseCaller {
 public:
   static const int NUM_SLOTS = 4;
   enum EMainMenuState {
@@ -18,9 +19,11 @@ public:
     MMS_GAME,
     MMS_LOAD_GAME,
     MMS_OPTIONS,
+    MMS_GAME_ESCAPE,
 
     MMS_COUNT,
 
+    MMS_RESULT_BACK_TO_GAME,
     MMS_RESULT_EXIT,
     MMS_RESULT_NEW_GAME,
     MMS_RESULT_LOAD_GAME,
@@ -40,6 +43,10 @@ public:
   };
   enum EOptionsSlots {
     OPTIONS_BACK    = NUM_SLOTS - 1,
+  };
+  enum EGamesEscapeSlots {
+    GAMES_ESCAPE_BACK_TO_GAME = 0,
+    GAMES_ESCAPE_EXIT_GAME    = NUM_SLOTS - 1,
   };
 private:
   CEGUI::Window *m_pMMRoot;

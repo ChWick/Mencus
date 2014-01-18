@@ -7,6 +7,8 @@
 #include "ScreenplayListener.hpp"
 #include "Fader.hpp"
 #include "PauseCaller.hpp"
+#include "PauseListener.hpp"
+#include "InputListener.hpp"
 
 class CMap;
 
@@ -112,7 +114,12 @@ public:
   virtual void stop();
 };
 
-class CScreenplay : public CScreenplayListener, public CFaderCallback, public CPauseCaller {
+class CScreenplay :
+  public CScreenplayListener,
+  public CFaderCallback,
+  public CPauseCaller,
+  public CInputListener,
+  public CPauseListener {
 private:
   const Ogre::String m_sLevelDir;
 
@@ -128,9 +135,10 @@ private:
   CScene *m_pOldScene;
 
   CFader m_Fader;
+  bool m_bPaused;
 public:
   CScreenplay();
-  ~CScreenplay();
+  virtual ~CScreenplay();
 
   void setNextAct(unsigned int uiActId, unsigned int uiSceneId) {m_uiNextAct = uiActId; m_uiNextScene = uiSceneId;}
 
@@ -140,9 +148,16 @@ public:
 
   void update(Ogre::Real tpf);
 
-
+  // CFader
   void fadeInCallback();
   void fadeOutCallback();
+
+  // CInputListener
+  virtual bool keyPressed( const OIS::KeyEvent &arg );
+  virtual bool keyReleased( const OIS::KeyEvent &arg );
+
+  // CPauseListener
+  virtual void screenplayPauseChanged(bool bPause) {m_bPaused = bPause; setInputListenerEnabled(bPause);}
 
 private:
 

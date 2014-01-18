@@ -16,6 +16,9 @@ public:
   virtual void playerMovePauseChanged(bool bPause) {}
   virtual void enemyMovePauseChanged(bool bPause) {}
   virtual void videoPauseChanged(bool bPause) {}
+  virtual void mapUpdatePauseChanged(bool bPause) {}
+  virtual void mapRenderPauseChanged(bool bPause) {}
+  virtual void screenplayPauseChanged(bool bPause) {}
 };
 
 #endif // PAUSE_LISTENER_HPP

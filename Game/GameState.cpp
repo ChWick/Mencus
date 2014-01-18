@@ -14,10 +14,9 @@ CGameState *CGameState::getSingletonPtr() {
 
 CGameState::CGameState()
 : m_eCurrentGameState(GS_COUNT),
-  m_pMainMenu(CMainMenu::getSingletonPtr()),
+  m_pMainMenu(NULL),
   m_pScreenplay(NULL),
   m_pSaveState(NULL) {
-  changeGameState(GS_MAIN_MENU);
 }
 CGameState::~CGameState() {
   if (m_pScreenplay) {
@@ -25,7 +24,12 @@ CGameState::~CGameState() {
     m_pScreenplay = NULL;
   }
 }
+void CGameState::init() {
+  m_pMainMenu = CMainMenu::getSingletonPtr();
+}
 void CGameState::changeGameState(EGameStates eNewGameState) {
+  if (eNewGameState == m_eCurrentGameState) {return;}
+
   switch (m_eCurrentGameState) {
   case GS_GAME:
     delete m_pScreenplay;

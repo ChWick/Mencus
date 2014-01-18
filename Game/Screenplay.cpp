@@ -3,6 +3,7 @@
 #include <OgreRoot.h>
 #include "Map.hpp"
 #include <fstream>
+#include "MainMenu.hpp"
 #include "GUIInstructions.hpp"
 #include "Video.hpp"
 #include "SaveStateManager.hpp"
@@ -62,7 +63,9 @@ CScreenplay::CScreenplay()
     m_uiNextScene(0),
     m_pCurrentScene(NULL),
     m_pOldScene(NULL),
-    m_Fader(this) {
+    m_Fader(this),
+    m_bPaused(false) {
+  CInputListenerManager::getSingleton().addInputListener(this);
   CGUIInstructions::getSingleton().setScreenplayListener(this);
   parse("../level/screenplay.xml");
 
@@ -76,6 +79,7 @@ CScreenplay::CScreenplay()
   m_Fader.startFadeOut(0);
 }
 CScreenplay::~CScreenplay() {
+  CInputListenerManager::getSingleton().removeInputListener(this);
   for (auto &p : m_mapActs) {
     delete p.second;
   }
@@ -205,6 +209,8 @@ void CScreenplay::parse(const Ogre::String &sFilename) {
   }
 }
 void CScreenplay::update(Ogre::Real tpf) {
+  if (m_bPaused) {return;}
+
   if (tpf > 0.2) {
     m_Fader.fade(0);
     // Probably loading causes this fps, next time step update
@@ -217,6 +223,16 @@ void CScreenplay::update(Ogre::Real tpf) {
     m_pCurrentScene->update(tpf);
   }
 
+}
+bool CScreenplay::keyPressed( const OIS::KeyEvent &arg ) {
+  if (arg.key == OIS::KC_ESCAPE) {
+    CMainMenu::getSingleton().show();
+    CMainMenu::getSingleton().changeState(CMainMenu::MMS_GAME_ESCAPE);
+  }
+  return true;
+}
+bool CScreenplay::keyReleased( const OIS::KeyEvent &arg ) {
+  return true;
 }
 void CScreenplay::playerExitsMap() {
   toNextScene();
@@ -237,7 +253,7 @@ void CScreenplay::toNextScene() {
     m_uiNextAct++;
   }
   m_Fader.startFadeOut(SCREENPLAY_FADE_DURATION);
-  pause(PAUSE_ALL);
+  pause(PAUSE_ALL ^ PAUSE_SCREENPLAY);
 }
 void CScreenplay::fadeInCallback() {
   unpause(PAUSE_ALL);

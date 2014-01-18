@@ -18,6 +18,12 @@ enum EPauseTypes {
 
   PAUSE_VIDEO             = 8,
 
+  PAUSE_MAP_UPDATE        = 16,
+  PAUSE_MAP_RENDER        = 32,
+  PAUSE_MAP               = 48,
+
+  PAUSE_SCREENPLAY        = 64,
+
   PAUSE_ALL               = 511,
 };
 

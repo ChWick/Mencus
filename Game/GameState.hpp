@@ -30,6 +30,8 @@ public:
   CGameState();
   ~CGameState();
 
+  void init();
+
   void update(Ogre::Real tpf);
 
   void changeGameState(EGameStates eNewGameState);
