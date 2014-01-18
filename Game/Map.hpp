@@ -15,6 +15,7 @@
 #include "Link.hpp"
 #include "ScreenplayListener.hpp"
 #include "PauseListener.hpp"
+#include "CameraRestriction.hpp"
 
 class CTile;
 class CPlayer;
@@ -54,7 +55,6 @@ private:
   std::list<CShot*> m_lShotsToDestroy;
   std::list<CExplosion*> m_lExplosionsToDestroy;
   std::list<CObject*> m_lObjectsToDestroy;
-
   Ogre2dManager* m_p2dManagerMap;
   grid2d<CTile*> m_gridTiles;
   std::list<CEnemy*> m_lEnemies;
@@ -63,10 +63,12 @@ private:
   std::list<CExplosion*> m_lExplosions;
   std::list<CLink> m_lLinks;
   std::list<CObject*> m_lObjects;
+  std::vector<CCameraRestriction> m_vCameraRestrictions;
   std::string m_sBackground;
   CSprite *m_pBackgroundSprite;
 
   Ogre::Vector2 m_vCameraPos;
+  Ogre::Vector2 m_vCameraTargetPos;
   Ogre::Vector2 m_vCameraDebugOffset;
 
   CPlayer *m_pPlayer;
@@ -181,7 +183,7 @@ public:
   virtual void mapRenderPauseChanged(bool bPause) {m_bRenderPause = bPause;}
 private:
   void updateBackground(Ogre::Real tpf);
-  void updateCameraPos();
+  void updateCameraPos(Ogre::Real tpf);
 
   void clearMap();
 
@@ -193,6 +195,7 @@ private:
   void readObject(tinyxml2::XMLElement *pObject);
   void readExit(tinyxml2::XMLElement *pExit);
   void readPlayer(tinyxml2::XMLElement *pPlayerElem);
+  void readCamera(tinyxml2::XMLElement *pCamera);
 };
 
 #endif

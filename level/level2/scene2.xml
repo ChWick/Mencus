@@ -28,6 +28,9 @@
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1"/>
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1"/>
     </tiles>
+    <camera>
+      <restriction type="horizontal" y="12"/>
+    </camera>
     <enemies>
         <enemy type="2" x="8.437500" y="16.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>
         <enemy type="2" x="12.062500" y="5.000000" direction="-1" jumps="0" hp="2.000000" rank="1"/>

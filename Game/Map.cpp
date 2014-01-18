@@ -21,10 +21,13 @@ const string CTile::DEFAULT_TILE_TEXTURE_NAME = "../gfx/tiles/Tile";
 const Ogre::Vector2 TILES_PER_SCREEN(16, 12);
 const Ogre::Real SCREEN_RATIO = TILES_PER_SCREEN.y / TILES_PER_SCREEN.x;
 
+const Ogre::Real CAMERA_MAX_MOVE_SPEED(10);
+
 CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayListener)
   : m_p2dManagerMap(NULL),
     m_pBackgroundSprite(NULL),
     m_vCameraPos(Ogre::Vector2::ZERO),
+    m_vCameraTargetPos(Ogre::Vector2::ZERO),
     m_vCameraDebugOffset(Ogre::Vector2::ZERO),
     m_pPlayer(NULL),
     m_pExit(NULL),
@@ -163,6 +166,9 @@ void CMap::loadMap(string sFilename) {
     }
     else if (std::string(pElement->Value()) == "player") {
       readPlayer(pElement);
+    }
+    else if (std::string(pElement->Value()) == "camera") {
+      readCamera(pElement);
     }
   }
 
@@ -403,7 +409,7 @@ bool CMap::keyReleased( const OIS::KeyEvent &arg ) {
 }
 void CMap::update(Ogre::Real tpf) {
   if (!m_bUpdatePause) {
-    updateCameraPos();
+    updateCameraPos(tpf);
 
     // order of updates exquates drawing order, last one will be on top
     updateBackground(tpf);
@@ -482,12 +488,24 @@ void CMap::updateBackground(Ogre::Real tpf) {
     m_pBackgroundSprite->update(tpf);
   }
 }
-void CMap::updateCameraPos() {
+void CMap::updateCameraPos(Ogre::Real tpf) {
   Ogre::Vector2 vCenter = m_pPlayer->getPosition() + m_pPlayer->getSize() / 2;
-  m_vCameraPos = vCenter - TILES_PER_SCREEN/ 2;
+  m_vCameraTargetPos = vCenter - TILES_PER_SCREEN/ 2;
+  m_vCameraTargetPos.x = max(m_vCameraTargetPos.x, static_cast<Ogre::Real>(0));
+  m_vCameraTargetPos.y = max(m_vCameraTargetPos.y, static_cast<Ogre::Real>(0));
+
+  m_vCameraTargetPos.x = min(m_vCameraTargetPos.x, m_gridTiles.getSizeX() - TILES_PER_SCREEN.x);
+  m_vCameraTargetPos.y = min(m_vCameraTargetPos.y, m_gridTiles.getSizeY() - TILES_PER_SCREEN.y);
+
+  for (auto &camRestr : m_vCameraRestrictions) {
+    camRestr.update(m_vCameraTargetPos, m_pPlayer->getCenter());
+  }
+  Ogre::Vector2 vDir(m_vCameraTargetPos - m_vCameraPos);
+  m_vCameraPos += vDir * std::min(vDir.normalise(), tpf * CAMERA_MAX_MOVE_SPEED);
+
+  // bounds
   m_vCameraPos.x = max(m_vCameraPos.x, static_cast<Ogre::Real>(0));
   m_vCameraPos.y = max(m_vCameraPos.y, static_cast<Ogre::Real>(0));
-
   m_vCameraPos.x = min(m_vCameraPos.x, m_gridTiles.getSizeX() - TILES_PER_SCREEN.x);
   m_vCameraPos.y = min(m_vCameraPos.y, m_gridTiles.getSizeY() - TILES_PER_SCREEN.y);
 }
@@ -609,6 +627,16 @@ void CMap::readPlayer(XMLElement *pPlayerElem) {
   m_pPlayer->startup(Ogre::Vector2(pPlayerElem->FloatAttribute("posx"),
                                    pPlayerElem->FloatAttribute("posy")),
                      pPlayerElem->FloatAttribute("direction"));
+  m_vCameraPos = m_vCameraTargetPos = m_pPlayer->getCenter() - TILES_PER_SCREEN * 0.5f;
+}
+void CMap::readCamera(tinyxml2::XMLElement *pCamera) {
+  for (XMLElement *pElement = pCamera->FirstChildElement(); pElement; pElement = pElement->NextSiblingElement()) {
+    if (std::string(pElement->Value()) == "restriction") {
+      if (strcmp(pElement->Attribute("type"), "horizontal") == 0){
+        m_vCameraRestrictions.push_back(CCameraRestriction(CCameraRestriction::HORIZONTAL_RESTRICTION, TILES_PER_SCREEN, pElement->FloatAttribute("y")));
+      }
+    }
+  }
 }
 CLink *CMap::getLinkById(const Ogre::String &id) {
   for (CLink &link : m_lLinks) {
