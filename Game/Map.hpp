@@ -178,6 +178,8 @@ public:
 
   const std::list<CEnemy*> &getEnemies() const {return m_lEnemies;}
 
+  void playerWarped();
+
   // PauseListener
   virtual void mapUpdatePauseChanged(bool bPause) {m_bUpdatePause = bPause;}
   virtual void mapRenderPauseChanged(bool bPause) {m_bRenderPause = bPause;}

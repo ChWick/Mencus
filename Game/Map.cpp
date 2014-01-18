@@ -627,7 +627,6 @@ void CMap::readPlayer(XMLElement *pPlayerElem) {
   m_pPlayer->startup(Ogre::Vector2(pPlayerElem->FloatAttribute("posx"),
                                    pPlayerElem->FloatAttribute("posy")),
                      pPlayerElem->FloatAttribute("direction"));
-  m_vCameraPos = m_vCameraTargetPos = m_pPlayer->getCenter() - TILES_PER_SCREEN * 0.5f;
 }
 void CMap::readCamera(tinyxml2::XMLElement *pCamera) {
   for (XMLElement *pElement = pCamera->FirstChildElement(); pElement; pElement = pElement->NextSiblingElement()) {
@@ -653,6 +652,13 @@ CEnemy *CMap::getEnemyById(const Ogre::String &id) {
     }
   }
   return NULL;
+}
+void CMap::playerWarped() {
+  m_vCameraTargetPos = m_pPlayer->getCenter() - TILES_PER_SCREEN * 0.5;
+  for (auto &camRestr : m_vCameraRestrictions) {
+    camRestr.update(m_vCameraTargetPos, m_pPlayer->getCenter());
+  }
+  m_vCameraPos = m_vCameraTargetPos;
 }
 
 

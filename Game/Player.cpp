@@ -79,6 +79,7 @@ CPlayer::~CPlayer() {
 void CPlayer::startup(const Ogre::Vector2 &vPosition, Ogre::Real fDirection) {
   setPosition(vPosition);
   m_eLastDirection = (fDirection > 0) ? LD_RIGHT : LD_LEFT;
+  m_pMap->playerWarped();
 }
 void CPlayer::setupAnimations() {
   setDefaultGetPath(&getPlayerTexturePath);
@@ -449,6 +450,7 @@ void CPlayer::fadeInCallback() {
 void CPlayer::fadeOutCallback() {
   if (m_eGoToLinkStatus == GTLS_MOVE_TO_ENTRANCE) {
     m_vPosition = m_vLinkToPos;
+    m_pMap->playerWarped();
     m_eGoToLinkStatus = GTLS_COME_OUT_FROM_EXIT;
     m_Fader.startFadeIn(PLAYER_LINK_FADE_TIME);
   }
