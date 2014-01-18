@@ -107,6 +107,9 @@
 		<Unit filename="../Game/ogre2d-main.hpp" />
 		<Unit filename="../level/level1/instructions.txt" />
 		<Unit filename="../level/level1/scene3.xml" />
+		<Unit filename="../level/level2/instructions.txt" />
+		<Unit filename="../level/level2/scene2.xml" />
+		<Unit filename="../level/level2/scene3.xml" />
 		<Unit filename="../level/screenplay.xml" />
 		<Extensions>
 			<envvars />
