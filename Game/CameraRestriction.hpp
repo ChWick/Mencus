@@ -8,7 +8,7 @@ class CCameraRestriction {
 public:
   enum ETypes {
     HORIZONTAL_RESTRICTION,
-    VERCTICAL_RESTRICTION
+    VERTICAL_RESTRICTION
   };
 private:
   const ETypes m_eRestrictionType;
@@ -38,7 +38,13 @@ public:
         vCameraPos.y = std::min<Ogre::Real>(vCameraPos.y, m_fLevel);
       }
       break;
-    case VERCTICAL_RESTRICTION:
+    case VERTICAL_RESTRICTION:
+      if (vPlayerCenter.x > m_fLevel) {
+        vCameraPos.x = std::max<Ogre::Real>(vCameraPos.x, m_fLevel);
+      }
+      else {
+        vCameraPos.x = std::min<Ogre::Real>(vCameraPos.x, m_fLevel);
+      }
       break;
     }
   }

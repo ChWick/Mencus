@@ -633,6 +633,8 @@ void CMap::readCamera(tinyxml2::XMLElement *pCamera) {
     if (std::string(pElement->Value()) == "restriction") {
       if (strcmp(pElement->Attribute("type"), "horizontal") == 0){
         m_vCameraRestrictions.push_back(CCameraRestriction(CCameraRestriction::HORIZONTAL_RESTRICTION, TILES_PER_SCREEN, pElement->FloatAttribute("y")));
+      } else if (strcmp(pElement->Attribute("type"), "vertical") == 0){
+        m_vCameraRestrictions.push_back(CCameraRestriction(CCameraRestriction::VERTICAL_RESTRICTION, TILES_PER_SCREEN, pElement->FloatAttribute("x")));
       }
     }
   }
