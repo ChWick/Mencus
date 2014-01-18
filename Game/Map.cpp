@@ -185,9 +185,16 @@ Ogre::Real CMap::hitsTile(ECollisionCheckDirections eCollisionCheckDirection, un
   int startX = static_cast<int>(bb.getPosition().x + ((eCollisionCheckDirection == CCD_RIGHT) ? bb.getSize().x : 0)); // round down
   int startY = static_cast<int>(bb.getPosition().y + ((eCollisionCheckDirection == CCD_TOP) ? bb.getSize().y : 0)); // round down
 
+  // bonds
+  startX = std::max(startX, 0);
+  startY = std::max(startY, 0);
+  startX = std::min<int>(startX, m_gridTiles.getSizeX() - 1);
+  startY = std::min<int>(startY, m_gridTiles.getSizeY() - 1);
+
 
   if (eCollisionCheckDirection == CCD_TOP || eCollisionCheckDirection == CCD_BOTTOM) {
     int endX = static_cast<int>(bb.getPosition().x + bb.getSize().x + 0.99); // round up
+    endX = std::min<int>(endX, m_gridTiles.getSizeX());
 
     for (int x = startX; x < endX; ++x) {
       if ((m_gridTiles(x, startY)->getTileFlags() & uiTileMask) == uiTileMask) {
@@ -203,6 +210,7 @@ Ogre::Real CMap::hitsTile(ECollisionCheckDirections eCollisionCheckDirection, un
   }
   else {
     int endY = static_cast<int>(bb.getPosition().y + bb.getSize().y + 0.99); // round up
+    endY = std::min<int>(endY, m_gridTiles.getSizeY());
 
     for (int y = startY; y < endY; ++y) {
       if ((m_gridTiles(startX, y)->getTileFlags() & uiTileMask) == uiTileMask) {
