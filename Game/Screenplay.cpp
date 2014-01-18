@@ -253,7 +253,7 @@ void CScreenplay::toNextScene() {
     m_uiNextAct++;
   }
   m_Fader.startFadeOut(SCREENPLAY_FADE_DURATION);
-  pause(PAUSE_ALL ^ PAUSE_SCREENPLAY);
+  pause(PAUSE_ALL ^ PAUSE_SCREENPLAY ^ PAUSE_MAP_RENDER ^ PAUSE_MAP_UPDATE);
 }
 void CScreenplay::fadeInCallback() {
   unpause(PAUSE_ALL);
@@ -262,6 +262,6 @@ void CScreenplay::fadeOutCallback() {
   if (m_uiCurrentAct != m_uiNextAct || m_uiCurrentScene != m_uiNextScene) {
     loadAct(m_uiNextAct, m_uiNextScene);
   }
-  pause(PAUSE_ALL ^ PAUSE_SCREENPLAY);
+  pause(PAUSE_ALL ^ PAUSE_SCREENPLAY ^ PAUSE_MAP_RENDER ^ PAUSE_MAP_UPDATE);
   m_Fader.startFadeIn(SCREENPLAY_FADE_DURATION);
 }
