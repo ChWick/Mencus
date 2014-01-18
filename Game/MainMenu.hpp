@@ -56,6 +56,7 @@ private:
   EMainMenuState m_eCurrentState;
   int m_iSelectedSlot;
   CEGUI::Listbox *m_pSaveStatesWindow;
+  CEGUI::Window *m_pSaveStatePreviewWindow;
   bool m_bSaveListSelected;
   int m_iSelectedLoadState;
   const CSaveState *m_pStateToLoad;
@@ -74,6 +75,9 @@ public:
 
   void show() { m_pMMRoot->setVisible(true); setInputListenerEnabled(true); }
   void hide() { m_pMMRoot->setVisible(false); setInputListenerEnabled(false); }
+
+private:
+  void selectedSaveStateChanged();
 };
 
 #endif // MAIN_MENU_HPP

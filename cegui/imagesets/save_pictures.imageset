@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Imageset version="2" name="save_pictures" imagefile="save_pictures.png" autoScaled="vertical" >
+    <Image name="none" xPos="384" yPos="384" width="128" height="96" />
+
+    <Image name="1-1" xPos="128" yPos="0" width="128" height="96" />
+    <Image name="1-2" xPos="0" yPos="0" width="128" height="96" />
+    <Image name="1-3" xPos="256" yPos="0" width="128" height="96" />
+
+    <Image name="2-1" xPos="0" yPos="0" width="128" height="96" />
+    <Image name="2-2" xPos="384" yPos="0" width="128" height="96" />
+    <Image name="2-3" xPos="0" yPos="96" width="128" height="96" />
+
+    <Image name="3-1" xPos="128" yPos="96" width="128" height="96" />
+</Imageset>

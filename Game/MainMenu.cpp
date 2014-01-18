@@ -29,6 +29,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pStateToLoad(NULL) {
   CInputListenerManager::getSingleton().addInputListener(this);
   ImageManager::getSingleton().loadImageset("main_menu_background.imageset");
+  ImageManager::getSingleton().loadImageset("save_pictures.imageset");
 
   for (int i = 0; i < MMS_COUNT; i++) {
     for (int j = 0; j < NUM_SLOTS; j++) {
@@ -84,6 +85,11 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pSaveStatesWindow->setPosition(UVector2(UDim(0.2f, 0), UDim(0.5f, 0)));
   m_pSaveStatesWindow->setSize(USize(UDim(0.3f, 0), UDim(0.07f + 2 * 0.1f, 0)));
   m_pSaveStatesWindow->setFont("dejavusans8");
+
+  m_pSaveStatePreviewWindow = m_pMMRoot->createChild("OgreTray/StaticImage", "PreviewPricture");
+  m_pSaveStatePreviewWindow->setPosition(UVector2(UDim(0.55f, 0), UDim(0.5f, 0)));
+  m_pSaveStatePreviewWindow->setSize(USize(UDim(0.2f, 0), UDim(0.2f, 0)));
+  m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/none");
 }
 CMainMenu::~CMainMenu() {
   CInputListenerManager::getSingleton().removeInputListener(this);
@@ -100,9 +106,11 @@ void CMainMenu::update(Ogre::Real tpf) {
     }
     if (m_bSaveListSelected){
       m_pSaveStatesWindow->setAlpha(min(m_pSaveStatesWindow->getAlpha() + tpf * BUTTON_ALPHA_CHANGE_PER_SEC, 1.0f));
+      m_pSaveStatePreviewWindow->setAlpha(min(m_pSaveStatePreviewWindow->getAlpha() + tpf * BUTTON_ALPHA_CHANGE_PER_SEC, 1.0f));
     }
     else {
       m_pSaveStatesWindow->setAlpha(max(m_pSaveStatesWindow->getAlpha() - tpf * BUTTON_ALPHA_CHANGE_PER_SEC, BUTTON_MIN_ALPHA));
+      m_pSaveStatePreviewWindow->setAlpha(max(m_pSaveStatePreviewWindow->getAlpha() - tpf * BUTTON_ALPHA_CHANGE_PER_SEC, BUTTON_MIN_ALPHA));
     }
 
     for (int i = 0; i < static_cast<int>(m_pSaveStatesWindow->getItemCount()); ++i) {
@@ -165,6 +173,7 @@ void CMainMenu::changeState(EMainMenuState eState) {
 
   if (eState == MMS_LOAD_GAME) {
     m_pSaveStatesWindow->setVisible(true);
+    m_pSaveStatePreviewWindow->setVisible(true);
 
     while (m_pSaveStatesWindow->getItemCount() > 0) {
       m_pSaveStatesWindow->removeItem(m_pSaveStatesWindow->getListboxItemFromIndex(0));
@@ -183,9 +192,12 @@ void CMainMenu::changeState(EMainMenuState eState) {
       m_pSaveStatesWindow->addItem(pItem);
       pItem->setUserData(const_cast<CSaveState*>(&state));
     }
+
+    selectedSaveStateChanged();
   }
   else {
     m_pSaveStatesWindow->setVisible(false);
+    m_pSaveStatePreviewWindow->setVisible(false);
   }
 
   if (eState == MMS_GAME_ESCAPE) {
@@ -203,6 +215,7 @@ bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
         if (m_iSelectedLoadState >= static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
           m_iSelectedLoadState = m_pSaveStatesWindow->getItemCount() - 1;
         }
+        selectedSaveStateChanged();
     }
     else {
       ++m_iSelectedSlot;
@@ -222,6 +235,7 @@ bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
         if (m_iSelectedLoadState < 0) {
           m_iSelectedLoadState = 0;
         }
+        selectedSaveStateChanged();
     }
     else {
       --m_iSelectedSlot;
@@ -261,4 +275,12 @@ bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
     break;
   }
   return true;
+}
+void CMainMenu::selectedSaveStateChanged() {
+  if (m_iSelectedLoadState < 0 || m_iSelectedLoadState >= static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
+    m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/none");
+    return;
+  }
+  m_pStateToLoad = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
+  m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/" + PropertyHelper<int>::toString(m_pStateToLoad->getActID()) + "-" + PropertyHelper<int>::toString(m_pStateToLoad->getSceneID()));
 }
