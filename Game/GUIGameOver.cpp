@@ -1,5 +1,6 @@
 #include "GUIGameOver.hpp"
 #include "GameState.hpp"
+#include "SaveStateManager.hpp"
 
 
 template<> CGUIGameOver *Ogre::Singleton<CGUIGameOver>::msSingleton = 0;
@@ -74,6 +75,7 @@ bool CGUIGameOver::keyPressed( const OIS::KeyEvent &arg ) {
   }
   else if (arg.key == OIS::KC_RETURN) {
     if (m_iSelectedText == 0) {
+      CGameState::getSingleton().setSaveState(CSaveStateManager::getSingleton().getLastSaveState());
       CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
     }
     else {

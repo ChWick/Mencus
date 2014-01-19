@@ -72,6 +72,7 @@ public:
   void eraseSaveState(unsigned int uiAct, unsigned int uiScene);
 
   const std::list<CSaveState> &listSaveState() const {return m_vSaveStates;}
+  const CSaveState *getLastSaveState() const {if (m_vSaveStates.size() > 0) {return &m_vSaveStates.back();} return NULL;}
 private:
   void writeXMLFile();
 };
