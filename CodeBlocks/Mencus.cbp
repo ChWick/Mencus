@@ -42,6 +42,7 @@
 		<Unit filename="../Game/AnimatedSprite.hpp" />
 		<Unit filename="../Game/BarIndicator.hpp" />
 		<Unit filename="../Game/BoundingBox2d.hpp" />
+		<Unit filename="../Game/CameraRestriction.hpp" />
 		<Unit filename="../Game/CheatDefines.hpp" />
 		<Unit filename="../Game/CollisionDefines.hpp" />
 		<Unit filename="../Game/Constants.hpp" />
@@ -53,6 +54,8 @@
 		<Unit filename="../Game/Explosion.cpp" />
 		<Unit filename="../Game/Explosion.hpp" />
 		<Unit filename="../Game/Fader.hpp" />
+		<Unit filename="../Game/GUIGameOver.cpp" />
+		<Unit filename="../Game/GUIGameOver.hpp" />
 		<Unit filename="../Game/GUIInstructions.cpp" />
 		<Unit filename="../Game/GUIInstructions.hpp" />
 		<Unit filename="../Game/GUIManager.cpp" />

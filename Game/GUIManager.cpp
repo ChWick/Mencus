@@ -2,6 +2,7 @@
 #include "HUD.hpp"
 #include "MainMenu.hpp"
 #include "GUIInstructions.hpp"
+#include "GUIGameOver.hpp"
 #include <CEGUI/CEGUI.h>
 #include <OgreSceneManager.h>
 
@@ -39,17 +40,20 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager)
 
   new CHUD(guiRoot);
   new CGUIInstructions(guiRoot);
+  new CGUIGameOver(guiRoot);
   new CMainMenu(guiRoot);
 }
 CGUIManager::~CGUIManager() {
   m_pSceneManager->removeRenderQueueListener(this);
   delete CHUD::getSingletonPtr();
   delete CGUIInstructions::getSingletonPtr();
+  delete CGUIGameOver::getSingletonPtr();
   delete CMainMenu::getSingletonPtr();
 }
 void CGUIManager::update(Ogre::Real tpf) {
   CHUD::getSingleton().update(tpf);
   CMainMenu::getSingleton().update(tpf);
+  CGUIGameOver::getSingleton().update(tpf);
 }
 void CGUIManager::renderQueueStarted(Ogre::uint8 id, const Ogre::String& invocation, bool& skipThisQueue) {
    // make sure you check the invocation string, or you can end up rendering the GUI multiple times

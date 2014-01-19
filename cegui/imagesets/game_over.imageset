@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Imageset version="2" name="game_over" imagefile="game_over.png" autoScaled="vertical" >
+    <Image name="full" xPos="0" yPos="0" width="1024" height="768" />
+</Imageset>
