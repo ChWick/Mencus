@@ -2,3 +2,4 @@ Game
 FileConverter
 ogre.cfg
 #*.cfg
+savestate.xml
