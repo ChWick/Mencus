@@ -19,6 +19,7 @@ public:
   };
 private:
   EGameStates m_eCurrentGameState;
+  EGameStates m_eNextGameState;
   CMainMenu *m_pMainMenu;
   CScreenplay *m_pScreenplay;
   const CSaveState *m_pSaveState;
@@ -37,6 +38,9 @@ public:
   void changeGameState(EGameStates eNewGameState);
   void setSaveState(const CSaveState *pState) {m_pSaveState = pState;}
   const CSaveState *getSaveState() const {return m_pSaveState;}
+
+private:
+  void changeGameStateImpl();
 };
 
 #endif

@@ -9,6 +9,7 @@
 #include "HUD.hpp"
 #include "Object.hpp"
 #include "CheatDefines.hpp"
+#include "GameState.hpp"
 
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_RIGHT(0.2, 0.0);
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_LEFT(PLAYER_BOLT_OFFSET_RIGHT * Ogre::Vector2(-1, 1));
@@ -461,6 +462,7 @@ void CPlayer::damageTakenCallback() {
 }
 
 void CPlayer::killedByDamageCallback() {
+  CGameState::getSingleton().changeGameState(CGameState::GS_GAME_OVER);
 }
 
 void CPlayer::playerInputPauseChanged(bool bPause) {

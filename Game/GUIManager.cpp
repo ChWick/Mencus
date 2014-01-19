@@ -53,7 +53,6 @@ CGUIManager::~CGUIManager() {
 void CGUIManager::update(Ogre::Real tpf) {
   CHUD::getSingleton().update(tpf);
   CMainMenu::getSingleton().update(tpf);
-  CGUIGameOver::getSingleton().update(tpf);
 }
 void CGUIManager::renderQueueStarted(Ogre::uint8 id, const Ogre::String& invocation, bool& skipThisQueue) {
    // make sure you check the invocation string, or you can end up rendering the GUI multiple times
