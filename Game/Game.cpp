@@ -7,6 +7,7 @@
 #include "GUIManager.hpp"
 #include "GameState.hpp"
 #include "SaveStateManager.hpp"
+#include "DebugDefines.hpp"
 
 using namespace Ogre;
 
@@ -222,6 +223,8 @@ bool CGame::go(void)
 
     //Register as a Window listener
     Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
+
+#ifdef DEBUG_SHOW_OGRE_TRAY
     mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, NULL, this);
     mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
     mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
@@ -245,6 +248,7 @@ bool CGame::go(void)
     mDetailsPanel->setParamValue(9, "Bilinear");
     mDetailsPanel->setParamValue(10, "Solid");
     mDetailsPanel->hide();
+#endif // DEBUG_SHOW_OGRE_TRAY
 
 
     m_pCEGuiOgreRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
@@ -293,7 +297,9 @@ bool CGame::frameRenderingQueued(const Ogre::FrameEvent& evt)
   //Need to capture/update each device
   mKeyboard->capture();
 
+#ifdef DEBUG_SHOW_OGRE_TRAY
   mTrayMgr->frameRenderingQueued(evt);
+#endif // DEBUG_SHOW_OGRE_TRAY
 
   CEGUI::System::getSingleton().injectTimePulse(evt.timeSinceLastFrame);
   mCameraMan->frameRenderingQueued(evt);   // if dialog isn't up, then update the camera
@@ -317,6 +323,7 @@ bool CGame::frameEnded(const Ogre::FrameEvent& evt) {
 //-------------------------------------------------------------------------------------
 bool CGame::keyPressed( const OIS::KeyEvent &arg )
 {
+#ifdef DEBUG_SHOW_OGRE_TRAY
   if (mTrayMgr->isDialogVisible()) return true;   // don't process any more keys if dialog is up
 
   if (arg.key == OIS::KC_F)   // toggle visibility of advanced frame stats
@@ -404,7 +411,9 @@ bool CGame::keyPressed( const OIS::KeyEvent &arg )
     {
       Ogre::TextureManager::getSingleton().reloadAll();
     }
-  else if (arg.key == OIS::KC_SYSRQ)   // take a screenshot
+  else
+#endif // DEBUG_SHOW_OGRE_TRAY
+  if (arg.key == OIS::KC_SYSRQ)   // take a screenshot
     {
       mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
     }

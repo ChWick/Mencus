@@ -452,10 +452,12 @@ void CMap::update(Ogre::Real tpf) {
       }
     }
 
+#if DEBUG_SHOW_OGRE_TRAY
     CGame::getSingleton().getDetailsPanel()->setParamValue(0, Ogre::StringConverter::toString(m_vCameraPos.x));
     CGame::getSingleton().getDetailsPanel()->setParamValue(1, Ogre::StringConverter::toString(m_vCameraPos.y));
     CGame::getSingleton().getDetailsPanel()->setParamValue(2, Ogre::StringConverter::toString(m_pPlayer->getPosition().x));
     CGame::getSingleton().getDetailsPanel()->setParamValue(3, Ogre::StringConverter::toString(m_pPlayer->getPosition().y));
+#endif // DEBUG_SHOW_OGRE_TRAY
 
     // tidy up
     while (m_lShotsToDestroy.size() > 0) {

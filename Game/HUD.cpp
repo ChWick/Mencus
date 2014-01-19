@@ -44,6 +44,7 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot)
   m_pFpsText->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
   m_pFpsText->setPosition(CEGUI::UVector2(CEGUI::UDim(0.267, 0), CEGUI::UDim(0.98, 0)));
   m_pFpsText->setText("00");
+  m_pFpsText->setFont("dejavusans8");
 
   m_pHealthBar = pMain->createChild("OgreTray/StaticImage", "healthbar");
   m_pHealthBar->setProperty("ImageColours", "FFFF00FF");
@@ -64,6 +65,42 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot)
   m_pWeapon->setProperty("BackgroundEnabled", "True");
   m_pWeapon->setPosition(UVector2(UDim(0.020507813, 0), UDim(0.936197917, 0)));
   m_pWeapon->setSize(USize(UDim(0.028320313, 0), UDim(0.037760417, 0)));
+
+  m_pHealthPotionsCount = pMain->createChild("OgreTray/StaticText", "HPCount");
+  m_pHealthPotionsCount->setProperty("TextColours", "FFFFFFFF");
+  m_pHealthPotionsCount->setProperty("FrameEnabled","False");
+  m_pHealthPotionsCount->setProperty("BackgroundEnabled","False");
+  m_pHealthPotionsCount->setFont("dejavusans8");
+  m_pHealthPotionsCount->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
+  m_pHealthPotionsCount->setPosition(CEGUI::UVector2(CEGUI::UDim(0.8, 0), CEGUI::UDim(0.98, 0)));
+  m_pHealthPotionsCount->setText("0");
+
+  m_pManaPotionsCount = pMain->createChild("OgreTray/StaticText", "MPCount");
+  m_pManaPotionsCount->setProperty("TextColours", "FFFFFFFF");
+  m_pManaPotionsCount->setProperty("FrameEnabled","False");
+  m_pManaPotionsCount->setProperty("BackgroundEnabled","False");
+  m_pManaPotionsCount->setFont("dejavusans8");
+  m_pManaPotionsCount->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
+  m_pManaPotionsCount->setPosition(CEGUI::UVector2(CEGUI::UDim(0.84, 0), CEGUI::UDim(0.98, 0)));
+  m_pManaPotionsCount->setText("0");
+
+  m_pKeyCount = pMain->createChild("OgreTray/StaticText", "KeyCount");
+  m_pKeyCount->setProperty("TextColours", "FFFFFFFF");
+  m_pKeyCount->setProperty("FrameEnabled","False");
+  m_pKeyCount->setProperty("BackgroundEnabled","False");
+  m_pKeyCount->setFont("dejavusans8");
+  m_pKeyCount->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
+  m_pKeyCount->setPosition(CEGUI::UVector2(CEGUI::UDim(0.88, 0), CEGUI::UDim(0.98, 0)));
+  m_pKeyCount->setText("0");
+
+  m_pBombCount = pMain->createChild("OgreTray/StaticText", "BombCount");
+  m_pBombCount->setProperty("TextColours", "FFFFFFFF");
+  m_pBombCount->setProperty("FrameEnabled","False");
+  m_pBombCount->setProperty("BackgroundEnabled","False");
+  m_pBombCount->setFont("dejavusans8");
+  m_pBombCount->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
+  m_pBombCount->setPosition(CEGUI::UVector2(CEGUI::UDim(0.92, 0), CEGUI::UDim(0.98, 0)));
+  m_pBombCount->setText("0");
 
   // initialise hp, mp
   setHP(m_fHP);
