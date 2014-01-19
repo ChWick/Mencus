@@ -295,6 +295,9 @@ void CMap::createExplosion(const Ogre::Vector2 &vCenter, Ogre::Real r) {
       pEnemy->takeDamage(CShot::SHOT_DAMAGE[CExplosion::ET_BOMB]);
     }
   }
+  if (vCenter.squaredDistance(m_pPlayer->getCenter()) < r * r) {
+    m_pPlayer->takeDamage(CShot::SHOT_DAMAGE[CExplosion::ET_BOMB]);
+  }
   // check endangered tiles
   int minx = static_cast<int>(vCenter.x - r);
   int maxx = static_cast<int>(vCenter.x + r);
