@@ -278,6 +278,8 @@ void CPlayer::update(Ogre::Real tpf) {
           m_pThrowStrengthIndicator->show();
           m_pBomb = new CShot(m_pMap, m_pSpriteManager, getCenter(), CShot::ST_BOMB, (m_eLastDirection == LD_LEFT) ? CShot::SD_LEFT : CShot::SD_RIGHT);
           m_pMap->addShot(m_pBomb);
+          m_uiBombCount--;
+          CHUD::getSingleton().setBombCount(m_uiBombCount);
         }
         m_pBomb->setCenter(getCenter() + PLAYER_BOMB_OFFSET);
         if (m_eLastDirection == LD_LEFT) {
@@ -375,6 +377,9 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
   } else if (arg.key == OIS::KC_SPACE) {
     if (m_eGoToLinkStatus == GTLS_NONE) {
       if (m_uiCurrentWeapon == W_BOMB) {
+        if (m_uiBombCount <= 0) {
+          return true;
+        }
         m_fBombThrowStrength = PLAYER_BOMB_DEFAULT_THROW_STRENGTH;
       } else if (m_uiCurrentWeapon == W_SHIELD) {
         m_bShieldActive = !m_bShieldActive;
