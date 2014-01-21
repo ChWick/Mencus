@@ -28,6 +28,9 @@ const Ogre::Real PLAYER_BOLT_MANA_COSTS(5);
 const Ogre::Real PLAYER_SHIELD_MANA_COSTS_PER_SEC(5);
 const Ogre::Real PLAYER_MANA_REGAIN_PER_SEC(0.5);
 
+const Ogre::Real PLAYER_HEALTH_POTION_REGAIN_PERCENTAGE(0.5f);
+const Ogre::Real PLAYER_MANA_POTION_REGAIN_PERCENTAGE(0.5f);
+
 const Ogre::Real SPIKES_DAMANGE_PER_HIT(1);
 
 CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
@@ -405,11 +408,46 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
     }
     CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
   }
+  else if (arg.key == OIS::KC_N) {
+    if (m_uiHealthPotionsCount > 0) {
+      --m_uiHealthPotionsCount;
+      addHitpoints(PLAYER_HEALTH_POTION_REGAIN_PERCENTAGE * getMaximumHitpoints());
+      CHUD::getSingleton().setHealthPotionCount(m_uiHealthPotionsCount);
+      CHUD::getSingleton().setHP(getHitpoints() / getMaximumHitpoints());
+    }
+  }
+  else if (arg.key == OIS::KC_M) {
+    if (m_uiManaPotionsCount > 0) {
+      --m_uiManaPotionsCount;
+      m_fManaPoints = min(PLAYER_MAX_MANA_POINTS, m_fManaPoints + PLAYER_MANA_POTION_REGAIN_PERCENTAGE * PLAYER_MAX_MANA_POINTS);
+      CHUD::getSingleton().setManaPotionCount(m_uiManaPotionsCount);
+      CHUD::getSingleton().setMP(m_fManaPoints / PLAYER_MAX_MANA_POINTS);
+    }
+  }
 #ifdef CHEAT_ADD_KEYS
   else if (arg.key == OIS::KC_F7) {
     ++m_uiKeyCount;
+    CHUD::getSingleton().setKeysCount(m_uiKeyCount);
   }
 #endif // CHEAT_ADD_KEYS
+#ifdef CHEAT_ADD_HEALTH_POTIONS
+  else if (arg.key == OIS::KC_F8) {
+    ++m_uiHealthPotionsCount;
+    CHUD::getSingleton().setHealthPotionCount(m_uiHealthPotionsCount);
+  }
+#endif // CHEAT_ADD_HEALTH_POTIONS
+#ifdef CHEAT_ADD_MANA_POTIONS
+  else if (arg.key == OIS::KC_F9) {
+    ++m_uiManaPotionsCount;
+    CHUD::getSingleton().setManaPotionCount(m_uiManaPotionsCount);
+  }
+#endif // CHEAT_ADD_MANA_POTIONS
+#ifdef CHEAT_ADD_BOMB
+  else if (arg.key == OIS::KC_F10) {
+    ++m_uiBombCount;
+    CHUD::getSingleton().setBombCount(m_uiBombCount);
+  }
+#endif // CHEAT_ADD_BOMB
 #ifdef CHEAT_MEGA_JUMP
   else if (arg.key == OIS::KC_LCONTROL) {
     m_vCurrentSpeed.y += m_fInitialJumpSpeed;

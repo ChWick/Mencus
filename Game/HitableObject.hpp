@@ -1,6 +1,8 @@
 #ifndef HITABLE_OBJECT_HPP
 #define HITABLE_OBJECT_HPP
 
+#include <algorithm>
+
 class CHitableObject {
 private:
   const Ogre::Real m_fMaximumHitpoints;
@@ -27,6 +29,7 @@ public:
   Ogre::Real getMaximumHitpoints() const {return m_fMaximumHitpoints;}
   bool isInvunerable() const {return m_bInvunerable;}
   void setInvunerable(bool bInvunerable) {m_bInvunerable = bInvunerable;}
+  void addHitpoints(Ogre::Real fHitpoints) {m_fHitpoints = std::min<Ogre::Real>(m_fHitpoints + fHitpoints, m_fMaximumHitpoints);}
 protected:
   virtual void damageTakenCallback() {}
   virtual void killedByDamageCallback() {}
