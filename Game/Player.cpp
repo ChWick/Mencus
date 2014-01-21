@@ -72,6 +72,10 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
   CHUD::getSingleton().setHP(getHitpoints() / getMaximumHitpoints());
   CHUD::getSingleton().setMP(m_fManaPoints / PLAYER_MAX_MANA_POINTS);
+  CHUD::getSingleton().setBombCount(m_uiBombCount);
+  CHUD::getSingleton().setManaPotionCount(m_uiManaPotionsCount);
+  CHUD::getSingleton().setHealthPotionCount(m_uiHealthPotionsCount);
+  CHUD::getSingleton().setKeysCount(m_uiKeyCount);
 }
 CPlayer::~CPlayer() {
   delete m_pThrowStrengthIndicator;
@@ -339,15 +343,19 @@ void CPlayer::pickobject(unsigned int uiObjectId) {
   switch (uiObjectId) {
   case CObject::OT_BOMB:
     m_uiBombCount++;
+    CHUD::getSingleton().setBombCount(m_uiBombCount);
     break;
   case CObject::OT_MANA_POTION:
     m_uiManaPotionsCount++;
+    CHUD::getSingleton().setManaPotionCount(m_uiManaPotionsCount);
     break;
   case CObject::OT_HEALTH_POTION:
     ++m_uiHealthPotionsCount;
+    CHUD::getSingleton().setHealthPotionCount(m_uiHealthPotionsCount);
     break;
   case CObject::OT_KEY:
     ++m_uiKeyCount;
+    CHUD::getSingleton().setKeysCount(m_uiKeyCount);
     break;
   default:
     break;

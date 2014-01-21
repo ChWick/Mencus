@@ -27,6 +27,10 @@ public:
 
   void setHP(Ogre::Real fHP);
   void setMP(Ogre::Real fMP);
+  void setHealthPotionCount(unsigned int uiCount);
+  void setManaPotionCount(unsigned int uiCount);
+  void setKeysCount(unsigned int uiCount);
+  void setBombCount(unsigned int uiCount);
 
   void setCurrentWeapon(unsigned int uiWeaponId);
 
