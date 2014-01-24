@@ -348,6 +348,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="..\..\Game\Game.hpp" />
     <ClInclude Include="..\..\Game\GameState.hpp" />
     <ClInclude Include="..\..\Game\Grid2d.hpp" />
+    <ClInclude Include="..\..\Game\GUIGameOver.hpp" />
     <ClInclude Include="..\..\Game\GUIInstructions.hpp" />
     <ClInclude Include="..\..\Game\GUIManager.hpp" />
     <ClInclude Include="..\..\Game\HitableObject.hpp" />
@@ -359,7 +360,11 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="..\..\Game\MapManager.hpp" />
     <ClInclude Include="..\..\Game\Object.hpp" />
     <ClInclude Include="..\..\Game\ogre2d-main.hpp" />
+    <ClInclude Include="..\..\Game\PauseCaller.hpp" />
+    <ClInclude Include="..\..\Game\PauseListener.hpp" />
+    <ClInclude Include="..\..\Game\PauseManager.hpp" />
     <ClInclude Include="..\..\Game\Player.hpp" />
+    <ClInclude Include="..\..\Game\SaveStateManager.hpp" />
     <ClInclude Include="..\..\Game\Screenplay.hpp" />
     <ClInclude Include="..\..\Game\ScreenplayListener.hpp" />
     <ClInclude Include="..\..\Game\Shot.hpp" />
@@ -376,6 +381,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="..\..\Game\Explosion.cpp" />
     <ClCompile Include="..\..\Game\Game.cpp" />
     <ClCompile Include="..\..\Game\GameState.cpp" />
+    <ClCompile Include="..\..\Game\GUIGameOver.cpp" />
     <ClCompile Include="..\..\Game\GUIInstructions.cpp" />
     <ClCompile Include="..\..\Game\GUIManager.cpp" />
     <ClCompile Include="..\..\Game\HUD.cpp" />
@@ -386,7 +392,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="..\..\Game\MapManager.cpp" />
     <ClCompile Include="..\..\Game\Object.cpp" />
     <ClCompile Include="..\..\Game\ogre2d-main.cpp" />
+    <ClCompile Include="..\..\Game\PauseManager.cpp" />
     <ClCompile Include="..\..\Game\Player.cpp" />
+    <ClCompile Include="..\..\Game\SaveStateManager.cpp" />
     <ClCompile Include="..\..\Game\Screenplay.cpp" />
     <ClCompile Include="..\..\Game\Shot.cpp" />
     <ClCompile Include="..\..\Game\Sprite.cpp" />
