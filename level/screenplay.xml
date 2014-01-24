@@ -42,4 +42,39 @@
       <level file="scene3.xml" />
     </scene>
   </act>
+  <act id="3" dir="level3">
+    <scene id="1" type="instructions">
+      <instructions file="instructions.txt"/>
+    </scene>
+    <scene id="2" type="level">
+      <level file="scene2.xml" />
+    </scene>
+  </act>
+  <act id="4" dir="level4">
+    <scene id="1" type="instructions">
+      <instructions file="instructions.txt"/>
+    </scene>
+    <scene id="2" type="level">
+      <level file="scene2.xml" />
+    </scene>
+  </act>
+  <act id="5" dir="level5">
+    <scene id="1" type="instructions">
+      <instructions file="instructions.txt"/>
+    </scene>
+    <scene id="2" type="level">
+      <level file="scene2.xml" />
+    </scene>
+    <scene id="3" type="level">
+      <level file="scene3.xml" />
+    </scene>
+  </act>
+  <act id="6" dir="level6">
+    <scene id="1" type="instructions">
+      <instructions file="instructions.txt"/>
+    </scene>
+    <scene id="2" type="level">
+      <level file="scene2.xml" />
+    </scene>
+  </act>
 </screenplay>
