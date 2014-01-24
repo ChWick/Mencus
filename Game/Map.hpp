@@ -148,6 +148,7 @@ public:
   void swapBoxes();
 
   void update(Ogre::Real tpf);
+  void render(Ogre::Real tpf);
 
   // OIS::KeyListener
   virtual bool keyPressed( const OIS::KeyEvent &arg );
@@ -185,6 +186,7 @@ public:
   virtual void mapRenderPauseChanged(bool bPause) {m_bRenderPause = bPause;}
 private:
   void updateBackground(Ogre::Real tpf);
+  void renderBackground(Ogre::Real tpf);
   void updateCameraPos(Ogre::Real tpf);
 
   void clearMap();

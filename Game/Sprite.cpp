@@ -5,8 +5,8 @@ const Ogre::Vector2 CSpriteTexture::DEFAULT_TEXTURE_TOP_LEFT(0, 1);
 const Ogre::Vector2 CSpriteTexture::DEFAULT_TEXTURE_BOTTOM_RIGHT(1, 0);
 
 CSprite::CSprite(const CSpriteTransformPipeline *pTransformPipeline, Ogre2dManager *pSpriteManager, const Ogre::Vector2 &vPosition, const Ogre::Vector2 &vSize, const Ogre::Vector2 &vScale, const Ogre::Radian radRotation)
-  : m_pTransformPipeline(pTransformPipeline), 
-    m_pSpriteManager(pSpriteManager), 
+  : m_pTransformPipeline(pTransformPipeline),
+    m_pSpriteManager(pSpriteManager),
     m_vPosition(vPosition),
     m_vSize(vSize),
     m_vScale(vScale),
@@ -27,9 +27,8 @@ CSprite::CSprite(const CSprite &src)
 CSprite::~CSprite() {
 }
 void CSprite::update(Ogre::Real tpf) {
-  draw();
 }
-void CSprite::draw() {
+void CSprite::render(Ogre::Real tpf) {
   //Ogre::LogManager::getSingleton().logMessage("Test1" + Ogre::StringConverter::toString(m_vPosition) + " //// " + Ogre::StringConverter::toString(m_vSize));
   Ogre::Vector2 vStart = m_pTransformPipeline->transformPosition(m_vPosition + m_pTextureToDraw->getSpriteOffset());
   Ogre::Vector2 vEnd = m_pTransformPipeline->transformPosition(m_vPosition + m_pTextureToDraw->getSpriteOffset() + m_vSize * m_pTextureToDraw->getSpriteScale());

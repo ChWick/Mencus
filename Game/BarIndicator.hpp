@@ -37,10 +37,16 @@ public:
       m_Indicator.update(tpf);
     }
   }
+  void render(Ogre::Real tpf) {
+    if (m_bVisible) {
+      CSprite::render(tpf);
+      m_Indicator.render(tpf);
+    }
+  }
   void setValue(Ogre::Real fValue) {m_fValue = fValue;}
   void show() {m_bVisible = true;}
   void hide() {m_bVisible = false;}
-  
+
 };
 
 #endif

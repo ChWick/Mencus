@@ -6,6 +6,7 @@
 #include "Fader.hpp"
 #include "HitableObject.hpp"
 #include "PauseListener.hpp"
+#include "PauseCaller.hpp"
 
 class CMap;
 class CShot;
@@ -15,7 +16,8 @@ class CPlayer : public CAnimatedSprite,
 		public CInputListener,
 		public CFaderCallback,
 		public CHitableObject,
-		public CPauseListener {
+		public CPauseListener,
+		public CPauseCaller {
 
 private:
   enum ELastDirection {

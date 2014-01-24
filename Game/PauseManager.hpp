@@ -14,17 +14,19 @@ enum EPauseTypes {
 
   PAUSE_PLAYER_MOVEMENT   = 2,
   PAUSE_ENEMY_MOVEMENT    = 4,
-  PAUSE_GLOABL_MOVEMENT   = 6,
+  PAUSE_SHOT_MOVEMENT     = 8,
+  PAUSE_GLOABL_MOVEMENT   = 14,
 
-  PAUSE_VIDEO             = 8,
+  PAUSE_VIDEO             = 128,
 
-  PAUSE_MAP_UPDATE        = 16,
-  PAUSE_MAP_RENDER        = 32,
-  PAUSE_MAP               = 48,
 
-  PAUSE_SCREENPLAY        = 64,
+  PAUSE_MAP_UPDATE        = 256,
+  PAUSE_MAP_RENDER        = 512,
+  PAUSE_MAP               = 768,
 
-  PAUSE_ALL               = 511,
+  PAUSE_SCREENPLAY        = 1024,
+
+  PAUSE_ALL               = 2047,
 };
 
 class CPauseManager : public Ogre::Singleton<CPauseManager> {
@@ -47,6 +49,8 @@ public:
 
   void addListener(CPauseListener *pListener) {m_lPauseListeners.push_back(pListener);}
   void removeListener(CPauseListener *pListener) {m_lPauseListeners.remove(pListener);}
+
+  bool isPause(unsigned int uiFlags) {return (m_uiOldPauseFlags & uiFlags) == uiFlags;}
 };
 
 #endif // PAUSE_MANAGER_HPP

@@ -42,6 +42,7 @@ public:
   virtual void stop() = 0;
 
   virtual void update(Ogre::Real tpf) {}
+  virtual void render(Ogre::Real tpf) {}
 
   unsigned int getID() const {return m_uiID;}
   ESceneTypes getType() const {return m_eSceneType;}
@@ -83,6 +84,7 @@ public:
   virtual void init() {}
   virtual void exit() {}
   void update(Ogre::Real tpf);
+  void render(Ogre::Real tpf);
 
   CMap *getMap() {return m_pMap;}
 };

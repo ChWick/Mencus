@@ -15,12 +15,12 @@ class CSpriteTransformPipeline;
 
 class CSprite {
 protected:
-  const CSpriteTransformPipeline *m_pTransformPipeline; //!< 
-  Ogre2dManager *m_pSpriteManager;			// 
-  Ogre::Vector2 m_vPosition;				// 
-  Ogre::Vector2 m_vSize;				// 
-  Ogre::Vector2 m_vScale;				// 
-  Ogre::Radian m_radRotation;				// 
+  const CSpriteTransformPipeline *m_pTransformPipeline; //!<
+  Ogre2dManager *m_pSpriteManager;			//
+  Ogre::Vector2 m_vPosition;				//
+  Ogre::Vector2 m_vSize;				//
+  Ogre::Vector2 m_vScale;				//
+  Ogre::Radian m_radRotation;				//
   CSpriteTexture m_Texture;				//!< Texture of the sprite
   const CSpriteTexture *m_pTextureToDraw;		//!< Texture to draw in the update method (this is modified e.g. by the animated sprite)
   CBoundingBox2d m_bbRelativeBoundingBox;		//!< Bounding box, realative position
@@ -43,7 +43,7 @@ public:
   void setTextureCoords(const Ogre::Vector2 &vTopLeft, const Ogre::Vector2 &vSize) {m_Texture.setTexturePosTopLeft(vTopLeft); m_Texture.setTexturePosBottomRight(vSize);}
 
   virtual void update(Ogre::Real tpf);
-  void draw();
+  virtual void render(Ogre::Real tpf);
 
 
   const Ogre::Vector2 &getPosition() const {return m_vPosition;}

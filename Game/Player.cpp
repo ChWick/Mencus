@@ -11,6 +11,8 @@
 #include "CheatDefines.hpp"
 #include "GameState.hpp"
 
+unsigned int PLAYER_LINK_PAUSE = PAUSE_ENEMY_MOVEMENT | PAUSE_SHOT_MOVEMENT;
+
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_RIGHT(0.2, 0.0);
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_LEFT(PLAYER_BOLT_OFFSET_RIGHT * Ogre::Vector2(-1, 1));
 
@@ -39,8 +41,8 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   CHitableObject(10),
   m_Fader(this),
   m_pMap(pMap),
-  m_bLeftPressed(false),
   m_bRightPressed(false),
+  m_bLeftPressed(false),
   m_bAttackPressed(false),
   m_bJumpPressed(false),
   m_bActivateLinkPressed(false),
@@ -234,6 +236,7 @@ void CPlayer::update(Ogre::Real tpf) {
       if (m_pMap->findLink(getWorldBoundingBox(), m_vLinkFromPos, m_vLinkToPos)) {
         m_eGoToLinkStatus = GTLS_MOVE_TO_ENTRANCE;
         m_Fader.startFadeOut(PLAYER_LINK_FADE_TIME);
+        pause(PLAYER_LINK_PAUSE);
       }
     }
   } else if (m_eGoToLinkStatus == GTLS_MOVE_TO_ENTRANCE) {
@@ -496,6 +499,7 @@ void CPlayer::animationTextureChangedCallback(unsigned int uiOldText, unsigned i
 void CPlayer::fadeInCallback() {
   if (m_eGoToLinkStatus == GTLS_COME_OUT_FROM_EXIT) {
     m_eGoToLinkStatus = GTLS_NONE;
+    unpause(PLAYER_LINK_PAUSE);
   }
 
 }

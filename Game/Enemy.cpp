@@ -6,7 +6,6 @@
 #include "Explosion.hpp"
 #include "Player.hpp"
 #include "Constants.hpp"
-
 const Ogre::Vector2 ENEMY_SIZE[CEnemy::ET_COUNT] = {
   Ogre::Vector2(1, 1),
   Ogre::Vector2(1, 2),
@@ -111,6 +110,12 @@ void CEnemy::update(Ogre::Real tpf) {
     m_HPBar.setCenter(getCenter() + Ogre::Vector2(0, getSize().y / 2));
     m_HPBar.update(tpf);
   }
+}
+void CEnemy::render(Ogre::Real tpf) {
+  if (getMaximumHitpoints() > getHitpoints()) {
+      m_HPBar.render(tpf);
+  }
+  CAnimatedSprite::render(tpf);
 }
 void CEnemy::updateKI() {
   if (m_bOnGround) {

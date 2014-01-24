@@ -56,7 +56,7 @@ void CVideo::CPicture::update(Ogre::Real tpf, Ogre::Real fPassedTime) {
   //m_Sprite.update(tpf);
 }
 void CVideo::CPicture::render() {
-  m_Sprite.draw();
+  m_Sprite.render(0);
 }
 
 CVideo::CPart::CPart(CVideo *pVideo, const Ogre::String &sAudioFile)

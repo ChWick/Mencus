@@ -430,14 +430,18 @@ void CMap::update(Ogre::Real tpf) {
     for (auto pObject : m_lObjects) {
       pObject->update(tpf);
     }
-    for (auto pEnemy : m_lEnemies) {
-      pEnemy->update(tpf);
+    if (!CPauseManager::getSingleton().isPause(PAUSE_ENEMY_MOVEMENT)) {
+      for (auto pEnemy : m_lEnemies) {
+        pEnemy->update(tpf);
+      }
     }
     for (auto pSwitch : m_lSwitches) {
       pSwitch->update(tpf);
     }
-    for (auto pShot : m_lShots) {
-      pShot->update(tpf);
+    if (!CPauseManager::getSingleton().isPause(PAUSE_SHOT_MOVEMENT)) {
+      for (auto pShot : m_lShots) {
+        pShot->update(tpf);
+      }
     }
 
     m_pPlayer->update(tpf);
@@ -495,10 +499,40 @@ void CMap::update(Ogre::Real tpf) {
     }
   }
 }
+void CMap::render(Ogre::Real tpf) {
+  // order of updates exquates drawing order, last one will be on top
+  renderBackground(tpf);
+  for (auto pTile : m_gridTiles) {
+    pTile->render(tpf);
+  }
+  for (auto pObject : m_lObjects) {
+    pObject->render(tpf);
+  }
+  for (auto pEnemy : m_lEnemies) {
+    pEnemy->render(tpf);
+  }
+  for (auto pSwitch : m_lSwitches) {
+    pSwitch->render(tpf);
+  }
+  for (auto pShot : m_lShots) {
+    pShot->render(tpf);
+  }
+
+  m_pPlayer->render(tpf);
+
+  for (auto pExplosion : m_lExplosions) {
+    pExplosion->render(tpf);
+  }
+}
 void CMap::updateBackground(Ogre::Real tpf) {
   if (m_pBackgroundSprite) {
     m_pBackgroundSprite->setTextureCoords(Ogre::Vector2(0, 0), Ogre::Vector2(1.5 / SCREEN_RATIO, 1.5));
     m_pBackgroundSprite->update(tpf);
+  }
+}
+void CMap::renderBackground(Ogre::Real tpf) {
+  if (m_pBackgroundSprite) {
+    m_pBackgroundSprite->render(tpf);
   }
 }
 void CMap::updateCameraPos(Ogre::Real tpf) {

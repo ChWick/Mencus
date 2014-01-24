@@ -89,7 +89,9 @@ void CAnimatedSprite::update(Ogre::Real tpf) {
       m_fAnimationTimer = 0;
     }
   }
-
-  setTextureToDraw(&m_AnimationSequences[m_uiCurrentAnimationSequence][m_uiCurrentAnimationTexture]);
   CSprite::update(tpf);
+}
+void CAnimatedSprite::render(Ogre::Real tpf) {
+  setTextureToDraw(&m_AnimationSequences[m_uiCurrentAnimationSequence][m_uiCurrentAnimationTexture]);
+  CSprite::render(tpf);
 }

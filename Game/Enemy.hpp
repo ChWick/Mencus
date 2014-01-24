@@ -43,6 +43,7 @@ public:
     const Ogre::String &sID);
 
   void update(Ogre::Real tpf);
+  void render(Ogre::Real tpf);
 
   const Ogre::String &getID() const {return m_sID;}
 

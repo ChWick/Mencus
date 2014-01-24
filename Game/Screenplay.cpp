@@ -41,6 +41,9 @@ void CLevel::stop() {
 void CLevel::update(Ogre::Real tpf) {
   m_pMap->update(tpf);
 }
+void CLevel::render(Ogre::Real tpf) {
+  m_pMap->render(tpf);
+}
 
 
 CAct::~CAct() {
@@ -221,6 +224,7 @@ void CScreenplay::update(Ogre::Real tpf) {
 
   if (m_pCurrentScene) {
     m_pCurrentScene->update(tpf);
+    m_pCurrentScene->render(tpf);
   }
 
 }

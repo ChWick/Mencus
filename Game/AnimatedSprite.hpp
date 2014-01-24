@@ -52,6 +52,7 @@ public:
   CSpriteTexture &getTexture(unsigned int uiCurrentAnimationSequence, unsigned int uiTextIndex) {return m_AnimationSequences[uiCurrentAnimationSequence][uiTextIndex];}
 
   virtual void update(Ogre::Real tpf);
+  virtual void render(Ogre::Real tpf);
 
   void setPauseAnimation(bool b) {m_bAnimationPaused = b;}
 
