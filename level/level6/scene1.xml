@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map background="clouds" sizex="16" sizey="12">
+    <player posx="13.375000" posy="9.000000" direction="1"/>
+    <tiles invert="true">
+        <row tiles="12 6 6 6 6 6 6 6 6 6 6 6 6 6 6 11"/>
+        <row tiles="4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3"/>
+        <row tiles="4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3"/>
+        <row tiles="4 2 2 2 2 2 2 2 2 2 2 2 18 17 17 11"/>
+        <row tiles="4 2 2 18 17 19 2 2 2 2 2 2 2 2 2 3"/>
+        <row tiles="4 2 2 2 2 2 2 2 18 17 17 19 2 2 2 3"/>
+        <row tiles="4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3"/>
+        <row tiles="4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3"/>
+        <row tiles="4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3"/>
+        <row tiles="4 2 2 2 7 8 2 2 2 2 7 8 2 2 2 3"/>
+        <row tiles="4 52 52 52 3 4 52 52 52 52 3 4 52 52 52 3"/>
+        <row tiles="1 5 5 5 1 1 5 5 5 5 1 1 5 5 5 1"/>
+    </tiles>
+    <enemies>
+        <enemy type="6" x="7.312500" y="9.000000" direction="1" jumps="0" hp="30.000000" rank="3"/>
+    </enemies>
+    <switches/>
+    <links/>
+    <objects>
+        <object type="5" x="3.187500" y="4.000000"/>
+        <object type="5" x="7.031250" y="8.000000"/>
+        <object type="5" x="13.218750" y="4.000000"/>
+        <object type="1" x="14.062500" y="2.000000"/>
+        <object type="2" x="12.343750" y="2.000000"/>
+        <object type="1" x="8.593750" y="2.000000"/>
+        <object type="2" x="6.875000" y="2.000000"/>
+        <object type="2" x="1.718750" y="2.000000"/>
+        <object type="1" x="2.687500" y="2.000000"/>
+        <object type="0" x="2.875000" y="8.000000"/>
+        <object type="0" x="3.343750" y="8.000000"/>
+        <object type="0" x="3.781250" y="8.000000"/>
+        <object type="0" x="4.250000" y="8.000000"/>
+        <object type="0" x="4.718750" y="8.000000"/>
+        <object type="0" x="5.250000" y="8.000000"/>
+        <object type="0" x="4.812500" y="8.000000"/>
+        <object type="0" x="4.281250" y="8.000000"/>
+        <object type="0" x="3.281250" y="8.000000"/>
+        <object type="0" x="3.625000" y="8.000000"/>
+        <object type="0" x="3.875000" y="8.000000"/>
+        <object type="1" x="9.875000" y="7.000000"/>
+        <object type="1" x="11.062500" y="3.000000"/>
+        <object type="2" x="4.937500" y="3.000000"/>
+    </objects>
+    <endangeredTiles/>
+</map>

@@ -124,6 +124,12 @@ int main(int argc, const char* argv[]) {
   else if (buffer == "Nebel") {
     pMapElem->SetAttribute("background", "fog");
   }
+  else if (buffer == "Sternenhimmel") {
+    pMapElem->SetAttribute("background", "stars");
+  }
+  else if (buffer == "Wolken") {
+    pMapElem->SetAttribute("background", "clouds");
+  }
   else {
     cout << buffer << " was not yet set as background type" << endl;
     return -1;
