@@ -20,6 +20,7 @@ public:
   enum EShotTypes {
     ST_BOLT,
     ST_BOMB,
+    ST_SKULL,
 
     ST_COUNT,
   };

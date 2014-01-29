@@ -8,19 +8,23 @@
 
 const Ogre::Vector2 SHOT_SIZE[CShot::ST_COUNT] = {
   Ogre::Vector2(0.5, 0.25),
+  Ogre::Vector2(0.5, 0.5),
   Ogre::Vector2(0.5, 0.5)
 };
 const bool SHOT_AFFECTED_BY_GRAVITY[CShot::ST_COUNT] = {
   false,
-  true
+  true,
+  false
 };
 const Ogre::Real SHOT_SPEED[CShot::ST_COUNT] = {
   10.0,
-  1.0
+  1.0,
+  7.0
 };
 const Ogre::Real CShot::SHOT_DAMAGE[CShot::ST_COUNT] = {
   1,
-  2
+  2,
+  0.5
 };
 const Ogre::Real BOMB_EXPLOSION_TIME = 5;
 const Ogre::Real BOMB_EXPLOSION_RADIUS = 1.75;
@@ -50,11 +54,16 @@ CShot::CShot(CMap *pMap,
   if (m_eShotType == ST_BOLT) {
     init(1, 1);
     setupAnimation(SA_DEFAULT, "bolt", 2, eMirrorType, &getBoltTexture);
-  } else if (m_eShotType == ST_BOMB) {
+  }
+  else if (m_eShotType == ST_BOMB) {
     init(1, 2);
     setDefaultGetPath(&getBombTexture);
     setupAnimation(SA_DEFAULT, "bomb", -1, eMirrorType);
     setupAnimation(SA_LAUNCHED, "bomb_on", 6, eMirrorType);
+  }
+  else if (m_eShotType == ST_SKULL) {
+    init(1, 1);
+    setupAnimation(SA_DEFAULT, "skull", 1, eMirrorType, &getSkullTexture);
   }
 
   changeCurrentAnimationSequence(SA_DEFAULT);
