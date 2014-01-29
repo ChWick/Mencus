@@ -12,6 +12,7 @@
 #include "Object.hpp"
 #include "HUD.hpp"
 #include "Game.hpp"
+#include "Background.hpp"
 
 using namespace tinyxml2;
 
@@ -25,7 +26,7 @@ const Ogre::Real CAMERA_MAX_MOVE_SPEED(10);
 
 CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayListener)
   : m_p2dManagerMap(NULL),
-    m_pBackgroundSprite(NULL),
+    m_pBackground(NULL),
     m_vCameraPos(Ogre::Vector2::ZERO),
     m_vCameraTargetPos(Ogre::Vector2::ZERO),
     m_vCameraDebugOffset(Ogre::Vector2::ZERO),
@@ -58,6 +59,7 @@ CMap::~CMap() {
 
   if (CDebugDrawer::getSingletonPtr()) {delete CDebugDrawer::getSingletonPtr();}
   if (m_pPlayer) {delete m_pPlayer; m_pPlayer = NULL;}
+
   CInputListenerManager::getSingleton().removeInputListener(this);
   m_p2dManagerMap->end();
   delete m_p2dManagerMap;
@@ -72,9 +74,9 @@ void CMap::clearMap() {
   m_lEnemiesToDestroy.clear();
   m_lObjectsToDestroy.clear();
 
-  if (m_pBackgroundSprite) {
-    delete m_pBackgroundSprite;
-    m_pBackgroundSprite = NULL;
+  if (m_pBackground) {
+    delete m_pBackground;
+    m_pBackground = NULL;
   }
 
   while (m_lEnemies.size() > 0) {
@@ -112,21 +114,14 @@ void CMap::loadMap(string sFilename) {
   }
 
   XMLElement *pRoot = doc.FirstChildElement("map");
-  m_sBackground = pRoot->Attribute("background");
-  if (m_sBackground.size() > 0) {
-    m_sBackground = getBackgroundTexturePath(m_sBackground);
-    m_pBackgroundSprite = new CSprite(&CBackgroundSpriteTransformPipeline::INSTANCE, m_p2dManagerMap, Ogre::Vector2(-1, -1), Ogre::Vector2(2, 2));
-    m_pBackgroundSprite->setTexture(m_sBackground);
+  Ogre::String sBackground = pRoot->Attribute("background");
+  if (sBackground.size() > 0) {
+    sBackground = getBackgroundTexturePath(sBackground);
+    m_pBackground = new CBackground(m_p2dManagerMap, m_vCameraPos, sBackground);
   }
 
   int sizeX = pRoot->IntAttribute("sizex");
   int sizeY = pRoot->IntAttribute("sizey");
-  m_p2dManagerMap->spriteBltFull(
-				 m_sBackground,
-				 -1,
-				 -1,
-				 1,
-				 1);
 
   m_gridTiles.resize(sizeX, sizeY);
 
@@ -543,14 +538,13 @@ void CMap::render(Ogre::Real tpf) {
   }
 }
 void CMap::updateBackground(Ogre::Real tpf) {
-  if (m_pBackgroundSprite) {
-    m_pBackgroundSprite->setTextureCoords(Ogre::Vector2(0, 0), Ogre::Vector2(1.5 / SCREEN_RATIO, 1.5));
-    m_pBackgroundSprite->update(tpf);
+  if (m_pBackground) {
+    m_pBackground->update(tpf);
   }
 }
 void CMap::renderBackground(Ogre::Real tpf) {
-  if (m_pBackgroundSprite) {
-    m_pBackgroundSprite->render(tpf);
+  if (m_pBackground) {
+    m_pBackground->render(tpf);
   }
 }
 void CMap::updateCameraPos(Ogre::Real tpf) {

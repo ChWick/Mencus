@@ -24,6 +24,7 @@ class CShot;
 class CExplosion;
 class CEnemy;
 class CObject;
+class CBackground;
 
 class CMap : public CSpriteTransformPipeline, public CInputListener, public CPauseListener {
 private:
@@ -65,8 +66,8 @@ private:
   std::list<CLink> m_lLinks;
   std::list<CObject*> m_lObjects;
   std::vector<CCameraRestriction> m_vCameraRestrictions;
-  std::string m_sBackground;
-  CSprite *m_pBackgroundSprite;
+
+  CBackground *m_pBackground;
 
   Ogre::Vector2 m_vCameraPos;
   Ogre::Vector2 m_vCameraTargetPos;
