@@ -116,7 +116,6 @@ void CMap::loadMap(string sFilename) {
   XMLElement *pRoot = doc.FirstChildElement("map");
   Ogre::String sBackground = pRoot->Attribute("background");
   if (sBackground.size() > 0) {
-    sBackground = getBackgroundTexturePath(sBackground);
     m_pBackground = new CBackground(m_p2dManagerMap, m_vCameraPos, sBackground);
   }
 

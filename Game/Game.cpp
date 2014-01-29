@@ -279,6 +279,9 @@ bool CGame::go(void)
 
     mRoot->startRendering();
 
+    Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TFO_TRILINEAR);
+    Ogre::MaterialManager::getSingleton().setDefaultAnisotropy(1);
+
     return true;
 }
 
