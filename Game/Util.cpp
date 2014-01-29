@@ -1,6 +1,15 @@
 #include "Util.hpp"
 #include <Ogre.h>
 
+
+std::string getShotTexture(const std::string &sType, const std::string &sName, int index) {
+  if (index < 0) {
+    return "../gfx/shots/" + sType + "/" + sName + ".png";
+  }
+  return "../gfx/shots/" + sType + "/" + sName + "_" + Ogre::StringConverter::toString(index) + ".png";
+}
+std::string getSkullTexture(std::string sName, int index) {return getShotTexture("skull", sName, index);}
+std::string getBoltTexture(std::string sName, int index) {return getShotTexture("bolt", sName, index);}
 std::string getHUDTexturePath(std::string sName) {
   return "../gfx/hud/" + sName + ".png";
 }

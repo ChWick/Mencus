@@ -47,10 +47,9 @@ CShot::CShot(CMap *pMap,
     eMirrorType = CSpriteTexture::MIRROR_Y;
   }
 
-  setDefaultGetPath(&getPlayerTexturePath);
   if (m_eShotType == ST_BOLT) {
     init(1, 1);
-    setupAnimation(SA_DEFAULT, "bolt", 2, eMirrorType);
+    setupAnimation(SA_DEFAULT, "bolt", 2, eMirrorType, &getBoltTexture);
   } else if (m_eShotType == ST_BOMB) {
     init(1, 2);
     setDefaultGetPath(&getBombTexture);

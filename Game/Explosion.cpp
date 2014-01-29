@@ -39,7 +39,7 @@ CExplosion::CExplosion(CMap *pMap, const Ogre::Vector2 &vCenter, EExplosionTypes
   CSpriteTexture::EMirrorTypes eMirrorType = CSpriteTexture::MIRROR_NONE;
 
   if (m_eExplosionType == ET_BOLT) {
-    setupAnimation(0, "bolt_explosion", 5, eMirrorType, &getPlayerTexturePath);
+    setupAnimation(0, "bolt_explosion", 5, eMirrorType, &getBoltTexture);
   }
   else if (m_eExplosionType == ET_BOMB) {
     m_vPosition += Ogre::Vector2(0, 0.4);
@@ -62,6 +62,9 @@ CExplosion::CExplosion(CMap *pMap, const Ogre::Vector2 &vCenter, EExplosionTypes
   }
   else if (m_eExplosionType == ET_SANTA) {
     setupAnimation(0, "explosion_right", 9, eMirrorType, &getEnemyTexturePath<6>);
+  }
+  else if (m_eExplosionType == ET_SKULL) {
+    setupAnimation(0, "explosion", 3, eMirrorType, &getSkullTexture);
   }
 }
 void CExplosion::update(Ogre::Real tpf) {

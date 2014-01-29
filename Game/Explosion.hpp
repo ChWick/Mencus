@@ -16,6 +16,7 @@ public:
     ET_GHOST,
     ET_DARK_MAGICAN,
     ET_SANTA,
+    ET_SKULL,
 
     ET_COUNT,
   };
