@@ -30,6 +30,14 @@ const Ogre::Real ENEMY_DAMAGE[CEnemy::ET_COUNT] = {
   0.5,
   1.0
 };
+CEnemy::EAttackType ENEMY_ATTACK_TYPES[CEnemy::ET_COUNT] = {
+  CEnemy::AT_MELEE,
+  CEnemy::AT_MELEE,
+  CEnemy::AT_MELEE,
+  CEnemy::AT_MELEE,
+  CEnemy::AT_RANGED,
+  CEnemy::AT_ALL,
+};
 
 CEnemy::CEnemy(CMap &map,
 	       const Ogre::Vector2 &vPosition,
@@ -240,8 +248,8 @@ void CEnemy::setup() {
     setDefaultGetPath(&getEnemyTexturePath<ET_DARK_MAGICAN + 1>);
     setupAnimation(AS_WALK_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", 1);
-    setupAnimation(AS_ATTACK_LEFT, "attack_right", 2, CSpriteTexture::MIRROR_Y);
-    setupAnimation(AS_ATTACK_RIGHT, "attack_right", 2);
+    setupAnimation(AS_RANGED_ATTACK_LEFT, "attack_right", 2, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_RANGED_ATTACK_RIGHT, "attack_right", 2);
     setupAnimation(AS_JUMP_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_JUMP_RIGHT, "walk_right", 1);
     break;

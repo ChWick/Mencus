@@ -9,6 +9,11 @@ class CMap;
 
 class CEnemy : public CAnimatedSprite, public CHitableObject {
 public:
+  enum EAttackType {
+    AT_MELEE = 1,
+    AT_RANGED = 2,
+    AT_ALL = 3
+  };
   enum EEnemyTypes {
     ET_GREEN_MONSTER,
     ET_KNIGHT,
@@ -25,6 +30,8 @@ public:
     AS_ATTACK_RIGHT,
     AS_JUMP_LEFT,
     AS_JUMP_RIGHT,
+    AS_RANGED_ATTACK_LEFT,
+    AS_RANGED_ATTACK_RIGHT,
 
     AS_COUNT
   };
