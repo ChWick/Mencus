@@ -115,6 +115,15 @@
 		<Unit filename="../level/level2/instructions.txt" />
 		<Unit filename="../level/level2/scene2.xml" />
 		<Unit filename="../level/level2/scene3.xml" />
+		<Unit filename="../level/level3/instructions.txt" />
+		<Unit filename="../level/level3/scene2.xml" />
+		<Unit filename="../level/level4/instructions.txt" />
+		<Unit filename="../level/level4/scene2.xml" />
+		<Unit filename="../level/level5/instructions.txt" />
+		<Unit filename="../level/level5/scene2.xml" />
+		<Unit filename="../level/level5/scene3.xml" />
+		<Unit filename="../level/level6/instructions.txt" />
+		<Unit filename="../level/level6/scene1.xml" />
 		<Unit filename="../level/screenplay.xml" />
 		<Extensions>
 			<envvars />
