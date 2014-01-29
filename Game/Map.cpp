@@ -364,15 +364,19 @@ bool CMap::findLink(const CBoundingBox2d &bb, Ogre::Vector2 &vFromPos, Ogre::Vec
 	((m_gridTiles(link.getSecondX(), link.getSecondY())->getTileFlags() & (CTile::TF_DOOR1 | CTile::TF_DOOR2 | CTile::TF_DOOR3)) == 0)) {
       continue;
     }
-    if (m_gridTiles(link.getFirstX(), link.getFirstY())->getWorldBoundingBox().collidesWith(bb) != CCD_NONE) {
-      vFromPos = Ogre::Vector2(link.getFirstX(), link.getFirstY());
-      vToPos   = Ogre::Vector2(link.getSecondX(), link.getSecondY());
-      return true;
+    if (link.getLinkDirection() & CLink::LD_FIRST_TO_SECOND) {
+      if (m_gridTiles(link.getFirstX(), link.getFirstY())->getWorldBoundingBox().collidesWith(bb) != CCD_NONE) {
+        vFromPos = Ogre::Vector2(link.getFirstX(), link.getFirstY());
+        vToPos   = Ogre::Vector2(link.getSecondX(), link.getSecondY());
+        return true;
+      }
     }
-    else if (m_gridTiles(link.getSecondX(), link.getSecondY())->getWorldBoundingBox().collidesWith(bb) != CCD_NONE) {
-      vFromPos = Ogre::Vector2(link.getSecondX(), link.getSecondY());
-      vToPos   = Ogre::Vector2(link.getFirstX(), link.getFirstY());
-      return true;
+    if (link.getLinkDirection() & CLink::LD_SECOND_TO_FIRST) {
+      if (m_gridTiles(link.getSecondX(), link.getSecondY())->getWorldBoundingBox().collidesWith(bb) != CCD_NONE) {
+        vFromPos = Ogre::Vector2(link.getSecondX(), link.getSecondY());
+        vToPos   = Ogre::Vector2(link.getFirstX(), link.getFirstY());
+        return true;
+      }
     }
   }
 
@@ -640,11 +644,20 @@ void CMap::readLink(XMLElement *pLink) {
   Ogre::String sID(Ogre::StringUtil::BLANK);
   if (pLink->Attribute("id")) {sID = pLink->Attribute("id");}
 
+  Ogre::String sLinkDirection;
+  if (pLink->Attribute("direction")) {sID = pLink->Attribute("direction");}
+  CLink::ELinkDirection eLD = CLink::LD_BOTH;
+  if (sLinkDirection.size() == 0 || sLinkDirection == "both") {eLD = CLink::LD_BOTH;}
+  else if (sLinkDirection == "first_to_second") {eLD = CLink::LD_FIRST_TO_SECOND;}
+  else if (sLinkDirection == "second_to_first") {eLD = CLink::LD_SECOND_TO_FIRST;}
+  else {throw Ogre::Exception(0, "Invalid direction in link: " + sLinkDirection, __FILE__);}
+
   m_lLinks.push_back(CLink(
                            pLink->IntAttribute("fromx"),
                            pLink->IntAttribute("fromy"),
                            pLink->IntAttribute("tox"),
                            pLink->IntAttribute("toy"),
+                           eLD,
                            sID));
   Ogre::LogManager::getSingleton().logMessage("Parsed: " + m_lLinks.back().toString());
 }
