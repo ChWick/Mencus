@@ -10,5 +10,16 @@
     <Image name="2-2" xPos="384" yPos="0" width="128" height="96" />
     <Image name="2-3" xPos="0" yPos="96" width="128" height="96" />
 
-    <Image name="3-1" xPos="128" yPos="96" width="128" height="96" />
+    <Image name="3-1" xPos="0" yPos="0" width="128" height="96" />
+    <Image name="3-2" xPos="384" yPos="96" width="128" height="96" />
+
+    <Image name="4-1" xPos="0" yPos="0" width="128" height="96" />
+    <Image name="4-2" xPos="0" yPos="192" width="128" height="96" />
+
+    <Image name="5-1" xPos="0" yPos="0" width="128" height="96" />
+    <Image name="5-2" xPos="128" yPos="192" width="128" height="96" />
+    <Image name="5-3" xPos="256" yPos="192" width="128" height="96" />
+
+    <Image name="6-1" xPos="0" yPos="0" width="128" height="96" />
+    <Image name="6-2" xPos="384" yPos="192" width="128" height="96" />
 </Imageset>
