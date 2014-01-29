@@ -205,6 +205,7 @@ void CMainMenu::changeState(EMainMenuState eState) {
   }
   if (eState == MMS_START) {
     CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);
+    unpause(PAUSE_ALL);
   }
 }
 bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
