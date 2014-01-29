@@ -40,6 +40,8 @@
 		</Linker>
 		<Unit filename="../Game/AnimatedSprite.cpp" />
 		<Unit filename="../Game/AnimatedSprite.hpp" />
+		<Unit filename="../Game/Background.cpp" />
+		<Unit filename="../Game/Background.hpp" />
 		<Unit filename="../Game/BarIndicator.hpp" />
 		<Unit filename="../Game/BoundingBox2d.hpp" />
 		<Unit filename="../Game/CameraRestriction.hpp" />
