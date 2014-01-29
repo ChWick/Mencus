@@ -72,6 +72,8 @@ void CShot::launch(const Ogre::Vector2 &vInitialSpeed, unsigned int uiNewAnimati
     case ST_BOMB:
       uiNewAnimationSequence = SA_LAUNCHED;
       break;
+    default:
+      break;
     }
   }
   changeCurrentAnimationSequence(uiNewAnimationSequence);

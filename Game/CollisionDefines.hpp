@@ -3,11 +3,15 @@
 
 //! Directions in that a collision occured
 enum ECollisionCheckDirections {
-  CCD_NONE    = 0,
-  CCD_TOP     = 1,
-  CCD_LEFT    = 2,
-  CCD_BOTTOM  = 4,
-  CCD_RIGHT   = 8,
+  CCD_NONE        = 0,
+  CCD_TOP         = 1,
+  CCD_LEFT        = 2,
+  CCD_BOTTOM      = 4,
+  CCD_RIGHT       = 8,
+
+  CCD_HORIZONTAL  = 10,
+  CCD_VERTICAL    = 5,
+  CCD_ALL         = 15,
 };
 enum ECollisionLineDirections {
   CLD_HORIZONTAL,

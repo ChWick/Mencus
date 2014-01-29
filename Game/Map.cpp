@@ -35,7 +35,10 @@ CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayLi
     m_bUpdatePause(false),
     m_bRenderPause(false) {
   m_p2dManagerMap = new Ogre2dManager();
-  m_p2dManagerMap->init(pSceneManager, Ogre::RENDER_QUEUE_BACKGROUND, true);
+  m_p2dManagerMap->init(pSceneManager, Ogre::RENDER_QUEUE_BACKGROUND, false);
+
+  m_pDebugSpriteManager =  new Ogre2dManager();
+  m_pDebugSpriteManager->init(pSceneManager, Ogre::RENDER_QUEUE_BACKGROUND, true);
   //loadMap("../level/level1/scene3.xml");
 
   CInputListenerManager::getSingleton().addInputListener(this);
@@ -43,7 +46,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayLi
   m_pPlayer = new CPlayer(this, m_p2dManagerMap);
   m_pPlayer->setPosition(Ogre::Vector2(0, 2));
 
-  new CDebugDrawer(this, m_p2dManagerMap);
+  new CDebugDrawer(this, m_pDebugSpriteManager);
 
   CHUD::getSingleton().show();
 }
@@ -58,6 +61,9 @@ CMap::~CMap() {
   CInputListenerManager::getSingleton().removeInputListener(this);
   m_p2dManagerMap->end();
   delete m_p2dManagerMap;
+
+  m_pDebugSpriteManager->end();
+  delete m_pDebugSpriteManager;
 }
 void CMap::clearMap() {
   m_lLinks.clear();
@@ -260,11 +266,19 @@ unsigned int CMap::hitsTile(unsigned int uiTileMask, const CBoundingBox2d &bb, C
   }
   return CCD_NONE;
 }
-bool CMap::outOfMap(const CBoundingBox2d &bb) const {
-  if (bb.getPosition().x + bb.getSize().x < 0) return true;
-  if (bb.getPosition().y + bb.getSize().y < 0) return true;
-  if (bb.getPosition().x > m_gridTiles.getSizeX()) return true;
-  if (bb.getPosition().y > m_gridTiles.getSizeY()) return true;
+bool CMap::outOfMap(const CBoundingBox2d &bb, ECollisionCheckDirections eCollisionCheckDirection) const {
+  if (eCollisionCheckDirection & CCD_LEFT)
+    if (bb.getPosition().x + bb.getSize().x < 0) return true;
+
+  if (eCollisionCheckDirection & CCD_BOTTOM)
+    if (bb.getPosition().y + bb.getSize().y < 0) return true;
+
+  if (eCollisionCheckDirection & CCD_RIGHT)
+    if (bb.getPosition().x > m_gridTiles.getSizeX()) return true;
+
+  if (eCollisionCheckDirection & CCD_TOP)
+    if (bb.getPosition().y > m_gridTiles.getSizeY()) return true;
+
   return false;
 }
 bool CMap::collidesWithMapMargin(const CBoundingBox2d &bb) const {
@@ -456,7 +470,7 @@ void CMap::update(Ogre::Real tpf) {
       }
     }
 
-#if DEBUG_SHOW_OGRE_TRAY
+#ifdef DEBUG_SHOW_OGRE_TRAY
     CGame::getSingleton().getDetailsPanel()->setParamValue(0, Ogre::StringConverter::toString(m_vCameraPos.x));
     CGame::getSingleton().getDetailsPanel()->setParamValue(1, Ogre::StringConverter::toString(m_vCameraPos.y));
     CGame::getSingleton().getDetailsPanel()->setParamValue(2, Ogre::StringConverter::toString(m_pPlayer->getPosition().x));

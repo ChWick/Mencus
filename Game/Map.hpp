@@ -56,6 +56,7 @@ private:
   std::list<CExplosion*> m_lExplosionsToDestroy;
   std::list<CObject*> m_lObjectsToDestroy;
   Ogre2dManager* m_p2dManagerMap;
+  Ogre2dManager* m_pDebugSpriteManager;
   grid2d<CTile*> m_gridTiles;
   std::list<CEnemy*> m_lEnemies;
   std::list<CSwitch*> m_lSwitches;
@@ -107,9 +108,10 @@ public:
   //! Function to check whether a bounding box is out of the map
   /**
    *  \param[in] bb The bounding box
+   *  \param[in] eCollisionCheckDirection If only one particular direction shall be checked
    *  \returns Whether the bb is out of the map
    */
-  bool outOfMap(const CBoundingBox2d &bb) const;
+  bool outOfMap(const CBoundingBox2d &bb, ECollisionCheckDirections eCollisionCheckDirection = CCD_ALL) const;
   //! Function to check whether a bounding box collides with the map margin
   /**
    *  \param[in] bb The bounding box

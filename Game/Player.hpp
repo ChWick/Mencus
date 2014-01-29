@@ -7,6 +7,7 @@
 #include "HitableObject.hpp"
 #include "PauseListener.hpp"
 #include "PauseCaller.hpp"
+#include "DebugDefines.hpp"
 
 class CMap;
 class CShot;
@@ -90,6 +91,10 @@ private:
   unsigned int m_uiHealthPotionsCount;
   unsigned int m_uiManaPotionsCount;
   unsigned int m_uiBombCount;
+
+#ifdef DEBUG_PLAYER_NO_COLLISION
+  bool m_bPlayerNoCollisionActivated;
+#endif // DEBUG_PLAYER_NO_COLLISION
 public:
   CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager);
   ~CPlayer();
@@ -97,6 +102,7 @@ public:
   void startup(const Ogre::Vector2 &vPosition, Ogre::Real fDirection);
 
   virtual void update(Ogre::Real tpf);
+  virtual void render(Ogre::Real tpf);
 
   void pickobject(unsigned int uiObjectId);
 

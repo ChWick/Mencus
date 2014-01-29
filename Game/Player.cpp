@@ -63,6 +63,10 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   m_uiManaPotionsCount(0),
   m_uiBombCount(0) {
 
+#ifdef DEBUG_PLAYER_NO_COLLISION
+  m_bPlayerNoCollisionActivated = false;
+#endif // DEBUG_PLAYER_NO_COLLISION
+
   CInputListenerManager::getSingleton().addInputListener(this);
   init(1, ANIM_COUNT);
   setupAnimations();
@@ -158,16 +162,20 @@ void CPlayer::update(Ogre::Real tpf) {
         fPenetration = m_pMap->hitsTile(CCD_TOP, CTile::TF_UNPASSABLE, getWorldBoundingBox(), &pTile);
       }
       if (fPenetration == 0) {
-        if (m_pMap->outOfMap(getWorldBoundingBox())) {
+        if (m_pMap->outOfMap(getWorldBoundingBox(), CCD_VERTICAL)) {
           fPenetration = m_vCurrentSpeed.y * tpf;
         }
       }
 
+#ifdef DEBUG_PLAYER_NO_COLLISION
+      if (m_bPlayerNoCollisionActivated) {
+        fPenetration = 0.f;
+      }
+#endif // DEBUG_PLAYER_NO_COLLISION
       if (fPenetration != 0) {
         m_vCurrentSpeed.y = 0;
         m_vPosition.y -= fPenetration;
       }
-
       if (pTile && (pTile->getTileFlags() & CTile::TF_DAMAGES)) {
         // last hope check if the tile right of the damage tile hits the player 2 and is not damaging him
         CTile *pRightTile = m_pMap->getTile(static_cast<int>(getWorldBoundingBox().getRight() - 0.01), pTile->getMapPosY());
@@ -195,10 +203,16 @@ void CPlayer::update(Ogre::Real tpf) {
       }
 
       if (fPenetration == 0) {
-        if (m_pMap->outOfMap(getWorldBoundingBox())) {
+        if (m_pMap->outOfMap(getWorldBoundingBox(), CCD_HORIZONTAL)) {
           fPenetration = m_vCurrentSpeed.x * tpf;
         }
       }
+
+#ifdef DEBUG_PLAYER_NO_COLLISION
+      if (m_bPlayerNoCollisionActivated) {
+        fPenetration = 0.f;
+      }
+#endif // DEBUG_PLAYER_NO_COLLISION
 
       if (fPenetration != 0) {
         // check if collision with door
@@ -323,10 +337,6 @@ void CPlayer::update(Ogre::Real tpf) {
     }
   }
 
-#ifdef DEBUG_CHARACTER_BOUNDING_BOXES
-  CDebugDrawer::getSingleton().draw(getWorldBoundingBox());
-#endif
-
   m_pThrowStrengthIndicator->setCenter(getCenter() + 0.5 * getSize().y * Ogre::Vector2::UNIT_Y);
   m_pThrowStrengthIndicator->setValue(m_fBombThrowStrength / PLAYER_BOMB_MAX_TRHOW_STRENGTH);
   m_pThrowStrengthIndicator->update(tpf);
@@ -346,6 +356,17 @@ void CPlayer::update(Ogre::Real tpf) {
   }
 
   setInvunerable(m_bShieldActive);
+}
+void CPlayer::render(Ogre::Real tpf) {
+  CAnimatedSprite::render(tpf);
+
+#ifdef DEBUG_CHARACTER_BOUNDING_BOXES
+  CDebugDrawer::getSingleton().draw(getWorldBoundingBox());
+#endif
+  m_pThrowStrengthIndicator->render(tpf);
+  if (m_bShieldActive) {
+    m_Shield.render(tpf);
+  }
 }
 void CPlayer::pickobject(unsigned int uiObjectId) {
   switch (uiObjectId) {
@@ -451,6 +472,11 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
     CHUD::getSingleton().setBombCount(m_uiBombCount);
   }
 #endif // CHEAT_ADD_BOMB
+#ifdef DEBUG_PLAYER_NO_COLLISION
+  else if (arg.key == OIS::KC_F11) {
+    m_bPlayerNoCollisionActivated = !m_bPlayerNoCollisionActivated;
+  }
+#endif // DEBUG_PLAYER_NO_COLLISION
 #ifdef CHEAT_MEGA_JUMP
   else if (arg.key == OIS::KC_LCONTROL) {
     m_vCurrentSpeed.y += m_fInitialJumpSpeed;
