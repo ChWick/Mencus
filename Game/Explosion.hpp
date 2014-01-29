@@ -13,6 +13,9 @@ public:
     ET_GREEN_MONSTER,
     ET_KNIGHT,
     ET_BEAR,
+    ET_GHOST,
+    ET_DARK_MAGICAN,
+    ET_SANTA,
 
     ET_COUNT,
   };

@@ -54,6 +54,15 @@ CExplosion::CExplosion(CMap *pMap, const Ogre::Vector2 &vCenter, EExplosionTypes
   else if (m_eExplosionType == ET_BEAR) {
     setupAnimation(0, "explosion_right", 1, eMirrorType, &getEnemyTexturePath<3>);
   }
+  else if (m_eExplosionType == ET_GHOST) {
+    setupAnimation(0, "explosion_right", 4, eMirrorType, &getEnemyTexturePath<4>);
+  }
+  else if (m_eExplosionType == ET_DARK_MAGICAN) {
+    setupAnimation(0, "explosion_right", 4, eMirrorType, &getEnemyTexturePath<5>);
+  }
+  else if (m_eExplosionType == ET_SANTA) {
+    setupAnimation(0, "explosion_right", 9, eMirrorType, &getEnemyTexturePath<6>);
+  }
 }
 void CExplosion::update(Ogre::Real tpf) {
   if (m_fFadingTimer > 0) {

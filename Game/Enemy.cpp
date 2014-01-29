@@ -9,17 +9,26 @@
 const Ogre::Vector2 ENEMY_SIZE[CEnemy::ET_COUNT] = {
   Ogre::Vector2(1, 1),
   Ogre::Vector2(1, 2),
-  Ogre::Vector2(4, 2)
+  Ogre::Vector2(4, 2),
+  Ogre::Vector2(1, 1),
+  Ogre::Vector2(1, 2),
+  Ogre::Vector2(1, 1)
 };
 const Ogre::Real ENEMY_SPEED[CEnemy::ET_COUNT] = {
   6.0,
   2.0,
-  6.0
+  6.0,
+  2.0,
+  2.0,
+  2.0
 };
 const Ogre::Real ENEMY_DAMAGE[CEnemy::ET_COUNT] = {
   0.1,
   0.2,
-  0.3
+  0.3,
+  0.4,
+  0.5,
+  1.0
 };
 
 CEnemy::CEnemy(CMap &map,
@@ -217,6 +226,27 @@ void CEnemy::setup() {
     setupAnimation(AS_ATTACK_RIGHT, "attack_right", {0, 1, 2, 1});
     setupAnimation(AS_JUMP_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_JUMP_RIGHT, "walk_right", 1);
+    break;
+  case ET_GHOST:
+    setDefaultGetPath(&getEnemyTexturePath<ET_GHOST + 1>);
+    setupAnimation(AS_WALK_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_WALK_RIGHT, "walk_right", 1);
+    setupAnimation(AS_ATTACK_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_ATTACK_RIGHT, "walk_right", 1);
+    setupAnimation(AS_JUMP_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_JUMP_RIGHT, "walk_right", 1);
+    break;
+  case ET_DARK_MAGICAN:
+    setDefaultGetPath(&getEnemyTexturePath<ET_DARK_MAGICAN + 1>);
+    setupAnimation(AS_WALK_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_WALK_RIGHT, "walk_right", 1);
+    setupAnimation(AS_ATTACK_LEFT, "attack_right", 2, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_ATTACK_RIGHT, "attack_right", 2);
+    setupAnimation(AS_JUMP_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
+    setupAnimation(AS_JUMP_RIGHT, "walk_right", 1);
+    break;
+  case ET_SANTA:
+    setDefaultGetPath(&getEnemyTexturePath<ET_SANTA + 1>);
     break;
   default:
     throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Enemy type '" + Ogre::StringConverter::toString(m_eEnemyType) + "' is unknown", __FILE__);
