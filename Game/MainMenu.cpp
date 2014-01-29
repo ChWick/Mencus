@@ -284,4 +284,5 @@ void CMainMenu::selectedSaveStateChanged() {
   }
   m_pStateToLoad = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
   m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/" + PropertyHelper<int>::toString(m_pStateToLoad->getActID()) + "-" + PropertyHelper<int>::toString(m_pStateToLoad->getSceneID()));
+  m_pSaveStatesWindow->ensureItemIsVisible(m_iSelectedLoadState);
 }
