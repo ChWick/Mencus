@@ -6,6 +6,10 @@
 #include "Explosion.hpp"
 #include "Player.hpp"
 #include "Constants.hpp"
+#include "Shot.hpp"
+
+Ogre::Real ENEMY_MAX_RANGED_ATTACK_DISTANCE = 5;
+
 const Ogre::Vector2 ENEMY_SIZE[CEnemy::ET_COUNT] = {
   Ogre::Vector2(1, 1),
   Ogre::Vector2(1, 2),
@@ -61,12 +65,29 @@ CEnemy::CEnemy(CMap &map,
 void CEnemy::update(Ogre::Real tpf) {
   CAnimatedSprite::update(tpf);
 
-  unsigned int ccd = getWorldBoundingBox().collidesWith(m_Map.getPlayer()->getWorldBoundingBox());
-  if (m_bOnGround && ccd != CCD_NONE) {
-    // Player collision, attack him!
-    changeCurrentAnimationSequence((ccd & CCD_LEFT) ? AS_ATTACK_LEFT : AS_ATTACK_RIGHT);
+  bool bWalk = true;
+  if (m_bOnGround) {
+    if (ENEMY_ATTACK_TYPES[m_eEnemyType] & AT_MELEE) {
+      unsigned int ccd = getWorldBoundingBox().collidesWith(m_Map.getPlayer()->getWorldBoundingBox());
+      if (ccd != CCD_NONE) {
+        // Player collision, attack him!
+        changeCurrentAnimationSequence((ccd & CCD_LEFT) ? AS_ATTACK_LEFT : AS_ATTACK_RIGHT);
+        bWalk = false;
+      }
+    }
+    else if (ENEMY_ATTACK_TYPES[m_eEnemyType] & AT_RANGED) {
+      ECollisionCheckDirections eCCD = m_Map.playerVisibleFromPoint(getCenter(), ENEMY_MAX_RANGED_ATTACK_DISTANCE, CCD_HORIZONTAL);
+      if (eCCD & CCD_LEFT) {
+        changeCurrentAnimationSequence(AS_RANGED_ATTACK_LEFT);
+        bWalk = false;
+      }
+      else if (eCCD & CCD_RIGHT) {
+        changeCurrentAnimationSequence(AS_RANGED_ATTACK_RIGHT);
+        bWalk = false;
+      }
+    }
   }
-  else {
+  if (bWalk) {
     updateKI();
 
     Ogre::Real fPenetration = 0;
@@ -274,6 +295,12 @@ void CEnemy::animationTextureChangedCallback(unsigned int uiOldText, unsigned ui
   if (uiOldText == m_AnimationSequences[m_uiCurrentAnimationSequence].size() - 1 && uiNewText == 0) {
     if (m_uiCurrentAnimationSequence == AS_ATTACK_RIGHT || m_uiCurrentAnimationSequence == AS_ATTACK_LEFT) {
       m_Map.getPlayer()->takeDamage(ENEMY_DAMAGE[m_eEnemyType]);
+    }
+    else if (m_uiCurrentAnimationSequence == AS_RANGED_ATTACK_LEFT) {
+      m_Map.addShot(new CShot(&m_Map, m_Map.get2dManager(), getCenter(), CShot::ST_SKULL, CShot::SD_LEFT, CShot::DMG_PLAYER))->launch(Ogre::Vector2(-1, 0));
+    }
+    else if (m_uiCurrentAnimationSequence == AS_RANGED_ATTACK_RIGHT) {
+      m_Map.addShot(new CShot(&m_Map, m_Map.get2dManager(), getCenter(), CShot::ST_SKULL, CShot::SD_RIGHT, CShot::DMG_PLAYER))->launch(Ogre::Vector2(+1, 0));
     }
   }
 }
