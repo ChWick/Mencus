@@ -387,25 +387,27 @@ ECollisionCheckDirections CMap::playerVisibleFromPoint(const Ogre::Vector2 &vFro
       return CCD_NONE;
     }
   }
+  bool bCollFound = false;
   if ((eCollisionCheckDirection & CCD_RIGHT) == CCD_RIGHT) {
-    if (m_pPlayer->getCenter().x < vFromPos.x) {return CCD_NONE;}
-
-    for (int x = vFromPos.x; x < m_pPlayer->getCenter().x; x++) {
-      if (m_gridTiles(x, static_cast<int>(vFromPos.y))->getTileFlags() & CTile::TF_UNPASSABLE) {
-        return CCD_NONE;
+    if (m_pPlayer->getCenter().x >= vFromPos.x) {
+      for (int x = vFromPos.x; x < m_pPlayer->getCenter().x; x++) {
+        if (m_gridTiles(x, static_cast<int>(vFromPos.y))->getTileFlags() & CTile::TF_UNPASSABLE) {
+          bCollFound = true;
+        }
       }
+      if (!bCollFound) return CCD_RIGHT;
     }
-    return CCD_RIGHT;
   }
+  bCollFound = false;
   if ((eCollisionCheckDirection & CCD_LEFT) == CCD_LEFT) {
-    if (m_pPlayer->getCenter().x > vFromPos.x) {return CCD_NONE;}
-
-    for (int x = vFromPos.x; x > m_pPlayer->getCenter().x; x--) {
-      if (m_gridTiles(x, static_cast<int>(vFromPos.y))->getTileFlags() & CTile::TF_UNPASSABLE) {
-        return CCD_NONE;
+    if (m_pPlayer->getCenter().x <= vFromPos.x) {
+      for (int x = vFromPos.x; x > m_pPlayer->getCenter().x; x--) {
+        if (m_gridTiles(x, static_cast<int>(vFromPos.y))->getTileFlags() & CTile::TF_UNPASSABLE) {
+          bCollFound = true;
+        }
       }
+      if (!bCollFound) return CCD_LEFT;
     }
-    return CCD_LEFT;
   }
   return CCD_NONE;
 }
