@@ -46,7 +46,7 @@ CSaveStateManager::CSaveStateManager() {
     tmTime.tm_mon = pSaveStateElem->IntAttribute("tm_mon");
     tmTime.tm_year = pSaveStateElem->IntAttribute("tm_year");
 
-    m_vSaveStates.push_back(CSaveState(uiActID, uiSceneID, fHP, fMP, bAccessible, tmTime));
+    m_vSaveStates.push_front(CSaveState(uiActID, uiSceneID, fHP, fMP, bAccessible, tmTime));
   }
 }
 CSaveStateManager::~CSaveStateManager() {
