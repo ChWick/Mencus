@@ -180,6 +180,9 @@ void CHUD::setCurrentWeapon(unsigned int uiWeaponId) {
   else if (uiWeaponId == 2) {
     m_pWeapon->setProperty("Image", "hud_weapons/shield");
   }
+  else if (uiWeaponId == 3) {
+    m_pWeapon->setProperty("Image", "hud_weapons/column");
+  }
 }
 Ogre::ColourValue CHUD::getHPColourmap() const {
   if (m_fHP == 1.0f) {

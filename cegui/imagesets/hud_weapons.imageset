@@ -3,6 +3,7 @@
     <Image name="bolt" xPos="0" yPos="0" width="32" height="32" />
     <Image name="bomb" xPos="32" yPos="0" width="32" height="32" />
     <Image name="shield" xPos="64" yPos="0" width="32" height="32" />
+    <Image name="column" xPos="96" yPos="0" width="32" height="32" />
     <Image name="health_potion" xPos="0" yPos="32" width="32" height="32" />
     <Image name="mana_potion" xPos="32" yPos="32" width="32" height="32" />
     <Image name="keys" xPos="64" yPos="32" width="32" height="32" />

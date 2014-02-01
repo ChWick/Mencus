@@ -21,6 +21,7 @@ public:
     ST_BOLT,
     ST_BOMB,
     ST_SKULL,
+    ST_COLUMN,
 
     ST_COUNT,
   };
