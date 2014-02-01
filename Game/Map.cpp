@@ -376,6 +376,39 @@ bool CMap::findLink(const CBoundingBox2d &bb, Ogre::Vector2 &vFromPos, Ogre::Vec
 
   return false;
 }
+ECollisionCheckDirections CMap::playerVisibleFromPoint(const Ogre::Vector2 &vFromPos, Ogre::Real fMaxDistance, ECollisionCheckDirections eCollisionCheckDirection) const {
+  if (vFromPos.squaredDistance(m_pPlayer->getCenter()) > fMaxDistance * fMaxDistance) {return CCD_NONE;}
+
+  if ((eCollisionCheckDirection & CCD_HORIZONTAL) > 0) {
+    if (vFromPos.y > m_pPlayer->getPosition().y + m_pPlayer->getSize().y) {
+      return CCD_NONE;
+    }
+    if (vFromPos.y < m_pPlayer->getPosition().y) {
+      return CCD_NONE;
+    }
+  }
+  if ((eCollisionCheckDirection & CCD_RIGHT) == CCD_RIGHT) {
+    if (m_pPlayer->getCenter().x < vFromPos.x) {return CCD_NONE;}
+
+    for (int x = vFromPos.x; x < m_pPlayer->getCenter().x; x++) {
+      if (m_gridTiles(x, static_cast<int>(vFromPos.y))->getTileFlags() & CTile::TF_UNPASSABLE) {
+        return CCD_NONE;
+      }
+    }
+    return CCD_RIGHT;
+  }
+  if ((eCollisionCheckDirection & CCD_RIGHT) == CCD_LEFT) {
+    if (m_pPlayer->getCenter().x > vFromPos.x) {return CCD_NONE;}
+
+    for (int x = vFromPos.x; x > m_pPlayer->getCenter().x; x--) {
+      if (m_gridTiles(x, static_cast<int>(vFromPos.y))->getTileFlags() & CTile::TF_UNPASSABLE) {
+        return CCD_NONE;
+      }
+    }
+    return CCD_LEFT;
+  }
+  return CCD_NONE;
+}
 void CMap::unlock(unsigned int x, unsigned int y) {
   TileType id = m_gridTiles(x, y)->getTileType();
   if (id == 49) {

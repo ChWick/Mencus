@@ -146,6 +146,14 @@ public:
    *  \returns true if there was a collision
    */
   bool findLink(const CBoundingBox2d &bb, Ogre::Vector2 &vFromPos, Ogre::Vector2 &vToPos) const;
+  //! Function to check if the player is visible from a certain point
+  /**
+   *  \param[in] vFromPos from pos
+   *  \param[in] fMaxDistance the maximal distance the check
+   *  \param[in] eCollisionCheckDirection in witch direction to look
+   *  \return The look direction in witch the player was visible
+   */
+  ECollisionCheckDirections playerVisibleFromPoint(const Ogre::Vector2 &vFromPos, Ogre::Real fMaxDistance, ECollisionCheckDirections eCollisionCheckDirection) const;
 
   void unlock(unsigned int x, unsigned int y);
   void swapBoxes();
