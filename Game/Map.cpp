@@ -397,7 +397,7 @@ ECollisionCheckDirections CMap::playerVisibleFromPoint(const Ogre::Vector2 &vFro
     }
     return CCD_RIGHT;
   }
-  if ((eCollisionCheckDirection & CCD_RIGHT) == CCD_LEFT) {
+  if ((eCollisionCheckDirection & CCD_LEFT) == CCD_LEFT) {
     if (m_pPlayer->getCenter().x > vFromPos.x) {return CCD_NONE;}
 
     for (int x = vFromPos.x; x > m_pPlayer->getCenter().x; x--) {
