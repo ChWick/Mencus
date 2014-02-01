@@ -24,6 +24,11 @@ public:
 
     ST_COUNT,
   };
+  enum EDamages {
+    DMG_PLAYER = 1,
+    DMG_ENEMY  = 2,
+    DMG_ALL    = 3,
+  };
 
   static const Ogre::Real SHOT_DAMAGE[ST_COUNT];
 private:
@@ -34,12 +39,14 @@ private:
   const EShotDirections m_eShotDirection;
   Ogre::Real m_fTimer;
   bool m_bLaunched;
+  unsigned int m_uiDamages;
 public:
   CShot(CMap *pMap,
 	Ogre2dManager *pSpriteManager,
 	const Ogre::Vector2 &vPosition,
 	EShotTypes eShotType,
-	EShotDirections eShotDirection);
+	EShotDirections eShotDirection,
+	unsigned int uiDmg = DMG_ALL);
   //! Lanches a shot with the given speed
   /** This speed will be multiplied with the default speed of the shot
    *  \param[in] vInitialSpeed The initial speed or direction vector
@@ -49,7 +56,7 @@ public:
 
   void update(Ogre::Real tpf);
 private:
-  void hitEnemy();
+  void hit();
 };
 
 #endif

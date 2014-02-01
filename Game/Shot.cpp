@@ -5,6 +5,7 @@
 #include "Tile.hpp"
 #include "Explosion.hpp"
 #include "Enemy.hpp"
+#include "Player.hpp"
 
 const Ogre::Vector2 SHOT_SIZE[CShot::ST_COUNT] = {
   Ogre::Vector2(0.5, 0.25),
@@ -33,7 +34,8 @@ CShot::CShot(CMap *pMap,
              Ogre2dManager *pSpriteManager,
              const Ogre::Vector2 &vPosition,
              EShotTypes eShotType,
-             EShotDirections eShotDirection)
+             EShotDirections eShotDirection,
+             unsigned int uiDmg)
   :
   CAnimatedSprite(pMap,
                   pSpriteManager,
@@ -44,7 +46,8 @@ CShot::CShot(CMap *pMap,
   m_bAffectedByGravity(SHOT_AFFECTED_BY_GRAVITY[eShotType]),
   m_vSpeed(Ogre::Vector2::ZERO),
   m_eShotDirection(eShotDirection),
-  m_bLaunched(false) {
+  m_bLaunched(false),
+  m_uiDamages(uiDmg) {
 
   CSpriteTexture::EMirrorTypes eMirrorType = CSpriteTexture::MIRROR_NONE;
   if (eShotDirection == SD_LEFT) {
@@ -74,6 +77,7 @@ void CShot::launch(const Ogre::Vector2 &vInitialSpeed, unsigned int uiNewAnimati
   m_vSpeed = vInitialSpeed * SHOT_SPEED[m_eShotType];
   if (uiNewAnimationSequence == SA_COUNT) {
     switch (m_eShotType) {
+    case ST_SKULL:
     case ST_BOLT:
       uiNewAnimationSequence = SA_DEFAULT;
       break;
@@ -93,7 +97,7 @@ void CShot::update(Ogre::Real tpf) {
       m_vSpeed.y += c_fGravity * tpf;
     }
 
-    if (m_eShotType == ST_BOLT) {
+    if (m_eShotType == ST_BOLT || m_eShotType == ST_SKULL) {
       m_vPosition += m_vSpeed * tpf;
 
       // check for collisions
@@ -107,7 +111,7 @@ void CShot::update(Ogre::Real tpf) {
         m_pMap->destroyShot(this);
       }
 
-      hitEnemy();
+      hit();
     } else if (m_eShotType == ST_BOMB) {
       m_fTimer += tpf;
       if (m_fTimer > BOMB_EXPLOSION_TIME) {
@@ -151,10 +155,19 @@ void CShot::update(Ogre::Real tpf) {
 
   CAnimatedSprite::update(tpf);
 }
-void CShot::hitEnemy() {
-  for (auto *pEnemy : m_pMap->getEnemies()) {
-    if (pEnemy->getWorldBoundingBox().collidesWith(getWorldBoundingBox())) {
-      pEnemy->takeDamage(SHOT_DAMAGE[m_eShotType]);
+void CShot::hit() {
+  if (m_uiDamages & DMG_ENEMY) {
+    for (auto *pEnemy : m_pMap->getEnemies()) {
+      if (pEnemy->getWorldBoundingBox().collidesWith(getWorldBoundingBox())) {
+        pEnemy->takeDamage(SHOT_DAMAGE[m_eShotType]);
+        m_pMap->destroyShot(this);
+        return;
+      }
+    }
+  }
+  if (m_uiDamages & DMG_PLAYER) {
+    if (m_pMap->getPlayer()->getWorldBoundingBox().collidesWith(getWorldBoundingBox())) {
+      m_pMap->getPlayer()->takeDamage(SHOT_DAMAGE[m_eShotType]);
       m_pMap->destroyShot(this);
       return;
     }
