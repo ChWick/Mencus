@@ -43,6 +43,8 @@ private:
   CBarIndicator m_HPBar;
   const bool m_bJumps;
   const Ogre::String m_sID;
+  Ogre::Vector2 m_vExternalForce;
+  bool m_bStunned;
 public:
   CEnemy(CMap &map,
     const Ogre::Vector2 &vPosition,
@@ -55,7 +57,12 @@ public:
   void update(Ogre::Real tpf);
   void render(Ogre::Real tpf);
 
+  void addExternalForce(const Ogre::Vector2 &vForce) {m_vExternalForce += vForce;}
+
   const Ogre::String &getID() const {return m_sID;}
+
+  void setStunned(bool bStunned) {m_bStunned = bStunned;}
+  bool isStunned() const {return m_bStunned;}
 
 protected:
   void damageTakenCallback();

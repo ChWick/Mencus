@@ -58,7 +58,9 @@ CEnemy::CEnemy(CMap &map,
     m_bOnGround(false),
     m_HPBar(&map, map.get2dManager()),
     m_bJumps(bJumps),
-    m_sID(sID) {
+    m_sID(sID),
+    m_vExternalForce(Ogre::Vector2::ZERO),
+    m_bStunned(false) {
   setup();
   m_HPBar.setSize(Ogre::Vector2(m_vSize.x, m_HPBar.getSize().y));
 }
@@ -88,11 +90,13 @@ void CEnemy::update(Ogre::Real tpf) {
     }
   }
   if (bWalk) {
-    updateKI();
+    if (!m_bStunned) {
+      updateKI();
+    }
 
     Ogre::Real fPenetration = 0;
 
-    m_vSpeed.y += c_fGravity * tpf;
+    m_vSpeed.y += (m_vExternalForce.y + c_fGravity) * tpf;
     m_vPosition.y += m_vSpeed.y * tpf;
 
     m_bOnGround = false;
@@ -108,6 +112,7 @@ void CEnemy::update(Ogre::Real tpf) {
         m_vSpeed.y = 0;
     }
     // move enemy
+    m_vSpeed.x += m_vExternalForce.x * tpf;
     m_vPosition.x += m_vSpeed.x * tpf;
 
     if (m_vSpeed.x < 0) {
@@ -138,6 +143,8 @@ void CEnemy::update(Ogre::Real tpf) {
       if (m_vSpeed.x < 0) changeCurrentAnimationSequence(AS_JUMP_LEFT);
       else changeCurrentAnimationSequence(AS_JUMP_RIGHT);
     }
+
+    m_vSpeed.x -= m_vSpeed.x * tpf * 5;
   }
 
 #ifdef DEBUG_CHARACTER_BOUNDING_BOXES
@@ -148,6 +155,7 @@ void CEnemy::update(Ogre::Real tpf) {
     m_HPBar.setCenter(getCenter() + Ogre::Vector2(0, getSize().y / 2));
     m_HPBar.update(tpf);
   }
+  m_vExternalForce = Ogre::Vector2::ZERO;
 }
 void CEnemy::render(Ogre::Real tpf) {
   if (getMaximumHitpoints() > getHitpoints()) {
@@ -195,6 +203,7 @@ void CEnemy::updateKI() {
       }
     }
   }
+  m_vSpeed.x = ENEMY_SPEED[m_eEnemyType] * m_vSpeed.x / abs(m_vSpeed.x);
 }
 void CEnemy::setup() {
   init(ENEMY_SPEED[m_eEnemyType], AS_COUNT);
