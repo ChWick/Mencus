@@ -764,6 +764,13 @@ void CMap::playerWarped() {
   }
   m_vCameraPos = m_vCameraTargetPos;
 }
+void CMap::destroyEnemy(CEnemy *pEnemy) {
+  m_lEnemiesToDestroy.push_back(pEnemy);
+
+  for (CShot *pShot : m_lShots) {
+    pShot->enemyDestroyed(pEnemy);
+  }
+}
 
 
 bool CMap::CExit::isInExit(CPlayer *pPlayer, CMap *pMap) {

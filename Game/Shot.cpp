@@ -117,8 +117,10 @@ void CShot::update(Ogre::Real tpf) {
 
       // check for collisions
       if (m_pMap->hitsTile(CTile::TF_UNPASSABLE, getWorldBoundingBox())) {
-        // create explosion
-        m_pMap->addExplosion(new CExplosion(m_pMap, getCenter(), CExplosion::ET_BOLT));
+        // create
+        if (m_eShotType == ST_BOLT) m_pMap->addExplosion(new CExplosion(m_pMap, getCenter(), CExplosion::ET_BOLT));
+        else if (m_eShotType == ST_SKULL) m_pMap->addExplosion(new CExplosion(m_pMap, getCenter(), CExplosion::ET_SKULL));
+
         m_pMap->destroyShot(this);
       }
       if (m_pMap->outOfMap(getWorldBoundingBox())) {
