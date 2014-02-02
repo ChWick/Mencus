@@ -4,6 +4,7 @@
 #include "AnimatedSprite.hpp"
 
 class CMap;
+class CEnemy;
 
 class CShot : public CAnimatedSprite {
 public:
@@ -41,6 +42,7 @@ private:
   Ogre::Real m_fTimer;
   bool m_bLaunched;
   unsigned int m_uiDamages;
+  CEnemy *m_pCatchedEnemy;
 public:
   CShot(CMap *pMap,
 	Ogre2dManager *pSpriteManager,

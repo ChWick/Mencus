@@ -7,6 +7,8 @@
 #include "Enemy.hpp"
 #include "Player.hpp"
 
+const Ogre::Real COLUMN_CATCH_DURATION = 3.0f;
+
 const Ogre::Vector2 SHOT_SIZE[CShot::ST_COUNT] = {
   Ogre::Vector2(0.5, 0.25),
   Ogre::Vector2(0.5, 0.5),
@@ -51,7 +53,8 @@ CShot::CShot(CMap *pMap,
   m_vSpeed(Ogre::Vector2::ZERO),
   m_eShotDirection(eShotDirection),
   m_bLaunched(false),
-  m_uiDamages(uiDmg) {
+  m_uiDamages(uiDmg),
+  m_pCatchedEnemy(NULL) {
 
   CSpriteTexture::EMirrorTypes eMirrorType = CSpriteTexture::MIRROR_NONE;
   if (eShotDirection == SD_LEFT) {
@@ -76,6 +79,8 @@ CShot::CShot(CMap *pMap,
     init(1, 1);
     setupAnimation(SA_DEFAULT, "column", 2, eMirrorType, &getColumnTexture);
     setCenter(vPosition);
+    m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.4, 0));
+    m_bbRelativeBoundingBox.setSize(Ogre::Vector2(0.2, 1.6));
   }
 
   changeCurrentAnimationSequence(SA_DEFAULT);
@@ -162,6 +167,17 @@ void CShot::update(Ogre::Real tpf) {
       }
     }
   }
+  else if (m_pCatchedEnemy) {
+    m_pCatchedEnemy->setStunned(true);
+    m_pCatchedEnemy->addExternalForce((getCenter() - m_pCatchedEnemy->getCenter()) * 50);
+    m_fTimer -= tpf;
+    setAlpha(m_fTimer / COLUMN_CATCH_DURATION);
+    if (m_fTimer <= 0) {
+      m_pCatchedEnemy->setStunned(false);
+      m_pCatchedEnemy = NULL;
+      m_pMap->destroyShot(this);
+    }
+  }
 
   CAnimatedSprite::update(tpf);
 }
@@ -169,8 +185,18 @@ void CShot::hit() {
   if (m_uiDamages & DMG_ENEMY) {
     for (auto *pEnemy : m_pMap->getEnemies()) {
       if (pEnemy->getWorldBoundingBox().collidesWith(getWorldBoundingBox())) {
+        if (m_eShotType == ST_COLUMN) {
+          m_pCatchedEnemy = pEnemy;
+          m_pCatchedEnemy->setStunned(true);
+          m_bLaunched = false;
+          m_fTimer = COLUMN_CATCH_DURATION;
+        }
+        else {
+          m_pMap->destroyShot(this);
+        }
+
         pEnemy->takeDamage(SHOT_DAMAGE[m_eShotType]);
-        m_pMap->destroyShot(this);
+
         return;
       }
     }
