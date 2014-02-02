@@ -12,7 +12,8 @@ CSprite::CSprite(const CSpriteTransformPipeline *pTransformPipeline, Ogre2dManag
     m_vScale(vScale),
     m_radRotation(radRotation),
     m_pTextureToDraw(&m_Texture),
-    m_bbRelativeBoundingBox(Ogre::Vector2::ZERO, vSize * vScale) {
+    m_bbRelativeBoundingBox(Ogre::Vector2::ZERO, vSize * vScale),
+    m_Colour(Ogre::ColourValue::White) {
 }
 CSprite::CSprite(const CSprite &src)
   : m_pSpriteManager(src.m_pSpriteManager),
@@ -22,7 +23,8 @@ CSprite::CSprite(const CSprite &src)
     m_radRotation(src.m_radRotation),
     m_Texture(src.m_Texture),
     m_pTextureToDraw(src.m_pTextureToDraw),
-    m_bbRelativeBoundingBox(src.m_bbRelativeBoundingBox) {
+    m_bbRelativeBoundingBox(src.m_bbRelativeBoundingBox),
+    m_Colour(src.m_Colour) {
 }
 CSprite::~CSprite() {
 }
@@ -47,7 +49,8 @@ void CSprite::render(Ogre::Real tpf) {
 				  m_pTextureToDraw->getTexturePosTopLeft().x,
 				  m_pTextureToDraw->getTexturePosTopLeft().y,
 				  m_pTextureToDraw->getTexturePosBottomRight().x,
-				  m_pTextureToDraw->getTexturePosBottomRight().y);
+				  m_pTextureToDraw->getTexturePosBottomRight().y,
+          m_Colour);
 
 }
 void CSprite::setTexture(const string &sName) {
