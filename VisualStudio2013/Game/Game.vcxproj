@@ -335,6 +335,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Game\AnimatedSprite.hpp" />
+    <ClInclude Include="..\..\Game\Background.hpp" />
     <ClInclude Include="..\..\Game\BarIndicator.hpp" />
     <ClInclude Include="..\..\Game\BoundingBox2d.hpp" />
     <ClInclude Include="..\..\Game\CheatDefines.hpp" />
@@ -376,6 +377,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClInclude Include="..\..\Game\Util.hpp" />
     <ClInclude Include="..\..\Game\Video.hpp" />
     <ClCompile Include="..\..\Game\AnimatedSprite.cpp" />
+    <ClCompile Include="..\..\Game\Background.cpp" />
     <ClCompile Include="..\..\Game\DebugDrawer.cpp" />
     <ClCompile Include="..\..\Game\Enemy.cpp" />
     <ClCompile Include="..\..\Game\Explosion.cpp" />
