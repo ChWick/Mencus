@@ -4,6 +4,7 @@
 #include "AnimatedSprite.hpp"
 
 class CMap;
+class CEnemy;
 
 class CShot : public CAnimatedSprite {
 public:
@@ -21,6 +22,7 @@ public:
     ST_BOLT,
     ST_BOMB,
     ST_SKULL,
+    ST_COLUMN,
 
     ST_COUNT,
   };
@@ -40,6 +42,7 @@ private:
   Ogre::Real m_fTimer;
   bool m_bLaunched;
   unsigned int m_uiDamages;
+  CEnemy *m_pCatchedEnemy;
 public:
   CShot(CMap *pMap,
 	Ogre2dManager *pSpriteManager,
@@ -55,6 +58,8 @@ public:
   void launch(const Ogre::Vector2 &vInitialSpeed, unsigned int uiNewAnimationSequence = SA_COUNT);
 
   void update(Ogre::Real tpf);
+
+  void enemyDestroyed(CEnemy *pEnemy) {if (m_pCatchedEnemy == pEnemy) {m_pCatchedEnemy = NULL;} }
 private:
   void hit();
 };

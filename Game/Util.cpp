@@ -10,6 +10,7 @@ std::string getShotTexture(const std::string &sType, const std::string &sName, i
 }
 std::string getSkullTexture(std::string sName, int index) {return getShotTexture("skull", sName, index);}
 std::string getBoltTexture(std::string sName, int index) {return getShotTexture("bolt", sName, index);}
+std::string getColumnTexture(std::string sName, int index) {return getShotTexture("column", sName, index);}
 std::string getHUDTexturePath(std::string sName) {
   return "../gfx/hud/" + sName + ".png";
 }

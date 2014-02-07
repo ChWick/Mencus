@@ -7,25 +7,31 @@
 #include "Enemy.hpp"
 #include "Player.hpp"
 
+const Ogre::Real COLUMN_CATCH_DURATION = 3.0f;
+
 const Ogre::Vector2 SHOT_SIZE[CShot::ST_COUNT] = {
   Ogre::Vector2(0.5, 0.25),
   Ogre::Vector2(0.5, 0.5),
-  Ogre::Vector2(0.5, 0.5)
+  Ogre::Vector2(0.5, 0.5),
+  Ogre::Vector2(1, 2)
 };
 const bool SHOT_AFFECTED_BY_GRAVITY[CShot::ST_COUNT] = {
   false,
   true,
+  false,
   false
 };
 const Ogre::Real SHOT_SPEED[CShot::ST_COUNT] = {
   10.0,
   1.0,
-  7.0
+  7.0,
+  5.0
 };
 const Ogre::Real CShot::SHOT_DAMAGE[CShot::ST_COUNT] = {
   1,
   2,
-  0.5
+  0.5,
+  0.25
 };
 const Ogre::Real BOMB_EXPLOSION_TIME = 5;
 const Ogre::Real BOMB_EXPLOSION_RADIUS = 1.75;
@@ -47,7 +53,8 @@ CShot::CShot(CMap *pMap,
   m_vSpeed(Ogre::Vector2::ZERO),
   m_eShotDirection(eShotDirection),
   m_bLaunched(false),
-  m_uiDamages(uiDmg) {
+  m_uiDamages(uiDmg),
+  m_pCatchedEnemy(NULL) {
 
   CSpriteTexture::EMirrorTypes eMirrorType = CSpriteTexture::MIRROR_NONE;
   if (eShotDirection == SD_LEFT) {
@@ -68,6 +75,13 @@ CShot::CShot(CMap *pMap,
     init(1, 1);
     setupAnimation(SA_DEFAULT, "skull", 1, eMirrorType, &getSkullTexture);
   }
+  else if (m_eShotType == ST_COLUMN) {
+    init(1, 1);
+    setupAnimation(SA_DEFAULT, "column", 2, eMirrorType, &getColumnTexture);
+    setCenter(vPosition);
+    m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.4, 0));
+    m_bbRelativeBoundingBox.setSize(Ogre::Vector2(0.2, 1.6));
+  }
 
   changeCurrentAnimationSequence(SA_DEFAULT);
 }
@@ -77,6 +91,7 @@ void CShot::launch(const Ogre::Vector2 &vInitialSpeed, unsigned int uiNewAnimati
   m_vSpeed = vInitialSpeed * SHOT_SPEED[m_eShotType];
   if (uiNewAnimationSequence == SA_COUNT) {
     switch (m_eShotType) {
+    case ST_COLUMN:
     case ST_SKULL:
     case ST_BOLT:
       uiNewAnimationSequence = SA_DEFAULT;
@@ -97,13 +112,15 @@ void CShot::update(Ogre::Real tpf) {
       m_vSpeed.y += c_fGravity * tpf;
     }
 
-    if (m_eShotType == ST_BOLT || m_eShotType == ST_SKULL) {
+    if (m_eShotType == ST_BOLT || m_eShotType == ST_SKULL || m_eShotType == ST_COLUMN) {
       m_vPosition += m_vSpeed * tpf;
 
       // check for collisions
       if (m_pMap->hitsTile(CTile::TF_UNPASSABLE, getWorldBoundingBox())) {
-        // create explosion
-        m_pMap->addExplosion(new CExplosion(m_pMap, getCenter(), CExplosion::ET_BOLT));
+        // create
+        if (m_eShotType == ST_BOLT) m_pMap->addExplosion(new CExplosion(m_pMap, getCenter(), CExplosion::ET_BOLT));
+        else if (m_eShotType == ST_SKULL) m_pMap->addExplosion(new CExplosion(m_pMap, getCenter(), CExplosion::ET_SKULL));
+
         m_pMap->destroyShot(this);
       }
       if (m_pMap->outOfMap(getWorldBoundingBox())) {
@@ -152,6 +169,17 @@ void CShot::update(Ogre::Real tpf) {
       }
     }
   }
+  else if (m_pCatchedEnemy) {
+    m_pCatchedEnemy->setStunned(true);
+    m_pCatchedEnemy->addExternalForce((getCenter() - m_pCatchedEnemy->getCenter()) * 50);
+    m_fTimer -= tpf;
+    setAlpha(m_fTimer / COLUMN_CATCH_DURATION);
+    if (m_fTimer <= 0) {
+      m_pCatchedEnemy->setStunned(false);
+      m_pCatchedEnemy = NULL;
+      m_pMap->destroyShot(this);
+    }
+  }
 
   CAnimatedSprite::update(tpf);
 }
@@ -159,8 +187,18 @@ void CShot::hit() {
   if (m_uiDamages & DMG_ENEMY) {
     for (auto *pEnemy : m_pMap->getEnemies()) {
       if (pEnemy->getWorldBoundingBox().collidesWith(getWorldBoundingBox())) {
+        if (m_eShotType == ST_COLUMN) {
+          m_pCatchedEnemy = pEnemy;
+          m_pCatchedEnemy->setStunned(true);
+          m_bLaunched = false;
+          m_fTimer = COLUMN_CATCH_DURATION;
+        }
+        else {
+          m_pMap->destroyShot(this);
+        }
+
         pEnemy->takeDamage(SHOT_DAMAGE[m_eShotType]);
-        m_pMap->destroyShot(this);
+
         return;
       }
     }

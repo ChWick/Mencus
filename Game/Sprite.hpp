@@ -24,6 +24,7 @@ protected:
   CSpriteTexture m_Texture;				//!< Texture of the sprite
   const CSpriteTexture *m_pTextureToDraw;		//!< Texture to draw in the update method (this is modified e.g. by the animated sprite)
   CBoundingBox2d m_bbRelativeBoundingBox;		//!< Bounding box, realative position
+  Ogre::ColourValue m_Colour;               //!< The draw colour
 public:
   CSprite(const CSpriteTransformPipeline *pTransformPipeline,
 	  Ogre2dManager *pSpriteManager,
@@ -57,6 +58,11 @@ public:
 
   const CBoundingBox2d &getBoundingBox() const {return m_bbRelativeBoundingBox;}
   CBoundingBox2d getWorldBoundingBox() const {return m_bbRelativeBoundingBox.translate(m_vPosition);}
+
+  void setColour(const Ogre::ColourValue &colour) {m_Colour = colour;}
+  const Ogre::ColourValue &getColour() const {return m_Colour;}
+
+  void setAlpha(Ogre::Real fAlpha) {m_Colour.a = fAlpha;}
 };
 
 #endif

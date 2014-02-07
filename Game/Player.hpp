@@ -36,6 +36,7 @@ private:
     W_BOLT,
     W_BOMB,
     W_SHIELD,
+    W_COLUMN,
     W_COUNT,
   };
 

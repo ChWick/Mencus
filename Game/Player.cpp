@@ -16,6 +16,9 @@ unsigned int PLAYER_LINK_PAUSE = PAUSE_ENEMY_MOVEMENT | PAUSE_SHOT_MOVEMENT;
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_RIGHT(0.2, 0.0);
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_LEFT(PLAYER_BOLT_OFFSET_RIGHT * Ogre::Vector2(-1, 1));
 
+const Ogre::Vector2 PLAYER_COLUMN_OFFSET_RIGHT(0.2, 0.0);
+const Ogre::Vector2 PLAYER_COLUMN_OFFSET_LEFT(PLAYER_BOLT_OFFSET_RIGHT * Ogre::Vector2(-1, 1));
+
 const Ogre::Vector2 PLAYER_BOMB_OFFSET(0, 0.9);
 const Ogre::Vector2 PLAYER_BOMB_THROW_DIRECTION_RIGHT(0.9, 0.1);
 const Ogre::Vector2 PLAYER_BOMB_THROW_DIRECTION_LEFT(PLAYER_BOMB_THROW_DIRECTION_RIGHT * Ogre::Vector2(-1, 1));
@@ -27,6 +30,7 @@ const Ogre::Real PLAYER_LINK_FADE_TIME(1);
 
 const Ogre::Real PLAYER_MAX_MANA_POINTS(50);
 const Ogre::Real PLAYER_BOLT_MANA_COSTS(5);
+const Ogre::Real PLAYER_COLUMN_MANA_COSTS(2);
 const Ogre::Real PLAYER_SHIELD_MANA_COSTS_PER_SEC(5);
 const Ogre::Real PLAYER_MANA_REGAIN_PER_SEC(0.5);
 
@@ -287,7 +291,7 @@ void CPlayer::update(Ogre::Real tpf) {
     // do nothing, wait for finished
   } else if (m_bOnGround) {
     if (m_bAttackPressed && m_vCurrentSpeed.x == 0) {
-      if (m_uiCurrentWeapon == W_BOLT) {
+      if (m_uiCurrentWeapon == W_BOLT || m_uiCurrentWeapon == W_COLUMN) {
         if (m_eLastDirection == LD_LEFT) {
           changeCurrentAnimationSequence(ANIM_ATTACK_LEFT);
         } else {
@@ -502,16 +506,40 @@ bool CPlayer::keyReleased( const OIS::KeyEvent &arg ) {
 void CPlayer::animationTextureChangedCallback(unsigned int uiOldText, unsigned int uiNewText) {
   if (uiOldText == 3 && uiNewText == 4) {
     if (m_uiCurrentAnimationSequence == ANIM_ATTACK_RIGHT || m_uiCurrentAnimationSequence == ANIM_ATTACK_LEFT) {
-      if (m_fManaPoints < PLAYER_BOLT_MANA_COSTS) {
+      Ogre::Real fManaCosts = PLAYER_BOLT_MANA_COSTS;
+      if (m_uiCurrentWeapon == W_COLUMN) {
+        fManaCosts = PLAYER_COLUMN_MANA_COSTS;
+      }
+      if (m_fManaPoints < fManaCosts) {
         return;
       }
-      m_fManaPoints -= PLAYER_BOLT_MANA_COSTS;
+      m_fManaPoints -= fManaCosts;
 
+      CShot::EShotTypes eShotType = CShot::ST_BOLT;
+      Ogre::Vector2 vOffset = getPosition();
+      Ogre::Vector2 vLaunchDirection;
+      CShot::EShotDirections eShotDir;
       if (m_uiCurrentAnimationSequence == ANIM_ATTACK_LEFT) {
-        m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_LEFT, CShot::ST_BOLT, CShot::SD_LEFT))->launch(Ogre::Vector2(-1,0));
-      } else if(m_uiCurrentAnimationSequence == ANIM_ATTACK_RIGHT) {
-        m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, getCenter() + PLAYER_BOLT_OFFSET_RIGHT, CShot::ST_BOLT, CShot::SD_RIGHT))->launch(Ogre::Vector2(1,0));
+        vLaunchDirection = Ogre::Vector2(-1, 0);
+        eShotDir = CShot::SD_LEFT;
       }
+      else {
+        vLaunchDirection = Ogre::Vector2(1, 0);
+        eShotDir = CShot::SD_RIGHT;
+      }
+
+      if (m_uiCurrentWeapon == W_COLUMN) {
+        eShotType = CShot::ST_COLUMN;
+        if (m_uiCurrentAnimationSequence == ANIM_ATTACK_LEFT) {vOffset = getCenter() + PLAYER_COLUMN_OFFSET_LEFT;}
+        else if (m_uiCurrentAnimationSequence == ANIM_ATTACK_RIGHT) {vOffset = getCenter() + PLAYER_COLUMN_OFFSET_RIGHT;}
+      }
+      else if (m_uiCurrentWeapon == W_BOLT) {
+        eShotType = CShot::ST_BOLT;
+        if (m_uiCurrentAnimationSequence == ANIM_ATTACK_LEFT) {vOffset = getCenter() + PLAYER_BOLT_OFFSET_LEFT;}
+        else if (m_uiCurrentAnimationSequence == ANIM_ATTACK_RIGHT) {vOffset = getCenter() + PLAYER_BOLT_OFFSET_RIGHT;}
+      }
+
+      m_pMap->addShot(new CShot(m_pMap, m_pSpriteManager, vOffset, eShotType, eShotDir, CShot::DMG_ENEMY))->launch(vLaunchDirection);
     }
   } else if (uiOldText == m_AnimationSequences[m_uiCurrentAnimationSequence].size() - 1 && uiNewText == 0) {
     // new loop of animation

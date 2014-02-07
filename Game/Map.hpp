@@ -184,7 +184,7 @@ public:
   void destroyExplosion(CExplosion *pExplosion) {m_lExplosionsToDestroy.push_back(pExplosion);}
 
 
-  void destroyEnemy(CEnemy *pEnemy) {m_lEnemiesToDestroy.push_back(pEnemy);}
+  void destroyEnemy(CEnemy *pEnemy);
 
   void destroyObject(CObject *pObject) {if (find(m_lObjectsToDestroy.begin(), m_lObjectsToDestroy.end(), pObject) == m_lObjectsToDestroy.end()) m_lObjectsToDestroy.push_back(pObject);}
 

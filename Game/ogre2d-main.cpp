@@ -177,6 +177,8 @@ void Ogre2dManager::renderBuffer()
             thisChunk.vertexCount=0;
          }
       }
+
+      thisChunk.colour = currSpr->colour;
    }
 
    hardwareBuffer->unlock();
@@ -190,6 +192,15 @@ void Ogre2dManager::renderBuffer()
 
    endChunk=chunks.end();
    renderOp.vertexData->vertexStart=0;
+
+
+   Ogre::LayerBlendModeEx alphaBlendMode;
+
+   alphaBlendMode.blendType=Ogre::LBT_ALPHA;
+   alphaBlendMode.source1=Ogre::LBS_TEXTURE;
+   alphaBlendMode.operation=Ogre::LBX_BLEND_MANUAL;
+   alphaBlendMode.factor = 1;
+
    for (currChunk=chunks.begin(); currChunk!=endChunk; currChunk++)
    {
       renderOp.vertexData->vertexCount=currChunk->vertexCount;
@@ -199,6 +210,8 @@ void Ogre2dManager::renderBuffer()
 	  tp = Ogre::TextureManager::getSingleton().getByHandle(currChunk->texHandle);
 #endif
       rs->_setTexture(0, true, tp->getName());
+      alphaBlendMode.factor = currChunk->colour.a;
+      rs->_setTextureBlendMode(0, alphaBlendMode);
       rs->_render(renderOp);
       renderOp.vertexData->vertexStart+=currChunk->vertexCount;
    }
@@ -210,7 +223,6 @@ void Ogre2dManager::renderBuffer()
 void Ogre2dManager::prepareForRender()
 {
    Ogre::LayerBlendModeEx colorBlendMode;
-   Ogre::LayerBlendModeEx alphaBlendMode;
    Ogre::TextureUnitState::UVWAddressingMode uvwAddressMode;
 
    Ogre::RenderSystem* rs=Ogre::Root::getSingleton().getRenderSystem();
@@ -218,10 +230,6 @@ void Ogre2dManager::prepareForRender()
    colorBlendMode.blendType=Ogre::LBT_COLOUR;
    colorBlendMode.source1=Ogre::LBS_TEXTURE;
    colorBlendMode.operation=Ogre::LBX_SOURCE1;
-
-   alphaBlendMode.blendType=Ogre::LBT_ALPHA;
-   alphaBlendMode.source1=Ogre::LBS_TEXTURE;
-   alphaBlendMode.operation=Ogre::LBX_SOURCE1;
 
    uvwAddressMode.u=Ogre::TextureUnitState::TAM_CLAMP;
    uvwAddressMode.v=Ogre::TextureUnitState::TAM_CLAMP;
@@ -235,7 +243,7 @@ void Ogre2dManager::prepareForRender()
    rs->_setTextureCoordCalculation(0, Ogre::TEXCALC_NONE);
    rs->_setTextureUnitFiltering(0, Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_POINT);
    rs->_setTextureBlendMode(0, colorBlendMode);
-   rs->_setTextureBlendMode(0, alphaBlendMode);
+   //rs->_setTextureBlendMode(0, alphaBlendMode);
    rs->_setTextureAddressingMode(0, uvwAddressMode);
    rs->_disableTextureUnitsFrom(1);
    rs->setLightingEnabled(false);
@@ -286,7 +294,8 @@ void Ogre2dManager::destroyHardwareBuffer()
 void Ogre2dManager::spriteBltFull(
    std::string textureName,
    double x1, double y1, double x2, double y2,
-   double tx1, double ty1, double tx2, double ty2)
+   double tx1, double ty1, double tx2, double ty2,
+   const Ogre::ColourValue &colour)
 {
    Ogre::TexturePtr tp;
    Ogre2dSprite spr;
@@ -300,6 +309,8 @@ void Ogre2dManager::spriteBltFull(
    spr.ty1=ty1;
    spr.tx2=tx2;
    spr.ty2=ty2;
+
+   spr.colour = colour;
 
    tp=Ogre::TextureManager::getSingleton().getByName(textureName);
    spr.texHandle=tp->getHandle();
