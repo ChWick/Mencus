@@ -45,6 +45,7 @@ private:
   const Ogre::String m_sID;
   Ogre::Vector2 m_vExternalForce;
   bool m_bStunned;
+  bool m_bAtLeastOneDamageDone;
 public:
   CEnemy(CMap &map,
     const Ogre::Vector2 &vPosition,
@@ -68,6 +69,7 @@ protected:
   void damageTakenCallback();
   void killedByDamageCallback();
   void animationTextureChangedCallback(unsigned int uiOldText, unsigned uiNewText);
+  bool readyForWalking();
 private:
   void setup();
   void updateKI();

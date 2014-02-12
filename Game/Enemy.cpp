@@ -60,21 +60,23 @@ CEnemy::CEnemy(CMap &map,
     m_bJumps(bJumps),
     m_sID(sID),
     m_vExternalForce(Ogre::Vector2::ZERO),
-    m_bStunned(false) {
+    m_bStunned(false),
+    m_bAtLeastOneDamageDone(true) {
   setup();
   m_HPBar.setSize(Ogre::Vector2(m_vSize.x, m_HPBar.getSize().y));
 }
 void CEnemy::update(Ogre::Real tpf) {
   CAnimatedSprite::update(tpf);
 
-  bool bWalk = true;
+  bool bWalk = readyForWalking();
   if (m_bOnGround) {
     if (ENEMY_ATTACK_TYPES[m_eEnemyType] & AT_MELEE) {
       unsigned int ccd = getWorldBoundingBox().collidesWith(m_Map.getPlayer()->getWorldBoundingBox());
       if (ccd != CCD_NONE) {
         // Player collision, attack him!
-        changeCurrentAnimationSequence((ccd & CCD_LEFT) ? AS_ATTACK_LEFT : AS_ATTACK_RIGHT);
+        changeCurrentAnimationSequence((getCenter().x > m_Map.getPlayer()->getCenter().x) ? AS_ATTACK_LEFT : AS_ATTACK_RIGHT);
         bWalk = false;
+        m_bAtLeastOneDamageDone = false;
       }
     }
     else if (ENEMY_ATTACK_TYPES[m_eEnemyType] & AT_RANGED) {
@@ -82,10 +84,12 @@ void CEnemy::update(Ogre::Real tpf) {
       if (eCCD & CCD_LEFT) {
         changeCurrentAnimationSequence(AS_RANGED_ATTACK_LEFT);
         bWalk = false;
+        m_bAtLeastOneDamageDone = false;
       }
       else if (eCCD & CCD_RIGHT) {
         changeCurrentAnimationSequence(AS_RANGED_ATTACK_RIGHT);
         bWalk = false;
+        m_bAtLeastOneDamageDone = false;
       }
     }
   }
@@ -257,6 +261,8 @@ void CEnemy::setup() {
     }
     break;
   case ET_BEAR:
+    m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.4, 0));
+    m_bbRelativeBoundingBox.setSize(Ogre::Vector2(3.2, 1.7));
     setDefaultGetPath(&getEnemyTexturePath<3>);
     setupAnimation(AS_WALK_LEFT, "walk_right", 6, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", 6);
@@ -311,5 +317,14 @@ void CEnemy::animationTextureChangedCallback(unsigned int uiOldText, unsigned ui
     else if (m_uiCurrentAnimationSequence == AS_RANGED_ATTACK_RIGHT) {
       m_Map.addShot(new CShot(&m_Map, m_Map.get2dManager(), getCenter(), CShot::ST_SKULL, CShot::SD_RIGHT, CShot::DMG_PLAYER))->launch(Ogre::Vector2(+1, 0));
     }
+    m_bAtLeastOneDamageDone = true;
   }
+}
+
+bool CEnemy::readyForWalking() {
+  if (m_uiCurrentAnimationSequence == AS_ATTACK_RIGHT || m_uiCurrentAnimationSequence == AS_ATTACK_LEFT ||
+      m_uiCurrentAnimationSequence == AS_RANGED_ATTACK_LEFT || m_uiCurrentAnimationSequence == AS_RANGED_ATTACK_RIGHT) {
+    return m_uiCurrentAnimationTexture == 0 && m_bAtLeastOneDamageDone;
+  }
+  return true;
 }
