@@ -91,6 +91,26 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pSaveStatesWindow->setPosition(UVector2(UDim(0.2f, 0), UDim(0.5f, 0)));
   m_pSaveStatesWindow->setSize(USize(UDim(0.3f, 0), UDim(0.07f + 2 * 0.1f, 0)));
   m_pSaveStatesWindow->setFont("dejavusans8");
+  m_pSaveStatesWindow->subscribeEvent(
+				      CEGUI::Window::EventMouseEntersArea,
+				      CEGUI::Event::Subscriber(
+							       &CMainMenu::saveStateListEntered,
+							       this));
+  m_pSaveStatesWindow->subscribeEvent(
+				      CEGUI::Window::EventMouseLeavesArea,
+				      CEGUI::Event::Subscriber(
+							       &CMainMenu::saveStateListLeaved,
+							       this));
+  m_pSaveStatesWindow->subscribeEvent(
+				      CEGUI::Window::EventMouseMove,
+				      CEGUI::Event::Subscriber(
+							       &CMainMenu::saveStateListMouseMoved,
+							       this));
+  m_pSaveStatesWindow->subscribeEvent(
+				      CEGUI::Window::EventMouseClick,
+				      CEGUI::Event::Subscriber(
+							       &CMainMenu::saveStateListMouseClicked,
+							       this));
 
   m_pSaveStatePreviewWindow = m_pMMRoot->createChild("OgreTray/StaticImage", "PreviewPricture");
   m_pSaveStatePreviewWindow->setPosition(UVector2(UDim(0.55f, 0), UDim(0.5f, 0)));
@@ -259,10 +279,7 @@ bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
     break;
   case OIS::KC_RETURN:
     if (m_bSaveListSelected) {
-      if (m_iSelectedLoadState >= 0 && m_iSelectedLoadState < static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
-        m_pStateToLoad = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
-        changeState(MMS_RESULT_LOAD_GAME);
-      }
+      activateLoadState();
     }
     else {
       changeState(m_iTargetState[m_eCurrentState][m_iSelectedSlot]);
@@ -292,6 +309,7 @@ void CMainMenu::selectedSaveStateChanged() {
   m_pStateToLoad = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
   m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/" + PropertyHelper<int>::toString(m_pStateToLoad->getActID()) + "-" + PropertyHelper<int>::toString(m_pStateToLoad->getSceneID()));
   m_pSaveStatesWindow->ensureItemIsVisible(m_iSelectedLoadState);
+  m_pSaveStatesWindow->setItemSelectState(m_iSelectedLoadState, true);
 }
 bool CMainMenu::buttonSelected(const CEGUI::EventArgs& args) {
   CEGUI::Window *pBtn = dynamic_cast<const WindowEventArgs*>(&args)->window;
@@ -308,4 +326,41 @@ bool CMainMenu::buttonClicked(const CEGUI::EventArgs& args) {
   changeState(m_iTargetState[m_eCurrentState][m_iSelectedSlot]);
   m_iSelectedSlot = uiSelectedSlotBuffer;
   return true;
+}
+bool CMainMenu::saveStateListEntered(const CEGUI::EventArgs&) {
+  m_bSaveListSelected = true;
+  m_iSelectedSlot = -1;
+  return true;
+}
+bool CMainMenu::saveStateListLeaved(const CEGUI::EventArgs&) {
+  m_bSaveListSelected = false;
+  m_iSelectedSlot = LOAD_GAME_BACK;
+  return true;
+}
+bool CMainMenu::saveStateListMouseMoved(const CEGUI::EventArgs& args) {
+  const CEGUI::MouseEventArgs *mea = dynamic_cast<const CEGUI::MouseEventArgs*>(&args);
+  CEGUI::ListboxItem *pItem = m_pSaveStatesWindow->getItemAtPoint(mea->position);
+  if (!pItem) {return true;}
+
+  m_iSelectedLoadState = m_pSaveStatesWindow->getItemIndex(pItem);
+  selectedSaveStateChanged();
+  return true;
+}
+bool CMainMenu::saveStateListMouseClicked(const CEGUI::EventArgs& args) {
+  const CEGUI::MouseEventArgs *mea = dynamic_cast<const CEGUI::MouseEventArgs*>(&args);
+  CEGUI::ListboxItem *pItem = m_pSaveStatesWindow->getItemAtPoint(mea->position);
+  if (!pItem) {return true;}
+
+  m_iSelectedLoadState = m_pSaveStatesWindow->getItemIndex(pItem);
+  selectedSaveStateChanged();
+  activateLoadState();
+  return true;
+}
+void CMainMenu::activateLoadState() {
+  if (m_iSelectedLoadState >= 0
+      && m_iSelectedLoadState < static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
+    m_pStateToLoad
+      = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
+    changeState(MMS_RESULT_LOAD_GAME);
+  }
 }

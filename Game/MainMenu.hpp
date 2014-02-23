@@ -78,8 +78,14 @@ public:
 
 private:
   void selectedSaveStateChanged();
+  void activateLoadState();
+
   bool buttonSelected(const CEGUI::EventArgs&);
   bool buttonClicked(const CEGUI::EventArgs&);
+  bool saveStateListEntered(const CEGUI::EventArgs&);
+  bool saveStateListLeaved(const CEGUI::EventArgs&);
+  bool saveStateListMouseMoved(const CEGUI::EventArgs&);
+  bool saveStateListMouseClicked(const CEGUI::EventArgs&);
 
 };
 
