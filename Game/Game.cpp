@@ -459,7 +459,6 @@ CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {
   }
 }
 bool CGame::mouseMoved( const OIS::MouseEvent &arg ) {
-  std::cout<< "moved" << std::endl;
   mTrayMgr->injectMouseMove(arg);
   CEGUI::System &sys = CEGUI::System::getSingleton();
   sys.getDefaultGUIContext().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
