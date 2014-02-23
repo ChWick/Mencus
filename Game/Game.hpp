@@ -1,5 +1,5 @@
-#ifndef _GAME_H_
-#define _GAME_H_
+#ifndef GAME_HPP
+#define GAME_HPP
 
 #include <Ogre.h>
 #include <OgreSingleton.h>
@@ -66,9 +66,14 @@ protected:
   virtual bool keyPressed( const OIS::KeyEvent &arg );
   virtual bool keyReleased( const OIS::KeyEvent &arg );
 
+  // OIS::MouseListener
+  virtual bool mouseMoved( const OIS::MouseEvent &arg );
+  virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
+  virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
+
   // Ogre::WindowEventListener
   virtual void windowResized(Ogre::RenderWindow* rw);
   virtual void windowClosed(Ogre::RenderWindow* rw);
 };
 
-#endif // #ifndef _GAME_H_
+#endif // GAME_HPP

@@ -214,7 +214,10 @@ bool CGame::go(void)
     mInputManager = OIS::InputManager::createInputSystem( pl );
 
     mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject( OIS::OISKeyboard, true ));
+    mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject(OIS::OISMouse, true));
+
     mKeyboard->setEventCallback(pInputManager);
+    mMouse->setEventCallback(pInputManager);				      
 
     pInputManager->addInputListener(this);
 
@@ -265,8 +268,6 @@ bool CGame::go(void)
     //new CEGUI::WindowManager();
     //new CEGUI::SchemeManager();
     CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
-    //CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("TaharezLook/MouseArrow");
-
 
     mRoot->addFrameListener(this);
     //-------------------------------------------------------------------------------------
@@ -299,6 +300,7 @@ bool CGame::frameRenderingQueued(const Ogre::FrameEvent& evt)
 
   //Need to capture/update each device
   mKeyboard->capture();
+  mMouse->capture();
 
 #ifdef DEBUG_SHOW_OGRE_TRAY
   mTrayMgr->frameRenderingQueued(evt);
@@ -441,11 +443,55 @@ bool CGame::keyReleased( const OIS::KeyEvent &arg )
   }
   return true;
 }
+CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {
+  switch (buttonID) {
+  case OIS::MB_Left:
+    return CEGUI::LeftButton;
 
+  case OIS::MB_Right:
+    return CEGUI::RightButton;
+
+  case OIS::MB_Middle:
+    return CEGUI::MiddleButton;
+
+  default:
+    return CEGUI::LeftButton;
+  }
+}
+bool CGame::mouseMoved( const OIS::MouseEvent &arg ) {
+  std::cout<< "moved" << std::endl;
+  mTrayMgr->injectMouseMove(arg);
+  CEGUI::System &sys = CEGUI::System::getSingleton();
+  sys.getDefaultGUIContext().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
+  // Scroll wheel.
+  if (arg.state.Z.rel)
+    sys.getDefaultGUIContext().injectMouseWheelChange(arg.state.Z.rel / 120.0f);
+
+ 
+  return true;
+}
+bool CGame::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertButton(id));
+  mTrayMgr->injectMouseDown(arg, id);
+  
+  return true;
+}
+bool CGame::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertButton(id));
+  mTrayMgr->injectMouseUp(arg, id);
+  
+  return true;
+}
 
 //Adjust mouse clipping area
-void CGame::windowResized(Ogre::RenderWindow* rw)
-{
+void CGame::windowResized(Ogre::RenderWindow* rw) {
+  unsigned int width, height, depth;
+  int left, top;
+  rw->getMetrics(width, height, depth, left, top);
+  
+  const OIS::MouseState &ms = mMouse->getMouseState();
+  ms.width = width;
+  ms.height = height;
 }
 
 //Unattach OIS before window shutdown (very important under Linux)

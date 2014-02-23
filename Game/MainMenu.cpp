@@ -79,6 +79,12 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
     m_vSlots[i]->setPosition(UVector2(UDim(0.2f, 0), UDim(0.5f + 0.10f * i, 0)));
     m_vSlots[i]->setAlpha(BUTTON_MIN_ALPHA);
     m_vSlots[i]->setFont("dejavusans12");
+    m_vSlots[i]->subscribeEvent(
+				CEGUI::PushButton::EventClicked,
+				CEGUI::Event::Subscriber(&CMainMenu::buttonClicked, this));
+    m_vSlots[i]->subscribeEvent(
+				CEGUI::PushButton::EventMouseEntersArea,
+				CEGUI::Event::Subscriber(&CMainMenu::buttonSelected, this));
   }
 
   m_pSaveStatesWindow = dynamic_cast<CEGUI::Listbox*>(m_pMMRoot->createChild("OgreTray/Listbox", "SaveStatesBox"));
@@ -180,15 +186,16 @@ void CMainMenu::changeState(EMainMenuState eState) {
     }
 
     for (const CSaveState &state : CSaveStateManager::getSingleton().listSaveState()) {
-      ListboxTextItem *pItem = new ListboxTextItem("Act " + PropertyHelper<int>::toString(state.getActID()) +
-                                                   " Scene " + PropertyHelper<int>::toString(state.getSceneID()) + ": " +
-                                                   PropertyHelper<int>::toString(state.getTime().tm_year) + "/" +
-                                                   PropertyHelper<int>::toString(state.getTime().tm_mon) + "/" +
-                                                   PropertyHelper<int>::toString(state.getTime().tm_mday) + " " +
-                                                   PropertyHelper<int>::toString(state.getTime().tm_hour) + ":" +
-                                                   PropertyHelper<int>::toString(state.getTime().tm_min) + ":" +
-                                                   PropertyHelper<int>::toString(state.getTime().tm_sec)
-                                                   );
+      ListboxTextItem *pItem =
+	new ListboxTextItem("Act " + PropertyHelper<int>::toString(state.getActID()) +
+			    " Scene " + PropertyHelper<int>::toString(state.getSceneID()) + ": " +
+			    PropertyHelper<int>::toString(state.getTime().tm_year) + "/" +
+			    PropertyHelper<int>::toString(state.getTime().tm_mon) + "/" +
+			    PropertyHelper<int>::toString(state.getTime().tm_mday) + " " +
+			    PropertyHelper<int>::toString(state.getTime().tm_hour) + ":" +
+			    PropertyHelper<int>::toString(state.getTime().tm_min) + ":" +
+			    PropertyHelper<int>::toString(state.getTime().tm_sec)
+			    );
       m_pSaveStatesWindow->addItem(pItem);
       pItem->setUserData(const_cast<CSaveState*>(&state));
     }
@@ -285,4 +292,20 @@ void CMainMenu::selectedSaveStateChanged() {
   m_pStateToLoad = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
   m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/" + PropertyHelper<int>::toString(m_pStateToLoad->getActID()) + "-" + PropertyHelper<int>::toString(m_pStateToLoad->getSceneID()));
   m_pSaveStatesWindow->ensureItemIsVisible(m_iSelectedLoadState);
+}
+bool CMainMenu::buttonSelected(const CEGUI::EventArgs& args) {
+  CEGUI::Window *pBtn = dynamic_cast<const WindowEventArgs*>(&args)->window;
+  for (unsigned int i = 0; i < NUM_SLOTS; i++) {
+    if (m_vSlots[i] == pBtn) {
+      m_iSelectedSlot = i;
+    }
+  }
+  return true;
+}
+bool CMainMenu::buttonClicked(const CEGUI::EventArgs& args) {
+  buttonSelected(args);
+  unsigned int uiSelectedSlotBuffer = m_iSelectedSlot;
+  changeState(m_iTargetState[m_eCurrentState][m_iSelectedSlot]);
+  m_iSelectedSlot = uiSelectedSlotBuffer;
+  return true;
 }

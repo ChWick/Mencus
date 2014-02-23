@@ -29,7 +29,8 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager)
   guiRoot->setAlpha(0);
   //guiRoot->setProperty("BackgroundEnabled", "false");
   CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(guiRoot);
-
+  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
+  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setPosition(CEGUI::Vector2f(0,0));
 
   CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans12", 12, true, "DejaVuSans.ttf" );
   CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans8", 8, true, "DejaVuSans.ttf" );

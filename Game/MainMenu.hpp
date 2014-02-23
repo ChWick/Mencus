@@ -78,6 +78,9 @@ public:
 
 private:
   void selectedSaveStateChanged();
+  bool buttonSelected(const CEGUI::EventArgs&);
+  bool buttonClicked(const CEGUI::EventArgs&);
+
 };
 
 #endif // MAIN_MENU_HPP
