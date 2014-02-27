@@ -6,6 +6,9 @@ include(FindPackageHandleStandardArgs)
 find_path(OGRE_H_PATH NAMES Ogre.h PATH_SUFFIXES OGRE)
 find_library(OGRE_LIB NAMES OgreMain)
 find_library(OGRE_LIB_DBG NAMES OgreMain_d)
+
+find_library(OGRE_OVERLAY_LIB NAMES OgreOverlay)
+
 mark_as_advanced(OGRE_H_PATH OGRE_LIB OGRE_LIB_DBG)
 
 find_package_handle_standard_args(OGRE DEFAULT_MSG OGRE_LIB OGRE_H_PATH)
@@ -14,8 +17,13 @@ find_package_handle_standard_args(OGRE DEFAULT_MSG OGRE_LIB OGRE_H_PATH)
 # set up output vars
 if (OGRE_FOUND)
     set (OGRE_OCTREE_INCLUDE_DIR ${OGRE_H_PATH}/Plugins/OctreeSceneManager)
-    set (OGRE_INCLUDE_DIR ${OGRE_H_PATH})
-    set (OGRE_LIBRARIES ${OGRE_LIB})
+    set (OGRE_OVERLAY_INCLUDE_DIR ${OGRE_H_PATH}/Overlay)
+    set (OGRE_INCLUDE_DIR
+      ${OGRE_H_PATH}
+      ${OGRE_OVERLAY_INCLUDE_DIR})
+    set (OGRE_LIBRARIES
+      ${OGRE_LIB}
+      ${OGRE_OVERLAY_LIB})
     if (OGRE_LIB_DBG)
         set (OGRE_LIBRARIES_DBG ${OGRE_LIB_DBG})
 

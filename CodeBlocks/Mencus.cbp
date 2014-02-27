@@ -135,6 +135,7 @@
 				<lib name="CEGUI-0" />
 				<lib name="CEGUI-0-OGRE" />
 				<lib name="tinyxml2" />
+				<lib name="OGRE-Overlay" />
 			</lib_finder>
 		</Extensions>
 	</Project>

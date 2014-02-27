@@ -53,6 +53,9 @@ CGame::~CGame(void) {
   if (CEGUI::System::getSingletonPtr()) {CEGUI::OgreRenderer::destroySystem();}
   if (CInputListenerManager::getSingletonPtr()) {delete CInputListenerManager::getSingletonPtr();}
   if (CSaveStateManager::getSingletonPtr()) {delete CSaveStateManager::getSingletonPtr();}
+#if OGRE_VERSION >= ((1 << 16) | (9 << 8) | 0)
+  if (mOverlaySystem) {delete mOverlaySystem;}
+#endif
 
   //Remove ourself as a Window listener
   Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);
@@ -84,6 +87,11 @@ bool CGame::go(void)
 
   // construct Ogre::Root
   mRoot = new Ogre::Root(mPluginsCfg);
+
+#if OGRE_VERSION >= ((1 << 16) | (9 << 8) | 0)
+    Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing OgreOverlay ***");
+    //OGRE_NEW  Ogre::OverlayManager();
+#endif
 
   //-------------------------------------------------------------------------------------
   // setup resources
@@ -130,6 +138,10 @@ bool CGame::go(void)
   mSceneMgr = mRoot->createSceneManager(ST_GENERIC, "MainSceneManager");
   //mSceneMgr->addLodListener(new CTestLOD());
   //mSceneMgr->setShadowUseInfiniteFarPlane(false);
+#if OGRE_VERSION >= ((1 << 16) | (9 << 8) | 0)
+  mOverlaySystem = OGRE_NEW Ogre::OverlaySystem();
+  mSceneMgr->addRenderQueueListener(mOverlaySystem);
+#endif
   //-------------------------------------------------------------------------------------
   // create camera
   // Create the camera
@@ -162,7 +174,7 @@ bool CGame::go(void)
   //createResourceListener();
   //-------------------------------------------------------------------------------------
   // load resources
-  Ogre::StringVector extensions = Ogre::Codec::getExtensions();
+  /*Ogre::StringVector extensions = Ogre::Codec::getExtensions();
   for(Ogre::StringVector::iterator itExt = extensions.begin(); itExt != extensions.end(); ++itExt)
     {
       Ogre::StringVectorPtr names = Ogre::ResourceGroupManager::getSingleton().findResourceNames("General",std::string("*.")+*itExt);
@@ -170,8 +182,8 @@ bool CGame::go(void)
 	{
 	  Ogre::ResourceGroupManager::getSingleton().declareResource(*itName,"Texture","General");
 	}
-    }
-    Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+    }*/
+      Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 
     //-------------------------------------------------------------------------------------
     // Create the scene
@@ -217,7 +229,7 @@ bool CGame::go(void)
     mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject(OIS::OISMouse, true));
 
     mKeyboard->setEventCallback(pInputManager);
-    mMouse->setEventCallback(pInputManager);				      
+    mMouse->setEventCallback(pInputManager);
 
     pInputManager->addInputListener(this);
 
@@ -227,8 +239,17 @@ bool CGame::go(void)
     //Register as a Window listener
     Ogre::WindowEventUtilities::addWindowEventListener(mWindow, this);
 
+
 #ifdef DEBUG_SHOW_OGRE_TRAY
+    Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing SdkTrays ***");
+#if OGRE_VERSION >= ((1 << 16) | (9 << 8) | 0)
+    OgreBites::InputContext inputContext;
+    inputContext.mKeyboard = mKeyboard;
+    inputContext.mMouse = mMouse;
+    mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, inputContext, this);
+#else
     mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, NULL, this);
+#endif
     mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
     mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
     //mTrayMgr->hideCursor();
@@ -253,7 +274,7 @@ bool CGame::go(void)
     mDetailsPanel->hide();
 #endif // DEBUG_SHOW_OGRE_TRAY
 
-
+    Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing CEGUI ***");
     m_pCEGuiOgreRenderer = &CEGUI::OgreRenderer::bootstrapSystem();
     m_pCEGuiOgreRenderer->setFrameControlExecutionEnabled(false);
     //m_pCEGuiImageCodec = &CEGUI::OgreRenderer::createOgreImageCodec();
@@ -270,6 +291,8 @@ bool CGame::go(void)
     CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
 
     mRoot->addFrameListener(this);
+
+    Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing singleton classes ***");
     //-------------------------------------------------------------------------------------
     m_pGameState = new CGameState();
     new CPauseManager();
@@ -466,19 +489,19 @@ bool CGame::mouseMoved( const OIS::MouseEvent &arg ) {
   if (arg.state.Z.rel)
     sys.getDefaultGUIContext().injectMouseWheelChange(arg.state.Z.rel / 120.0f);
 
- 
+
   return true;
 }
 bool CGame::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertButton(id));
   mTrayMgr->injectMouseDown(arg, id);
-  
+
   return true;
 }
 bool CGame::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertButton(id));
   mTrayMgr->injectMouseUp(arg, id);
-  
+
   return true;
 }
 
@@ -487,7 +510,7 @@ void CGame::windowResized(Ogre::RenderWindow* rw) {
   unsigned int width, height, depth;
   int left, top;
   rw->getMetrics(width, height, depth, left, top);
-  
+
   const OIS::MouseState &ms = mMouse->getMouseState();
   ms.width = width;
   ms.height = height;

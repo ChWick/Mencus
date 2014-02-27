@@ -38,12 +38,16 @@ public:
 
   void shutDown() { mShutDown = true; }
 protected:
+#if OGRE_VERSION >= ((1 << 16) | (9 << 8) | 0)
+  Ogre::OverlaySystem *mOverlaySystem;
+#endif
   Ogre::Root *mRoot;
   Ogre::Camera* mCamera;
   Ogre::SceneManager* mSceneMgr;
   Ogre::RenderWindow* mWindow;
   Ogre::String mResourcesCfg;
   Ogre::String mPluginsCfg;
+
 
   // OgreBites
   OgreBites::SdkTrayManager* mTrayMgr;
