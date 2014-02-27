@@ -7,51 +7,50 @@
 #pragma comment(lib,"user32.lib")
 #endif
 
-#ifdef __cplusplus
-extern "C" {
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
+#elif OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+void android_main(struct android_app* state)
+#else
+int main(int argc, char *argv[])
 #endif
+{
+#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+  app_dummy();
+#else
+  // Create application object
+  CGame *app = new CGame();
 
-#if OGRE_PLATFORM == sOGRE_PLATFORM_WIN32
-    INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR strCmdLine, INT )
-#else
-    int main(int argc, char *argv[])
-#endif
-    {
-        // Create application object
-      CGame *app = new CGame();
-
-      try {
-	app->go();
-      } catch( Ogre::Exception& e ) {
+  try {
+    app->go();
+  } catch( Ogre::Exception& e ) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-            MessageBox( NULL, e.getFullDescription().c_str(), "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
+    MessageBox( NULL, e.getFullDescription().c_str(), "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
-            std::cerr << "An exception has occured: " <<
-                e.getFullDescription().c_str() << std::endl;
-            std::cout << "An exception hat occured: " <<
-                e.getFullDescription().c_str() << std::endl;
+    std::cerr << "An exception has occured: " <<
+      e.getFullDescription().c_str() << std::endl;
+    std::cout << "An exception hat occured: " <<
+      e.getFullDescription().c_str() << std::endl;
 #endif
-        }
-		catch (CEGUI::Exception &e) {
+  }
+  catch (CEGUI::Exception &e) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-            MessageBox( NULL, e.getMessage().c_str(), "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
+    MessageBox( NULL, e.getMessage().c_str(), "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
-            std::cerr << "An exception has occured: " <<
-                e.getMessage().c_str() << std::endl;
+    std::cerr << "An exception has occured: " <<
+      e.getMessage().c_str() << std::endl;
 #endif
-		}
-		 catch (...) {
+  }
+  catch (...) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-            MessageBox( NULL, "Unknown Error", "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
+    MessageBox( NULL, "Unknown Error", "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
-            std::cerr << "An exception has occured: " <<
-                "Unknown Error" << std::endl;
+    std::cerr << "An exception has occured: " <<
+      "Unknown Error" << std::endl;
 #endif
-		}
-      delete app;
-      return 0;
-    }
-  
-#ifdef __cplusplus
+  }
+  delete app;
+  return 0;
 }
+  
 #endif
