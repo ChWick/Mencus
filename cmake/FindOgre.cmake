@@ -4,10 +4,10 @@
 include(FindPackageHandleStandardArgs)
 
 find_path(OGRE_H_PATH NAMES Ogre.h PATH_SUFFIXES OGRE)
-find_library(OGRE_LIB NAMES OgreMain)
+find_library(OGRE_LIB NAMES OgreMain OgreMainStatic)
 find_library(OGRE_LIB_DBG NAMES OgreMain_d)
 
-find_library(OGRE_OVERLAY_LIB NAMES OgreOverlay)
+find_library(OGRE_OVERLAY_LIB NAMES OgreOverlay OgreOverlayStatic)
 
 mark_as_advanced(OGRE_H_PATH OGRE_LIB OGRE_LIB_DBG)
 

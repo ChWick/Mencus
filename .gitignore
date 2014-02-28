@@ -53,3 +53,7 @@ cotire*
 CMakeCache.txt
 *.blend[0-9]
 blendcache_*
+
+# build dirs
+build*/
+bin*/

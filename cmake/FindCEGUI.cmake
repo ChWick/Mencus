@@ -4,8 +4,8 @@
 include(FindPackageHandleStandardArgs)
 
 find_path(CEGUI_H_PATH NAMES CEGUI/CEGUI.h PATH_SUFFIXES cegui-0)
-find_library(CEGUI_LIB NAMES CEGUIBase-0)
-find_library(CEGUI_OGRE_RENDERER_LIB NAMES CEGUIOgreRenderer-0)
+find_library(CEGUI_LIB NAMES CEGUIBase-0 CEGUIBase-0_Static)
+find_library(CEGUI_OGRE_RENDERER_LIB NAMES CEGUIOgreRenderer-0 CEGUIOgreRenderer-0_Static)
 find_library(CEGUI_LIB_DBG NAMES CEGUIBase-0_d libCEGUIBase-0_d)
 
 mark_as_advanced(CEGUI_H_PATH CEGUI_LIB CEGUI_OGRE_RENDERER_LIB CEGUI_LIB_DBG)
