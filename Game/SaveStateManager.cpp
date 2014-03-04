@@ -98,6 +98,10 @@ const CSaveState *CSaveStateManager::read(unsigned int uiAct, unsigned int uiSce
 void CSaveStateManager::writeXMLFile() {
   using namespace tinyxml2;
   std::ofstream outputfile(SAVE_STATE_FILE);
+  if (!outputfile) {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Save states file could not be created");
+    return;
+  }
 
   XMLDocument doc;
   XMLElement *pStatesElem = doc.NewElement("save_states");

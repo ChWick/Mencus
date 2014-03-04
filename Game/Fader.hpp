@@ -4,8 +4,7 @@
 #include <Ogre.h>
 
 #if OGRE_VERSION >= ((1 << 16) | (9 << 8) | 0)
-#include <Overlay/OgreOverlay.h>
-#include <Overlay/OgreOverlayManager.h>
+#include "OgreOverlaySystem.h"
 #endif
 
 class CFaderCallback {

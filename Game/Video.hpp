@@ -60,7 +60,7 @@ public:
     void update(Ogre::Real tpf, Ogre::Real fPassedTime);
     void render();
 
-    friend CEffectScale;
+    friend class CEffectScale;
   };
   class CPart {
   private:

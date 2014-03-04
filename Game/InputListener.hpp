@@ -3,6 +3,7 @@
 
 #include <OIS.h>
 #include <OgreSingleton.h>
+#include <OgreRenderWindow.h>
 
 class CInputListener {
 private:
@@ -17,15 +18,33 @@ public:
   virtual bool mouseMoved( const OIS::MouseEvent &arg ) {return true;}
   virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {return true;}
   virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {return true;}
+  // OIS::MultiTouchListener
+  virtual bool touchMoved(const OIS::MultiTouchEvent& evt) {return true;}
+  virtual bool touchPressed(const OIS::MultiTouchEvent& evt) {return true;}
+  virtual bool touchReleased(const OIS::MultiTouchEvent& evt) {return true;}
+  virtual bool touchCancelled(const OIS::MultiTouchEvent& evt) {return true;}
 
   bool isInputListenerEnabled() const {return m_bInputListenerEnabled;}
   void setInputListenerEnabled(bool bEnable) {m_bInputListenerEnabled = bEnable;}
 };
 
-class CInputListenerManager : public Ogre::Singleton<CInputListenerManager>, public OIS::KeyListener, public OIS::MouseListener {
+class CInputListenerManager :
+  public Ogre::Singleton<CInputListenerManager>,
+#if (OGRE_PLATFORM != OGRE_PLATFORM_APPLE_IOS) && (OGRE_PLATFORM != OGRE_PLATFORM_ANDROID)
+  public OIS::KeyListener,
+  public OIS::MouseListener
+#else
+  public OIS::MultiTouchListener
+#endif 
+{
 private:
   Ogre::list<CInputListener*>::type m_ListenerList;
+  Ogre::RenderWindow *&mWindow;
 public:
+  CInputListenerManager(Ogre::RenderWindow *&window)
+    : mWindow(window) {
+  }
+
   void addInputListener(CInputListener *pListener) {
     m_ListenerList.push_back(pListener);
   }
@@ -45,7 +64,7 @@ public:
   static CInputListenerManager* getSingletonPtr(void);
   // OIS::KeyListener
   virtual bool keyPressed( const OIS::KeyEvent &arg ) {
-    for (auto pListener : m_ListenerList) {
+    for (auto  pListener : m_ListenerList) {
       if (pListener->isInputListenerEnabled()) {
 	if (!pListener->keyPressed(arg)) {
 	  break;
@@ -66,9 +85,12 @@ public:
   }
   // OIS::MouseListener
   virtual bool mouseMoved( const OIS::MouseEvent &arg ) {
+    OIS::MouseState state = arg.state;
+    transformInputState(state);
+    OIS::MouseEvent orientedEvt((OIS::Object*)arg.device, state);
     for (auto pListener : m_ListenerList) {
       if (pListener->isInputListenerEnabled()) {
-	if (!pListener->mouseMoved(arg)) {
+	if (!pListener->mouseMoved(orientedEvt)) {
 	  break;
 	}
       }
@@ -76,9 +98,12 @@ public:
     return true;
   }
   virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
+    OIS::MouseState state = arg.state;
+    transformInputState(state);
+    OIS::MouseEvent orientedEvt((OIS::Object*)arg.device, state);
     for (auto pListener : m_ListenerList) {
       if (pListener->isInputListenerEnabled()) {
-	if (!pListener->mousePressed(arg, id)) {
+	if (!pListener->mousePressed(orientedEvt, id)) {
 	  break;
 	}
       }
@@ -86,14 +111,106 @@ public:
     return true;
   }
   virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
+    OIS::MouseState state = arg.state;
+    transformInputState(state);
+    OIS::MouseEvent orientedEvt((OIS::Object*)arg.device, state);
     for (auto pListener : m_ListenerList) {
       if (pListener->isInputListenerEnabled()) {
-	if (!pListener->mouseReleased(arg, id)) {
+	if (!pListener->mouseReleased(orientedEvt, id)) {
 	  break;
 	}
       }
     }
     return true;
+  }
+  // OIS::MultitouchListener
+  virtual bool touchMoved(const OIS::MultiTouchEvent& evt) {
+    OIS::MultiTouchState state = evt.state;
+    transformInputState(state);
+    OIS::MultiTouchEvent orientedEvt((OIS::Object*)evt.device, state);
+    for (auto pListener : m_ListenerList) {
+      if (pListener->isInputListenerEnabled()) {
+	if (!pListener->touchMoved(orientedEvt)) {
+	  break;
+	}
+      }
+    }
+    return true;
+  }
+  virtual bool touchPressed(const OIS::MultiTouchEvent& evt) {
+    OIS::MultiTouchState state = evt.state;
+    transformInputState(state);
+    OIS::MultiTouchEvent orientedEvt((OIS::Object*)evt.device, state);
+    for (auto pListener : m_ListenerList) {
+      if (pListener->isInputListenerEnabled()) {
+	if (!pListener->touchPressed(orientedEvt)) {
+	  break;
+	}
+      }
+    }
+    return true;
+  }
+  virtual bool touchReleased(const OIS::MultiTouchEvent& evt) {
+    OIS::MultiTouchState state = evt.state;
+    transformInputState(state);
+    OIS::MultiTouchEvent orientedEvt((OIS::Object*)evt.device, state);
+    for (auto pListener : m_ListenerList) {
+      if (pListener->isInputListenerEnabled()) {
+	if (!pListener->touchReleased(orientedEvt)) {
+	  break;
+	}
+      }
+    }
+    return true;
+  }
+  virtual bool touchCancelled(const OIS::MultiTouchEvent& evt) {
+    OIS::MultiTouchState state = evt.state;
+    transformInputState(state);
+    OIS::MultiTouchEvent orientedEvt((OIS::Object*)evt.device, state);
+    for (auto pListener : m_ListenerList) {
+      if (pListener->isInputListenerEnabled()) {
+	if (!pListener->touchCancelled(orientedEvt)) {
+	  break;
+	}
+      }
+    }
+    return true;
+  }
+private:
+
+  template <class T>
+  void transformInputState (T &state) {
+#if (OGRE_NO_VIEWPORT_ORIENTATIONMODE == 0)
+    int w = mWindow->getViewport(0)->getActualWidth();
+    int h = mWindow->getViewport(0)->getActualHeight();
+    int absX = state.X.abs;
+    int absY = state.Y.abs;
+    int relX = state.X.rel;
+    int relY = state.Y.rel;
+
+    switch (mWindow->getViewport(0)->getOrientationMode()) {
+  case Ogre::OR_DEGREE_0:
+    break;
+  case Ogre::OR_DEGREE_90:
+    state.X.abs = w - absY;
+    state.Y.abs = absX;
+    state.X.rel = -relY;
+    state.Y.rel = relX;
+    break;
+  case Ogre::OR_DEGREE_180:
+    state.X.abs = w - absX;
+    state.Y.abs = h - absY;
+    state.X.rel = -relX;
+    state.Y.rel = -relY;
+    break;
+  case Ogre::OR_DEGREE_270:
+    state.X.abs = absY;
+    state.Y.abs = h - absX;
+    state.X.rel = relY;
+    state.Y.rel = -relX;
+    break;
+  }
+#endif
   }
 };
 

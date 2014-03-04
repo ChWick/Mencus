@@ -48,6 +48,8 @@ public:
       break;
     }
   }
+  CCameraRestriction& operator=(const CCameraRestriction&) {
+  }
 };
 
 #endif // CAMERA_RESTRICTION

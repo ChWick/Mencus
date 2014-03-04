@@ -158,7 +158,8 @@ void CScreenplay::parse(const Ogre::String &sFilename) {
         std::vector<CEGUI::utf8> buffer(length);
         file.read((char*)(&buffer[0]), length);
 
-        pScene = new CInstructions(id, &buffer[0]);
+        //pScene = new CInstructions(id, &buffer[0]);
+	pScene = new CInstructions(id, "test");
       }
       else if (type == "video") {
         XMLElement *pVideoElem = pSceneElem->FirstChildElement("video");

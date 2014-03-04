@@ -5,6 +5,22 @@
 #define WIN32_LEAN_AND_MEAN
 #include "windows.h"
 #pragma comment(lib,"user32.lib")
+#elif OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+#include "Android/Android.hpp"
+
+CGame* OgreAndroidBridge::mGame = NULL;
+AndroidInputInjector* OgreAndroidBridge::mInputInjector = NULL;
+AndroidMultiTouch* OgreAndroidBridge::mTouch = NULL;
+AndroidKeyboard* OgreAndroidBridge::mKeyboard = NULL;
+Ogre::RenderWindow* OgreAndroidBridge::mRenderWnd = NULL;
+Ogre::Root* OgreAndroidBridge::mRoot = NULL;
+bool OgreAndroidBridge::mInit = false;
+bool OgreAndroidBridge::m_bRenderPaused = true;
+
+#   ifdef OGRE_STATIC_LIB
+Ogre::StaticPluginLoader* OgreAndroidBridge::mStaticPluginLoader = NULL;
+#   endif
+
 #endif
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
@@ -17,6 +33,9 @@ int main(int argc, char *argv[])
 {
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
   app_dummy();
+
+  OgreAndroidBridge::init(state);
+  OgreAndroidBridge::go(state);
 #else
   // Create application object
   CGame *app = new CGame();
@@ -51,6 +70,5 @@ int main(int argc, char *argv[])
   }
   delete app;
   return 0;
-}
-  
 #endif
+}

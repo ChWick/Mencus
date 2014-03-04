@@ -3,11 +3,18 @@
 
 #include <Ogre.h>
 #include <OgreSingleton.h>
-#include <CEGUI/CEGUI.h>
-#include <CEGUI/RendererModules/Ogre/Renderer.h>
 #include "InputListener.hpp"
 #include "dependencies/OgreSdkUtil/SdkCameraMan.h"
 #include "dependencies/OgreSdkUtil/SdkTrays.h"
+#include "OgreFileSystemLayer.h"
+
+#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+#include <android_native_app_glue.h>
+#include "Android/OgreAPKFileSystemArchive.h"
+#include "Android/OgreAPKZipArchive.h"
+#endif
+
+#include "ShaderGenerator.hpp"
 
 class CGameState;
 
@@ -19,24 +26,46 @@ class CGame : public CInputListener,
 private:
   CGameState *m_pGameState;
 
-  CEGUI::OgreRenderer* m_pCEGuiOgreRenderer;
-  //! ImageCodec to use.  Set in subclass constructor, may be 0.
-  CEGUI::ImageCodec* m_pCEGuiImageCodec;
-  //! ResourceProvider to use.  Set in subclass constructor, may be 0.
-  CEGUI::ResourceProvider* m_pCEGuiResourceProvider;
+#ifdef INCLUDE_RTSHADER_SYSTEM
+  Ogre::RTShader::ShaderGenerator*	    mShaderGenerator;	  //!< The Shader generator instance.
+  ShaderGeneratorTechniqueResolverListener* mMaterialMgrListener; //!< Shader generator material manager listener.	
+#endif // INCLUDE_RTSHADER_SYSTEM
 public:
   CGame(void);
   virtual ~CGame(void);
 
   static CGame &getSingleton();
   static CGame *getSingletonPtr();
-  bool go(void);
 
-  OIS::Keyboard* getKeyboard() {return mKeyboard;}
-  OIS::Mouse *getMouse() {return mMouse;}
+  OIS::Keyboard* getKeyboard() {return mInputContext.mKeyboard;}
+  OIS::Mouse *getMouse() {return mInputContext.mMouse;}
+  const OgreBites::InputContext &getInputContext() const {return mInputContext;}
+
   OgreBites::ParamsPanel* getDetailsPanel() {return mDetailsPanel;}
 
+  void initApp();
+  void closeApp();
+
   void shutDown() { mShutDown = true; }
+
+#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+  void initAppForAndroid(Ogre::RenderWindow *window, struct android_app* app, OIS::MultiTouch *mouse, OIS::Keyboard *keyboard) {
+    Ogre::LogManager::getSingletonPtr()->logMessage("Initializing App for Android");
+    assert(mouse);
+    assert(keyboard);
+    mWindow = window;
+    mInputContext.mMultiTouch = mouse;
+    mInputContext.mKeyboard = keyboard;
+
+    if(app != NULL) {
+      mAssetMgr = app->activity->assetManager;
+      Ogre::ArchiveManager::getSingleton().addArchiveFactory(
+        new Ogre::APKFileSystemArchiveFactory(app->activity->assetManager));
+      Ogre::ArchiveManager::getSingleton().addArchiveFactory(
+	new Ogre::APKZipArchiveFactory(app->activity->assetManager));
+    }
+  }
+#endif
 protected:
 #if OGRE_VERSION >= ((1 << 16) | (9 << 8) | 0)
   Ogre::OverlaySystem *mOverlaySystem;
@@ -58,8 +87,7 @@ protected:
 
   // OIS Input devices
   OIS::InputManager* mInputManager;
-  OIS::Keyboard* mKeyboard;
-  OIS::Mouse* mMouse;
+  OgreBites::InputContext mInputContext;
 
   // Ogre::FrameListener
   virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
@@ -75,9 +103,48 @@ protected:
   virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
   virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
 
+  // OIS::MultitouchListener
+  virtual bool touchMoved(const OIS::MultiTouchEvent& evt);
+  virtual bool touchPressed(const OIS::MultiTouchEvent& evt);
+  virtual bool touchReleased(const OIS::MultiTouchEvent& evt);
+  virtual bool touchCancelled(const OIS::MultiTouchEvent& evt);
+
   // Ogre::WindowEventListener
   virtual void windowResized(Ogre::RenderWindow* rw);
   virtual void windowClosed(Ogre::RenderWindow* rw);
+private:
+  void createRoot();
+  void setup();
+  void setupInput(bool nograb = false);
+  void shutdown();
+  void shutdownInput();
+  void locateResources();
+  void loadResources();
+  Ogre::RenderWindow *createWindow();
+  void createScene();
+  void destroyScene();
+private:
+  Ogre::FileSystemLayer* mFSLayer; // File system abstraction layer
+#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+  Ogre::DataStreamPtr openAPKFile(const Ogre::String& fileName) {
+    Ogre::DataStreamPtr stream;
+    AAsset* asset = AAssetManager_open(mAssetMgr, fileName.c_str(), AASSET_MODE_BUFFER);
+    if(asset) {
+      off_t length = AAsset_getLength(asset);
+      void* membuf = OGRE_MALLOC(length, Ogre::MEMCATEGORY_GENERAL);
+      memcpy(membuf, AAsset_getBuffer(asset), length);
+      AAsset_close(asset);
+      
+      stream = Ogre::DataStreamPtr(new Ogre::MemoryDataStream(membuf, length, true, true));
+    }
+    return stream;
+  }
+  AAssetManager* mAssetMgr;       // Android asset manager to access files inside apk
+#endif
+#ifdef INCLUDE_RTSHADER_SYSTEM
+  bool initialiseRTShaderSystem(Ogre::SceneManager* sceneMgr);
+  void destroyRTShaderSystem();
+#endif
 };
 
 #endif // GAME_HPP
