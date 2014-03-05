@@ -21,3 +21,6 @@
 @RESOURCES_USING_APK@FileSystem=@RESOURCES_PREFIX@/cegui/looknfeel
 [Layouts]
 @RESOURCES_USING_APK@FileSystem=@RESOURCES_PREFIX@/cegui/layouts
+
+[mencus_campaign]
+@RESOURCES_USING_APK@Zip=@RESOURCES_PREFIX@/level/mencus_campaign.zip
