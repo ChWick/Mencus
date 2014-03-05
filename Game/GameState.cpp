@@ -33,6 +33,7 @@ void CGameState::changeGameState(EGameStates eNewGameState) {
   m_eNextGameState = eNewGameState;
 }
 void CGameState::changeGameStateImpl() {
+  auto ePreviousGameState = m_eCurrentGameState;
   switch (m_eCurrentGameState) {
   case GS_GAME:
     delete m_pScreenplay;
@@ -47,20 +48,28 @@ void CGameState::changeGameStateImpl() {
   default:
     break;
   }
-  m_eCurrentGameState = m_eNextGameState;
-  switch (m_eCurrentGameState) {
-  case GS_GAME:
-    m_pScreenplay = new CScreenplay();
-    break;
-  case GS_MAIN_MENU:
-    m_pMainMenu->show();
-    m_pMainMenu->changeState(CMainMenu::MMS_START);
-    break;
-  case GS_GAME_OVER:
-    CGUIGameOver::getSingleton().show();
-    break;
-  default:
-    break;
+  try {
+    m_eCurrentGameState = m_eNextGameState;
+    switch (m_eCurrentGameState) {
+    case GS_GAME:
+      m_pScreenplay = new CScreenplay();
+      break;
+    case GS_MAIN_MENU:
+      m_pMainMenu->show();
+      m_pMainMenu->changeState(CMainMenu::MMS_START);
+      break;
+    case GS_GAME_OVER:
+      CGUIGameOver::getSingleton().show();
+      break;
+    default:
+      break;
+    }
+  }
+  catch (const Ogre::Exception &e) {
+    Ogre::LogManager::getSingleton().logMessage("Exception while changing the game state");
+    Ogre::LogManager::getSingleton().logMessage(e.getFullDescription());
+    m_eNextGameState = ePreviousGameState;
+    changeGameStateImpl();
   }
 }
 void CGameState::update(Ogre::Real tpf) {
