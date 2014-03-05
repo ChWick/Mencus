@@ -31,15 +31,29 @@ if (ANDROID)
   SET(NDKOUT "${CMAKE_BINARY_DIR}/Game")
   file(MAKE_DIRECTORY "${NDKOUT}")
   file(MAKE_DIRECTORY "${NDKOUT}/jni")
-  file(MAKE_DIRECTORY "${NDKOUT}/assets")	
+  file(MAKE_DIRECTORY "${NDKOUT}/assets")
   file(MAKE_DIRECTORY "${NDKOUT}/res")	
-  file(MAKE_DIRECTORY "${NDKOUT}/src")	
+  file(MAKE_DIRECTORY "${NDKOUT}/src")
   
   file(WRITE "${NDKOUT}/default.properties" "target=${ANDROID_TARGET}")
   file(WRITE "${NDKOUT}/jni/Application.mk" "APP_ABI := ${ANDROID_ABI}\nAPP_STL := gnustl_static ")
   configure_file("${MENCUS_TEMPLATES_DIR}/AndroidManifest.xml.in" "${NDKOUT}/AndroidManifest.xml" @ONLY)
 
   configure_file("${MENCUS_TEMPLATES_DIR}/Android.mk.in" "${NDKOUT}/jni/Android.mk" @ONLY)
+
+  # resources file
+  SET(RESOURCES_USING_APK "APK")
+  SET(RESOURCES_PREFIX "")
+  configure_file("${MENCUS_TEMPLATES_DIR}/resources.cfg.in" "${NDKOUT}/assets/resources.cfg" @ONLY)
+
+  # copy resource files
+  file(COPY "${CMAKE_SOURCE_DIR}/cegui" DESTINATION "${NDKOUT}/assets")
+  file(COPY "${CMAKE_SOURCE_DIR}/gfx" DESTINATION "${NDKOUT}/assets" PATTERN "*working_files*" EXCLUDE)
+  file(COPY "${CMAKE_SOURCE_DIR}/level" DESTINATION "${NDKOUT}/assets")
+  file(COPY "${CMAKE_SOURCE_DIR}/materials" DESTINATION "${NDKOUT}/assets")
+  file(COPY "${CMAKE_SOURCE_DIR}/overlays" DESTINATION "${NDKOUT}/assets")
+  file(COPY "${CMAKE_SOURCE_DIR}/packs" DESTINATION "${NDKOUT}/assets")
+  file(COPY "${CMAKE_SOURCE_DIR}/RTShaderLib" DESTINATION "${NDKOUT}/assets")
   
   add_custom_command(
     TARGET Game
