@@ -70,7 +70,8 @@ CScreenplay::CScreenplay()
     m_bPaused(false) {
   CInputListenerManager::getSingleton().addInputListener(this);
   CGUIInstructions::getSingleton().setScreenplayListener(this);
-  parse("../level/screenplay.xml");
+
+  parse("screenplay.xml", "mencus_campaign");
 
   m_uiNextAct = 1;
   m_uiNextScene = 1;
@@ -121,9 +122,14 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   m_pCurrentScene = pScene;
   m_pOldScene = pScene;
 }
-void CScreenplay::parse(const Ogre::String &sFilename) {
+void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sResourceGroup) {
   tinyxml2::XMLDocument doc; // namespace required for windoof...
-  if (doc.LoadFile(sFilename.c_str())) {
+  Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource(sFilename, sResourceGroup);
+
+  doc.Parse( pStream->getAsString().c_str() );
+  pStream->close();
+  pStream.setNull();
+  if (doc.Error()) {
     throw Ogre::Exception(Ogre::Exception::ERR_FILE_NOT_FOUND, sFilename + " not found.", __FILE__);
   }
 

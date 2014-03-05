@@ -164,7 +164,7 @@ public:
 private:
 
   void loadAct(unsigned int uiActId, unsigned int uiSceneId = 1);
-  void parse(const Ogre::String &sFilename);
+  void parse(const Ogre::String &sFilename, const Ogre::String &sResourceGroup);
 
   void toNextScene();
 };
