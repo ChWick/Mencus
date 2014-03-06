@@ -16,7 +16,6 @@ find_package(Ogre)
 find_package(OIS)
 find_package(CEGUI)
 find_package(tinyxml2)
-find_package(AndroidLibs)
 
 if(ANDROID)
   include(toolchain/AndroidGame)
