@@ -59,3 +59,13 @@ bool CGUIInstructions::keyPressed( const OIS::KeyEvent &arg ) {
 
   return true;
 }
+bool CGUIInstructions::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
+  m_pScreenplayListener->keyForContinueInstructionsPressed();
+
+  return true;
+}
+bool CGUIInstructions::touchPressed(const OIS::MultiTouchEvent& evt) {
+  m_pScreenplayListener->keyForContinueInstructionsPressed();
+
+  return true;
+}

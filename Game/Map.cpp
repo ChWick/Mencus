@@ -17,7 +17,7 @@
 using namespace tinyxml2;
 
 const Ogre::Vector2 CTile::DEFAULT_TILE_SIZE(1, 1);
-const string CTile::DEFAULT_TILE_TEXTURE_NAME = "../gfx/tiles/Tile";
+const string CTile::DEFAULT_TILE_TEXTURE_NAME = "tiles/Tile";
 
 const Ogre::Vector2 TILES_PER_SCREEN(16, 12);
 const Ogre::Real SCREEN_RATIO = TILES_PER_SCREEN.y / TILES_PER_SCREEN.x;
@@ -35,6 +35,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayLi
     m_pScreenplayListener(pScreenplayListener),
     m_bUpdatePause(false),
     m_bRenderPause(false) {
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
   m_p2dManagerMap = new Ogre2dManager();
   m_p2dManagerMap->init(pSceneManager, Ogre::RENDER_QUEUE_BACKGROUND, false);
 
@@ -66,6 +67,8 @@ CMap::~CMap() {
 
   m_pDebugSpriteManager->end();
   delete m_pDebugSpriteManager;
+
+  Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup("Game");
 }
 void CMap::clearMap() {
   m_lLinks.clear();

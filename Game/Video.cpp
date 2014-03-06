@@ -167,6 +167,16 @@ bool CVideo::keyPressed( const OIS::KeyEvent &arg ) {
 
   return true;
 }
+bool CVideo::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
+  nextPart();
+
+  return true;
+}
+bool CVideo::touchPressed(const OIS::MultiTouchEvent& evt) {
+  nextPart();
+
+  return true;
+}
 void CVideo::videoPauseChanged(bool bPause) {
   m_bPaused = bPause;
   setInputListenerEnabled(!bPause);

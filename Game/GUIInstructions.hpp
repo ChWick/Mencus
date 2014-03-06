@@ -29,5 +29,7 @@ public:
   void setScreenplayListener(CScreenplayListener *pListener) {m_pScreenplayListener = pListener;}
 
   virtual bool keyPressed( const OIS::KeyEvent &arg );
+  bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
+  bool touchPressed(const OIS::MultiTouchEvent& evt);
 };
 #endif // INSTRUCTIONS_GUI_HPP

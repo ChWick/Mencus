@@ -108,6 +108,8 @@ public:
   void update(Ogre::Real tpf);
 
   bool keyPressed( const OIS::KeyEvent &arg );
+  bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
+  bool touchPressed(const OIS::MultiTouchEvent& evt);
 
   Ogre2dManager *getSpriteManager() {return &m_SpriteManager;}
 
