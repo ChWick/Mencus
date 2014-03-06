@@ -32,6 +32,7 @@ if (ANDROID)
   file(MAKE_DIRECTORY "${NDKOUT}")
   file(MAKE_DIRECTORY "${NDKOUT}/jni")
   file(MAKE_DIRECTORY "${NDKOUT}/assets")
+  file(MAKE_DIRECTORY "${NDKOUT}/assets/gfx")
   file(MAKE_DIRECTORY "${NDKOUT}/src")
   
   file(WRITE "${NDKOUT}/default.properties" "target=${ANDROID_TARGET}")
@@ -47,7 +48,9 @@ if (ANDROID)
 
   # copy assets files
   file(COPY "${CMAKE_SOURCE_DIR}/cegui" DESTINATION "${NDKOUT}/assets")
-  file(COPY "${CMAKE_SOURCE_DIR}/gfx" DESTINATION "${NDKOUT}/assets" PATTERN "*working_files*" EXCLUDE)
+  file(COPY "${CMAKE_SOURCE_DIR}/gfx/black.png" DESTINATION "${NDKOUT}/assets/gfx")
+  file(GLOB gfxPacks "${CMAKE_SOURCE_DIR}/gfx/*.zip")
+  file(COPY ${gfxPacks} DESTINATION "${NDKOUT}/assets/gfx")
   file(GLOB levelFiles "${CMAKE_SOURCE_DIR}/level/*.zip")
   file(COPY ${levelFiles} DESTINATION "${NDKOUT}/assets/level")
   file(COPY "${CMAKE_SOURCE_DIR}/materials" DESTINATION "${NDKOUT}/assets")
