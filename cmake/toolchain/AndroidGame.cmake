@@ -32,7 +32,6 @@ if (ANDROID)
   file(MAKE_DIRECTORY "${NDKOUT}")
   file(MAKE_DIRECTORY "${NDKOUT}/jni")
   file(MAKE_DIRECTORY "${NDKOUT}/assets")
-  file(MAKE_DIRECTORY "${NDKOUT}/res")	
   file(MAKE_DIRECTORY "${NDKOUT}/src")
   
   file(WRITE "${NDKOUT}/default.properties" "target=${ANDROID_TARGET}")
@@ -46,7 +45,7 @@ if (ANDROID)
   SET(RESOURCES_PREFIX "")
   configure_file("${MENCUS_TEMPLATES_DIR}/resources.cfg.in" "${NDKOUT}/assets/resources.cfg" @ONLY)
 
-  # copy resource files
+  # copy assets files
   file(COPY "${CMAKE_SOURCE_DIR}/cegui" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/gfx" DESTINATION "${NDKOUT}/assets" PATTERN "*working_files*" EXCLUDE)
   file(GLOB levelFiles "${CMAKE_SOURCE_DIR}/level/*.zip")
@@ -55,6 +54,9 @@ if (ANDROID)
   file(COPY "${CMAKE_SOURCE_DIR}/overlays" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/packs" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/RTShaderLib" DESTINATION "${NDKOUT}/assets")
+
+  # copy resource files (icons e.g.)
+  file(COPY "${CMAKE_SOURCE_DIR}/android/res" DESTINATION "${NDKOUT}")
   
   add_custom_command(
     TARGET Game
