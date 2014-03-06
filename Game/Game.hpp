@@ -43,6 +43,7 @@ public:
 
   OgreBites::ParamsPanel* getDetailsPanel() {return mDetailsPanel;}
 
+  void go();
   void initApp();
   void closeApp();
 
@@ -116,6 +117,7 @@ private:
   void createRoot();
   void setup();
   void setupInput(bool nograb = false);
+  void createInputDevices();
   void shutdown();
   void shutdownInput();
   void locateResources();
@@ -123,6 +125,8 @@ private:
   Ogre::RenderWindow *createWindow();
   void createScene();
   void destroyScene();
+
+  bool oneTimeConfig();
 private:
   Ogre::FileSystemLayer* mFSLayer; // File system abstraction layer
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID

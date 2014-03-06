@@ -1,4 +1,6 @@
 #include "Game.hpp"
+#include <CEGUI/CEGUI.h>
+#include <OIS.h>
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_DEFAULT_LIBS

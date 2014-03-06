@@ -68,9 +68,11 @@ CGame::~CGame(void) {
     OGRE_DELETE mRoot;
   }
 }
+void CGame::go() {
+  initApp();
+  mRoot->startRendering();
+}
 void CGame::initApp() {
-  Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing App ***");
-  Ogre::LogManager::getSingletonPtr()->logMessage("   ******************");
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
   createRoot();
 
@@ -86,16 +88,17 @@ void CGame::initApp() {
 #else
   createRoot();
 
-  if (!oneTimeConfig()) return;
-
-  // if the context was reconfigured, set requested renderer
-  if (!mFirstRun) mRoot->setRenderSystem(mRoot->getRenderSystemByName(mNextRenderer));
+  if (!oneTimeConfig());
 
   setup();
 
-  // restore the last sample if there was one or, if not, start initial sample
-  if (!mFirstRun) recoverLastSample();
 #endif
+}
+bool CGame::oneTimeConfig() {
+  if (!mRoot->restoreConfig()) {
+    return mRoot->showConfigDialog();
+  }
+  return true;
 }
 void CGame::closeApp() {
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
@@ -117,7 +120,7 @@ void CGame::setup() {
   Ogre::LogManager::getSingletonPtr()->logMessage("*** creating window ***");
   mWindow = createWindow();
   Ogre::LogManager::getSingletonPtr()->logMessage("*** Setting up input ***");
-  setupInput();
+  setupInput(true);
   Ogre::LogManager::getSingletonPtr()->logMessage("*** locating resources ***");
   locateResources();
   Ogre::LogManager::getSingletonPtr()->logMessage("*** loading resources ***");
@@ -143,7 +146,6 @@ Ogre::RenderWindow *CGame::createWindow() {
 #endif
 }
 void CGame::createRoot() {
- Ogre::LogManager::getSingletonPtr()->logMessage("*** Creating root ***");
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
   mRoot = Ogre::Root::getSingletonPtr();
 #else
@@ -233,6 +235,21 @@ void CGame::setupInput(bool nograb) {
 
   pInputManager->addInputListener(this);
 }
+void CGame::createInputDevices() {
+#if OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS
+  mInputContext.mMultiTouch = static_cast<OIS::MultiTouch*>(mInputMgr->createInputObject(OIS::OISMultiTouch, true));
+  mInputContext.mAccelerometer = static_cast<OIS::JoyStick*>(mInputMgr->createInputObject(OIS::OISJoyStick, true));
+#elif OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+  // nothing to do
+#elif OGRE_PLATFORM == OGRE_PLATFORM_WINRT
+  // mInputManager is NULL and input devices are already passed to us, therefore nothing to do
+  assert(mInputContext.mKeyboard);
+  assert(mInputContext.mMouse);
+#else
+  mInputContext.mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject(OIS::OISKeyboard, true));
+  mInputContext.mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject(OIS::OISMouse, true));
+#endif
+}
 void CGame::shutdown() {
 #if ENABLE_SHADERS_CACHE_SAVE == 1
   if (Ogre::GpuProgramManager::getSingleton().isCacheDirty()) {
@@ -278,20 +295,20 @@ void CGame::shutdownInput() {
     mInputContext.mAccelerometer->setEventCallback(NULL);
 
 #if OGRE_PLATFORM != OGRE_PLATFORM_ANDROID && OGRE_PLATFORM != OGRE_PLATFORM_WINRT
-  if (mInputMgr) {
+  if (mInputManager) {
     if(mInputContext.mKeyboard)
-      mInputMgr->destroyInputObject(mInputContext.mKeyboard);
+      mInputManager->destroyInputObject(mInputContext.mKeyboard);
     if(mInputContext.mMouse)
-      mInputMgr->destroyInputObject(mInputContext.mMouse);
+      mInputManager->destroyInputObject(mInputContext.mMouse);
 #if OIS_WITH_MULTITOUCH
     if(mInputContext.mMultiTouch)
-      mInputMgr->destroyInputObject(mInputContext.mMultiTouch);
+      mInputManager->destroyInputObject(mInputContext.mMultiTouch);
 #endif
     if(mInputContext.mAccelerometer)
-      mInputMgr->destroyInputObject(mInputContext.mAccelerometer);
+      mInputManager->destroyInputObject(mInputContext.mAccelerometer);
 
-    OIS::InputManager::destroyInputSystem(mInputMgr);
-    mInputMgr = 0;
+    OIS::InputManager::destroyInputSystem(mInputManager);
+    mInputManager = 0;
   }
 #endif
 }
