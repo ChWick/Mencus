@@ -39,16 +39,18 @@
 // - rs->_setAlphaRejectSettings(Ogre::CMPF_ALWAYS_PASS, 0, true); modified to be runnable under newer Ogre version
 // - added check for init of scene manager
 //
+// - added shader for glsles
 // ###############################################################################
 #include "ogre2d-main.hpp"
 #include <Ogre.h>
 #include <OgreMesh.h>
 #include <OgreHardwareBuffer.h>
+#include "ShaderManager.hpp"
 
 #define OGRE2D_MINIMAL_HARDWARE_BUFFER_SIZE 120
 
 Ogre2dManager::Ogre2dManager()
- : sceneMan(NULL) {
+  : sceneMan(NULL) {
 }
 
 Ogre2dManager::~Ogre2dManager()
@@ -65,9 +67,7 @@ void Ogre2dManager::init(Ogre::SceneManager* sceneMan, Ogre::uint8 targetQueue, 
 
    sceneMan->addRenderQueueListener(this);
 }
-
-void Ogre2dManager::end()
-{
+void Ogre2dManager::end() {
    if (!hardwareBuffer.isNull())
       destroyHardwareBuffer();
 
@@ -257,6 +257,9 @@ void Ogre2dManager::prepareForRender()
    rs->unbindGpuProgram(Ogre::GPT_VERTEX_PROGRAM);
    rs->_setSceneBlending(Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA);
    rs->_setAlphaRejectSettings(Ogre::CMPF_ALWAYS_PASS, 0, true);
+#ifdef INCLUDE_RTSHADER_SYSTEM
+   CShaderManager::getSingleton().bindSpriteShaders();
+#endif
 }
 
 void Ogre2dManager::createHardwareBuffer(unsigned int size)

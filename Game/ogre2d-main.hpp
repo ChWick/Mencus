@@ -32,6 +32,10 @@
    distribution.
 
 */
+// modifications
+// =============
+// - added shader support
+
 #ifndef __OGRE2D_MAIN_FILE
 #define __OGRE2D_MAIN_FILE
 
@@ -58,66 +62,70 @@ struct VertexChunk {
 class Ogre2dManager:public Ogre::RenderQueueListener
 {
 private:
-   Ogre::SceneManager* sceneMan;
+  Ogre::SceneManager* sceneMan;
 
-   Ogre::uint8 targetQueue;
-   bool afterQueue;
+  Ogre::uint8 targetQueue;
+  bool afterQueue;
+
 public:
-   Ogre2dManager();
-   virtual ~Ogre2dManager();
+  Ogre2dManager();
+  virtual ~Ogre2dManager();
 
-   /// Initializes this 2d Manager
-   /** and registers it as the render queue listener.*/
-   void init(Ogre::SceneManager* sceneMan, Ogre::uint8 targetQueue, bool afterQueue);
-   /// Finishes Ogre 2d Manager
-   void end();
+  /// Initializes this 2d Manager
+  /** and registers it as the render queue listener.*/
+  void init(Ogre::SceneManager* sceneMan, Ogre::uint8 targetQueue, bool afterQueue);
+  /// Finishes Ogre 2d Manager
+  void end();
 
-   /// Called by Ogre, for being a render queue listener
-   virtual void renderQueueStarted(
-      Ogre::uint8 queueGroupId, const Ogre::String &invocation, bool &skipThisInvocation);
-   /// Called by Ogre, for being a render queue listener
-   virtual void renderQueueEnded(
-      Ogre::uint8 queueGroupId, const Ogre::String &invocation, bool &repeatThisInvocation);
+  /// Called by Ogre, for being a render queue listener
+  virtual void renderQueueStarted(
+				  Ogre::uint8 queueGroupId, const Ogre::String &invocation, bool &skipThisInvocation);
+  /// Called by Ogre, for being a render queue listener
+  virtual void renderQueueEnded(
+				Ogre::uint8 queueGroupId, const Ogre::String &invocation, bool &repeatThisInvocation);
 
-   /// Buffers a sprite to be sent to the screen at render time.
-   /**
-      Sprite coordinates are in screen space: top left pixel is (-1, 1), and bottom right
-      is (1, -1). The texture space, instead, ranges from (0, 0) to (1, 1).
+  /// Buffers a sprite to be sent to the screen at render time.
+  /**
+     Sprite coordinates are in screen space: top left pixel is (-1, 1), and bottom right
+     is (1, -1). The texture space, instead, ranges from (0, 0) to (1, 1).
 
-      \param textureName Name of the texture to use in this sprite (remember: texture
-      name, not material name!). The texture has to be already loaded by Ogre for this
-      to work.
-      \param x1 x coordinate for the top left point in the sprite.
-      \param y1 y coordinate for the top left point in the sprite.
-      \param x2 x coordinate for the bottom right point in the sprite.
-      \param y2 y coordinate for the bottom right point in the sprite.
-      \param tx1 u coordinate for the texture, in the top left point of the sprite.
-      \param ty1 v coordinate for the texture, in the top left point of the sprite.
-      \param tx2 u coordinate for the texture, in the bottom right point of the sprite.
-      \param ty2 u coordinate for the texture, in the bottom right point of the sprite.
-      \param colour colour value to draw
-   */
-   void spriteBltFull(std::string textureName, double x1, double y1, double x2, double y2, double tx1=0, double ty1=0, double tx2=1, double ty2=1, const Ogre::ColourValue &colour = Ogre::ColourValue::White);
+     \param textureName Name of the texture to use in this sprite (remember: texture
+     name, not material name!). The texture has to be already loaded by Ogre for this
+     to work.
+     \param x1 x coordinate for the top left point in the sprite.
+     \param y1 y coordinate for the top left point in the sprite.
+     \param x2 x coordinate for the bottom right point in the sprite.
+     \param y2 y coordinate for the bottom right point in the sprite.
+     \param tx1 u coordinate for the texture, in the top left point of the sprite.
+     \param ty1 v coordinate for the texture, in the top left point of the sprite.
+     \param tx2 u coordinate for the texture, in the bottom right point of the sprite.
+     \param ty2 u coordinate for the texture, in the bottom right point of the sprite.
+     \param colour colour value to draw
+  */
+  void spriteBltFull(std::string textureName, double x1, double y1, double x2, double y2, double tx1=0, double ty1=0, double tx2=1, double ty2=1, const Ogre::ColourValue &colour = Ogre::ColourValue::White);
 
 private:
-   /// Render all the 2d data stored in the hardware buffers.
-   void renderBuffer();
-   /// Create a new hardware buffer
-   /**
-   /param size Vertex count for the new hardware buffer.
-   */
-   void createHardwareBuffer(unsigned int size);
-   /// Destroy the hardware buffer
-   void destroyHardwareBuffer();
-   /// Set Ogre for rendering
-   void prepareForRender();
+  /// Setting up shaders if needed
+  void setupShaders();
 
-   // ogre specifics
-   Ogre::RenderOperation renderOp;
-   Ogre::HardwareVertexBufferSharedPtr hardwareBuffer;
+  /// Render all the 2d data stored in the hardware buffers.
+  void renderBuffer();
+  /// Create a new hardware buffer
+  /**
+     /param size Vertex count for the new hardware buffer.
+  */
+  void createHardwareBuffer(unsigned int size);
+  /// Destroy the hardware buffer
+  void destroyHardwareBuffer();
+  /// Set Ogre for rendering
+  void prepareForRender();
 
-   // sprite buffer
-   std::list<Ogre2dSprite> sprites;
+  // ogre specifics
+  Ogre::RenderOperation renderOp;
+  Ogre::HardwareVertexBufferSharedPtr hardwareBuffer;
+
+  // sprite buffer
+  std::list<Ogre2dSprite> sprites;
 };
 
 #endif // __OGRE2D_MAIN_FILE
