@@ -83,7 +83,7 @@ public:
   CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayListener);
   ~CMap();
 
-  void loadMap(string sFilename);
+  void loadMap(const string &sFilename, const string &sResourceGroup);
 
   //! Function to check if a line penetrates into a tile a lower position
   /**

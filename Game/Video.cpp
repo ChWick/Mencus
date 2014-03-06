@@ -101,8 +101,8 @@ void CVideo::CPart::exit() {
   }
 }
 
-CVideo::CVideo(unsigned int uiID, CScreenplayListener *pListener)
-  : CScene(uiID, ST_VIDEO),
+CVideo::CVideo(const CAct &act, unsigned int uiID, CScreenplayListener *pListener)
+  : CScene(act, uiID, ST_VIDEO),
     m_pListener(pListener),
     m_bPaused(false) {
 }

@@ -30,7 +30,7 @@ CLevel::~CLevel() {
 }
 void CLevel::start() {
   m_pMap = new CMap(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"), m_pScreenplayListener);
-  m_pMap->loadMap(m_sFilename);
+  m_pMap->loadMap(m_sFilename, m_Act.getScreenplay().getResourceGroup());
 }
 void CLevel::stop() {
   if (m_pMap) {
@@ -59,7 +59,7 @@ void CAct::stop() {
 }
 
 CScreenplay::CScreenplay()
-  : m_sLevelDir("../level/"),
+  : m_sResourceGroup("mencus_campaign"),
     m_uiCurrentAct(0),
     m_uiCurrentScene(0),
     m_uiNextAct(0),
@@ -70,8 +70,9 @@ CScreenplay::CScreenplay()
     m_bPaused(false) {
   CInputListenerManager::getSingleton().addInputListener(this);
   CGUIInstructions::getSingleton().setScreenplayListener(this);
-
-  parse("screenplay.xml", "mencus_campaign");
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(m_sResourceGroup);
+  
+  parse("screenplay.xml", m_sResourceGroup);
 
   m_uiNextAct = 1;
   m_uiNextScene = 1;
@@ -87,6 +88,7 @@ CScreenplay::~CScreenplay() {
   for (auto &p : m_mapActs) {
     delete p.second;
   }
+  Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup(m_sResourceGroup);
 }
 void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   Ogre::LogManager::getSingleton().logMessage("Switching to act " + Ogre::StringConverter::toString(uiActId) + " at scene " + Ogre::StringConverter::toString(uiSceneId));
@@ -139,7 +141,7 @@ void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sReso
 
     unsigned int id = pActElem->IntAttribute("id");
     Ogre::String dir = pActElem->Attribute("dir");
-    CAct *pAct = new CAct(id, dir);
+    CAct *pAct = new CAct(*this, id, dir);
 
     for (XMLElement *pSceneElem = pActElem->FirstChildElement(); pSceneElem; pSceneElem = pSceneElem->NextSiblingElement()) {
 
@@ -150,26 +152,25 @@ void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sReso
       if (type == "level") {
         XMLElement *pLevelElem = pSceneElem->FirstChildElement("level");
         Ogre::String file = pLevelElem->Attribute("file");
-        pScene = new CLevel(id, m_sLevelDir + dir + "/" + file, this);
+        pScene = new CLevel(*pAct, id, dir + "/" + file, this);
       }
       else if (type == "instructions") {
         XMLElement *pInstructionsElem = pSceneElem->FirstChildElement("instructions");
         Ogre::String sFile = pInstructionsElem->Attribute("file");
-        std::ifstream file(m_sLevelDir + dir + "/" + sFile);
-        if (!file) {throw Ogre::Exception(Ogre::Exception::ERR_FILE_NOT_FOUND, "'" + m_sLevelDir + dir + "/" + sFile + "' was not found.", __FILE__);}
-
-        file.seekg(0,std::ios::end);
+	Ogre::DataStreamPtr pFile = Ogre::ResourceGroupManager::getSingleton().openResource(dir + "/" + sFile, sResourceGroup);
+        
+        /*file.seekg(0,std::ios::end);
         std::streampos length = file.tellg();
         file.seekg(0,std::ios::beg);
         std::vector<CEGUI::utf8> buffer(length);
-        file.read((char*)(&buffer[0]), length);
+        file.read((char*)(&buffer[0]), length);*/
 
         //pScene = new CInstructions(id, &buffer[0]);
-	pScene = new CInstructions(id, "test");
+	pScene = new CInstructions(*pAct, id, pFile->getAsString().c_str());
       }
       else if (type == "video") {
         XMLElement *pVideoElem = pSceneElem->FirstChildElement("video");
-        CVideo *pVideo = new CVideo(id, this);
+        CVideo *pVideo = new CVideo(*pAct, id, this);
 
         for (XMLElement *pPartElem = pVideoElem->FirstChildElement(); pPartElem; pPartElem = pPartElem->NextSiblingElement()) {
           Ogre::String sAudioFile = pPartElem->Attribute("audio");
@@ -180,7 +181,7 @@ void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sReso
           for (XMLElement *pPictureElem = pPartElem->FirstChildElement(); pPictureElem; pPictureElem = pPictureElem->NextSiblingElement()) {
             Ogre::String sFile = pPictureElem->Attribute("file");
             Ogre::Real fDuration = pPictureElem->FloatAttribute("duration");
-            CVideo::CPicture *pPicture = new CVideo::CPicture(m_sLevelDir + dir + "/" + sFile, fDuration, pVideo->getSpriteManager());
+            CVideo::CPicture *pPicture = new CVideo::CPicture(dir + "/" + sFile, fDuration, pVideo->getSpriteManager());
             pPart->addPicture(pPicture);
             for (XMLElement *pChildElem = pPictureElem->FirstChildElement(); pChildElem; pChildElem = pChildElem->NextSiblingElement()) {
               if (std::string(pChildElem->Value()) == "effect") {

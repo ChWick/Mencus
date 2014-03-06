@@ -105,11 +105,15 @@ void CMap::clearMap() {
   }
   m_gridTiles.clear();
 }
-void CMap::loadMap(string sFilename) {
+void CMap::loadMap(const string &sFilename, const string &sResourceGroup) {
   clearMap();
 
+  Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource(sFilename, sResourceGroup);
   tinyxml2::XMLDocument doc; // namespace required for windoof (conflicts)
-  if (doc.LoadFile(sFilename.c_str())) {
+  doc.Parse( pStream->getAsString().c_str() );
+  pStream->close();
+  pStream.setNull();
+  if (doc.Error()) {
     throw Ogre::Exception(Ogre::Exception::ERR_FILE_NOT_FOUND, sFilename + " not found.", __FILE__);
   }
 

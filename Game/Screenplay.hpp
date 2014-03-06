@@ -11,6 +11,8 @@
 #include "InputListener.hpp"
 
 class CMap;
+class CScreenplay;
+class CAct;
 
 class CScene {
 public:
@@ -21,13 +23,16 @@ public:
 
     ST_COUNT
   };
+protected:
+  const CAct &m_Act;
 private:
   const unsigned int m_uiID;
   const ESceneTypes m_eSceneType;
 
 protected:
-  CScene(unsigned int uiID, ESceneTypes eSceneTypes)
-    : m_uiID(uiID),
+  CScene(const CAct &act, unsigned int uiID, ESceneTypes eSceneTypes)
+    : m_Act(act),
+      m_uiID(uiID),
       m_eSceneType(eSceneTypes) {
   }
 
@@ -53,8 +58,8 @@ private:
   const CEGUI::String m_sText;
 
 public:
-  CInstructions(unsigned int uiID, const CEGUI::String &sText)
-    : CScene(uiID, ST_INSTRUCTION),
+  CInstructions(const CAct &act, unsigned int uiID, const CEGUI::String &sText)
+    : CScene(act, uiID, ST_INSTRUCTION),
       m_sText(sText) {
     }
 
@@ -69,10 +74,10 @@ private:
   const Ogre::String m_sFilename;
   CMap *m_pMap;
   CScreenplayListener *m_pScreenplayListener;
-
+  
 public:
-  CLevel(unsigned int uiID, const Ogre::String &sFilename, CScreenplayListener *pScreenplayListener)
-    : CScene(uiID, ST_LEVEL),
+  CLevel(const CAct &act, unsigned int uiID, const Ogre::String &sFilename, CScreenplayListener *pScreenplayListener)
+    : CScene(act, uiID, ST_LEVEL),
       m_sFilename(sFilename),
       m_pMap(NULL),
       m_pScreenplayListener(pScreenplayListener) {
@@ -91,17 +96,20 @@ public:
 
 class CAct {
 private:
+  const CScreenplay &m_Screenplay;
   const unsigned int m_uiID;
   const Ogre::String m_sDirectory;
   std::map<unsigned int, CScene *> m_mapScenes;
 
 public:
-  CAct(unsigned int uiID, const Ogre::String &sDirectory)
-    : m_uiID(uiID),
+  CAct(const CScreenplay &screenplay, unsigned int uiID, const Ogre::String &sDirectory)
+    : m_Screenplay(screenplay),
+      m_uiID(uiID),
       m_sDirectory(sDirectory) {
   }
   CAct(const CAct &src)
-    : m_uiID(src.m_uiID),
+    : m_Screenplay(src.m_Screenplay),
+      m_uiID(src.m_uiID),
       m_sDirectory(src.m_sDirectory) {
   }
   virtual ~CAct();
@@ -111,6 +119,8 @@ public:
 
   CScene *getScene(unsigned int id) {return m_mapScenes.at(id);}
   CScene *operator[](unsigned int id) {return m_mapScenes[id];}
+
+  const CScreenplay &getScreenplay() const {return m_Screenplay;}
 
   virtual void start();
   virtual void stop();
@@ -123,7 +133,7 @@ class CScreenplay :
   public CInputListener,
   public CPauseListener {
 private:
-  const Ogre::String m_sLevelDir;
+  const Ogre::String m_sResourceGroup;
 
   std::map<unsigned int, CAct*> m_mapActs;
 
@@ -150,6 +160,7 @@ public:
 
   void update(Ogre::Real tpf);
 
+  const Ogre::String &getResourceGroup() const {return m_sResourceGroup;}
   // CFader
   void fadeInCallback();
   void fadeOutCallback();

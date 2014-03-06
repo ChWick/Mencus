@@ -92,7 +92,7 @@ private:
 
   bool m_bPaused;
 public:
-  CVideo(unsigned int uiID, CScreenplayListener *pListener);
+  CVideo(const CAct &act, unsigned int uiID, CScreenplayListener *pListener);
   ~CVideo();
 
   void addPart(CPart *pPart) {m_vParts.push_back(pPart);}
