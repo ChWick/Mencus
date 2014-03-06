@@ -192,7 +192,13 @@ void CGame::locateResources() {
   }
 }
 void CGame::loadResources() {
-  Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+  //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("General");
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Imagesets");
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Fonts");
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Schemes");
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("LookNFeel");
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Layouts");
 }
 void CGame::setupInput(bool nograb) {
 #if OGRE_PLATFORM != OGRE_PLATFORM_ANDROID && OGRE_PLATFORM != OGRE_PLATFORM_WINRT
