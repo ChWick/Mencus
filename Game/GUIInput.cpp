@@ -20,6 +20,31 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot) {
   for (int i = 0; i < BT_COUNT; i++) {
     createButton(i);
   }
+
+  // create drag button
+  Window *pDragButton = pGUIRoot->createChild("OgreTray/Button", "DragButton");
+  pDragButton->setSize(USize(UDim(1, 0), UDim(0.05, 0)));
+  pDragButton->setAlpha(0.5);
+  //pDragButton->setProperty("FrameEnabled", "False");
+  //pDragButton->setProperty("BackgroundEnabled", "True");
+  pDragButton->
+    subscribeEvent(
+		   CEGUI::Window::EventMouseButtonDown,
+		   Event::Subscriber(&CGUIInput::onDragPressed, this));
+  pDragButton->
+    subscribeEvent(
+		   CEGUI::Window::EventMouseButtonUp,
+		   Event::Subscriber(&CGUIInput::onDragReleased, this));
+  pDragButton->
+    subscribeEvent(
+		   CEGUI::Window::EventMouseMove,
+		   Event::Subscriber(&CGUIInput::onDragMoved, this));
+  pDragButton->
+    subscribeEvent(
+		   Window::EventMouseLeavesArea,
+		   Event::Subscriber(&CGUIInput::onDragMoved, this));
+
+  m_pDragButton = pDragButton;
 }
 CEGUI::Window *CGUIInput::createButton(int bt) {
   Window *pParent = m_pControlButtonContainer;
@@ -103,6 +128,25 @@ CEGUI::Window *CGUIInput::createButton(int bt) {
     break;
   }
 }
+void CGUIInput::update(float tpf) {
+  if (m_eDragState == DS_CLOSING) {
+    m_pDragButton->setPosition(m_pDragButton->getPosition() +
+			       UVector2(UDim(0, 0), UDim(0, -tpf * 1000)));
+    if (m_pDragButton->getPosition().d_y.d_offset < 0) {
+      m_pDragButton->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+      m_eDragState = DS_SLEEPING;
+    }
+  }
+}
+void CGUIInput::updateDragButtonPosition(const CEGUI::EventArgs& args) {
+const CEGUI::MouseEventArgs &mea = dynamic_cast<const CEGUI::MouseEventArgs&>(args);
+ updateDragBar(mea.position.d_y);
+}
+void CGUIInput::updateDragBar(float fPosY) {
+  if (m_eDragState == DS_DRAGGING) {
+    m_pDragButton->setPosition(UVector2(UDim(0, 0), UDim(-0.025, fPosY)));
+  }
+}
 bool CGUIInput::onMouseEntersRightButton(const CEGUI::EventArgs&) {
   CGameInputManager::getSingleton().
     sendCommandToListeners(CGameInputCommand(GIC_RIGHT, 1));
@@ -173,5 +217,18 @@ bool CGUIInput::onActivatePressed(const CEGUI::EventArgs&) {
 bool CGUIInput::onActivateReleased(const CEGUI::EventArgs&) {
   CGameInputManager::getSingleton().
     sendCommandToListeners(CGameInputCommand(GIC_ACTIVATE, 0));
+  return true;
+}
+bool CGUIInput::onDragPressed(const CEGUI::EventArgs&) {
+  m_eDragState = DS_DRAGGING;
+  return true;
+}
+bool CGUIInput::onDragReleased(const CEGUI::EventArgs&) {
+  m_eDragState = DS_CLOSING;
+  return true;
+}
+bool CGUIInput::onDragMoved(const CEGUI::EventArgs& args) {
+  updateDragButtonPosition(args);
+  
   return true;
 }

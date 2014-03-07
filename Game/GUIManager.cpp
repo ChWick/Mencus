@@ -78,6 +78,7 @@ void CGUIManager::update(Ogre::Real tpf) {
   CEGUI::System::getSingleton().injectTimePulse(tpf);
   CHUD::getSingleton().update(tpf);
   CMainMenu::getSingleton().update(tpf);
+  m_pGUIInput->update(tpf);
 }
 void CGUIManager::renderQueueStarted(Ogre::uint8 id, const Ogre::String& invocation, bool& skipThisQueue) {
    // make sure you check the invocation string, or you can end up rendering the GUI multiple times
