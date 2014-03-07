@@ -40,7 +40,6 @@ public:
   virtual bool touchReleased(const OIS::MultiTouchEvent& evt);
   virtual bool touchCancelled(const OIS::MultiTouchEvent& evt);
 
-private:
   void sendCommandToListeners( const CGameInputCommand &cmd );
 
 };

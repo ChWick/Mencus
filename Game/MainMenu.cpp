@@ -64,14 +64,23 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_EXIT_GAME] = "Exit game";
 
   // create cegui windows/buttons
-  m_pMMRoot = pGUIRoot->createChild("OgreTray/StaticImage", "MainMenuRoot");
+  m_pMMRoot = pGUIRoot->createChild("DefaultWindow", "MainMenuRoot");
   m_pMMRoot->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
   m_pMMRoot->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(1, 0)));
   m_pMMRoot->setInheritsAlpha(false);
   m_pMMRoot->setAlpha(1);
-  m_pMMRoot->setProperty("Image", "main_menu_background/full_image");
-  m_pMMRoot->setProperty("FrameEnabled", "False");
-  m_pMMRoot->setProperty("BackgroundEnabled", "True");
+  m_pMMRoot->setRiseOnClickEnabled(false);
+
+  CEGUI::Window *pBackground = m_pMMRoot->
+    createChild("OgreTray/StaticImage", "Background");
+  pBackground->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
+  pBackground->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(1, 0)));
+  pBackground->setInheritsAlpha(false);
+  pBackground->setAlpha(1);
+  pBackground->setProperty("Image", "main_menu_background/full_image");
+  pBackground->setProperty("FrameEnabled", "False");
+  pBackground->setProperty("BackgroundEnabled", "True");
+  pBackground->setRiseOnClickEnabled(false);
 
   for (int i = 0; i < NUM_SLOTS; i++) {
     m_vSlots[i] = m_pMMRoot->createChild("OgreTray/Button", "Slot" + CEGUI::PropertyHelper<int>::toString(i));
@@ -79,6 +88,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
     m_vSlots[i]->setPosition(UVector2(UDim(0.2f, 0), UDim(0.5f + 0.10f * i, 0)));
     m_vSlots[i]->setAlpha(BUTTON_MIN_ALPHA);
     m_vSlots[i]->setFont("dejavusans12");
+    m_vSlots[i]->enable();
     m_vSlots[i]->subscribeEvent(
 				CEGUI::PushButton::EventClicked,
 				CEGUI::Event::Subscriber(&CMainMenu::buttonClicked, this));
