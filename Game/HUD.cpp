@@ -26,6 +26,7 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot)
   m_pHudRoot = pGUIRoot->createChild("DefaultWindow", "HudRoot");
   m_pHudRoot->setInheritsAlpha(false);
   m_pHudRoot->setAlpha(1);
+  m_pHudRoot->setRiseOnClickEnabled(false);
   CEGUI::ImageManager::getSingleton().loadImageset("hud.imageset");
   ImageManager::getSingleton().loadImageset("white.imageset");
   ImageManager::getSingleton().loadImageset("hud_weapons.imageset");

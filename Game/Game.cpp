@@ -16,7 +16,6 @@ template<> CGame *Ogre::Singleton<CGame>::msSingleton = 0;
 #define USE_DEBUG_PLUGINS
 #endif
 
-#define DEBUG_SHOW_OGRE_TRAY
 
 CGame *CGame::getSingletonPtr() {
   return msSingleton;
@@ -653,38 +652,37 @@ bool CGame::keyReleased( const OIS::KeyEvent &arg )
   }
   }*/
 bool CGame::mouseMoved( const OIS::MouseEvent &arg ) {
+#ifdef DEBUG_SHOW_OGRE_TRAY
 #if (OGRE_PLATFORM != OGRE_PLATFORM_APPLE_IOS) && (OGRE_PLATFORM != OGRE_PLATFORM_ANDROID)
   mTrayMgr->injectMouseMove(arg);
 #endif
-  //CEGUI::System &sys = CEGUI::System::getSingleton();
-  //sys.getDefaultGUIContext().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
-  // Scroll wheel.
-  //if (arg.state.Z.rel)
-  //  sys.getDefaultGUIContext().injectMouseWheelChange(arg.state.Z.rel / 120.0f);
-
-
+#endif
+  
   return true;
 }
 bool CGame::mousePressed(const OIS::MouseEvent& arg, OIS::MouseButtonID id) {
-  //CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertButton(id));
+#ifdef DEBUG_SHOW_OGRE_TRAY
 #if (OGRE_PLATFORM != OGRE_PLATFORM_APPLE_IOS) && (OGRE_PLATFORM != OGRE_PLATFORM_ANDROID)
   mTrayMgr->injectMouseDown(arg, id);
+#endif
 #endif
 
   return true;
 }
 bool CGame::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
-  //CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertButton(id));
-
+#ifdef DEBUG_SHOW_OGRE_TRAY
 #if (OGRE_PLATFORM != OGRE_PLATFORM_APPLE_IOS) && (OGRE_PLATFORM != OGRE_PLATFORM_ANDROID)
   mTrayMgr->injectMouseUp(arg, id);
+#endif
 #endif
 
   return true;
 }
 bool CGame::touchMoved(const OIS::MultiTouchEvent& evt) {
+#ifdef DEBUG_SHOW_OGRE_TRAY
 #if (OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS) || (OGRE_PLATFORM == OGRE_PLATFORM_ANDROID)
    mTrayMgr->injectMouseMove(evt);
+#endif
 #endif
   return true;
 }
@@ -695,8 +693,10 @@ bool CGame::touchPressed(const OIS::MultiTouchEvent& evt) {
   return true;
 }
 bool CGame::touchReleased(const OIS::MultiTouchEvent& evt) {
+#ifdef DEBUG_SHOW_OGRE_TRAY
 #if (OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS) || (OGRE_PLATFORM == OGRE_PLATFORM_ANDROID)
    mTrayMgr->injectMouseUp(evt);
+#endif
 #endif
   return true;
 }

@@ -21,6 +21,7 @@ CEGUI::Window *CGUIInput::createDirectionButton(int iDir) {
   Window *pButton = m_pDirectionButtonContainer->createChild("OgreTray/Button", (iDir > 0) ? "right" : "left");
   pButton->setSize(USize(UDim(0.5, 0), UDim(1, 0)));
   pButton->setPosition(UVector2(UDim((iDir > 0) ? 0.5 : 0, 0), UDim(0, 0)));
+  pButton->setAlpha(0.7);
 
   pButton->
     subscribeEvent(
