@@ -389,24 +389,7 @@ void CPlayer::pickobject(unsigned int uiObjectId) {
   }
 }
 bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
-  if (arg.key == OIS::KC_SPACE) {
-    if (m_eGoToLinkStatus == GTLS_NONE) {
-      if (m_uiCurrentWeapon == W_BOMB) {
-        if (m_uiBombCount <= 0) {
-          return true;
-        }
-        m_fBombThrowStrength = PLAYER_BOMB_DEFAULT_THROW_STRENGTH;
-      } else if (m_uiCurrentWeapon == W_SHIELD) {
-        m_bShieldActive = !m_bShieldActive;
-      }
-
-      if (m_bOnGround) {
-        m_bAttackPressed = true;
-      }
-    }
-  } else if (arg.key == OIS::KC_RETURN) {
-    m_pMap->activateSwitchOnHit(getWorldBoundingBox());
-  } else if (arg.key == OIS::KC_COMMA) {
+ if (arg.key == OIS::KC_COMMA) {
     if (m_uiCurrentWeapon == 0) {
       m_uiCurrentWeapon = W_COUNT - 1;
     } else {
@@ -474,9 +457,6 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
   return true;
 }
 bool CPlayer::keyReleased( const OIS::KeyEvent &arg ) {
-  if (arg.key ==OIS::KC_SPACE) {
-    m_bAttackPressed = false;
-  }
   return true;
 }
 void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
@@ -492,6 +472,32 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
     break;
   case GIC_ENTER_LINK:
     m_bActivateLinkPressed = cmd.getValue() > 0.5;
+    break;
+  case GIC_ATTACK:
+    if (cmd.getValue() > 0.5) {
+      if (m_eGoToLinkStatus == GTLS_NONE) {
+	if (m_uiCurrentWeapon == W_BOMB) {
+	  if (m_uiBombCount <= 0) {
+	    break;
+	  }
+	  m_fBombThrowStrength = PLAYER_BOMB_DEFAULT_THROW_STRENGTH;
+	} else if (m_uiCurrentWeapon == W_SHIELD) {
+	  m_bShieldActive = !m_bShieldActive;
+	}
+
+	if (m_bOnGround) {
+	  m_bAttackPressed = true;
+	}
+      }
+    }
+    else {
+      m_bAttackPressed = false;
+    }
+    break;
+  case GIC_ACTIVATE:
+    if (cmd.getValue() > 0.5) {
+      m_pMap->activateSwitchOnHit(getWorldBoundingBox());
+    }
     break;
   default:
     break;

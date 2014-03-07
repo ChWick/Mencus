@@ -31,6 +31,12 @@ bool CGameInputManager::keyPressed( const OIS::KeyEvent &arg ) {
   else if (arg.key == OIS::KC_DOWN) {
     sendCommandToListeners(CGameInputCommand(GIC_ENTER_LINK, 1));
   }
+  else if (arg.key == OIS::KC_SPACE) {
+    sendCommandToListeners(CGameInputCommand(GIC_ATTACK, 1));
+  }
+  else if (arg.key == OIS::KC_RETURN) {
+    sendCommandToListeners(CGameInputCommand(GIC_ACTIVATE, 1));
+  }
 
   return true;
 }
@@ -46,6 +52,12 @@ bool CGameInputManager::keyReleased( const OIS::KeyEvent &arg ) {
   }
   else if (arg.key == OIS::KC_DOWN) {
     sendCommandToListeners(CGameInputCommand(GIC_ENTER_LINK, 0));
+  }
+  else if (arg.key == OIS::KC_SPACE) {
+    sendCommandToListeners(CGameInputCommand(GIC_ATTACK, 0));
+  }
+  else if (arg.key == OIS::KC_RETURN) {
+    sendCommandToListeners(CGameInputCommand(GIC_ACTIVATE, 0));
   }
 
   return true;

@@ -14,8 +14,8 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot) {
 
   m_pControlButtonContainer = pGUIRoot->createChild("DefaultWindow", "ControlContainer");
   m_pControlButtonContainer->setInheritsAlpha(false);
-  m_pControlButtonContainer->setPosition(UVector2(UDim(1, -110), UDim(1, -310)));
-  m_pControlButtonContainer->setSize(USize(UDim(0, 100), UDim(0, 300)));
+  m_pControlButtonContainer->setPosition(UVector2(UDim(1, -110), UDim(1, -410)));
+  m_pControlButtonContainer->setSize(USize(UDim(0, 100), UDim(0, 400)));
 
   for (int i = 0; i < BT_COUNT; i++) {
     createButton(i);
@@ -29,7 +29,7 @@ CEGUI::Window *CGUIInput::createButton(int bt) {
   pButton->setAlpha(0.7);
   
   // this is default for control buttons
-  pButton->setPosition(UVector2(UDim(0, 0), UDim(0, (bt - BT_JUMP) * 100)));
+  pButton->setPosition(UVector2(UDim(0, 0), UDim(0, (bt - BT_ENTER_LINK) * 100)));
   
   switch (bt) {
   case BT_LEFT:
@@ -80,6 +80,26 @@ CEGUI::Window *CGUIInput::createButton(int bt) {
       subscribeEvent(
 		     Window::EventMouseLeavesArea,
 		     Event::Subscriber(&CGUIInput::onEnterLinkReleased, this));
+    break;
+  case BT_ACTIVATE:
+    pButton->
+      subscribeEvent(
+		     Window::EventMouseEntersArea,
+		     Event::Subscriber(&CGUIInput::onActivatePressed, this));
+    pButton->
+      subscribeEvent(
+		     Window::EventMouseLeavesArea,
+		     Event::Subscriber(&CGUIInput::onActivateReleased, this));
+    break;
+  case BT_ATTACK:
+    pButton->
+      subscribeEvent(
+		     Window::EventMouseEntersArea,
+		     Event::Subscriber(&CGUIInput::onAttackPressed, this));
+    pButton->
+      subscribeEvent(
+		     Window::EventMouseLeavesArea,
+		     Event::Subscriber(&CGUIInput::onAttackReleased, this));
     break;
   }
 }
@@ -133,5 +153,25 @@ bool CGUIInput::onEnterLinkPressed(const CEGUI::EventArgs&) {
 bool CGUIInput::onEnterLinkReleased(const CEGUI::EventArgs&) {
   CGameInputManager::getSingleton().
     sendCommandToListeners(CGameInputCommand(GIC_ENTER_LINK, 0));
+  return true;
+}
+bool CGUIInput::onAttackPressed(const CEGUI::EventArgs&) {
+  CGameInputManager::getSingleton().
+    sendCommandToListeners(CGameInputCommand(GIC_ATTACK, 1));
+  return true;
+}
+bool CGUIInput::onAttackReleased(const CEGUI::EventArgs&) {
+  CGameInputManager::getSingleton().
+    sendCommandToListeners(CGameInputCommand(GIC_ATTACK, 0));
+  return true;
+}
+bool CGUIInput::onActivatePressed(const CEGUI::EventArgs&) {
+  CGameInputManager::getSingleton().
+    sendCommandToListeners(CGameInputCommand(GIC_ACTIVATE, 1));
+  return true;
+}
+bool CGUIInput::onActivateReleased(const CEGUI::EventArgs&) {
+  CGameInputManager::getSingleton().
+    sendCommandToListeners(CGameInputCommand(GIC_ACTIVATE, 0));
   return true;
 }

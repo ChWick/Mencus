@@ -8,8 +8,10 @@ private:
   enum EButtonTypes {
     BT_LEFT,
     BT_RIGHT,
-    BT_JUMP,
     BT_ENTER_LINK,
+    BT_ACTIVATE,
+    BT_JUMP,
+    BT_ATTACK,
 
     BT_COUNT
   };
@@ -36,6 +38,12 @@ private:
 
   bool onEnterLinkPressed(const CEGUI::EventArgs&);
   bool onEnterLinkReleased(const CEGUI::EventArgs&);
+
+  bool onAttackPressed(const CEGUI::EventArgs&);
+  bool onAttackReleased(const CEGUI::EventArgs&);
+
+  bool onActivatePressed(const CEGUI::EventArgs&);
+  bool onActivateReleased(const CEGUI::EventArgs&);
 };
 
 #endif

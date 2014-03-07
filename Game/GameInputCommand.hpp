@@ -6,6 +6,8 @@ enum EGameInputCommandTypes {
   GIC_LEFT,
   GIC_JUMP,
   GIC_ENTER_LINK,
+  GIC_ATTACK,
+  GIC_ACTIVATE,
 };
 
 class CGameInputCommand {
