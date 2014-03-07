@@ -3,6 +3,7 @@
 
 #include "AnimatedSprite.hpp"
 #include "InputListener.hpp"
+#include "GameInputListener.hpp"
 #include "Fader.hpp"
 #include "HitableObject.hpp"
 #include "PauseListener.hpp"
@@ -15,6 +16,7 @@ class CBarIndicator;
 
 class CPlayer : public CAnimatedSprite,
 		public CInputListener,
+		public CGameInputListener,
 		public CFaderCallback,
 		public CHitableObject,
 		public CPauseListener,
@@ -64,8 +66,8 @@ private:
 private:
   CFader m_Fader;
   CMap *m_pMap;
-  bool m_bRightPressed;
-  bool m_bLeftPressed;
+  float m_fRightPressed;
+  float m_fLeftPressed;
   bool m_bAttackPressed;
   bool m_bJumpPressed;
   bool m_bActivateLinkPressed;
@@ -109,6 +111,8 @@ public:
 
   virtual bool keyPressed( const OIS::KeyEvent &arg );
   virtual bool keyReleased( const OIS::KeyEvent &arg );
+
+  virtual void receiveInputCommand( const CGameInputCommand &cmd );
 
   virtual void fadeInCallback();
   virtual void fadeOutCallback();

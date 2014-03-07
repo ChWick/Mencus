@@ -10,6 +10,7 @@
 #include "Object.hpp"
 #include "CheatDefines.hpp"
 #include "GameState.hpp"
+#include "GameInputCommand.hpp"
 
 unsigned int PLAYER_LINK_PAUSE = PAUSE_ENEMY_MOVEMENT | PAUSE_SHOT_MOVEMENT;
 
@@ -45,8 +46,8 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   CHitableObject(10),
   m_Fader(this),
   m_pMap(pMap),
-  m_bRightPressed(false),
-  m_bLeftPressed(false),
+  m_fRightPressed(0),
+  m_fLeftPressed(0),
   m_bAttackPressed(false),
   m_bJumpPressed(false),
   m_bActivateLinkPressed(false),
@@ -133,14 +134,7 @@ void CPlayer::update(Ogre::Real tpf) {
   // Move the player
   // ========================================================================
   if (m_eGoToLinkStatus == GTLS_NONE) {
-    if (m_bLeftPressed) {
-      m_vCurrentSpeed.x = -m_fMaxWalkSpeed;
-    } else if (m_bRightPressed) {
-      m_vCurrentSpeed.x = m_fMaxWalkSpeed;
-    } else {
-      m_vCurrentSpeed.x = 0;
-    }
-
+    m_vCurrentSpeed.x = m_fMaxWalkSpeed * (m_fRightPressed - m_fLeftPressed);
     m_vCurrentSpeed.y += c_fGravity * tpf;
 
     if (m_vCurrentSpeed.y > 0 && !m_bJumpPressed) {
@@ -395,11 +389,7 @@ void CPlayer::pickobject(unsigned int uiObjectId) {
   }
 }
 bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
-  if (arg.key == OIS::KC_RIGHT) {
-    m_bRightPressed = true;
-  } else if (arg.key == OIS::KC_LEFT) {
-    m_bLeftPressed = true;
-  } else if (arg.key == OIS::KC_UP) {
+  if (arg.key == OIS::KC_UP) {
     m_bJumpPressed = true;
   } else if (arg.key == OIS::KC_DOWN) {
     if (!m_bAttackPressed) {
@@ -490,11 +480,7 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
   return true;
 }
 bool CPlayer::keyReleased( const OIS::KeyEvent &arg ) {
-  if (arg.key == OIS::KC_RIGHT) {
-    m_bRightPressed = false;
-  } else if (arg.key == OIS::KC_LEFT) {
-    m_bLeftPressed = false;
-  } else if (arg.key == OIS::KC_UP) {
+  if (arg.key == OIS::KC_UP) {
     m_bJumpPressed = false;
   } else if (arg.key ==OIS::KC_SPACE) {
     m_bAttackPressed = false;
@@ -502,6 +488,18 @@ bool CPlayer::keyReleased( const OIS::KeyEvent &arg ) {
     m_bActivateLinkPressed = false;
   }
   return true;
+}
+void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
+  switch (cmd.getType()) {
+  case GIC_LEFT:
+    m_fLeftPressed = cmd.getValue();
+    break;
+  case GIC_RIGHT:
+    m_fRightPressed = cmd.getValue();
+    break;
+  default:
+    break;
+  }
 }
 void CPlayer::animationTextureChangedCallback(unsigned int uiOldText, unsigned int uiNewText) {
   if (uiOldText == 3 && uiNewText == 4) {
