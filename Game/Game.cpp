@@ -6,6 +6,7 @@
 #include "SaveStateManager.hpp"
 #include "DebugDefines.hpp"
 #include "ShaderManager.hpp"
+#include "GameInputManager.hpp"
 
 using namespace Ogre;
 
@@ -55,6 +56,7 @@ CGame::~CGame(void) {
   if (CGameState::getSingletonPtr()) { delete CGameState::getSingletonPtr(); }
   if (CGUIManager::getSingletonPtr()) {delete CGUIManager::getSingletonPtr();}
   if (CPauseManager::getSingletonPtr()) {delete CPauseManager::getSingletonPtr();}
+  if (CGameInputManager::getSingletonPtr()) {delete CGameInputManager::getSingletonPtr();}
   if (CInputListenerManager::getSingletonPtr()) {delete CInputListenerManager::getSingletonPtr();}
   if (CSaveStateManager::getSingletonPtr()) {delete CSaveStateManager::getSingletonPtr();}
 
@@ -231,6 +233,7 @@ void CGame::setupInput(bool nograb) {
   // attach input devices
   windowResized(mWindow);    // do an initial adjustment of mouse area
   CInputListenerManager *pInputManager = new CInputListenerManager(mWindow);
+  new CGameInputManager();
 #if (OGRE_PLATFORM != OGRE_PLATFORM_APPLE_IOS) && (OGRE_PLATFORM != OGRE_PLATFORM_ANDROID)
   
   if(mInputContext.mKeyboard)
