@@ -8,6 +8,8 @@
 #include <CEGUI/RendererModules/Ogre/Renderer.h>
 #include "InputListener.hpp"
 
+class CGUIInput;
+
 class CGUIManager :
   public CInputListener,
   public Ogre::Singleton<CGUIManager>,
@@ -21,6 +23,8 @@ private:
   CEGUI::ImageCodec* m_pCEGuiImageCodec;
   //! ResourceProvider to use.  Set in subclass constructor, may be 0.
   CEGUI::ResourceProvider* m_pCEGuiResourceProvider;
+
+  CGUIInput *m_pGUIInput;
 public:
   static CGUIManager& getSingleton(void);
   static CGUIManager* getSingletonPtr(void);

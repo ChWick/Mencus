@@ -4,6 +4,7 @@
 #include "GUIInstructions.hpp"
 #include "GUIGameOver.hpp"
 #include <OgreSceneManager.h>
+#include "GUIInput.hpp"
 
 using namespace CEGUI;
 
@@ -42,8 +43,8 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
 
   Ogre::LogManager::getSingletonPtr()->logMessage("    creating root window");
   CEGUI::Window *guiRoot = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "MasterRoot");
-  guiRoot->setAlpha(0);
-  guiRoot->setSize(USize(UDim(1, 1), UDim(1, 1)));
+  //guiRoot->setAlpha(0);
+  guiRoot->setSize(USize(UDim(1, 0), UDim(1, 0)));
   //guiRoot->setProperty("BackgroundEnabled", "false");
   CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(guiRoot);
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
@@ -60,6 +61,7 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   new CGUIInstructions(guiRoot);
   new CGUIGameOver(guiRoot);
   new CMainMenu(guiRoot);
+  m_pGUIInput = new CGUIInput(guiRoot);
 }
 CGUIManager::~CGUIManager() {
   CInputListenerManager::getSingleton().removeInputListener(this);
@@ -68,6 +70,7 @@ CGUIManager::~CGUIManager() {
   delete CGUIInstructions::getSingletonPtr();
   delete CGUIGameOver::getSingletonPtr();
   delete CMainMenu::getSingletonPtr();
+  delete m_pGUIInput;
   
   if (CEGUI::System::getSingletonPtr()) {CEGUI::OgreRenderer::destroySystem();}
 }
