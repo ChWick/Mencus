@@ -4,8 +4,8 @@
 enum EGameInputCommandTypes {
   GIC_RIGHT,
   GIC_LEFT,
-  GIC_UP,
-  GIC_DOWN,
+  GIC_JUMP,
+  GIC_ENTER_LINK,
 };
 
 class CGameInputCommand {

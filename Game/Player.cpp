@@ -389,13 +389,7 @@ void CPlayer::pickobject(unsigned int uiObjectId) {
   }
 }
 bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
-  if (arg.key == OIS::KC_UP) {
-    m_bJumpPressed = true;
-  } else if (arg.key == OIS::KC_DOWN) {
-    if (!m_bAttackPressed) {
-      m_bActivateLinkPressed = true;
-    }
-  } else if (arg.key == OIS::KC_SPACE) {
+  if (arg.key == OIS::KC_SPACE) {
     if (m_eGoToLinkStatus == GTLS_NONE) {
       if (m_uiCurrentWeapon == W_BOMB) {
         if (m_uiBombCount <= 0) {
@@ -480,12 +474,8 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
   return true;
 }
 bool CPlayer::keyReleased( const OIS::KeyEvent &arg ) {
-  if (arg.key == OIS::KC_UP) {
-    m_bJumpPressed = false;
-  } else if (arg.key ==OIS::KC_SPACE) {
+  if (arg.key ==OIS::KC_SPACE) {
     m_bAttackPressed = false;
-  } else if (arg.key == OIS::KC_DOWN) {
-    m_bActivateLinkPressed = false;
   }
   return true;
 }
@@ -496,6 +486,12 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
     break;
   case GIC_RIGHT:
     m_fRightPressed = cmd.getValue();
+    break;
+  case GIC_JUMP:
+    m_bJumpPressed = cmd.getValue() > 0.5;
+    break;
+  case GIC_ENTER_LINK:
+    m_bActivateLinkPressed = cmd.getValue() > 0.5;
     break;
   default:
     break;
