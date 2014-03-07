@@ -27,7 +27,7 @@ fi
 
 if [[ -z "$ABI" ]] || [[ "$FORCE_INPUT" = true ]]
 then
-	echo "Type the android abi (e.g. arme: ${DEST:?"Need to set DEST non-empty"}abi or armeabi-v7a)"
+	echo "Type the android abi (e.g. armeabi or armeabi-v7a)"
 	read ABI
 	export ABI
 else
