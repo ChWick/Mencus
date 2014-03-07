@@ -19,14 +19,19 @@ private:
     DS_SLEEPING,
     DS_DRAGGING,
     DS_CLOSING,
+    DS_OPENING,
+    DS_OPEN,
   };
 private:
   CEGUI::Window *m_pRoot;
   CEGUI::Window *m_pDirectionButtonContainer;
   CEGUI::Window *m_pControlButtonContainer;
   CEGUI::Window *m_pDragButton;
+  CEGUI::Window *m_pDragWindow;
 
   EDragState m_eDragState;
+  float m_fDragVelocity;
+  float m_fLastDragPos;
 public:
   CGUIInput(CEGUI::Window *pGUIRoot);
 

@@ -45,6 +45,11 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot) {
 		   Event::Subscriber(&CGUIInput::onDragMoved, this));
 
   m_pDragButton = pDragButton;
+
+  // create drag frame
+  m_pDragWindow = pGUIRoot->createChild("OgreTray/Group", "DragWindow");
+  m_pDragWindow->setAlpha(0.8);
+  m_pDragWindow->setSize(USize(UDim(1, 0), UDim(0, 200)));
 }
 CEGUI::Window *CGUIInput::createButton(int bt) {
   Window *pParent = m_pControlButtonContainer;
@@ -132,11 +137,29 @@ void CGUIInput::update(float tpf) {
   if (m_eDragState == DS_CLOSING) {
     m_pDragButton->setPosition(m_pDragButton->getPosition() +
 			       UVector2(UDim(0, 0), UDim(0, -tpf * 1000)));
-    if (m_pDragButton->getPosition().d_y.d_offset < 0) {
-      m_pDragButton->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  }
+  else if (m_eDragState == DS_OPENING) {
+    m_pDragButton->setPosition(m_pDragButton->getPosition() +
+			       UVector2(UDim(0, 0), UDim(0, tpf * 1000)));
+  }
+
+  if (m_pDragButton->getPosition().d_y.d_offset > 210) {
+    m_pDragButton->setPosition(UVector2(UDim(0, 0), UDim(-0.025, 210)));
+    if (m_eDragState == DS_OPENING) {
+      m_eDragState = DS_OPEN;
+    }
+  }
+  else if (m_pDragButton->getPosition().d_y.d_offset < 0) {
+    m_pDragButton->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+    if (m_eDragState == DS_CLOSING) {
       m_eDragState = DS_SLEEPING;
     }
   }
+
+  m_fDragVelocity = (m_pDragButton->getPosition().d_y.d_offset - m_fLastDragPos) / tpf;
+  m_fLastDragPos = m_pDragButton->getPosition().d_y.d_offset;
+
+  m_pDragWindow->setPosition(UVector2(UDim(0, 0), UDim(-0.025, m_fLastDragPos - 200)));
 }
 void CGUIInput::updateDragButtonPosition(const CEGUI::EventArgs& args) {
 const CEGUI::MouseEventArgs &mea = dynamic_cast<const CEGUI::MouseEventArgs&>(args);
@@ -224,7 +247,22 @@ bool CGUIInput::onDragPressed(const CEGUI::EventArgs&) {
   return true;
 }
 bool CGUIInput::onDragReleased(const CEGUI::EventArgs&) {
-  m_eDragState = DS_CLOSING;
+  if (m_fDragVelocity < 0) {
+    if (m_fDragVelocity < -10 || m_fLastDragPos < 70) {
+      m_eDragState = DS_CLOSING;
+    }
+    else {
+      m_eDragState = DS_OPENING;
+    }
+  }
+  else {
+    if (m_fDragVelocity > 10 || m_fLastDragPos > 140) {
+      m_eDragState = DS_OPENING;
+    }
+    else {
+      m_eDragState = DS_CLOSING;
+    }
+  }
   return true;
 }
 bool CGUIInput::onDragMoved(const CEGUI::EventArgs& args) {
