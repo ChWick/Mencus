@@ -2,11 +2,13 @@
 #include "GameInputManager.hpp"
 #include "GameInputCommand.hpp"
 #include <OgreLogManager.h>
+#include "Weapon.hpp"
 
 using namespace CEGUI;
 
 
-CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot) {
+CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
+  : m_uiCurrentWeapon(0) {
   m_pDirectionButtonContainer = pGUIRoot->createChild("DefaultWindow", "ButtonContainer");
   m_pDirectionButtonContainer->setInheritsAlpha(false);
   m_pDirectionButtonContainer->setPosition(UVector2(UDim(0, 10), UDim(1, -110)));
@@ -50,6 +52,12 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot) {
   m_pDragWindow = pGUIRoot->createChild("OgreTray/Group", "DragWindow");
   m_pDragWindow->setAlpha(0.8);
   m_pDragWindow->setSize(USize(UDim(1, 0), UDim(0, 200)));
+
+  for (unsigned int i = 0; i < Weapon::W_COUNT; i++) {
+    m_pWeapons[i] = createWeaponButton(i);
+  }
+
+  setCurrentWeapon(0);
 }
 CEGUI::Window *CGUIInput::createButton(int bt) {
   Window *pParent = m_pControlButtonContainer;
@@ -132,6 +140,27 @@ CEGUI::Window *CGUIInput::createButton(int bt) {
 		     Event::Subscriber(&CGUIInput::onAttackReleased, this));
     break;
   }
+  
+  return pButton;
+}
+CEGUI::Window *CGUIInput::createWeaponButton(unsigned int uiWeapon) {
+  Window *pButton = m_pDragWindow->createChild("OgreTray/StaticImage", "WeaponButton" + PropertyHelper<int>::toString(uiWeapon));
+  pButton->setSize(USize(UDim(0, 100), UDim(0, 100)));
+  pButton->setAlpha(1);
+  
+  // this is default for control buttons
+  pButton->setPosition(UVector2(UDim(0, 10 + uiWeapon * 100), UDim(0, 0)));
+  pButton->setProperty("Image", Weapon::getPicture(uiWeapon));
+
+  pButton->
+    subscribeEvent(Window::EventMouseButtonDown,
+		   Event::Subscriber(&CGUIInput::onWeaponClick, this));
+
+
+    pButton->setProperty("BackgroundEnabled", "False");
+    pButton->setProperty("FrameEnabled", "False");
+
+  return pButton;
 }
 void CGUIInput::update(float tpf) {
   if (m_eDragState == DS_CLOSING) {
@@ -160,6 +189,13 @@ void CGUIInput::update(float tpf) {
   m_fLastDragPos = m_pDragButton->getPosition().d_y.d_offset;
 
   m_pDragWindow->setPosition(UVector2(UDim(0, 0), UDim(-0.025, m_fLastDragPos - 200)));
+}
+void CGUIInput::setCurrentWeapon(unsigned int uiWeapon) {
+  m_pWeapons[m_uiCurrentWeapon]->setProperty("BackgroundEnabled", "False");
+  m_pWeapons[m_uiCurrentWeapon]->setProperty("FrameEnabled", "False");
+  m_pWeapons[uiWeapon]->setProperty("BackgroundEnabled", "True");
+  m_pWeapons[uiWeapon]->setProperty("FrameEnabled", "True");
+  m_uiCurrentWeapon = uiWeapon;
 }
 void CGUIInput::updateDragButtonPosition(const CEGUI::EventArgs& args) {
 const CEGUI::MouseEventArgs &mea = dynamic_cast<const CEGUI::MouseEventArgs&>(args);
@@ -243,6 +279,7 @@ bool CGUIInput::onActivateReleased(const CEGUI::EventArgs&) {
   return true;
 }
 bool CGUIInput::onDragPressed(const CEGUI::EventArgs&) {
+  pause(PAUSE_MAP_UPDATE);
   m_eDragState = DS_DRAGGING;
   return true;
 }
@@ -250,6 +287,7 @@ bool CGUIInput::onDragReleased(const CEGUI::EventArgs&) {
   if (m_fDragVelocity < 0) {
     if (m_fDragVelocity < -10 || m_fLastDragPos < 70) {
       m_eDragState = DS_CLOSING;
+      unpause(PAUSE_MAP_UPDATE);
     }
     else {
       m_eDragState = DS_OPENING;
@@ -261,6 +299,7 @@ bool CGUIInput::onDragReleased(const CEGUI::EventArgs&) {
     }
     else {
       m_eDragState = DS_CLOSING;
+      unpause(PAUSE_MAP_UPDATE);
     }
   }
   return true;
@@ -268,5 +307,15 @@ bool CGUIInput::onDragReleased(const CEGUI::EventArgs&) {
 bool CGUIInput::onDragMoved(const CEGUI::EventArgs& args) {
   updateDragButtonPosition(args);
   
+  return true;
+}
+bool CGUIInput::onWeaponClick(const CEGUI::EventArgs& args) {
+  CEGUI::Window *pBtn = dynamic_cast<const WindowEventArgs*>(&args)->window;
+  for (unsigned int i = 0; i < Weapon::W_COUNT; i++) {
+    if (m_pWeapons[i] == pBtn) {
+      setCurrentWeapon(i);
+      break;
+    }
+  }
   return true;
 }

@@ -134,7 +134,7 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot)
   // initialise hp, mp
   setHP(m_fHP);
   setMP(m_fMP);
-  setCurrentWeapon(0);
+  setCurrentWeapon(Weapon::W_BOLT);
 
   hide();
 }
@@ -171,19 +171,8 @@ void CHUD::setKeysCount(unsigned int uiCount) {
 void CHUD::setBombCount(unsigned int uiCount) {
   m_pBombCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
 }
-void CHUD::setCurrentWeapon(unsigned int uiWeaponId) {
-  if (uiWeaponId == 0) {
-    m_pWeapon->setProperty("Image", "hud_weapons/bolt");
-  }
-  else if (uiWeaponId == 1) {
-    m_pWeapon->setProperty("Image", "hud_weapons/bomb");
-  }
-  else if (uiWeaponId == 2) {
-    m_pWeapon->setProperty("Image", "hud_weapons/shield");
-  }
-  else if (uiWeaponId == 3) {
-    m_pWeapon->setProperty("Image", "hud_weapons/column");
-  }
+void CHUD::setCurrentWeapon(unsigned int uiWeapon) {
+  m_pWeapon->setProperty("Image", Weapon::getPicture(uiWeapon));
 }
 Ogre::ColourValue CHUD::getHPColourmap() const {
   if (m_fHP == 1.0f) {

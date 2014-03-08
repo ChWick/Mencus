@@ -12,6 +12,9 @@
 #include "GameState.hpp"
 #include "GameInputCommand.hpp"
 
+
+using namespace Weapon;
+
 unsigned int PLAYER_LINK_PAUSE = PAUSE_ENEMY_MOVEMENT | PAUSE_SHOT_MOVEMENT;
 
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_RIGHT(0.2, 0.0);

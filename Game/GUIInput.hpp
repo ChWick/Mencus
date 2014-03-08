@@ -2,8 +2,10 @@
 #define GUIINPUT_HPP
 
 #include <CEGUI/CEGUI.h>
+#include "Weapon.hpp"
+#include "PauseCaller.hpp"
 
-class CGUIInput {
+class CGUIInput : public CPauseCaller {
 private:
   enum EButtonTypes {
     BT_LEFT,
@@ -28,6 +30,9 @@ private:
   CEGUI::Window *m_pControlButtonContainer;
   CEGUI::Window *m_pDragButton;
   CEGUI::Window *m_pDragWindow;
+  CEGUI::Window *m_pWeapons[Weapon::W_COUNT];
+
+  unsigned int m_uiCurrentWeapon;
 
   EDragState m_eDragState;
   float m_fDragVelocity;
@@ -39,6 +44,9 @@ public:
 
 private:
   CEGUI::Window *createButton(int bt);
+  CEGUI::Window *createWeaponButton(unsigned int uiWeapon);
+
+  void setCurrentWeapon(unsigned int uiCurrentWeapon);
 
   void updateDragButtonPosition(const CEGUI::EventArgs&);
   void updateDragBar(float fPosY);
@@ -66,6 +74,8 @@ private:
   bool onDragPressed(const CEGUI::EventArgs&);
   bool onDragReleased(const CEGUI::EventArgs&);
   bool onDragMoved(const CEGUI::EventArgs&);
+
+  bool onWeaponClick(const CEGUI::EventArgs&);
 };
 
 #endif

@@ -9,6 +9,7 @@
 #include "PauseListener.hpp"
 #include "PauseCaller.hpp"
 #include "DebugDefines.hpp"
+#include "Weapon.hpp"
 
 class CMap;
 class CShot;
@@ -34,14 +35,6 @@ private:
   };
 
 private:
-  enum EWeapons {
-    W_BOLT,
-    W_BOMB,
-    W_SHIELD,
-    W_COLUMN,
-    W_COUNT,
-  };
-
   enum EPlayerAnimations {
     ANIM_STAND_RIGHT,
     ANIM_STAND_LEFT,

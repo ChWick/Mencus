@@ -326,6 +326,7 @@ bool CMainMenu::buttonSelected(const CEGUI::EventArgs& args) {
   for (unsigned int i = 0; i < NUM_SLOTS; i++) {
     if (m_vSlots[i] == pBtn) {
       m_iSelectedSlot = i;
+      break;
     }
   }
   return true;

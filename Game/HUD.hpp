@@ -3,6 +3,8 @@
 
 #include <OgreSingleton.h>
 #include <CEGUI/CEGUI.h>
+#include "Weapon.hpp"
+
 class CHUD : public Ogre::Singleton<CHUD> {
 private:
   CEGUI::Window *m_pHudRoot;
@@ -32,7 +34,7 @@ public:
   void setKeysCount(unsigned int uiCount);
   void setBombCount(unsigned int uiCount);
 
-  void setCurrentWeapon(unsigned int uiWeaponId);
+  void setCurrentWeapon(unsigned int uiWeapon);
 
   void show() {m_pHudRoot->setVisible(true);}
   void hide() {m_pHudRoot->setVisible(false);}
