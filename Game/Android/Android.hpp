@@ -197,12 +197,17 @@ public:
 	  else {
 	    LOGI("... recreating render winow");
 	    static_cast<Ogre::AndroidEGLWindow*>(mRenderWnd)->_createInternalResources(app->window, config);
+	    if (mGame)
+	      mGame->createResources();
 	  }
                         
 	  AConfiguration_delete(config);
 	}
 	break;
       case APP_CMD_TERM_WINDOW:
+	if (mGame)
+	  mGame->destroyResources();
+
 	if(mRoot && mRenderWnd)
 	  static_cast<Ogre::AndroidEGLWindow*>(mRenderWnd)->_destroyInternalResources();
 	break;
@@ -236,8 +241,18 @@ public:
                 
 	if(mRenderWnd != NULL && mRenderWnd->isActive() && !m_bRenderPaused)
 	  {
-	    mRenderWnd->windowMovedOrResized();
-	    mRoot->renderOneFrame();
+	    try {
+	      mRenderWnd->windowMovedOrResized();
+	      mRoot->renderOneFrame();
+	    }
+	    catch (const Ogre::Exception &e) {
+	      LOGW("%s", e.getFullDescription().c_str());
+	      break;
+	    }
+	    catch (...) {
+	      LOGW("Unknown Exception");
+	      break;
+	    }
 	  }
       }
   }

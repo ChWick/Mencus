@@ -48,6 +48,9 @@ public:
   void closeApp();
 
   void shutDown() { mShutDown = true; }
+  
+  void createResources();
+  void destroyResources();
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
   void initAppForAndroid(Ogre::RenderWindow *window, struct android_app* app, OIS::MultiTouch *mouse, OIS::Keyboard *keyboard) {

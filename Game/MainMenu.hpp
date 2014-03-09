@@ -67,6 +67,8 @@ public:
   CMainMenu(CEGUI::Window *pGUIRoot);
   ~CMainMenu();
 
+  void createResources();
+
   void update(Ogre::Real tpf);
 
   void changeState(EMainMenuState eState);

@@ -29,7 +29,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pStateToLoad(NULL) {
   CInputListenerManager::getSingleton().addInputListener(this);
   ImageManager::getSingleton().loadImageset("main_menu_background.imageset");
-  ImageManager::getSingleton().loadImageset("save_pictures.imageset");
+  //ImageManager::getSingleton().loadImageset("save_pictures.imageset");
 
   for (int i = 0; i < MMS_COUNT; i++) {
     for (int j = 0; j < NUM_SLOTS; j++) {
@@ -77,7 +77,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   pBackground->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(1, 0)));
   pBackground->setInheritsAlpha(false);
   pBackground->setAlpha(1);
-  pBackground->setProperty("Image", "main_menu_background/full_image");
+  pBackground->setProperty("Image", "main_menu_background/full");
   pBackground->setProperty("FrameEnabled", "False");
   pBackground->setProperty("BackgroundEnabled", "True");
   pBackground->setRiseOnClickEnabled(false);
@@ -129,6 +129,14 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 }
 CMainMenu::~CMainMenu() {
   CInputListenerManager::getSingleton().removeInputListener(this);
+}
+void CMainMenu::createResources() {
+  if (!m_pMMRoot->getChild("Background")) {
+    throw Ogre::Exception(0, "asd", __FILE__);
+  }
+  m_pMMRoot->getChild("Background")->setProperty("Image", "main_menu_background/full");
+  for (int i = 0; i < NUM_SLOTS; i++) {
+  }
 }
 void CMainMenu::update(Ogre::Real tpf) {
   if (!m_pMMRoot->isVisible()) { return; }

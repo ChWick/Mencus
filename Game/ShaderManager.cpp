@@ -111,8 +111,6 @@ void CShaderManager::bindSpriteShaders() {
 
     if (Ogre::GpuProgram* prog = m_SpritePixelShader->_getBindingDelegate())
       m_pRenderSystem->bindGpuProgram(prog);
-
-    updateSpriteShaderParams();
   }
   else {
     m_pRenderSystem->unbindGpuProgram(Ogre::GPT_VERTEX_PROGRAM);

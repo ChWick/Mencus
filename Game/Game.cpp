@@ -509,7 +509,9 @@ bool CGame::frameStarted(const Ogre::FrameEvent& evt) {
     return true;
   }
 
-  CGUIManager::getSingleton().update(evt.timeSinceLastFrame);
+  if (CGUIManager::getSingletonPtr()) {
+    CGUIManager::getSingleton().update(evt.timeSinceLastFrame);
+  }
   CPauseManager::getSingleton().update();
   m_pGameState->update(evt.timeSinceLastFrame);
   return true;
@@ -615,6 +617,12 @@ bool CGame::keyPressed( const OIS::KeyEvent &arg )
     {
       mWindow->writeContentsToTimestampedFile("screenshot", ".jpg");
     }
+  else if (arg.key == OIS::KC_R) {
+    createResources();
+  }
+  else if (arg.key == OIS::KC_E) {
+    destroyResources();
+  }
 
   //CEGUI::System &sys = CEGUI::System::getSingleton();
   //sys.getDefaultGUIContext().injectKeyDown(static_cast<CEGUI::Key::Scan>(arg.key));
@@ -687,8 +695,10 @@ bool CGame::touchMoved(const OIS::MultiTouchEvent& evt) {
   return true;
 }
 bool CGame::touchPressed(const OIS::MultiTouchEvent& evt) {
+#ifdef DEBUG_SHOW_OGRE_TRAY
 #if (OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS) || (OGRE_PLATFORM == OGRE_PLATFORM_ANDROID)
    mTrayMgr->injectMouseDown(evt);
+#endif
 #endif
   return true;
 }
@@ -805,3 +815,15 @@ void CGame::destroyRTShaderSystem() {
   }
 }
 #endif // INCLUDE_RTSHADER_SYSTEM
+void CGame::createResources() {
+  if (CGUIManager::getSingletonPtr()) {
+    CGUIManager::getSingleton().createResources();
+    //delete CGUIManager::getSingletonPtr();
+  }
+}
+void CGame::destroyResources() {
+  if (!CGUIManager::getSingletonPtr()) {
+    //CGUIManager::getSingleton().destroyResources();
+    //new CGUIManager(mSceneMgr, *mWindow);
+  }
+}

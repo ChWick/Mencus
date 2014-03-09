@@ -31,18 +31,23 @@ private:
   CEGUI::Window *m_pDragButton;
   CEGUI::Window *m_pDragWindow;
   CEGUI::Window *m_pWeapons[Weapon::W_COUNT];
+  CEGUI::Window *m_pButtons[BT_COUNT];
 
   unsigned int m_uiCurrentWeapon;
 
   EDragState m_eDragState;
   float m_fDragVelocity;
   float m_fLastDragPos;
+
+  float m_fButtonSize;
 public:
   CGUIInput(CEGUI::Window *pGUIRoot);
 
   void update(float tpf);
 
 private:
+  void buttonSizeChanged(float fSize);
+
   CEGUI::Window *createButton(int bt);
   CEGUI::Window *createWeaponButton(unsigned int uiWeapon);
 

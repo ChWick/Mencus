@@ -6,21 +6,16 @@
 
 using namespace CEGUI;
 
-
 CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
   : m_uiCurrentWeapon(0) {
   m_pDirectionButtonContainer = pGUIRoot->createChild("DefaultWindow", "ButtonContainer");
   m_pDirectionButtonContainer->setInheritsAlpha(false);
-  m_pDirectionButtonContainer->setPosition(UVector2(UDim(0, 10), UDim(1, -110)));
-  m_pDirectionButtonContainer->setSize(USize(UDim(0, 200), UDim(0, 100)));
 
   m_pControlButtonContainer = pGUIRoot->createChild("DefaultWindow", "ControlContainer");
   m_pControlButtonContainer->setInheritsAlpha(false);
-  m_pControlButtonContainer->setPosition(UVector2(UDim(1, -110), UDim(1, -410)));
-  m_pControlButtonContainer->setSize(USize(UDim(0, 100), UDim(0, 400)));
 
   for (int i = 0; i < BT_COUNT; i++) {
-    createButton(i);
+    m_pButtons[i] = createButton(i);
   }
 
   // create drag button
@@ -46,6 +41,7 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
 		   Window::EventMouseLeavesArea,
 		   Event::Subscriber(&CGUIInput::onDragMoved, this));
 
+  void buttonSizeChanged(float fSize);
   m_pDragButton = pDragButton;
 
   // create drag frame
@@ -58,11 +54,38 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
   }
 
   setCurrentWeapon(0);
+  this->buttonSizeChanged(64);
+}
+void CGUIInput::buttonSizeChanged(float fSize) {
+  m_fButtonSize = fSize;
+
+  // resize direction button container
+  m_pDirectionButtonContainer->setPosition(UVector2(UDim(0, 0), UDim(1, -fSize)));
+  m_pDirectionButtonContainer->setSize(USize(UDim(0, 2 * fSize), UDim(0, fSize)));
+
+  // resize controll button container
+  m_pControlButtonContainer->setPosition(UVector2(UDim(1, -fSize), UDim(1, -4 * fSize)));
+  m_pControlButtonContainer->setSize(USize(UDim(0, fSize), UDim(0, 4 * fSize)));
+
+  // resize drag window
+  m_pDragWindow->setSize(USize(UDim(1, 0), UDim(0, 2 * fSize)));
+  for (unsigned int i = 0; i < Weapon::W_COUNT; i++) {
+    m_pWeapons[i]->setSize(USize(UDim(0, fSize), UDim(0, fSize)));
+    m_pWeapons[i]->setPosition(UVector2(UDim(0, 10 + i * fSize), UDim(0, 0)));
+  }
+
+  // resize push buttons
+  for (unsigned int i = 0; i < BT_COUNT; i++) {
+    m_pButtons[i]->setSize(USize(UDim(0, fSize), UDim(0, fSize)));
+    if (i > BT_RIGHT) {
+      m_pButtons[i]->setPosition(UVector2(UDim(0, 0), UDim(0, (i - BT_ENTER_LINK) * fSize)));
+    }
+  }
 }
 CEGUI::Window *CGUIInput::createButton(int bt) {
   Window *pParent = m_pControlButtonContainer;
   if (bt <= BT_RIGHT) {pParent = m_pDirectionButtonContainer;}
-  Window *pButton = pParent->createChild("OgreTray/Button", "Button" + PropertyHelper<int>::toString(bt));
+  Window *pButton = pParent->createChild("OgreTray/StaticImage", "Button" + PropertyHelper<int>::toString(bt));
   pButton->setSize(USize(UDim(0, 100), UDim(0, 100)));
   pButton->setAlpha(0.7);
   
@@ -165,15 +188,15 @@ CEGUI::Window *CGUIInput::createWeaponButton(unsigned int uiWeapon) {
 void CGUIInput::update(float tpf) {
   if (m_eDragState == DS_CLOSING) {
     m_pDragButton->setPosition(m_pDragButton->getPosition() +
-			       UVector2(UDim(0, 0), UDim(0, -tpf * 1000)));
+			       UVector2(UDim(0, 0), UDim(0, -tpf * 10 * m_fButtonSize)));
   }
   else if (m_eDragState == DS_OPENING) {
     m_pDragButton->setPosition(m_pDragButton->getPosition() +
-			       UVector2(UDim(0, 0), UDim(0, tpf * 1000)));
+			       UVector2(UDim(0, 0), UDim(0, tpf * 10 * m_fButtonSize)));
   }
 
-  if (m_pDragButton->getPosition().d_y.d_offset > 210) {
-    m_pDragButton->setPosition(UVector2(UDim(0, 0), UDim(-0.025, 210)));
+  if (m_pDragButton->getPosition().d_y.d_offset > 2 * m_fButtonSize) {
+    m_pDragButton->setPosition(UVector2(UDim(0, 0), UDim(-0.025, 2 * m_fButtonSize)));
     if (m_eDragState == DS_OPENING) {
       m_eDragState = DS_OPEN;
     }
@@ -188,7 +211,7 @@ void CGUIInput::update(float tpf) {
   m_fDragVelocity = (m_pDragButton->getPosition().d_y.d_offset - m_fLastDragPos) / tpf;
   m_fLastDragPos = m_pDragButton->getPosition().d_y.d_offset;
 
-  m_pDragWindow->setPosition(UVector2(UDim(0, 0), UDim(-0.025, m_fLastDragPos - 200)));
+  m_pDragWindow->setPosition(UVector2(UDim(0, 0), UDim(-0.025, m_fLastDragPos - 2 * m_fButtonSize)));
 }
 void CGUIInput::setCurrentWeapon(unsigned int uiWeapon) {
   m_pWeapons[m_uiCurrentWeapon]->setProperty("BackgroundEnabled", "False");
@@ -294,7 +317,7 @@ bool CGUIInput::onDragReleased(const CEGUI::EventArgs&) {
     }
   }
   else {
-    if (m_fDragVelocity > 10 || m_fLastDragPos > 140) {
+    if (m_fDragVelocity > 10 || m_fLastDragPos > m_fButtonSize * 2 - 70) {
       m_eDragState = DS_OPENING;
     }
     else {

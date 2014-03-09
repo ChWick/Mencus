@@ -20,7 +20,7 @@ CGUIInstructions::CGUIInstructions(CEGUI::Window *pGUIRoot) {
   m_pInstructionsRoot->setInheritsAlpha(false);
   m_pInstructionsRoot->setAlpha(1);
   m_pInstructionsRoot->setSize(USize(UDim(1, 0), UDim(1, 0)));
-  m_pInstructionsRoot->setProperty("Image", "instructions/full_image");
+  m_pInstructionsRoot->setProperty("Image", "instructions/full");
   m_pInstructionsRoot->setProperty("FrameEnabled","False");
   m_pInstructionsRoot->setProperty("BackgroundEnabled","False");
 

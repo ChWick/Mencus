@@ -65,6 +65,8 @@ void CGUIGameOver::update(Ogre::Real tpf) {
     m_pExitText->setAlpha(std::min<float>(m_pExitText->getAlpha() + tpf, 1.0f));
     m_pRetryText->setAlpha(std::max<float>(m_pRetryText->getAlpha() - tpf, 0.3f));
   }
+
+  hide();
 }
 bool CGUIGameOver::keyPressed( const OIS::KeyEvent &arg ) {
   if (arg.key == OIS::KC_UP) {

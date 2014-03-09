@@ -22,7 +22,8 @@ CGUIManager& CGUIManager::getSingleton(void)
 CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &target)
 : m_pSceneManager(pSceneManager),
   m_nRenderQueue(Ogre::RENDER_QUEUE_OVERLAY),
-  m_bPostQueue(false) {
+  m_bPostQueue(false),
+  m_bRenderPause(false) {
   CInputListenerManager::getSingleton().addInputListener(this);
 
   Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing CEGUI ***");
@@ -57,40 +58,46 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans20", 20, true, "DejaVuSans.ttf" );
   guiRoot->setFont("dejavusans12");
 
-  new CHUD(guiRoot);
-  new CGUIInstructions(guiRoot);
-  new CGUIGameOver(guiRoot);
+
+  destroyResources();
+  createResources();
+
+  //new CHUD(guiRoot);
+  //new CGUIInstructions(guiRoot);
+  //new CGUIGameOver(guiRoot);
   new CMainMenu(guiRoot);
-  m_pGUIInput = new CGUIInput(guiRoot);
+  //m_pGUIInput = new CGUIInput(guiRoot);
+
 }
 CGUIManager::~CGUIManager() {
   CInputListenerManager::getSingleton().removeInputListener(this);
   m_pSceneManager->removeRenderQueueListener(this);
-  delete CHUD::getSingletonPtr();
-  delete CGUIInstructions::getSingletonPtr();
-  delete CGUIGameOver::getSingletonPtr();
+  //delete CHUD::getSingletonPtr();
+  //delete CGUIInstructions::getSingletonPtr();
+  //delete CGUIGameOver::getSingletonPtr();
   delete CMainMenu::getSingletonPtr();
-  delete m_pGUIInput;
+  //delete m_pGUIInput;
   
   if (CEGUI::System::getSingletonPtr()) {CEGUI::OgreRenderer::destroySystem();}
 }
 void CGUIManager::update(Ogre::Real tpf) {
   CEGUI::System::getSingleton().injectTimePulse(tpf);
-  CHUD::getSingleton().update(tpf);
+  if (m_bRenderPause) {return;}
+  //CHUD::getSingleton().update(tpf);
   CMainMenu::getSingleton().update(tpf);
-  m_pGUIInput->update(tpf);
+  //m_pGUIInput->update(tpf);
 }
 void CGUIManager::renderQueueStarted(Ogre::uint8 id, const Ogre::String& invocation, bool& skipThisQueue) {
    // make sure you check the invocation string, or you can end up rendering the GUI multiple times
    // per frame due to shadow cameras.
-   if ( !m_bPostQueue && m_nRenderQueue == id && invocation == "" )
+   if ( !m_bPostQueue && m_nRenderQueue == id && invocation == "" && !m_bRenderPause)
    {
      CEGUI::System::getSingleton().renderAllGUIContexts();
    }
 }
 
 void CGUIManager::renderQueueEnded(Ogre::uint8 id, const Ogre::String& invocation, bool& repeatThisQueue) {
-   if ( m_bPostQueue && m_nRenderQueue == id && invocation == "" )
+   if ( m_bPostQueue && m_nRenderQueue == id && invocation == "" && !m_bRenderPause)
    {
      CEGUI::System::getSingleton().renderAllGUIContexts();
    }
@@ -166,4 +173,28 @@ bool CGUIManager::touchReleased(const OIS::MultiTouchEvent& evt) {
 }
 bool CGUIManager::touchCancelled(const OIS::MultiTouchEvent& evt) {
   return true;
+}
+void CGUIManager::createResources() {
+  m_bRenderPause = false;
+  //CEGUI::ImageManager::getSingleton().loadImageset("OgreTray.imageset", "Imagesets");
+  CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
+  
+  CEGUI::ImageManager::getSingleton().loadImageset("main_menu_background.imageset");
+  CEGUI::ImageManager::getSingleton().loadImageset("hud_weapons.imageset");
+  CEGUI::ImageManager::getSingleton().loadImageset("save_pictures.imageset");
+  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
+
+  //if (CMainMenu::getSingletonPtr()) CMainMenu::getSingletonPtr()->createResources();
+
+  m_pCEGuiOgreRenderer->getTexture("OgreTrayImages").loadFromFile("OgreTrayImages.png", "Imagesets");
+  m_pCEGuiOgreRenderer->getTexture("main_menu_background").loadFromFile("main_menu_background.png", "Imagesets");
+  //m_pCEGuiOgreRenderer->getTexture("DejaVuSans.ttf").loadFromFile("DejaVuSans.ttf", "Fonts");
+}
+void CGUIManager::destroyResources() {
+  m_bRenderPause = true;
+  CEGUI::ImageManager::getSingleton().destroyImageCollection("main_menu_background");
+  CEGUI::ImageManager::getSingleton().destroyImageCollection("hud_weapons");
+  CEGUI::ImageManager::getSingleton().destroyImageCollection("save_pictures");
+  CEGUI::SchemeManager::getSingleton().destroy("OgreTray");
+  CEGUI::ImageManager::getSingleton().destroyImageCollection("OgreTrayImages");
 }

@@ -25,12 +25,17 @@ private:
   CEGUI::ResourceProvider* m_pCEGuiResourceProvider;
 
   CGUIInput *m_pGUIInput;
+
+  bool m_bRenderPause;
 public:
   static CGUIManager& getSingleton(void);
   static CGUIManager* getSingletonPtr(void);
 
   CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &target);
   ~CGUIManager();
+
+  void createResources();
+  void destroyResources();
 
   void update(Ogre::Real tpf);
 

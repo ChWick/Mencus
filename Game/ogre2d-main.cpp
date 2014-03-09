@@ -49,6 +49,24 @@
 
 #define OGRE2D_MINIMAL_HARDWARE_BUFFER_SIZE 120
 
+//----------------------------------------------------------------------------//
+static const Ogre::LayerBlendModeEx S_colourBlendMode =
+{
+    Ogre::LBT_COLOUR,
+    Ogre::LBX_MODULATE,
+    Ogre::LBS_TEXTURE,
+    Ogre::LBS_DIFFUSE
+};
+
+//----------------------------------------------------------------------------//
+static const Ogre::LayerBlendModeEx S_alphaBlendMode =
+{
+    Ogre::LBT_ALPHA,
+    Ogre::LBX_MODULATE,
+    Ogre::LBS_TEXTURE,
+    Ogre::LBS_DIFFUSE
+};
+
 Ogre2dManager::Ogre2dManager()
   : sceneMan(NULL) {
 }
@@ -212,6 +230,7 @@ void Ogre2dManager::renderBuffer()
       rs->_setTexture(0, true, tp->getName());
       alphaBlendMode.factor = currChunk->colour.a;
       rs->_setTextureBlendMode(0, alphaBlendMode);
+      CShaderManager::getSingleton().updateSpriteShaderParams();
       rs->_render(renderOp);
       renderOp.vertexData->vertexStart+=currChunk->vertexCount;
    }
@@ -242,6 +261,9 @@ void Ogre2dManager::prepareForRender()
    rs->_setTextureCoordSet(0, 0);
    rs->_setTextureCoordCalculation(0, Ogre::TEXCALC_NONE);
    rs->_setTextureUnitFiltering(0, Ogre::FO_LINEAR, Ogre::FO_LINEAR, Ogre::FO_POINT);
+   rs->_setAlphaRejectSettings(Ogre::CMPF_ALWAYS_PASS, 0, false);
+   rs->_setTextureBlendMode(0, S_colourBlendMode);
+   rs->_setTextureBlendMode(0, S_alphaBlendMode);
    rs->_setTextureBlendMode(0, colorBlendMode);
    //rs->_setTextureBlendMode(0, alphaBlendMode);
    rs->_setTextureAddressingMode(0, uvwAddressMode);
@@ -250,12 +272,13 @@ void Ogre2dManager::prepareForRender()
    rs->_setFog(Ogre::FOG_NONE);
    rs->_setCullingMode(Ogre::CULL_NONE);
    rs->_setDepthBufferParams(false, false);
-   rs->_setColourBufferWriteEnabled(true, true, true, false);
+   rs->_setDepthBias(0, 0);
+   rs->_setColourBufferWriteEnabled(true, true, true, true);
    rs->setShadingType(Ogre::SO_GOURAUD);
    rs->_setPolygonMode(Ogre::PM_SOLID);
    rs->unbindGpuProgram(Ogre::GPT_FRAGMENT_PROGRAM);
    rs->unbindGpuProgram(Ogre::GPT_VERTEX_PROGRAM);
-   rs->_setSceneBlending(Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA);
+   rs->_setSeparateSceneBlending(Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_DEST_ALPHA, Ogre::SBF_ONE);
    rs->_setAlphaRejectSettings(Ogre::CMPF_ALWAYS_PASS, 0, true);
 #ifdef INCLUDE_RTSHADER_SYSTEM
    CShaderManager::getSingleton().bindSpriteShaders();
