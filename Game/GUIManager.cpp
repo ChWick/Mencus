@@ -39,7 +39,7 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
 
   Ogre::LogManager::getSingletonPtr()->logMessage("    creating scheme");
-  CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
+  createResources();
 
   pSceneManager->addRenderQueueListener(this);
 
@@ -52,41 +52,40 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setPosition(CEGUI::Vector2f(0,0));
 
-  CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans12", 12, true, "DejaVuSans.ttf", "Fonts", CEGUI::ASM_Both, m_vNativeRes);
-  CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans8", 8, true, "DejaVuSans.ttf", "Fonts", CEGUI::ASM_Both, m_vNativeRes);
-  CEGUI::FontManager::getSingleton().createFreeTypeFont("diploma15", 15, true, "diploma.ttf", "Fonts", CEGUI::ASM_Both, m_vNativeRes);
-  CEGUI::FontManager::getSingleton().createFreeTypeFont("diploma20", 20, true, "diploma.ttf", "Fonts", CEGUI::ASM_Both, m_vNativeRes);
-  CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans20", 20, true, "DejaVuSans.ttf", "Fonts", CEGUI::ASM_Both, m_vNativeRes);
+  createFreeTypeFont("dejavusans12", 12, "DejaVuSans.ttf");
+  createFreeTypeFont("dejavusans8", 8, "DejaVuSans.ttf");
+  createFreeTypeFont("diploma15", 15, "diploma.ttf");
+  createFreeTypeFont("diploma20", 20, "diploma.ttf");
+  createFreeTypeFont("dejavusans20", 20, "DejaVuSans.ttf");
   guiRoot->setFont("dejavusans12");
 
 
   //destroyResources();
-  //createResources();
 
-  //new CHUD(guiRoot);
-  //new CGUIInstructions(guiRoot);
-  //new CGUIGameOver(guiRoot);
+  new CHUD(guiRoot);
+  new CGUIInstructions(guiRoot);
+  new CGUIGameOver(guiRoot);
   new CMainMenu(guiRoot);
-  //m_pGUIInput = new CGUIInput(guiRoot);
+  m_pGUIInput = new CGUIInput(guiRoot);
 
 }
 CGUIManager::~CGUIManager() {
   CInputListenerManager::getSingleton().removeInputListener(this);
   m_pSceneManager->removeRenderQueueListener(this);
-  //delete CHUD::getSingletonPtr();
-  //delete CGUIInstructions::getSingletonPtr();
-  //delete CGUIGameOver::getSingletonPtr();
+  delete CHUD::getSingletonPtr();
+  delete CGUIInstructions::getSingletonPtr();
+  delete CGUIGameOver::getSingletonPtr();
   delete CMainMenu::getSingletonPtr();
-  //delete m_pGUIInput;
+  delete m_pGUIInput;
   
   if (CEGUI::System::getSingletonPtr()) {CEGUI::OgreRenderer::destroySystem();}
 }
 void CGUIManager::update(Ogre::Real tpf) {
   CEGUI::System::getSingleton().injectTimePulse(tpf);
   if (m_bRenderPause) {return;}
-  //CHUD::getSingleton().update(tpf);
+  CHUD::getSingleton().update(tpf);
   CMainMenu::getSingleton().update(tpf);
-  //m_pGUIInput->update(tpf);
+  m_pGUIInput->update(tpf);
 }
 void CGUIManager::renderQueueStarted(Ogre::uint8 id, const Ogre::String& invocation, bool& skipThisQueue) {
    // make sure you check the invocation string, or you can end up rendering the GUI multiple times
@@ -175,20 +174,22 @@ bool CGUIManager::touchReleased(const OIS::MultiTouchEvent& evt) {
 bool CGUIManager::touchCancelled(const OIS::MultiTouchEvent& evt) {
   return true;
 }
+
+void CGUIManager::createFreeTypeFont(const CEGUI::String &name, int size, const CEGUI::String &ttfFile) {
+  CEGUI::FontManager::getSingleton().createFreeTypeFont(name, size, true, ttfFile, "Fonts", CEGUI::ASM_Both, m_vNativeRes);
+  m_vFonts.push_back(name);  
+}
 void CGUIManager::createResources() {
   m_bRenderPause = false;
-  //CEGUI::ImageManager::getSingleton().loadImageset("OgreTray.imageset", "Imagesets");
   CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
   
   CEGUI::ImageManager::getSingleton().loadImageset("main_menu_background.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("hud_weapons.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("save_pictures.imageset");
+  CEGUI::ImageManager::getSingleton().loadImageset("hud.imageset");
+  CEGUI::ImageManager::getSingleton().loadImageset("game_over.imageset");
+  CEGUI::ImageManager::getSingleton().loadImageset("white.imageset");
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
-
-  //if (CMainMenu::getSingletonPtr()) CMainMenu::getSingletonPtr()->createResources();
-
-  
-  //m_pCEGuiOgreRenderer->getTexture("DejaVuSans.ttf").loadFromFile("DejaVuSans.ttf", "Fonts");
 }
 void CGUIManager::destroyResources() {
   m_bRenderPause = true;
@@ -200,8 +201,17 @@ void CGUIManager::destroyResources() {
 }
 void CGUIManager::reloadResources() {
   m_pCEGuiOgreRenderer->getTexture("OgreTrayImages").loadFromFile("OgreTrayImages.png", "Imagesets");
-  m_pCEGuiOgreRenderer->getTexture("main_menu_background").loadFromFile("main_menu_background.png", "Imagesets");
+  m_pCEGuiOgreRenderer->getTexture("main_menu_background").loadFromFile("main_menu_background.jpg", "Imagesets");
+  m_pCEGuiOgreRenderer->getTexture("game_over").loadFromFile("game_over.jpg", "Imagesets");
+  m_pCEGuiOgreRenderer->getTexture("hud_weapons").loadFromFile("hud_weapons.png", "Imagesets");
+  m_pCEGuiOgreRenderer->getTexture("hud").loadFromFile("hud_main.png", "Imagesets");
+  m_pCEGuiOgreRenderer->getTexture("save_pictures").loadFromFile("save_pictures.png", "Imagesets");
+  m_pCEGuiOgreRenderer->getTexture("white").loadFromFile("white.png", "Imagesets");
 
-  //CEGUI::FontManager::getSingleton().destroyAll();
-  CEGUI::FontManager::getSingleton().get("dejavusans12").notifyDisplaySizeChanged(m_vNativeRes);
+  for (auto &sFontName : m_vFonts) {
+    CEGUI::FontManager::getSingleton().get(sFontName).notifyDisplaySizeChanged(m_vNativeRes);
+  }
 }
+
+
+

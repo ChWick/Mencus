@@ -7,6 +7,7 @@
 #include <CEGUI/CEGUI.h>
 #include <CEGUI/RendererModules/Ogre/Renderer.h>
 #include "InputListener.hpp"
+#include <vector>
 
 class CGUIInput;
 
@@ -29,6 +30,7 @@ private:
   bool m_bRenderPause;
 
   CEGUI::Sizef m_vNativeRes;
+  std::vector<CEGUI::String> m_vFonts;
 public:
   static CGUIManager& getSingleton(void);
   static CGUIManager* getSingletonPtr(void);
@@ -60,6 +62,9 @@ public:
   virtual bool touchPressed(const OIS::MultiTouchEvent& evt);
   virtual bool touchReleased(const OIS::MultiTouchEvent& evt);
   virtual bool touchCancelled(const OIS::MultiTouchEvent& evt);
+
+private:
+  void createFreeTypeFont(const CEGUI::String &name, int size, const CEGUI::String &ttfFile);
 private:
    Ogre::RenderQueueGroupID m_nRenderQueue; //!< When we draw the UI.
    bool m_bPostQueue;                       //!< Whether to draw CEGUI immediately before or after m_nRenderQueue

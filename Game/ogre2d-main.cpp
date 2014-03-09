@@ -219,6 +219,10 @@ void Ogre2dManager::renderBuffer()
    alphaBlendMode.operation=Ogre::LBX_BLEND_MANUAL;
    alphaBlendMode.factor = 1;
 
+#ifdef INCLUDE_RTSHADER_SYSTEM
+   CShaderManager::getSingleton().updateSpriteShaderParams();
+#endif
+
    for (currChunk=chunks.begin(); currChunk!=endChunk; currChunk++)
    {
       renderOp.vertexData->vertexCount=currChunk->vertexCount;
@@ -230,7 +234,6 @@ void Ogre2dManager::renderBuffer()
       rs->_setTexture(0, true, tp->getName());
       alphaBlendMode.factor = currChunk->colour.a;
       rs->_setTextureBlendMode(0, alphaBlendMode);
-      CShaderManager::getSingleton().updateSpriteShaderParams();
       rs->_render(renderOp);
       renderOp.vertexData->vertexStart+=currChunk->vertexCount;
    }
