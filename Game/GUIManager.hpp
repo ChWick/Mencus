@@ -27,6 +27,8 @@ private:
   CGUIInput *m_pGUIInput;
 
   bool m_bRenderPause;
+
+  CEGUI::Sizef m_vNativeRes;
 public:
   static CGUIManager& getSingleton(void);
   static CGUIManager* getSingletonPtr(void);
@@ -36,6 +38,7 @@ public:
 
   void createResources();
   void destroyResources();
+  void reloadResources();
 
   void update(Ogre::Real tpf);
 

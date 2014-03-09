@@ -23,7 +23,8 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
 : m_pSceneManager(pSceneManager),
   m_nRenderQueue(Ogre::RENDER_QUEUE_OVERLAY),
   m_bPostQueue(false),
-  m_bRenderPause(false) {
+  m_bRenderPause(false),
+  m_vNativeRes(target.getWidth(), target.getHeight()) {
   CInputListenerManager::getSingleton().addInputListener(this);
 
   Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing CEGUI ***");
@@ -51,16 +52,16 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setPosition(CEGUI::Vector2f(0,0));
 
-  CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans12", 12, true, "DejaVuSans.ttf" );
-  CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans8", 8, true, "DejaVuSans.ttf" );
-  CEGUI::FontManager::getSingleton().createFreeTypeFont("diploma15", 15, true, "diploma.ttf" );
-  CEGUI::FontManager::getSingleton().createFreeTypeFont("diploma20", 20, true, "diploma.ttf" );
-  CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans20", 20, true, "DejaVuSans.ttf" );
+  CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans12", 12, true, "DejaVuSans.ttf", "Fonts", CEGUI::ASM_Both, m_vNativeRes);
+  CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans8", 8, true, "DejaVuSans.ttf", "Fonts", CEGUI::ASM_Both, m_vNativeRes);
+  CEGUI::FontManager::getSingleton().createFreeTypeFont("diploma15", 15, true, "diploma.ttf", "Fonts", CEGUI::ASM_Both, m_vNativeRes);
+  CEGUI::FontManager::getSingleton().createFreeTypeFont("diploma20", 20, true, "diploma.ttf", "Fonts", CEGUI::ASM_Both, m_vNativeRes);
+  CEGUI::FontManager::getSingleton().createFreeTypeFont("dejavusans20", 20, true, "DejaVuSans.ttf", "Fonts", CEGUI::ASM_Both, m_vNativeRes);
   guiRoot->setFont("dejavusans12");
 
 
-  destroyResources();
-  createResources();
+  //destroyResources();
+  //createResources();
 
   //new CHUD(guiRoot);
   //new CGUIInstructions(guiRoot);
@@ -186,8 +187,7 @@ void CGUIManager::createResources() {
 
   //if (CMainMenu::getSingletonPtr()) CMainMenu::getSingletonPtr()->createResources();
 
-  m_pCEGuiOgreRenderer->getTexture("OgreTrayImages").loadFromFile("OgreTrayImages.png", "Imagesets");
-  m_pCEGuiOgreRenderer->getTexture("main_menu_background").loadFromFile("main_menu_background.png", "Imagesets");
+  
   //m_pCEGuiOgreRenderer->getTexture("DejaVuSans.ttf").loadFromFile("DejaVuSans.ttf", "Fonts");
 }
 void CGUIManager::destroyResources() {
@@ -197,4 +197,11 @@ void CGUIManager::destroyResources() {
   CEGUI::ImageManager::getSingleton().destroyImageCollection("save_pictures");
   CEGUI::SchemeManager::getSingleton().destroy("OgreTray");
   CEGUI::ImageManager::getSingleton().destroyImageCollection("OgreTrayImages");
+}
+void CGUIManager::reloadResources() {
+  m_pCEGuiOgreRenderer->getTexture("OgreTrayImages").loadFromFile("OgreTrayImages.png", "Imagesets");
+  m_pCEGuiOgreRenderer->getTexture("main_menu_background").loadFromFile("main_menu_background.png", "Imagesets");
+
+  //CEGUI::FontManager::getSingleton().destroyAll();
+  CEGUI::FontManager::getSingleton().get("dejavusans12").notifyDisplaySizeChanged(m_vNativeRes);
 }

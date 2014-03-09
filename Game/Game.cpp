@@ -817,7 +817,8 @@ void CGame::destroyRTShaderSystem() {
 #endif // INCLUDE_RTSHADER_SYSTEM
 void CGame::createResources() {
   if (CGUIManager::getSingletonPtr()) {
-    CGUIManager::getSingleton().createResources();
+    //CGUIManager::getSingleton().createResources();
+    CGUIManager::getSingleton().reloadResources();
     //delete CGUIManager::getSingletonPtr();
   }
 }
