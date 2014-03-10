@@ -180,6 +180,9 @@ void CGUIInput::updateInput() {
   if (pMultiTouch) {
     std::vector<OIS::MultiTouchState> mts = pMultiTouch->getMultiTouchStates();
     for (auto &state : mts) {
+      if (!state.touchIsType(OIS::MT_Pressed)) {
+	continue;
+      }
       checkForButtonPress(Ogre::Vector2(state.X.abs,
 					state.Y.abs));
     }
