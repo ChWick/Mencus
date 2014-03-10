@@ -11,6 +11,16 @@ namespace Weapon {
     W_COLUMN,
     W_COUNT,
   };
+  enum EItems {
+    I_BOLT,
+    I_BOMB,
+    I_SHIELD,
+    I_COLUMN,
+    I_MANA_POTION,
+    I_HEALTH_POTION,
+    I_KEY,
+    I_COUNT,
+  };
 
   CEGUI::String getPicture(unsigned int uiWeapon);
 };

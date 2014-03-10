@@ -14,6 +14,15 @@ namespace Weapon {
     else if (uiWeapon == Weapon::W_COLUMN) {
       return "hud_weapons/column";
     }
+    else if (uiWeapon == Weapon::I_HEALTH_POTION) {
+      return "hud_weapons/health_potion";
+    }
+    else if (uiWeapon == Weapon::I_MANA_POTION) {
+      return "hud_weapons/mana_potion";
+    }
+    else if (uiWeapon == Weapon::I_KEY) {
+      return "hud_weapons/keys";
+    }
     return "hud_weapons/UNDEFINED_WEAPON";
   }
 };

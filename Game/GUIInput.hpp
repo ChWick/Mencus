@@ -31,7 +31,8 @@ private:
   CEGUI::Window *m_pControlButtonContainer;
   CEGUI::Window *m_pDragButton;
   CEGUI::Window *m_pDragWindow;
-  CEGUI::Window *m_pWeapons[Weapon::W_COUNT];
+  CEGUI::Window *m_pWeapons[Weapon::I_COUNT];
+  CEGUI::Window *m_pWeaponLabels[Weapon::I_COUNT];
   CEGUI::Window *m_pButtons[BT_COUNT];
   Ogre::Vector2 m_vButtonOrigins[BT_COUNT];
   bool m_bButtonPressed[BT_COUNT];
@@ -56,6 +57,7 @@ private:
 
   CEGUI::Window *createButton(int bt);
   CEGUI::Window *createWeaponButton(unsigned int uiWeapon);
+  CEGUI::Window *createWeaponButtonLabel(unsigned int uiWeapon);
 
   void setCurrentWeapon(unsigned int uiCurrentWeapon);
 
