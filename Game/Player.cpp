@@ -406,22 +406,6 @@ bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
     }
     CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
   }
-  else if (arg.key == OIS::KC_N) {
-    if (m_uiHealthPotionsCount > 0) {
-      --m_uiHealthPotionsCount;
-      addHitpoints(PLAYER_HEALTH_POTION_REGAIN_PERCENTAGE * getMaximumHitpoints());
-      CHUD::getSingleton().setHealthPotionCount(m_uiHealthPotionsCount);
-      CHUD::getSingleton().setHP(getHitpoints() / getMaximumHitpoints());
-    }
-  }
-  else if (arg.key == OIS::KC_M) {
-    if (m_uiManaPotionsCount > 0) {
-      --m_uiManaPotionsCount;
-      m_fManaPoints = min(PLAYER_MAX_MANA_POINTS, m_fManaPoints + PLAYER_MANA_POTION_REGAIN_PERCENTAGE * PLAYER_MAX_MANA_POINTS);
-      CHUD::getSingleton().setManaPotionCount(m_uiManaPotionsCount);
-      CHUD::getSingleton().setMP(m_fManaPoints / PLAYER_MAX_MANA_POINTS);
-    }
-  }
 #ifdef CHEAT_ADD_KEYS
   else if (arg.key == OIS::KC_F7) {
     ++m_uiKeyCount;
@@ -501,6 +485,26 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
     if (cmd.getValue() > 0.5) {
       m_pMap->activateSwitchOnHit(getWorldBoundingBox());
     }
+    break;
+  case GIC_USE_HEALTH_POTION:
+    if (m_uiHealthPotionsCount > 0) {
+      --m_uiHealthPotionsCount;
+      addHitpoints(PLAYER_HEALTH_POTION_REGAIN_PERCENTAGE * getMaximumHitpoints());
+      CHUD::getSingleton().setHealthPotionCount(m_uiHealthPotionsCount);
+      CHUD::getSingleton().setHP(getHitpoints() / getMaximumHitpoints());
+    }
+    break;
+  case GIC_USE_MANA_POTION:
+    if (m_uiManaPotionsCount > 0) {
+      --m_uiManaPotionsCount;
+      m_fManaPoints = min(PLAYER_MAX_MANA_POINTS, m_fManaPoints + PLAYER_MANA_POTION_REGAIN_PERCENTAGE * PLAYER_MAX_MANA_POINTS);
+      CHUD::getSingleton().setManaPotionCount(m_uiManaPotionsCount);
+      CHUD::getSingleton().setMP(m_fManaPoints / PLAYER_MAX_MANA_POINTS);
+    }
+    break;
+  case GIC_CHANGE_WEAPON:
+    m_uiCurrentWeapon = min(W_COUNT - 1, max(0, cmd.getIntValue()));
+    CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
     break;
   default:
     break;

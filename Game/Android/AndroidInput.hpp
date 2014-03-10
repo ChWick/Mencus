@@ -109,7 +109,7 @@ public:
   {
     OIS::MultiTouchState &state = mTouch->getMultiTouchState(pointerId);
 
-    LOGI("%d x %f y %f id %d", action, x, y, pointerId);
+    //LOGI("%d x %f y %f id %d", action, x, y, pointerId);
             
     switch(action)
       {

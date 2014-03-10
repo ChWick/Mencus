@@ -37,6 +37,12 @@ bool CGameInputManager::keyPressed( const OIS::KeyEvent &arg ) {
   else if (arg.key == OIS::KC_RETURN) {
     sendCommandToListeners(CGameInputCommand(GIC_ACTIVATE, 1));
   }
+  else if (arg.key == OIS::KC_N) {
+    sendCommandToListeners(CGameInputCommand(GIC_USE_HEALTH_POTION, 1));
+  }
+  else if (arg.key == OIS::KC_M) {
+    sendCommandToListeners(CGameInputCommand(GIC_USE_MANA_POTION, 1));
+  }
 
   return true;
 }

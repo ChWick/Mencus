@@ -193,6 +193,8 @@ void CGUIInput::setCurrentWeapon(unsigned int uiWeapon) {
   m_pWeapons[uiWeapon]->setProperty("BackgroundEnabled", "True");
   m_pWeapons[uiWeapon]->setProperty("FrameEnabled", "True");
   m_uiCurrentWeapon = uiWeapon;
+  CGameInputManager::getSingleton().
+    sendCommandToListeners(CGameInputCommand(GIC_CHANGE_WEAPON, uiWeapon));
 }
 void CGUIInput::updateInput() {
   for (int i = 0; i < BT_COUNT; i++) {
@@ -288,11 +290,26 @@ bool CGUIInput::onDragMoved(const CEGUI::EventArgs& args) {
 }
 bool CGUIInput::onWeaponClick(const CEGUI::EventArgs& args) {
   CEGUI::Window *pBtn = dynamic_cast<const WindowEventArgs*>(&args)->window;
+
+  if (m_pWeapons[Weapon::I_HEALTH_POTION] == pBtn ||
+      m_pWeaponLabels[Weapon::I_HEALTH_POTION] == pBtn) {
+    CGameInputManager::getSingleton().
+      sendCommandToListeners(CGameInputCommand(GIC_USE_HEALTH_POTION));
+    return true;
+  }
+  else if (m_pWeapons[Weapon::I_MANA_POTION] == pBtn ||
+	   m_pWeaponLabels[Weapon::I_MANA_POTION] == pBtn) {
+    CGameInputManager::getSingleton().
+      sendCommandToListeners(CGameInputCommand(GIC_USE_MANA_POTION));
+    return true;
+  }
+
   for (unsigned int i = 0; i < Weapon::W_COUNT; i++) {
     if (m_pWeapons[i] == pBtn || m_pWeaponLabels[i] == pBtn) {
       setCurrentWeapon(i);
-      break;
+      return true;
     }
   }
+  
   return true;
 }
