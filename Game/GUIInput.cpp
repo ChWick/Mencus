@@ -56,7 +56,7 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
   }
 
   setCurrentWeapon(0);
-  this->buttonSizeChanged(64);
+  this->buttonSizeChanged(100);
 }
 void CGUIInput::buttonSizeChanged(float fSize) {
   m_fButtonSize = fSize;
@@ -180,7 +180,7 @@ void CGUIInput::updateInput() {
   if (pMultiTouch) {
     std::vector<OIS::MultiTouchState> mts = pMultiTouch->getMultiTouchStates();
     for (auto &state : mts) {
-      if (!state.touchIsType(OIS::MT_Pressed)) {
+      if (!(state.touchIsType(OIS::MT_Pressed))) {
 	continue;
       }
       checkForButtonPress(Ogre::Vector2(state.X.abs,

@@ -140,12 +140,21 @@ public:
       {
 	if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) 
 	  {
-	    int action = (int)(AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction(event));
+	    for (size_t pi = 0; pi < AMotionEvent_getPointerCount(event); pi++) {
+	      // LOGI("Count %d", AMotionEvent_getPointerCount(event));
+	      int action = (int)(AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction(event));
+	      
+	      if(action == 0)
+		mInputInjector->
+		  injectTouchEvent(2,
+				   AMotionEvent_getRawX(event, pi),
+				   AMotionEvent_getRawY(event, pi), pi );
                     
-	    if(action == 0)
-	      mInputInjector->injectTouchEvent(2, AMotionEvent_getRawX(event, 0), AMotionEvent_getRawY(event, 0) );
-                    
-	    mInputInjector->injectTouchEvent(action, AMotionEvent_getRawX(event, 0), AMotionEvent_getRawY(event, 0) );
+	      mInputInjector->
+		injectTouchEvent(action,
+				 AMotionEvent_getRawX(event, pi),
+				 AMotionEvent_getRawY(event, pi), pi);
+	    }
 	  }
 	else 
 	  {
@@ -244,6 +253,7 @@ public:
 	    try {
 	      mRenderWnd->windowMovedOrResized();
 	      mRoot->renderOneFrame();
+	      mTouch->clearStates();
 	    }
 	    catch (const Ogre::Exception &e) {
 	      LOGW("%s", e.getFullDescription().c_str());

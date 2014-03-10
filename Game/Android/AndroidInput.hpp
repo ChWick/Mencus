@@ -85,6 +85,10 @@ public:
   AndroidInputInjector(CInputListenerManager* manager, AndroidMultiTouch* touch, AndroidKeyboard* keyboard) 
     : mInputListenerManager(manager), mTouch(touch), mKeyboard(keyboard) {}
         
+
+  void clearStates() {
+    mTouch->clearStates();
+  }
   void injectKeyEvent(int action, int32_t keyCode)
   {
     if(keyCode == AKEYCODE_BACK)
@@ -101,9 +105,11 @@ public:
       }
   }
         
-  void injectTouchEvent(int action, float x, float y, int pointerId = 0)
+  void injectTouchEvent(int action, float x, float y, int pointerId)
   {
     OIS::MultiTouchState &state = mTouch->getMultiTouchState(pointerId);
+
+    LOGI("%d x %f y %f id %d", action, x, y, pointerId);
             
     switch(action)
       {
@@ -123,8 +129,6 @@ public:
 	state.touchType = OIS::MT_None;
       }
             
-    if(state.touchType != OIS::MT_None)
-      {
 	int last = state.X.abs;
 	state.X.abs =  (int)x;
 	state.X.rel = state.X.abs - last;
@@ -135,6 +139,8 @@ public:
                 
 	state.Z.abs = 0;
 	state.Z.rel = 0;
+    if(state.touchType != OIS::MT_None)
+      {
                 
 	OIS::MultiTouchEvent evt(mTouch, state);
                 
