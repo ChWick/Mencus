@@ -171,10 +171,19 @@ void CGUIInput::updateInput() {
     m_bButtonPressed[i] = false;
   }
   OIS::Mouse *pMouse = CGame::getSingleton().getInputContext().mMouse;
-  checkForButtonPress(Ogre::Vector2(pMouse->getMouseState().X.abs,
-				    pMouse->getMouseState().Y.abs));
+  if (pMouse) {
+    checkForButtonPress(Ogre::Vector2(pMouse->getMouseState().X.abs,
+				      pMouse->getMouseState().Y.abs));
+  }
 
   OIS::MultiTouch *pMultiTouch = CGame::getSingleton().getInputContext().mMultiTouch;
+  if (pMultiTouch) {
+    std::vector<OIS::MultiTouchState> mts = pMultiTouch->getMultiTouchStates();
+    for (auto &state : mts) {
+      checkForButtonPress(Ogre::Vector2(state.X.abs,
+					state.Y.abs));
+    }
+  }
 
   CGameInputManager::getSingleton().
     sendCommandToListeners(CGameInputCommand(GIC_LEFT,
@@ -214,76 +223,6 @@ void CGUIInput::updateDragBar(float fPosY) {
   if (m_eDragState == DS_DRAGGING) {
     m_pDragButton->setPosition(UVector2(UDim(0, 0), UDim(-0.025, fPosY)));
   }
-}
-bool CGUIInput::onMouseEntersRightButton(const CEGUI::EventArgs&) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_RIGHT, 1));
-
-  return true;
-}
-bool CGUIInput::onMouseLeavesRightButton(const CEGUI::EventArgs& args) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_RIGHT, 0));
-
-  return true;
-}
-bool CGUIInput::onMouseMoveRightButton(const CEGUI::EventArgs&) {
-  return true;
-}
-bool CGUIInput::onMouseEntersLeftButton(const CEGUI::EventArgs&) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_LEFT, 1));
-  return true;
-}
-bool CGUIInput::onMouseLeavesLeftButton(const CEGUI::EventArgs&) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_LEFT, 0));
-  return true;
-}
-bool CGUIInput::onMouseMoveLeftButton(const CEGUI::EventArgs&) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_LEFT, 1));
-  return true;
-}
-bool CGUIInput::onJumpPressed(const CEGUI::EventArgs&) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_JUMP, 1));
-  return true;
-}
-bool CGUIInput::onJumpReleased(const CEGUI::EventArgs&) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_JUMP, 0));
-  return true;
-}
-bool CGUIInput::onEnterLinkPressed(const CEGUI::EventArgs&) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_ENTER_LINK, 1));
-  return true;
-}
-bool CGUIInput::onEnterLinkReleased(const CEGUI::EventArgs&) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_ENTER_LINK, 0));
-  return true;
-}
-bool CGUIInput::onAttackPressed(const CEGUI::EventArgs&) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_ATTACK, 1));
-  return true;
-}
-bool CGUIInput::onAttackReleased(const CEGUI::EventArgs&) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_ATTACK, 0));
-  return true;
-}
-bool CGUIInput::onActivatePressed(const CEGUI::EventArgs&) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_ACTIVATE, 1));
-  return true;
-}
-bool CGUIInput::onActivateReleased(const CEGUI::EventArgs&) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_ACTIVATE, 0));
-  return true;
 }
 bool CGUIInput::onDragPressed(const CEGUI::EventArgs&) {
   pause(PAUSE_MAP_UPDATE);

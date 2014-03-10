@@ -62,26 +62,6 @@ private:
   void updateDragButtonPosition(const CEGUI::EventArgs&);
   void updateDragBar(float fPosY);
 
-  bool onMouseEntersRightButton(const CEGUI::EventArgs&);
-  bool onMouseLeavesRightButton(const CEGUI::EventArgs&);
-  bool onMouseMoveRightButton(const CEGUI::EventArgs&);
-
-  bool onMouseEntersLeftButton(const CEGUI::EventArgs&);
-  bool onMouseLeavesLeftButton(const CEGUI::EventArgs&);
-  bool onMouseMoveLeftButton(const CEGUI::EventArgs&);
-
-  bool onJumpPressed(const CEGUI::EventArgs&);
-  bool onJumpReleased(const CEGUI::EventArgs&);
-
-  bool onEnterLinkPressed(const CEGUI::EventArgs&);
-  bool onEnterLinkReleased(const CEGUI::EventArgs&);
-
-  bool onAttackPressed(const CEGUI::EventArgs&);
-  bool onAttackReleased(const CEGUI::EventArgs&);
-
-  bool onActivatePressed(const CEGUI::EventArgs&);
-  bool onActivateReleased(const CEGUI::EventArgs&);
-
   bool onDragPressed(const CEGUI::EventArgs&);
   bool onDragReleased(const CEGUI::EventArgs&);
   bool onDragMoved(const CEGUI::EventArgs&);
