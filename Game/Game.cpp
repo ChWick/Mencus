@@ -59,9 +59,7 @@ CGame::~CGame(void) {
   if (CInputListenerManager::getSingletonPtr()) {delete CInputListenerManager::getSingletonPtr();}
   if (CSaveStateManager::getSingletonPtr()) {delete CSaveStateManager::getSingletonPtr();}
 
-#ifdef INCLUDE_RTSHADER_SYSTEM
-if (CShaderManager::getSingletonPtr()) {delete CShaderManager::getSingletonPtr();}
-#endif
+  if (CShaderManager::getSingletonPtr()) {delete CShaderManager::getSingletonPtr();}
 
   //Remove ourself as a Window listener
   Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);
@@ -410,9 +408,7 @@ void CGame::createScene() {
 
   Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing singleton classes ***");
   //-------------------------------------------------------------------------------------
-#ifdef INCLUDE_RTSHADER_SYSTEM
   new CShaderManager(mRoot->getRenderSystem());
-#endif
   m_pGameState = new CGameState();
   new CPauseManager();
   new CSaveStateManager();

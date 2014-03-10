@@ -1,6 +1,8 @@
 #ifndef _SHADER_MANAGER_HPP_
 #define _SHADER_MANAGER_HPP_
 
+#define USE_SPRITE_SHADER
+
 #include <OgreSingleton.h>
 #include <OgreHighLevelGpuProgramManager.h>
 

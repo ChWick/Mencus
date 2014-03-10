@@ -3,6 +3,8 @@
 #include "GameInputCommand.hpp"
 #include <OgreLogManager.h>
 #include "Weapon.hpp"
+#include "Game.hpp"
+#include "GUIManager.hpp"
 
 using namespace CEGUI;
 
@@ -75,11 +77,25 @@ void CGUIInput::buttonSizeChanged(float fSize) {
   }
 
   // resize push buttons
+  float fHeight =
+    CGUIManager::getSingleton().getRenderer()->getDisplaySize().d_height;
+  float fWidth =
+    CGUIManager::getSingleton().getRenderer()->getDisplaySize().d_width;
+
   for (unsigned int i = 0; i < BT_COUNT; i++) {
     m_pButtons[i]->setSize(USize(UDim(0, fSize), UDim(0, fSize)));
     if (i > BT_RIGHT) {
       m_pButtons[i]->setPosition(UVector2(UDim(0, 0), UDim(0, (i - BT_ENTER_LINK) * fSize)));
+      m_vButtonOrigins[i].x = fWidth - fSize;
+      m_vButtonOrigins[i].y = fHeight - (4 - (i - BT_ENTER_LINK)) * fSize;
     }
+    else {
+      m_pButtons[i]->setPosition(UVector2(UDim(0, (i == BT_RIGHT) ? fSize : 0), UDim(0, 0)));
+      m_vButtonOrigins[i].x = (i == BT_RIGHT) ? fSize : 0;
+      m_vButtonOrigins[i].y = fHeight - fSize;
+    }
+
+    //Ogre::LogManager::getSingleton().logMessage(Ogre::StringConverter::toString(m_vButtonOrigins[i]));
   }
 }
 CEGUI::Window *CGUIInput::createButton(int bt) {
@@ -91,78 +107,6 @@ CEGUI::Window *CGUIInput::createButton(int bt) {
   
   // this is default for control buttons
   pButton->setPosition(UVector2(UDim(0, 0), UDim(0, (bt - BT_ENTER_LINK) * 100)));
-  
-  switch (bt) {
-  case BT_LEFT:
-  case BT_RIGHT:
-    pButton->setPosition(UVector2(UDim((bt == BT_RIGHT) ? 0.5 : 0, 0), UDim(0, 0)));
-
-    pButton->
-      subscribeEvent(
-		     Window::EventMouseEntersArea,
-		     Event::Subscriber(
-				       (bt == BT_RIGHT) ?
-				       &CGUIInput::onMouseEntersRightButton :
-				       &CGUIInput::onMouseEntersLeftButton,
-				       this));
-    pButton->
-      subscribeEvent(
-		     Window::EventMouseLeavesArea,
-		     Event::Subscriber(
-				       (bt == BT_RIGHT) ?
-				       &CGUIInput::onMouseLeavesRightButton :
-				       &CGUIInput::onMouseLeavesLeftButton,
-				       this));
-    pButton->
-      subscribeEvent(
-		     Window::EventMouseMove,
-		     Event::Subscriber(
-				       (bt == BT_RIGHT) ?
-				       &CGUIInput::onMouseMoveRightButton :
-				       &CGUIInput::onMouseMoveLeftButton,
-				       this));
-    break;
-  case BT_JUMP:
-    pButton->
-      subscribeEvent(
-		     Window::EventMouseEntersArea,
-		     Event::Subscriber(&CGUIInput::onJumpPressed, this));
-    pButton->
-      subscribeEvent(
-		     Window::EventMouseLeavesArea,
-		     Event::Subscriber(&CGUIInput::onJumpReleased, this));
-    break;
-  case BT_ENTER_LINK:
-    pButton->
-      subscribeEvent(
-		     Window::EventMouseEntersArea,
-		     Event::Subscriber(&CGUIInput::onEnterLinkPressed, this));
-    pButton->
-      subscribeEvent(
-		     Window::EventMouseLeavesArea,
-		     Event::Subscriber(&CGUIInput::onEnterLinkReleased, this));
-    break;
-  case BT_ACTIVATE:
-    pButton->
-      subscribeEvent(
-		     Window::EventMouseEntersArea,
-		     Event::Subscriber(&CGUIInput::onActivatePressed, this));
-    pButton->
-      subscribeEvent(
-		     Window::EventMouseLeavesArea,
-		     Event::Subscriber(&CGUIInput::onActivateReleased, this));
-    break;
-  case BT_ATTACK:
-    pButton->
-      subscribeEvent(
-		     Window::EventMouseEntersArea,
-		     Event::Subscriber(&CGUIInput::onAttackPressed, this));
-    pButton->
-      subscribeEvent(
-		     Window::EventMouseLeavesArea,
-		     Event::Subscriber(&CGUIInput::onAttackReleased, this));
-    break;
-  }
   
   return pButton;
 }
@@ -212,6 +156,8 @@ void CGUIInput::update(float tpf) {
   m_fLastDragPos = m_pDragButton->getPosition().d_y.d_offset;
 
   m_pDragWindow->setPosition(UVector2(UDim(0, 0), UDim(-0.025, m_fLastDragPos - 2 * m_fButtonSize)));
+
+  updateInput();
 }
 void CGUIInput::setCurrentWeapon(unsigned int uiWeapon) {
   m_pWeapons[m_uiCurrentWeapon]->setProperty("BackgroundEnabled", "False");
@@ -219,6 +165,46 @@ void CGUIInput::setCurrentWeapon(unsigned int uiWeapon) {
   m_pWeapons[uiWeapon]->setProperty("BackgroundEnabled", "True");
   m_pWeapons[uiWeapon]->setProperty("FrameEnabled", "True");
   m_uiCurrentWeapon = uiWeapon;
+}
+void CGUIInput::updateInput() {
+  for (int i = 0; i < BT_COUNT; i++) {
+    m_bButtonPressed[i] = false;
+  }
+  OIS::Mouse *pMouse = CGame::getSingleton().getInputContext().mMouse;
+  checkForButtonPress(Ogre::Vector2(pMouse->getMouseState().X.abs,
+				    pMouse->getMouseState().Y.abs));
+
+  OIS::MultiTouch *pMultiTouch = CGame::getSingleton().getInputContext().mMultiTouch;
+
+  CGameInputManager::getSingleton().
+    sendCommandToListeners(CGameInputCommand(GIC_LEFT,
+					     m_bButtonPressed[BT_LEFT]));
+  CGameInputManager::getSingleton().
+    sendCommandToListeners(CGameInputCommand(GIC_RIGHT,
+					     m_bButtonPressed[BT_RIGHT]));
+  CGameInputManager::getSingleton().
+    sendCommandToListeners(CGameInputCommand(GIC_ATTACK,
+					     m_bButtonPressed[BT_ATTACK]));
+  CGameInputManager::getSingleton().
+    sendCommandToListeners(CGameInputCommand(GIC_JUMP,
+					     m_bButtonPressed[BT_JUMP]));
+  CGameInputManager::getSingleton().
+    sendCommandToListeners(CGameInputCommand(GIC_ACTIVATE,
+					     m_bButtonPressed[BT_ACTIVATE]));
+  CGameInputManager::getSingleton().
+    sendCommandToListeners(CGameInputCommand(GIC_ENTER_LINK,
+					     m_bButtonPressed[BT_ENTER_LINK]));
+}
+void CGUIInput::checkForButtonPress(const Ogre::Vector2 &vPos) {
+  //Ogre::LogManager::getSingleton().logMessage(Ogre::StringConverter::toString(vPos));
+  for (int i = 0; i < BT_COUNT; i++) {
+    Ogre::Vector2 posInButton = vPos - m_vButtonOrigins[i];
+    if (posInButton.x > 0 && posInButton.x < m_fButtonSize &&
+	posInButton.y > 0 && posInButton.y < m_fButtonSize) {
+      m_bButtonPressed[i] = true;
+      break;
+    }
+  }
 }
 void CGUIInput::updateDragButtonPosition(const CEGUI::EventArgs& args) {
 const CEGUI::MouseEventArgs &mea = dynamic_cast<const CEGUI::MouseEventArgs&>(args);
@@ -242,8 +228,6 @@ bool CGUIInput::onMouseLeavesRightButton(const CEGUI::EventArgs& args) {
   return true;
 }
 bool CGUIInput::onMouseMoveRightButton(const CEGUI::EventArgs&) {
-  CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_RIGHT, 1));
   return true;
 }
 bool CGUIInput::onMouseEntersLeftButton(const CEGUI::EventArgs&) {

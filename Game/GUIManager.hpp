@@ -44,6 +44,8 @@ public:
 
   void update(Ogre::Real tpf);
 
+  CEGUI::OgreRenderer *getRenderer() const {return m_pCEGuiOgreRenderer;}
+
   // Ogre::RenderQueueListener
   void renderQueueStarted(Ogre::uint8 id, const Ogre::String& invocation, bool& skipThisQueue);
   void renderQueueEnded(Ogre::uint8 id, const Ogre::String& invocation, bool& repeatThisQueue);

@@ -219,9 +219,7 @@ void Ogre2dManager::renderBuffer()
    alphaBlendMode.operation=Ogre::LBX_BLEND_MANUAL;
    alphaBlendMode.factor = 1;
 
-#ifdef INCLUDE_RTSHADER_SYSTEM
    CShaderManager::getSingleton().updateSpriteShaderParams();
-#endif
 
    for (currChunk=chunks.begin(); currChunk!=endChunk; currChunk++)
    {
@@ -283,9 +281,8 @@ void Ogre2dManager::prepareForRender()
    rs->unbindGpuProgram(Ogre::GPT_VERTEX_PROGRAM);
    rs->_setSeparateSceneBlending(Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_DEST_ALPHA, Ogre::SBF_ONE);
    rs->_setAlphaRejectSettings(Ogre::CMPF_ALWAYS_PASS, 0, true);
-#ifdef INCLUDE_RTSHADER_SYSTEM
+
    CShaderManager::getSingleton().bindSpriteShaders();
-#endif
 }
 
 void Ogre2dManager::createHardwareBuffer(unsigned int size)

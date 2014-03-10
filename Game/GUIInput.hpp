@@ -2,6 +2,7 @@
 #define GUIINPUT_HPP
 
 #include <CEGUI/CEGUI.h>
+#include <OgreVector2.h>
 #include "Weapon.hpp"
 #include "PauseCaller.hpp"
 
@@ -32,6 +33,8 @@ private:
   CEGUI::Window *m_pDragWindow;
   CEGUI::Window *m_pWeapons[Weapon::W_COUNT];
   CEGUI::Window *m_pButtons[BT_COUNT];
+  Ogre::Vector2 m_vButtonOrigins[BT_COUNT];
+  bool m_bButtonPressed[BT_COUNT];
 
   unsigned int m_uiCurrentWeapon;
 
@@ -47,6 +50,9 @@ public:
 
 private:
   void buttonSizeChanged(float fSize);
+  
+  void updateInput();
+  void checkForButtonPress(const Ogre::Vector2 &vPos);
 
   CEGUI::Window *createButton(int bt);
   CEGUI::Window *createWeaponButton(unsigned int uiWeapon);
