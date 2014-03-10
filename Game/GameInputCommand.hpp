@@ -22,13 +22,13 @@ private:
 
 public:
   CGameInputCommand(const EGameInputCommandTypes eType, float fValue = 1)
-    : m_eType(eType), m_fValue(fValue), m_iValue(0) {
+    : m_eType(eType), m_fValue(fValue), m_iValue(static_cast<int>(fValue)) {
   }
   CGameInputCommand(const EGameInputCommandTypes eType, unsigned int uiValue)
-    : m_eType(eType), m_fValue(0), m_iValue(uiValue) {
+    : m_eType(eType), m_fValue(uiValue), m_iValue(uiValue) {
   }
   CGameInputCommand(const EGameInputCommandTypes eType, int iValue)
-    : m_eType(eType), m_fValue(0), m_iValue(iValue) {
+    : m_eType(eType), m_fValue(iValue), m_iValue(iValue) {
   }
 
   EGameInputCommandTypes getType() const {return m_eType;}
