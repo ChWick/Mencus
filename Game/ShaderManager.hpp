@@ -5,6 +5,7 @@
 
 #include <OgreSingleton.h>
 #include <OgreHighLevelGpuProgramManager.h>
+#include <OgreColourValue.h>
 
 enum OgreRendererShaderTypes {
   ORST_UNUSED,           //!< no shader used
@@ -24,6 +25,10 @@ private:
   Ogre::HighLevelGpuProgramPtr m_SpritePixelShader;
   Ogre::GpuProgramParametersSharedPtr m_SpriteVertexShaderParameters;
   Ogre::GpuProgramParametersSharedPtr m_SpritePixelShaderParameters;
+
+  bool m_bSpriteParamsChanged;
+  Ogre::ColourValue m_cLastSpriteColor;
+  Ogre::String m_sShaderLanguage;
 public:
   static CShaderManager& getSingleton(void);
   static CShaderManager* getSingletonPtr(void);
@@ -35,13 +40,17 @@ public:
   void bindSpriteShaders();
   void updateSpriteShaderParams();
 
+  void setSpriteColor(const Ogre::ColourValue &col);
   Ogre::HighLevelGpuProgramPtr getSpriteVertexShader() {return m_SpriteVertexShader;}
   Ogre::HighLevelGpuProgramPtr getSpritePixelShader() {return m_SpritePixelShader;}
 
+  void addAlphaBlendTextureShader(Ogre::MaterialPtr matptr);
 private:
   void setupSpriteShader();
   void cleanupSpriteShader();
-  
+
+  Ogre::HighLevelGpuProgramPtr createAlphaBlendTextureVertexProgram();
+  Ogre::HighLevelGpuProgramPtr createAlphaBlendTextureFragmentProgram();
 };
 
 

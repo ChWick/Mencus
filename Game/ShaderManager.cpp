@@ -1,5 +1,7 @@
 #include "ShaderManager.hpp"
 #include <OgreRenderSystem.h>
+#include <OgrePass.h>
+#include <OgreTechnique.h>
 
 namespace ShaderPrograms {
   // -------------------------------------------------------------------------------
@@ -16,9 +18,10 @@ namespace ShaderPrograms {
   static Ogre::String
   S_glsl_compat_ps_source(
 			  "uniform sampler2D texture0;"
+			  "uniform vec4 colour;"
 			  "void main(void)"
 			  "{"
-			  "    gl_FragColor = texture2D(texture0, gl_TexCoord[0].st) * gl_Color;"
+			  "    gl_FragColor = texture2D(texture0, gl_TexCoord[0].st) * colour;"
 			  "}"
 			  );
   static Ogre::String
@@ -27,7 +30,6 @@ namespace ShaderPrograms {
 		     "precision highp float;"
 		     "attribute vec4 vertex;"
 		     "attribute vec2 uv0;"
-		     "attribute vec4 colour;"
 
 		     "varying vec2 exTexCoord;"
 		     "varying vec4 exColour;"
@@ -37,7 +39,6 @@ namespace ShaderPrograms {
 		     "void main()"
 		     "{"
 		     "  exTexCoord = uv0;"
-		     "  exColour = vec4(1.0, 1.0, 1.0, 1.0);"
 		     "  gl_Position = modelViewPerspMatrix * vertex;"
 		     "}"
 		     );
@@ -47,12 +48,12 @@ namespace ShaderPrograms {
 		     "#version 100 \n"
 		     "precision highp float;"
 		     "uniform sampler2D texture0;"
+		     "uniform vec4 colour;"
 		     "varying vec2 exTexCoord;"
-		     "varying vec4 exColour;"
 
 		     "void main(void)"
 		     "{"
-		     "  gl_FragColor = texture2D( texture0, exTexCoord ) * exColour;"
+		     "  gl_FragColor = texture2D( texture0, exTexCoord ) * colour;"
 		     "}"
 		     );
 }
@@ -72,40 +73,40 @@ CShaderManager& CShaderManager::getSingleton(void)
 
 CShaderManager::CShaderManager(Ogre::RenderSystem *pRenderSystem)
   : m_pRenderSystem(pRenderSystem), m_ShaderTypes(ORST_UNUSED) {
-  setupSpriteShader();
-}
+  m_cLastSpriteColor = Ogre::ColourValue::White;
 
-void CShaderManager::setupSpriteShader() {
-  using namespace ShaderPrograms;
-
-#ifdef USE_SPRITE_SHADER
-  Ogre::String shaderLanguage;
   if (m_pRenderSystem->getName().compare(0, 8, "OpenGL 3") == 0) {
     m_ShaderTypes = ORST_GLSL_CORE;
-    shaderLanguage = "glsl";
+    m_sShaderLanguage = "glsl";
     Ogre::LogManager::getSingleton().logMessage("Using glsl core shader");
   }
   else if (Ogre::HighLevelGpuProgramManager::getSingleton().isLanguageSupported("glsles")) {
     m_ShaderTypes = ORST_GLSLES;
-    shaderLanguage = "glsles";
+    m_sShaderLanguage = "glsles";
     Ogre::LogManager::getSingleton().logMessage("Using glsles shader");
   }
   else if (Ogre::HighLevelGpuProgramManager::getSingleton().isLanguageSupported("glsl")) {
     m_ShaderTypes = ORST_GLSL;
-    shaderLanguage = "glsl";
+    m_sShaderLanguage = "glsl";
     Ogre::LogManager::getSingleton().logMessage("Using glsl shader");
   }
   else {
     throw Ogre::Exception(0, "No shader types supported!", __FILE__);
   }
 
+  setupSpriteShader();
+}
+void CShaderManager::setupSpriteShader() {
+  using namespace ShaderPrograms;
+ 
+
   // Create vertex shader
   m_SpriteVertexShader = Ogre::HighLevelGpuProgramManager::getSingleton().
     createProgram("__ogre2dmanager_vs__",
 		  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-		  shaderLanguage, Ogre::GPT_VERTEX_PROGRAM);
+		  m_sShaderLanguage, Ogre::GPT_VERTEX_PROGRAM);
   m_SpriteVertexShader->setParameter("entry_point", "main");
-  m_SpriteVertexShader->setParameter("profiles", shaderLanguage);
+  m_SpriteVertexShader->setParameter("profiles", m_sShaderLanguage);
 
   switch (m_ShaderTypes) {
   case ORST_GLSLES:
@@ -126,9 +127,9 @@ void CShaderManager::setupSpriteShader() {
   m_SpritePixelShader = Ogre::HighLevelGpuProgramManager::getSingleton().
     createProgram("__ogre2dmanager_ps__",
 		  Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-		  shaderLanguage, Ogre::GPT_FRAGMENT_PROGRAM);
+		  m_sShaderLanguage, Ogre::GPT_FRAGMENT_PROGRAM);
   m_SpritePixelShader->setParameter("entry_point", "main");
-  m_SpritePixelShader->setParameter("profiles", shaderLanguage);
+  m_SpritePixelShader->setParameter("profiles", m_sShaderLanguage);
 
   switch (m_ShaderTypes) {
   case ORST_GLSLES:
@@ -147,44 +148,62 @@ void CShaderManager::setupSpriteShader() {
 
   m_SpriteVertexShaderParameters = m_SpriteVertexShader->createParameters();
   m_SpritePixelShaderParameters = m_SpritePixelShader->createParameters();
-#endif
+
+  m_SpritePixelShader->getDefaultParameters()->setNamedConstant("colour", Ogre::ColourValue::White);
 }
 void CShaderManager::bindSpriteShaders() {
-#ifdef USE_SPRITE_SHADER
+  m_bSpriteParamsChanged = true;
   if (Ogre::GpuProgram* prog = m_SpriteVertexShader->_getBindingDelegate())
     m_pRenderSystem->bindGpuProgram(prog);
 
   if (Ogre::GpuProgram* prog = m_SpritePixelShader->_getBindingDelegate())
     m_pRenderSystem->bindGpuProgram(prog);
-#else
-  m_pRenderSystem->unbindGpuProgram(Ogre::GPT_VERTEX_PROGRAM);
-  m_pRenderSystem->unbindGpuProgram(Ogre::GPT_FRAGMENT_PROGRAM);
-#endif
 }
 void CShaderManager::updateSpriteShaderParams() {
-#ifdef USE_SPRITE_SHADER
+  //if (!m_bSpriteParamsChanged) {return;}
   switch (m_ShaderTypes) {
-  case ORST_GLSLES:
+  case ORST_GLSLES:   
   case ORST_GLSL_CORE:
     m_SpriteVertexShaderParameters->
-      setNamedConstant("modelViewPerspMatrix", Ogre::Matrix4::IDENTITY);    
+      setNamedConstant("modelViewPerspMatrix", Ogre::Matrix4::IDENTITY); 
     
-    m_pRenderSystem->
-      bindGpuProgramParameters(Ogre::GPT_VERTEX_PROGRAM,
-			       m_SpriteVertexShaderParameters,
-			       Ogre::GPV_ALL);
+   
     // no break!
   case ORST_GLSL:
     m_SpritePixelShaderParameters->
       setNamedConstant("texture0", 0);
-    
+    			  
+    m_SpritePixelShaderParameters->
+      setNamedConstant("colour", m_cLastSpriteColor);
+
+
     m_pRenderSystem->
       bindGpuProgramParameters(Ogre::GPT_FRAGMENT_PROGRAM,
 			       m_SpritePixelShaderParameters,
+			       Ogre::GPV_ALL);
+    m_pRenderSystem->
+      bindGpuProgramParameters(Ogre::GPT_VERTEX_PROGRAM,
+			       m_SpriteVertexShaderParameters,
 			       Ogre::GPV_ALL);
     break;
   default:
     break;
   }
-#endif
+  m_bSpriteParamsChanged = false;
+}
+void CShaderManager::setSpriteColor(const Ogre::ColourValue &col) {
+  if (col != m_cLastSpriteColor) {
+    m_bSpriteParamsChanged = true;
+    m_cLastSpriteColor = col;
+  }
+}
+void CShaderManager::addAlphaBlendTextureShader(Ogre::MaterialPtr matptr) {
+  Ogre::Pass *pPass = matptr->getTechnique(0)->getPass(0);
+  if (pPass->hasVertexProgram() || pPass->hasFragmentProgram()) {
+    return;
+  }
+  pPass->setFragmentProgram(m_SpritePixelShader->getName());
+  pPass->setVertexProgram(m_SpriteVertexShader->getName());
+  pPass->setFragmentProgramParameters(m_SpritePixelShaderParameters);
+  pPass->setVertexProgramParameters(m_SpriteVertexShaderParameters);
 }
