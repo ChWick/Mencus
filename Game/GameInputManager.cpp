@@ -23,50 +23,50 @@ CGameInputManager::~CGameInputManager() {
 }
 bool CGameInputManager::keyPressed( const OIS::KeyEvent &arg ) {
   if (arg.key == OIS::KC_LEFT) {
-    sendCommandToListeners(CGameInputCommand(GIC_LEFT, 1));
+    injectCommand(CGameInputCommand(GIC_LEFT, 1));
   }
   else if (arg.key == OIS::KC_RIGHT) {
-    sendCommandToListeners(CGameInputCommand(GIC_RIGHT, 1));
+    injectCommand(CGameInputCommand(GIC_RIGHT, 1));
   }
   else if (arg.key == OIS::KC_UP) {
-    sendCommandToListeners(CGameInputCommand(GIC_JUMP, 1));
+    injectCommand(CGameInputCommand(GIC_JUMP, 1));
   }
   else if (arg.key == OIS::KC_DOWN) {
-    sendCommandToListeners(CGameInputCommand(GIC_ENTER_LINK, 1));
+    injectCommand(CGameInputCommand(GIC_ENTER_LINK, 1));
   }
   else if (arg.key == OIS::KC_SPACE) {
-    sendCommandToListeners(CGameInputCommand(GIC_ATTACK, 1));
+    injectCommand(CGameInputCommand(GIC_ATTACK, 1));
   }
   else if (arg.key == OIS::KC_RETURN) {
-    sendCommandToListeners(CGameInputCommand(GIC_ACTIVATE, 1));
+    injectCommand(CGameInputCommand(GIC_ACTIVATE, 1));
   }
   else if (arg.key == OIS::KC_N) {
-    sendCommandToListeners(CGameInputCommand(GIC_USE_HEALTH_POTION, 1));
+    injectCommand(CGameInputCommand(GIC_USE_HEALTH_POTION, 1));
   }
   else if (arg.key == OIS::KC_M) {
-    sendCommandToListeners(CGameInputCommand(GIC_USE_MANA_POTION, 1));
+    injectCommand(CGameInputCommand(GIC_USE_MANA_POTION, 1));
   }
 
   return true;
 }
 bool CGameInputManager::keyReleased( const OIS::KeyEvent &arg ) {
   if (arg.key == OIS::KC_LEFT) {
-    sendCommandToListeners(CGameInputCommand(GIC_LEFT, 0));
+    injectCommand(CGameInputCommand(GIC_LEFT, 0));
   }
   else if (arg.key == OIS::KC_RIGHT) {
-    sendCommandToListeners(CGameInputCommand(GIC_RIGHT, 0));
+    injectCommand(CGameInputCommand(GIC_RIGHT, 0));
   }
   else if (arg.key == OIS::KC_UP) {
-    sendCommandToListeners(CGameInputCommand(GIC_JUMP, 0));
+    injectCommand(CGameInputCommand(GIC_JUMP, 0));
   }
   else if (arg.key == OIS::KC_DOWN) {
-    sendCommandToListeners(CGameInputCommand(GIC_ENTER_LINK, 0));
+    injectCommand(CGameInputCommand(GIC_ENTER_LINK, 0));
   }
   else if (arg.key == OIS::KC_SPACE) {
-    sendCommandToListeners(CGameInputCommand(GIC_ATTACK, 0));
+    injectCommand(CGameInputCommand(GIC_ATTACK, 0));
   }
   else if (arg.key == OIS::KC_RETURN) {
-    sendCommandToListeners(CGameInputCommand(GIC_ACTIVATE, 0));
+    injectCommand(CGameInputCommand(GIC_ACTIVATE, 0));
   }
 
   return true;
