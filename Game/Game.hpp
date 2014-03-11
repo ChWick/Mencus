@@ -52,6 +52,9 @@ public:
   void createResources();
   void destroyResources();
 
+  void showLoadingBar();
+  void hideLoadingBar();
+
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
   void initAppForAndroid(Ogre::RenderWindow *window, struct android_app* app, OIS::MultiTouch *mouse, OIS::Keyboard *keyboard) {
     Ogre::LogManager::getSingletonPtr()->logMessage("Initializing App for Android");

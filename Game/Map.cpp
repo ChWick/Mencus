@@ -35,7 +35,10 @@ CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayLi
     m_pScreenplayListener(pScreenplayListener),
     m_bUpdatePause(false),
     m_bRenderPause(false) {
+  CGame::getSingleton().showLoadingBar();
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
+  CGame::getSingleton().hideLoadingBar();
+
   m_p2dManagerMap = new Ogre2dManager();
   m_p2dManagerMap->init(pSceneManager, Ogre::RENDER_QUEUE_BACKGROUND, false);
 

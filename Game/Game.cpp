@@ -126,8 +126,8 @@ void CGame::setup() {
   setupInput(true);
   Ogre::LogManager::getSingletonPtr()->logMessage("*** locating resources ***");
   locateResources();
-  Ogre::LogManager::getSingletonPtr()->logMessage("*** loading resources ***");
-  loadResources();
+  Ogre::LogManager::getSingletonPtr()->logMessage("*** loading essential resources ***");
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Essential");
             
   Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(5);
             
@@ -196,12 +196,14 @@ void CGame::locateResources() {
 }
 void CGame::loadResources() {
   //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
+  showLoadingBar();
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("General");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Imagesets");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Fonts");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Schemes");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("LookNFeel");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Layouts");
+  hideLoadingBar();
 }
 void CGame::setupInput(bool nograb) {
 #if OGRE_PLATFORM != OGRE_PLATFORM_ANDROID && OGRE_PLATFORM != OGRE_PLATFORM_WINRT
@@ -371,16 +373,16 @@ void CGame::createScene() {
 
  
 
-#ifdef DEBUG_SHOW_OGRE_TRAY
   Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing SdkTrays ***");
 #if OGRE_VERSION >= ((1 << 16) | (9 << 8) | 0)
   mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, mInputContext, this);
 #else
   mTrayMgr = new OgreBites::SdkTrayManager("InterfaceName", mWindow, NULL, this);
 #endif
+
+#ifdef DEBUG_SHOW_OGRE_TRAY
   mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
   mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
-  //mTrayMgr->hideCursor();
 
   // create a params panel for displaying sample details
   Ogre::StringVector items;
@@ -400,21 +402,14 @@ void CGame::createScene() {
   mDetailsPanel->setParamValue(9, "Bilinear");
   mDetailsPanel->setParamValue(10, "Solid");
   mDetailsPanel->hide();
+#else
+  mTrayMgr->hideCursor();
 #endif // DEBUG_SHOW_OGRE_TRAY
+
 
   
 
   mRoot->addFrameListener(this);
-
-  Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing singleton classes ***");
-  //-------------------------------------------------------------------------------------
-  new CShaderManager(mRoot->getRenderSystem());
-  m_pGameState = new CGameState();
-  new CPauseManager();
-  new CSaveStateManager();
-  new CGUIManager(mSceneMgr, *mWindow);
-  m_pGameState->init();
-  m_pGameState->changeGameState(CGameState::GS_MAIN_MENU);
 
 
 #ifdef INCLUDE_RTSHADER_SYSTEM
@@ -462,7 +457,19 @@ void CGame::createScene() {
   }
 #endif // INCLUDE_RTSHADER_SYSTEM
 
-  //mRoot->startRendering();
+
+
+  loadResources();
+
+  Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing singleton classes ***");
+  //-------------------------------------------------------------------------------------
+  new CShaderManager(mRoot->getRenderSystem());
+  m_pGameState = new CGameState();
+  new CPauseManager();
+  new CSaveStateManager();
+  new CGUIManager(mSceneMgr, *mWindow);
+  m_pGameState->init();
+  m_pGameState->changeGameState(CGameState::GS_MAIN_MENU);
 }
 
 bool CGame::frameRenderingQueued(const Ogre::FrameEvent& evt) {
@@ -476,12 +483,7 @@ bool CGame::frameRenderingQueued(const Ogre::FrameEvent& evt) {
     return true;
   }
 
-  
-#ifdef DEBUG_SHOW_OGRE_TRAY
   mTrayMgr->frameRenderingQueued(evt);
-#endif // DEBUG_SHOW_OGRE_TRAY
-
-  //mCameraMan->frameRenderingQueued(evt);   // if dialog isn't up, then update the camera
 
   return true;
 }
@@ -824,3 +826,11 @@ void CGame::destroyResources() {
     //new CGUIManager(mSceneMgr, *mWindow);
   }
 }
+ void CGame::showLoadingBar() {
+   assert(mTrayMgr);
+   mTrayMgr->showLoadingBar(1, 0);
+ }
+ void CGame::hideLoadingBar() {
+   assert(mTrayMgr);
+   mTrayMgr->hideLoadingBar();
+ }
