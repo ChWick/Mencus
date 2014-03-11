@@ -365,6 +365,7 @@ bool CMap::findLink(const CBoundingBox2d &bb, Ogre::Vector2 &vFromPos, Ogre::Vec
 	((m_gridTiles(link.getSecondX(), link.getSecondY())->getTileFlags() & (CTile::TF_DOOR1 | CTile::TF_DOOR2 | CTile::TF_DOOR3)) == 0)) {
       continue;
     }
+
     if (link.getLinkDirection() & CLink::LD_FIRST_TO_SECOND) {
       if (m_gridTiles(link.getFirstX(), link.getFirstY())->getWorldBoundingBox().collidesWith(bb) != CCD_NONE) {
         vFromPos = Ogre::Vector2(link.getFirstX(), link.getFirstY());
@@ -372,6 +373,7 @@ bool CMap::findLink(const CBoundingBox2d &bb, Ogre::Vector2 &vFromPos, Ogre::Vec
         return true;
       }
     }
+
     if (link.getLinkDirection() & CLink::LD_SECOND_TO_FIRST) {
       if (m_gridTiles(link.getSecondX(), link.getSecondY())->getWorldBoundingBox().collidesWith(bb) != CCD_NONE) {
         vFromPos = Ogre::Vector2(link.getSecondX(), link.getSecondY());

@@ -248,9 +248,7 @@ void CPlayer::update(Ogre::Real tpf) {
 
     // if activate link and on ground
     if (m_bActivateLinkPressed && m_bOnGround) {
-      Ogre::LogManager::getSingleton().logMessage("activate and on ground");
       if (m_pMap->findLink(getWorldBoundingBox(), m_vLinkFromPos, m_vLinkToPos)) {
-	Ogre::LogManager::getSingleton().logMessage("Link found");
         m_eGoToLinkStatus = GTLS_MOVE_TO_ENTRANCE;
         m_Fader.startFadeOut(PLAYER_LINK_FADE_TIME);
         pause(PLAYER_LINK_PAUSE);
