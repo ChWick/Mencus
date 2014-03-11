@@ -219,19 +219,22 @@ void Ogre2dManager::renderBuffer()
    alphaBlendMode.operation=Ogre::LBX_BLEND_MANUAL;
    alphaBlendMode.factor = 1;
 
-   CShaderManager::getSingleton().updateSpriteShaderParams();
-
    for (currChunk=chunks.begin(); currChunk!=endChunk; currChunk++)
    {
       renderOp.vertexData->vertexCount=currChunk->vertexCount;
 #if OGRE_VERSION >= ((1 << 16) | (9 << 8) | 0)
       tp = Ogre::TextureManager::getSingleton().getByHandle(currChunk->texHandle).dynamicCast<Ogre::Texture>();
 #else
-	  tp = Ogre::TextureManager::getSingleton().getByHandle(currChunk->texHandle);
+      tp = Ogre::TextureManager::getSingleton().getByHandle(currChunk->texHandle);
 #endif
       rs->_setTexture(0, true, tp->getName());
       alphaBlendMode.factor = currChunk->colour.a;
       rs->_setTextureBlendMode(0, alphaBlendMode);
+
+#ifdef USE_SPRITE_SHADER
+      CShaderManager::getSingleton().setSpriteColor(currChunk->colour);
+      CShaderManager::getSingleton().updateSpriteShaderParams();
+#endif
       rs->_render(renderOp);
       renderOp.vertexData->vertexStart+=currChunk->vertexCount;
    }
@@ -282,7 +285,9 @@ void Ogre2dManager::prepareForRender()
    rs->_setSeparateSceneBlending(Ogre::SBF_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_SOURCE_ALPHA, Ogre::SBF_ONE_MINUS_DEST_ALPHA, Ogre::SBF_ONE);
    rs->_setAlphaRejectSettings(Ogre::CMPF_ALWAYS_PASS, 0, true);
 
+#ifdef USE_SPRITE_SHADER
    CShaderManager::getSingleton().bindSpriteShaders();
+#endif
 }
 
 void Ogre2dManager::createHardwareBuffer(unsigned int size)
