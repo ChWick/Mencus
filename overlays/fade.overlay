@@ -4,6 +4,7 @@ FadeOverlay
  
      container Panel(FadeInOutPanel)
      {
+	
          left 0
          top 0
          width 1
