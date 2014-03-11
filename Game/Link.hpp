@@ -27,7 +27,8 @@ public:
     : m_uiFirstX(uiFirstX), m_uiFirstY(uiFirstY),
       m_uiSecondX(uiSecondX), m_uiSecondY(uiSecondY),
       m_sID(sID),
-      m_bActivated(true) {
+      m_bActivated(true),
+      m_eLinkDirection(eLinkDirection) {
   }
   CLink(const CLink &link)
     : m_uiFirstX(link.m_uiFirstX), m_uiFirstY(link.m_uiFirstY),
