@@ -149,7 +149,19 @@ void CShaderManager::setupSpriteShader() {
   m_SpriteVertexShaderParameters = m_SpriteVertexShader->createParameters();
   m_SpritePixelShaderParameters = m_SpritePixelShader->createParameters();
 
-  m_SpritePixelShader->getDefaultParameters()->setNamedConstant("colour", Ogre::ColourValue::White);
+  
+
+  switch (m_ShaderTypes) {
+  case ORST_GLSLES:
+  case ORST_GLSL_CORE:
+     m_SpriteVertexShader->getDefaultParameters()->setNamedConstant("modelViewPerspMatrix", Ogre::Matrix4::IDENTITY);
+     m_SpritePixelShader->getDefaultParameters()->setNamedConstant("texture0", 0);
+  case ORST_GLSL:
+    m_SpritePixelShader->getDefaultParameters()->setNamedConstant("colour", Ogre::ColourValue::White);
+    break;
+  default:
+    break;
+  }
 }
 void CShaderManager::bindSpriteShaders() {
   m_bSpriteParamsChanged = true;
