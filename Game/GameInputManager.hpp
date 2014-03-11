@@ -2,6 +2,7 @@
 #define GAME_INPUT_MANAGER_HPP
 
 #include "InputListener.hpp"
+#include "GameInputCommand.hpp"
 #include <OgreSingleton.h>
 #include <list>
 
@@ -12,7 +13,8 @@ class CGameInputManager :
   public CInputListener,
   public Ogre::Singleton<CGameInputManager> {
 private:
-  std::list<CGameInputListener*> m_lListenerList;
+  std::list<CGameInputListener*> m_lListenerList;       //!< List of the listeners 
+  EGameInputState m_InputStates[GIC_COUNT];             //!< Current state of the inputs
 public:
   static CGameInputManager& getSingleton(void);
   static CGameInputManager* getSingletonPtr(void);
@@ -39,6 +41,9 @@ public:
   virtual bool touchPressed(const OIS::MultiTouchEvent& evt);
   virtual bool touchReleased(const OIS::MultiTouchEvent& evt);
   virtual bool touchCancelled(const OIS::MultiTouchEvent& evt);
+
+  void injectCommand( const CGameInputCommand &cmd );
+protected:
 
   void sendCommandToListeners( const CGameInputCommand &cmd );
 

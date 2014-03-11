@@ -46,6 +46,7 @@ private:
   float m_fButtonSize;
 public:
   CGUIInput(CEGUI::Window *pGUIRoot);
+  ~CGUIInput();
 
   void update(float tpf);
 
@@ -54,6 +55,7 @@ private:
   
   void updateInput();
   void checkForButtonPress(const Ogre::Vector2 &vPos);
+  int getButtonAtPos(const Ogre::Vector2 &vPos);
 
   CEGUI::Window *createButton(int bt);
   CEGUI::Window *createWeaponButton(unsigned int uiWeapon);

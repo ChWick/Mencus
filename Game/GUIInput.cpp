@@ -68,6 +68,8 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
   setCurrentWeapon(0);
   this->buttonSizeChanged(85);
 }
+CGUIInput::~CGUIInput() {
+}
 void CGUIInput::buttonSizeChanged(float fSize) {
   m_fButtonSize = fSize;
 
@@ -194,12 +196,13 @@ void CGUIInput::setCurrentWeapon(unsigned int uiWeapon) {
   m_pWeapons[uiWeapon]->setProperty("FrameEnabled", "True");
   m_uiCurrentWeapon = uiWeapon;
   CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_CHANGE_WEAPON, uiWeapon));
+    injectCommand(CGameInputCommand(GIC_CHANGE_WEAPON, uiWeapon));
 }
 void CGUIInput::updateInput() {
-  for (int i = 0; i < BT_COUNT; i++) {
-    m_bButtonPressed[i] = false;
+  for (auto &state : m_bButtonPressed) {
+    state = false;
   }
+
   OIS::Mouse *pMouse = CGame::getSingleton().getInputContext().mMouse;
   if (pMouse) {
     checkForButtonPress(Ogre::Vector2(pMouse->getMouseState().X.abs,
@@ -210,43 +213,50 @@ void CGUIInput::updateInput() {
   if (pMultiTouch) {
     std::vector<OIS::MultiTouchState> mts = pMultiTouch->getMultiTouchStates();
     for (auto &state : mts) {
-      if (!(state.touchIsType(OIS::MT_Pressed))) {
-	continue;
+      if (state.touchType == OIS::MT_Moved) {
+	checkForButtonPress(Ogre::Vector2(state.X.abs,
+					  state.Y.abs));
       }
-      checkForButtonPress(Ogre::Vector2(state.X.abs,
-					state.Y.abs));
     }
   }
 
+
   CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_LEFT,
+    injectCommand(CGameInputCommand(GIC_LEFT,
 					     m_bButtonPressed[BT_LEFT]));
   CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_RIGHT,
+    injectCommand(CGameInputCommand(GIC_RIGHT,
 					     m_bButtonPressed[BT_RIGHT]));
   CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_ATTACK,
+    injectCommand(CGameInputCommand(GIC_ATTACK,
 					     m_bButtonPressed[BT_ATTACK]));
   CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_JUMP,
+    injectCommand(CGameInputCommand(GIC_JUMP,
 					     m_bButtonPressed[BT_JUMP]));
   CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_ACTIVATE,
+    injectCommand(CGameInputCommand(GIC_ACTIVATE,
 					     m_bButtonPressed[BT_ACTIVATE]));
   CGameInputManager::getSingleton().
-    sendCommandToListeners(CGameInputCommand(GIC_ENTER_LINK,
+    injectCommand(CGameInputCommand(GIC_ENTER_LINK,
 					     m_bButtonPressed[BT_ENTER_LINK]));
 }
 void CGUIInput::checkForButtonPress(const Ogre::Vector2 &vPos) {
   //Ogre::LogManager::getSingleton().logMessage(Ogre::StringConverter::toString(vPos));
+  int btn = getButtonAtPos(vPos);
+  if (btn >= 0 && btn < BT_COUNT) {
+    m_bButtonPressed[btn] = true;
+  }
+}
+int CGUIInput::getButtonAtPos(const Ogre::Vector2 &vPos) {
   for (int i = 0; i < BT_COUNT; i++) {
     Ogre::Vector2 posInButton = vPos - m_vButtonOrigins[i];
     if (posInButton.x > 0 && posInButton.x < m_fButtonSize &&
 	posInButton.y > 0 && posInButton.y < m_fButtonSize) {
-      m_bButtonPressed[i] = true;
+      return i;
       break;
     }
   }
+  return BT_COUNT;
 }
 void CGUIInput::updateDragButtonPosition(const CEGUI::EventArgs& args) {
 const CEGUI::MouseEventArgs &mea = dynamic_cast<const CEGUI::MouseEventArgs&>(args);
@@ -294,13 +304,13 @@ bool CGUIInput::onWeaponClick(const CEGUI::EventArgs& args) {
   if (m_pWeapons[Weapon::I_HEALTH_POTION] == pBtn ||
       m_pWeaponLabels[Weapon::I_HEALTH_POTION] == pBtn) {
     CGameInputManager::getSingleton().
-      sendCommandToListeners(CGameInputCommand(GIC_USE_HEALTH_POTION));
+      injectCommand(CGameInputCommand(GIC_USE_HEALTH_POTION));
     return true;
   }
   else if (m_pWeapons[Weapon::I_MANA_POTION] == pBtn ||
 	   m_pWeaponLabels[Weapon::I_MANA_POTION] == pBtn) {
     CGameInputManager::getSingleton().
-      sendCommandToListeners(CGameInputCommand(GIC_USE_MANA_POTION));
+      injectCommand(CGameInputCommand(GIC_USE_MANA_POTION));
     return true;
   }
 

@@ -248,7 +248,9 @@ void CPlayer::update(Ogre::Real tpf) {
 
     // if activate link and on ground
     if (m_bActivateLinkPressed && m_bOnGround) {
+      Ogre::LogManager::getSingleton().logMessage("activate and on ground");
       if (m_pMap->findLink(getWorldBoundingBox(), m_vLinkFromPos, m_vLinkToPos)) {
+	Ogre::LogManager::getSingleton().logMessage("Link found");
         m_eGoToLinkStatus = GTLS_MOVE_TO_ENTRANCE;
         m_Fader.startFadeOut(PLAYER_LINK_FADE_TIME);
         pause(PLAYER_LINK_PAUSE);
@@ -461,15 +463,19 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
     m_bActivateLinkPressed = cmd.getValue() > 0.5;
     break;
   case GIC_ATTACK:
-    if (cmd.getValue() > 0.5) {
+    if (cmd.getFloatValue() > 0.5) {
       if (m_eGoToLinkStatus == GTLS_NONE) {
 	if (m_uiCurrentWeapon == W_BOMB) {
 	  if (m_uiBombCount <= 0) {
 	    break;
 	  }
-	  m_fBombThrowStrength = PLAYER_BOMB_DEFAULT_THROW_STRENGTH;
+	  if (cmd.getState() == GIS_PRESSED) {
+	    m_fBombThrowStrength = PLAYER_BOMB_DEFAULT_THROW_STRENGTH;
+	  }
 	} else if (m_uiCurrentWeapon == W_SHIELD) {
-	  m_bShieldActive = !m_bShieldActive;
+	  if (cmd.getState() == GIS_PRESSED) {
+	    m_bShieldActive = !m_bShieldActive;
+	  }
 	}
 
 	if (m_bOnGround) {
@@ -482,12 +488,12 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
     }
     break;
   case GIC_ACTIVATE:
-    if (cmd.getValue() > 0.5) {
+    if (cmd.getState() == GIS_PRESSED) {
       m_pMap->activateSwitchOnHit(getWorldBoundingBox());
     }
     break;
   case GIC_USE_HEALTH_POTION:
-    if (m_uiHealthPotionsCount > 0) {
+    if (m_uiHealthPotionsCount > 0 && cmd.getState() == GIS_PRESSED) {
       --m_uiHealthPotionsCount;
       addHitpoints(PLAYER_HEALTH_POTION_REGAIN_PERCENTAGE * getMaximumHitpoints());
       CHUD::getSingleton().setHealthPotionCount(m_uiHealthPotionsCount);
@@ -495,7 +501,7 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
     }
     break;
   case GIC_USE_MANA_POTION:
-    if (m_uiManaPotionsCount > 0) {
+    if (m_uiManaPotionsCount > 0 && cmd.getState() == GIS_PRESSED) {
       --m_uiManaPotionsCount;
       m_fManaPoints = min(PLAYER_MAX_MANA_POINTS, m_fManaPoints + PLAYER_MANA_POTION_REGAIN_PERCENTAGE * PLAYER_MAX_MANA_POINTS);
       CHUD::getSingleton().setManaPotionCount(m_uiManaPotionsCount);

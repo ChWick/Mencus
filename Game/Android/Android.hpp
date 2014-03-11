@@ -140,6 +140,7 @@ public:
       {
 	if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) 
 	  {
+	    mTouch->clearStates();
 	    for (size_t pi = 0; pi < AMotionEvent_getPointerCount(event); pi++) {
 	      // LOGI("Count %d", AMotionEvent_getPointerCount(event));
 	      int action = (int)(AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction(event));
@@ -154,7 +155,9 @@ public:
 		injectTouchEvent(action,
 				 AMotionEvent_getRawX(event, pi),
 				 AMotionEvent_getRawY(event, pi), pi);
+	      //LOGI("Action of %d: %d", pi, action);
 	    }
+	    //LOGI("Pointer Count: %d  Number of states: %d", AMotionEvent_getPointerCount(event), mTouch->getMultiTouchStates().size());
 	  }
 	else 
 	  {
@@ -253,7 +256,6 @@ public:
 	    try {
 	      mRenderWnd->windowMovedOrResized();
 	      mRoot->renderOneFrame();
-	      mTouch->clearStates();
 	    }
 	    catch (const Ogre::Exception &e) {
 	      LOGW("%s", e.getFullDescription().c_str());

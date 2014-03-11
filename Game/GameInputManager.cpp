@@ -14,6 +14,9 @@ CGameInputManager& CGameInputManager::getSingleton(void) {
 
 CGameInputManager::CGameInputManager() {
   CInputListenerManager::getSingleton().addInputListener(this);
+  for (auto &state : m_InputStates) {
+    state = GIS_NONE;
+  }
 }
 CGameInputManager::~CGameInputManager() {
   CInputListenerManager::getSingleton().removeInputListener(this);
@@ -75,6 +78,36 @@ bool CGameInputManager::touchMoved(const OIS::MultiTouchEvent& evt) {return true
 bool CGameInputManager::touchPressed(const OIS::MultiTouchEvent& evt) {return true;}
 bool CGameInputManager::touchReleased(const OIS::MultiTouchEvent& evt) {return true;}
 bool CGameInputManager::touchCancelled(const OIS::MultiTouchEvent& evt) {return true;}
+void CGameInputManager::injectCommand( const CGameInputCommand &cmd) {
+  if (cmd.getFloatValue() > 0.5) {
+    switch (m_InputStates[cmd.getType()]) {
+    case GIS_RELEASED:
+    case GIS_NONE:
+      sendCommandToListeners(CGameInputCommand(cmd, GIS_PRESSED));
+      m_InputStates[cmd.getType()] = GIS_PRESSED;
+      break;
+    case GIS_HOLD:
+    case GIS_PRESSED:
+      sendCommandToListeners(CGameInputCommand(cmd, GIS_HOLD));
+      m_InputStates[cmd.getType()] = GIS_HOLD;
+      break;
+    }
+  }
+  else {
+    switch (m_InputStates[cmd.getType()]) {
+    case GIS_PRESSED:
+    case GIS_HOLD:
+      sendCommandToListeners(CGameInputCommand(cmd, GIS_RELEASED));
+      m_InputStates[cmd.getType()] = GIS_RELEASED;
+      break;
+    case GIS_RELEASED:
+    case GIS_NONE:
+      sendCommandToListeners(CGameInputCommand(cmd, GIS_NONE));
+      m_InputStates[cmd.getType()] = GIS_NONE;
+      break;
+    }
+  }
+}
 void CGameInputManager::sendCommandToListeners( const CGameInputCommand &cmd ) {
   for (auto pListener : m_lListenerList) {
     if (pListener->isGameInputListenerEnabled()) {
