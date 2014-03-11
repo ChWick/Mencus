@@ -7,6 +7,8 @@
 #include "OgreOverlaySystem.h"
 #endif
 
+#include "ShaderManager.hpp"
+
 class CFaderCallback {
 public:
   virtual void fadeInCallback() {}
@@ -29,6 +31,9 @@ private:
   Ogre::TextureUnitState *m_pTextUnitState;
   Ogre::Overlay *m_pOverlay;
   EFadeOperation m_eFadeOperation;
+  
+  Ogre::GpuProgramParametersSharedPtr m_SpriteVertexShaderParameters;
+  Ogre::GpuProgramParametersSharedPtr m_SpritePixelShaderParameters;
 public:
   CFader(CFaderCallback *pCallback = NULL)
     :
@@ -38,6 +43,14 @@ public:
     m_pFaderCallback(pCallback),
     m_eFadeOperation(FADE_NONE) {
     Ogre::MaterialPtr matptr = Ogre::MaterialManager::getSingleton().getByName("FadeMaterial");
+#ifdef USE_SPRITE_SHADER
+    CShaderManager::getSingleton().addAlphaBlendTextureShader(matptr);
+    Ogre::Pass *pPass = matptr->getTechnique(0)->getPass(0);
+    m_SpritePixelShaderParameters = pPass->getFragmentProgram()->createParameters();
+    m_SpriteVertexShaderParameters = pPass->getVertexProgram()->createParameters();
+    pPass->setFragmentProgramParameters(m_SpritePixelShaderParameters);
+    pPass->setVertexProgramParameters(m_SpriteVertexShaderParameters);
+#endif
     m_pTextUnitState = matptr->getTechnique(0)->getPass(0)->getTextureUnitState(0);
     m_pOverlay = Ogre::OverlayManager::getSingleton().getByName("FadeOverlay");
     m_pOverlay->hide();
@@ -90,6 +103,9 @@ public:
 	}
       }
     }
+#ifdef USE_SPRITE_SHADER
+    m_SpritePixelShaderParameters->setNamedConstant("colour", Ogre::ColourValue(1, 1, 1, m_fAlpha));
+#endif
   }
 };
 
