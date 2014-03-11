@@ -172,7 +172,7 @@ void CShaderManager::bindSpriteShaders() {
     m_pRenderSystem->bindGpuProgram(prog);
 }
 void CShaderManager::updateSpriteShaderParams() {
-  //if (!m_bSpriteParamsChanged) {return;}
+  if (!m_bSpriteParamsChanged) {return;}
   switch (m_ShaderTypes) {
   case ORST_GLSLES:   
   case ORST_GLSL_CORE:

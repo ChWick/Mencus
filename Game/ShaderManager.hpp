@@ -48,9 +48,6 @@ public:
 private:
   void setupSpriteShader();
   void cleanupSpriteShader();
-
-  Ogre::HighLevelGpuProgramPtr createAlphaBlendTextureVertexProgram();
-  Ogre::HighLevelGpuProgramPtr createAlphaBlendTextureFragmentProgram();
 };
 
 
