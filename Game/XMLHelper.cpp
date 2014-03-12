@@ -34,4 +34,17 @@ namespace XMLHelper {
     return Ogre::Vector2(RealAttribute(pElem, (prefix + "x").c_str(), vDefault.x),
 			 RealAttribute(pElem, (prefix + "y").c_str(), vDefault.y));
   }
+
+
+  void SetAttribute(tinyxml2::XMLElement *pElem,
+		    const char *pLabel,
+		    const Ogre::Vector2 &vec) {
+    pElem->SetAttribute((Ogre::String(pLabel) + "x").c_str(), vec.x);
+    pElem->SetAttribute((Ogre::String(pLabel) + "y").c_str(), vec.y);
+  }
+  void SetAttribute(tinyxml2::XMLElement *pElem,
+		    const char *pLabel,
+		    Ogre::Real value) {
+    pElem->SetAttribute(pLabel, value);
+  }
 };

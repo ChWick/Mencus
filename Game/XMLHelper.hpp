@@ -5,6 +5,7 @@
 #include <assert.h>
 #include <string>
 #include <OgreString.h>
+#include <OgreStringConverter.h>
 #include <OgreVector2.h>
 
 namespace XMLHelper {
@@ -35,6 +36,20 @@ namespace XMLHelper {
     return static_cast<T>(pElem->IntAttribute(pLabel) + iOffset);
   }
 
+
+  void SetAttribute(tinyxml2::XMLElement *pElem,
+		    const char *pLabel,
+		    const Ogre::Vector2 &vec);
+  void SetAttribute(tinyxml2::XMLElement *pElem,
+		    const char *pLabel,
+		    Ogre::Real value);
+
+  template <class T>
+  void SetAttribute(tinyxml2::XMLElement *pElem,
+		    const char *pLabel,
+		    const T &value) {
+    pElem->SetAttribute(pLabel, Ogre::StringConverter::toString(value).c_str());
+ }
 };
 
 
