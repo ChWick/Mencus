@@ -18,7 +18,8 @@ CGameState::CGameState()
   m_eNextGameState(GS_COUNT),
   m_pMainMenu(NULL),
   m_pScreenplay(NULL),
-  m_pSaveState(NULL) {
+  m_pSaveState(NULL),
+  m_bForce(true) {
 }
 CGameState::~CGameState() {
   if (m_pScreenplay) {
@@ -29,10 +30,16 @@ CGameState::~CGameState() {
 void CGameState::init() {
   m_pMainMenu = CMainMenu::getSingletonPtr();
 }
-void CGameState::changeGameState(EGameStates eNewGameState) {
+void CGameState::changeGameState(EGameStates eNewGameState, bool bNow, bool bForce) {
   m_eNextGameState = eNewGameState;
+  if (bNow) {
+    changeGameStateImpl();
+  }
 }
 void CGameState::changeGameStateImpl() {
+  if (!m_bForce && m_eCurrentGameState == m_eNextGameState) {
+    return;
+  }
   auto ePreviousGameState = m_eCurrentGameState;
   switch (m_eCurrentGameState) {
   case GS_GAME:
