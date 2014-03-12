@@ -2,6 +2,7 @@
 #define GRID2D_HPP
 
 #include <vector>
+#include <assert.h>
 
 template <class T>
 class grid2d : public std::vector<T> {
@@ -20,9 +21,11 @@ public:
     std::vector<T>::resize(x * y);
   }
   const T &operator()(std::size_t x, std::size_t y) const {
+    assert(sizeY * x + y < std::vector<T>::size());
     return (*this)[sizeY * x + y];
   }
   T &operator()(std::size_t x, std::size_t y) {
+    assert(sizeY * x + y < std::vector<T>::size());
     return (*this)[sizeY * x + y];
   }
 };
