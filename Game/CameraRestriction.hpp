@@ -3,6 +3,7 @@
 
 #include <OgreVector2.h>
 #include <algorithm>
+#include "XMLHelper.hpp"
 
 class CCameraRestriction {
 public:
@@ -10,6 +11,16 @@ public:
     HORIZONTAL_RESTRICTION,
     VERTICAL_RESTRICTION
   };
+  static Ogre::String toString(ETypes type) {
+    switch (type) {
+    case HORIZONTAL_RESTRICTION:
+      return "horizontal";
+    case VERTICAL_RESTRICTION:
+      return "vertical";
+    default:
+      throw Ogre::Exception(0, "CameraRestriction-type undefined", __FILE__);
+    }
+  }
 private:
   const ETypes m_eRestrictionType;
   const float m_fLevel;
@@ -49,6 +60,22 @@ public:
     }
   }
   CCameraRestriction& operator=(const CCameraRestriction&) {
+  }
+
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+    using namespace XMLHelper;
+
+    pElem->SetAttribute("type", toString(m_eRestrictionType).c_str());
+    switch (m_eRestrictionType) {
+    case HORIZONTAL_RESTRICTION:
+      SetAttribute(pElem, "y", m_fLevel);
+      break;
+    case VERTICAL_RESTRICTION:
+      SetAttribute(pElem, "x", m_fLevel);
+      break;
+    default:
+      throw Ogre::Exception(0, "Undefined CameraRestriction-type", __FILE__);
+    }
   }
 };
 

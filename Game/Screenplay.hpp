@@ -51,6 +51,9 @@ public:
 
   unsigned int getID() const {return m_uiID;}
   ESceneTypes getType() const {return m_eSceneType;}
+
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const {}
+  virtual void readFromXMLElement(tinyxml2::XMLElement *pElem) {}
 };
 
 class CInstructions : public CScene {
@@ -86,12 +89,15 @@ public:
 
   virtual void start();
   virtual void stop();
-  virtual void init() {}
-  virtual void exit() {}
+  virtual void init();
+  virtual void exit();
   void update(Ogre::Real tpf);
   void render(Ogre::Real tpf);
 
   CMap *getMap() {return m_pMap;}
+
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
+  virtual void readFromXMLElement(tinyxml2::XMLElement *pElem);
 };
 
 class CAct {
@@ -118,7 +124,9 @@ public:
   size_t getSceneCount() const {return m_mapScenes.size();}
 
   CScene *getScene(unsigned int id) {return m_mapScenes.at(id);}
+  const CScene *getScene(unsigned int id) const {return m_mapScenes.at(id);}
   CScene *operator[](unsigned int id) {return m_mapScenes[id];}
+  const CScene *operator[](unsigned int id) const {return m_mapScenes.at(id);}
 
   const CScreenplay &getScreenplay() const {return m_Screenplay;}
 
@@ -172,6 +180,8 @@ public:
   // CPauseListener
   virtual void screenplayPauseChanged(bool bPause) {m_bPaused = bPause; setInputListenerEnabled(!bPause);}
 
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
+  virtual void readFromXMLElement(tinyxml2::XMLElement *pElem);
 private:
 
   void loadAct(unsigned int uiActId, unsigned int uiSceneId = 1);

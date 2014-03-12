@@ -29,10 +29,17 @@ CLevel::~CLevel() {
   }
 }
 void CLevel::start() {
-  m_pMap = new CMap(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"), m_pScreenplayListener);
   m_pMap->loadMap(m_sFilename, m_Act.getScreenplay().getResourceGroup());
 }
 void CLevel::stop() {
+  
+}
+void CLevel::init() {
+  if (!m_pMap) {
+    m_pMap = new CMap(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"), m_pScreenplayListener);
+  }
+}
+void CLevel::exit() {
   if (m_pMap) {
     delete m_pMap;
     m_pMap = 0;
@@ -43,6 +50,12 @@ void CLevel::update(Ogre::Real tpf) {
 }
 void CLevel::render(Ogre::Real tpf) {
   m_pMap->render(tpf);
+}
+void CLevel::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+  m_pMap->writeToXMLElement(pElem);
+}
+void CLevel::readFromXMLElement(tinyxml2::XMLElement *pElem) {
+  m_pMap->readFromXMLElement(pElem);
 }
 
 
@@ -275,5 +288,30 @@ void CScreenplay::fadeOutCallback() {
     loadAct(m_uiNextAct, m_uiNextScene);
   }
   pause(PAUSE_ALL ^ PAUSE_SCREENPLAY ^ PAUSE_MAP_RENDER ^ PAUSE_MAP_UPDATE);
+  m_Fader.startFadeIn(SCREENPLAY_FADE_DURATION);
+}
+void CScreenplay::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+  //pElem->SetAttribute("resourceGroup", m_sResourceGroup.c_str());
+  pElem->SetAttribute("currentAct", m_uiCurrentAct);
+  pElem->SetAttribute("currentScene", m_uiCurrentScene);
+  pElem->SetAttribute("nextAct", m_uiNextAct);
+  pElem->SetAttribute("nextScene", m_uiNextScene);
+
+  tinyxml2::XMLElement *pSceneElem = pElem->GetDocument()->NewElement("scene");
+  pElem->InsertEndChild(pSceneElem);
+  m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->writeToXMLElement(pSceneElem);
+}
+void CScreenplay::readFromXMLElement(tinyxml2::XMLElement *pElem) {
+  m_uiCurrentAct = pElem->IntAttribute("currentAct");
+  m_uiCurrentScene = pElem->IntAttribute("currentScene");
+  m_uiNextAct = pElem->IntAttribute("nextAct");
+  m_uiNextScene = pElem->IntAttribute("nextScene");
+
+  m_mapActs.at(m_uiCurrentAct)->stop();
+  m_pCurrentScene = m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene);
+  m_pCurrentScene->stop();
+  m_pCurrentScene->init();
+  // loadAct(m_uiCurrentAct, m_uiCurrentScene);
+  m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->readFromXMLElement(pElem->FirstChildElement("scene"));
   m_Fader.startFadeIn(SCREENPLAY_FADE_DURATION);
 }

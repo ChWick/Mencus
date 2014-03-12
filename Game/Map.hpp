@@ -33,6 +33,8 @@ private:
     EXIT_ENEMY_DEATH,
   };
   class CExit {
+  public:
+    static Ogre::String toString(EExitTypes et);
   private:
     EExitTypes m_eExitType;
     CBoundingBox2d m_BoundingBox;
@@ -49,6 +51,7 @@ private:
 #ifdef DEBUG_EXIT
     void debugDraw();
 #endif
+    virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
   };
 public:
 private:
@@ -84,6 +87,8 @@ public:
   ~CMap();
 
   void loadMap(const string &sFilename, const string &sResourceGroup);
+  void writeToXMLElement(tinyxml2::XMLElement *pMapElem) const;
+  void readFromXMLElement(tinyxml2::XMLElement *pRoot);
 
   //! Function to check if a line penetrates into a tile a lower position
   /**

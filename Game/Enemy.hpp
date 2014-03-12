@@ -54,6 +54,7 @@ public:
     Ogre::Real fHitpoints,
     bool bJumps,
     const Ogre::String &sID);
+  CEnemy(tinyxml2::XMLElement *pElem);
 
   void update(Ogre::Real tpf);
   void render(Ogre::Real tpf);
@@ -61,9 +62,17 @@ public:
   void addExternalForce(const Ogre::Vector2 &vForce) {m_vExternalForce += vForce;}
 
   const Ogre::String &getID() const {return m_sID;}
+  EEnemyTypes getType() const {return m_eEnemyType;}
 
   void setStunned(bool bStunned) {m_bStunned = bStunned;}
   bool isStunned() const {return m_bStunned;}
+
+  bool mayJump() const {return m_bJumps;}
+
+  Ogre::Real getDirection() const {return m_vSpeed.x > 0 ? 1 : -1;}
+  const Ogre::Vector2 &getSpeed() const {return m_vSpeed;}
+
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem);
 
 protected:
   void damageTakenCallback();

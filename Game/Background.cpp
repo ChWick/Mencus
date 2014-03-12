@@ -12,26 +12,31 @@ const Ogre::Real BACKGROUND_CAMERA_OFFSET_SCALING_FACTOR[CBackground::BT_COUNT] 
   1
 };
 
-CBackground::CBackground(Ogre2dManager *pSpriteManager, const Ogre::Vector2 &vCameraPosition, const Ogre::String &sName)
-  : CSprite(&CDefaultSpriteTransformPipeline::INSTANCE, pSpriteManager, Ogre::Vector2(-1, -1), Ogre::Vector2(BACKGROUND_SIZE * SCREEN_RATIO, BACKGROUND_SIZE)),
-    m_vCameraPosition(vCameraPosition) {
-
-  setTexture(getBackgroundTexturePath(sName));
+CBackground::ETypes CBackground::fromString(const Ogre::String &sName) {
   if (sName == "clouds") {
-    m_eBackgroundType = BT_CLOUDS;
+    return BT_CLOUDS;
   }
   else if (sName == "fog") {
-    m_eBackgroundType = BT_FOG;
+    return BT_FOG;
   }
   else if (sName == "forest") {
-    m_eBackgroundType = BT_FOREST;
+    return BT_FOREST;
   }
   else if (sName == "stars") {
-    m_eBackgroundType = BT_STARS;
+    return BT_STARS;
   }
   else {
     throw Ogre::Exception(0, "Unknown background type: " + sName, __FILE__);
   }
+}
+CBackground::CBackground(Ogre2dManager *pSpriteManager, const Ogre::Vector2 &vCameraPosition, const Ogre::String &sName)
+  : CSprite(&CDefaultSpriteTransformPipeline::INSTANCE, pSpriteManager, Ogre::Vector2(-1, -1), Ogre::Vector2(BACKGROUND_SIZE * SCREEN_RATIO, BACKGROUND_SIZE)),
+    m_vCameraPosition(vCameraPosition),
+    m_sName(sName),
+    m_eBackgroundType(fromString(sName)) {
+
+  setTexture(getBackgroundTexturePath(sName));
+  
 }
 void CBackground::render(Ogre::Real tpf) {
   //setTextureCoords(Ogre::Vector2(0, 0), Ogre::Vector2(1.5 / SCREEN_RATIO, 1.5));

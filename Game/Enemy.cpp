@@ -7,6 +7,9 @@
 #include "Player.hpp"
 #include "Constants.hpp"
 #include "Shot.hpp"
+#include "XMLHelper.hpp"
+
+using namespace XMLHelper;
 
 Ogre::Real ENEMY_MAX_RANGED_ATTACK_DISTANCE = 5;
 
@@ -207,7 +210,9 @@ void CEnemy::updateKI() {
       }
     }
   }
-  m_vSpeed.x = ENEMY_SPEED[m_eEnemyType] * m_vSpeed.x / abs(m_vSpeed.x);
+  if (m_vSpeed.x != 0) {
+    m_vSpeed.x = ENEMY_SPEED[m_eEnemyType] * m_vSpeed.x / abs(m_vSpeed.x);
+  }
 }
 void CEnemy::setup() {
   init(ENEMY_SPEED[m_eEnemyType], AS_COUNT);
@@ -327,4 +332,14 @@ bool CEnemy::readyForWalking() {
     return m_uiCurrentAnimationTexture == 0 && m_bAtLeastOneDamageDone;
   }
   return true;
+}
+
+void CEnemy::writeToXMLElement(tinyxml2::XMLElement *pElem) {
+  pElem->SetAttribute("id", getID().c_str());
+  pElem->SetAttribute("type", getType() + 1); // offset here of +1
+  pElem->SetAttribute("direction", getDirection());
+  SetAttribute(pElem, "speed", getSpeed());
+  CHitableObject::writeToXMLElement(pElem);
+  pElem->SetAttribute("jumps", mayJump());
+  CAnimatedSprite::writeToXMLElement(pElem);
 }

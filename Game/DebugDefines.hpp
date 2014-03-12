@@ -15,6 +15,7 @@
 #define DEBUG_KI
 #define DEBUG_EXIT
 #define DEBUG_PLAYER_NO_COLLISION
+#define DEBUG_LOAD_SAFE
 
 #endif
 

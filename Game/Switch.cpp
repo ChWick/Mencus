@@ -16,10 +16,11 @@ CSwitch::CSwitch(const CSpriteTransformPipeline *pTransformPipeline,
 		 Ogre2dManager *pSpriteManager,
 		 const Ogre::Vector2 &vPosition,
 		 SwitchType stSwitchType,
-		 bool bChangeBlocks)
+		 bool bChangeBlocks,
+		 ESwitchStates eSwitchState)
   : CSprite(pTransformPipeline, pSpriteManager, vPosition, SWITCH_SIZES[stSwitchType]),
     m_stSwitchType(stSwitchType),
-    m_eSwitchState(SS_DEACTIVATED),
+    m_eSwitchState(eSwitchState),
     m_bChangeBlocks(bChangeBlocks) {
 
   setTexture(getSwitchTexture(stSwitchType, false));

@@ -2,6 +2,7 @@
 #define HITABLE_OBJECT_HPP
 
 #include <algorithm>
+#include <tinyxml2.h>
 
 class CHitableObject {
 private:
@@ -30,6 +31,13 @@ public:
   bool isInvunerable() const {return m_bInvunerable;}
   void setInvunerable(bool bInvunerable) {m_bInvunerable = bInvunerable;}
   void addHitpoints(Ogre::Real fHitpoints) {m_fHitpoints = std::min<Ogre::Real>(m_fHitpoints + fHitpoints, m_fMaximumHitpoints);}
+
+
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+    pElem->SetAttribute("hp", getMaximumHitpoints());
+    pElem->SetAttribute("curhp", getHitpoints());
+    pElem->SetAttribute("invunerable", isInvunerable());
+  }
 protected:
   virtual void damageTakenCallback() {}
   virtual void killedByDamageCallback() {}

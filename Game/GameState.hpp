@@ -23,6 +23,7 @@ private:
   CMainMenu *m_pMainMenu;
   CScreenplay *m_pScreenplay;
   const CSaveState *m_pSaveState;
+  bool m_bForce;
 
 public:
   static CGameState &getSingleton();
@@ -35,9 +36,11 @@ public:
 
   void update(Ogre::Real tpf);
 
-  void changeGameState(EGameStates eNewGameState);
+  void changeGameState(EGameStates eNewGameState, bool bNow = false, bool bForce = true);
   void setSaveState(const CSaveState *pState) {m_pSaveState = pState;}
   const CSaveState *getSaveState() const {return m_pSaveState;}
+  EGameStates getCurrentGameState() {return m_eCurrentGameState;}
+  CScreenplay *getScreenplay() {return m_pScreenplay;}
 
 private:
   void changeGameStateImpl();

@@ -16,11 +16,16 @@ public:
 
     BT_COUNT
   };
+
+  static ETypes fromString(const Ogre::String &sName);
 private:
-  ETypes m_eBackgroundType;
+  const ETypes m_eBackgroundType;
   const Ogre::Vector2 &m_vCameraPosition;
+  const Ogre::String m_sName;
 public:
   CBackground(Ogre2dManager *pSpriteManager, const Ogre::Vector2 &vCameraPosition, const Ogre::String &sName);
+
+  const Ogre::String &getName() const {return m_sName;}
 
   virtual void render(Ogre::Real tpf);
 };

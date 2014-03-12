@@ -40,7 +40,8 @@ public:
 	  Ogre2dManager *pSpriteManager,
 	  const Ogre::Vector2 &vPosition,
 	  SwitchType stSwitchType,
-	  bool bChangeBlocks);
+	  bool bChangeBlocks,
+	  ESwitchStates eSwitchState);
   ~CSwitch();
 
   void initialize(CMap *pMap);
@@ -51,6 +52,9 @@ public:
 
   bool doesChangeBlocks() const {return m_bChangeBlocks;}
   const vector<SSwitchEntry> &getEntries() const {return m_vEntries;}
+  const vector<STogglesLinkEntry> &getLinkEntries() const {return m_vLinkEntries;}
+  ESwitchStates getState() const {return m_eSwitchState;}
+  SwitchType getType() const {return m_stSwitchType;}
 
   void activate(CMap *pMap);
 
