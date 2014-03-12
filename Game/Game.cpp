@@ -828,7 +828,7 @@ void CGame::destroyResources() {
 }
  void CGame::showLoadingBar() {
    assert(mTrayMgr);
-   mTrayMgr->showLoadingBar(1, 0);
+   mTrayMgr->showLoadingBar(6, 0);
  }
  void CGame::hideLoadingBar() {
    assert(mTrayMgr);
