@@ -29,10 +29,17 @@ CLevel::~CLevel() {
   }
 }
 void CLevel::start() {
-  m_pMap = new CMap(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"), m_pScreenplayListener);
   m_pMap->loadMap(m_sFilename, m_Act.getScreenplay().getResourceGroup());
 }
 void CLevel::stop() {
+  
+}
+void CLevel::init() {
+  if (!m_pMap) {
+    m_pMap = new CMap(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"), m_pScreenplayListener);
+  }
+}
+void CLevel::exit() {
   if (m_pMap) {
     delete m_pMap;
     m_pMap = 0;
@@ -300,6 +307,11 @@ void CScreenplay::readFromXMLElement(tinyxml2::XMLElement *pElem) {
   m_uiNextAct = pElem->IntAttribute("nextAct");
   m_uiNextScene = pElem->IntAttribute("nextScene");
 
-  loadAct(m_uiCurrentAct, m_uiCurrentScene);
+  m_mapActs.at(m_uiCurrentAct)->stop();
+  m_pCurrentScene = m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene);
+  m_pCurrentScene->stop();
+  m_pCurrentScene->init();
+  // loadAct(m_uiCurrentAct, m_uiCurrentScene);
   m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->readFromXMLElement(pElem->FirstChildElement("scene"));
+  m_Fader.startFadeIn(SCREENPLAY_FADE_DURATION);
 }

@@ -89,8 +89,8 @@ public:
 
   virtual void start();
   virtual void stop();
-  virtual void init() {}
-  virtual void exit() {}
+  virtual void init();
+  virtual void exit();
   void update(Ogre::Real tpf);
   void render(Ogre::Real tpf);
 
