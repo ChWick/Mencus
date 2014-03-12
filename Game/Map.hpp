@@ -84,6 +84,7 @@ public:
   ~CMap();
 
   void loadMap(const string &sFilename, const string &sResourceGroup);
+  void saveMap(tinyxml2::XMLDocument &doc);
 
   //! Function to check if a line penetrates into a tile a lower position
   /**

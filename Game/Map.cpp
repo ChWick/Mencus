@@ -13,8 +13,10 @@
 #include "HUD.hpp"
 #include "Game.hpp"
 #include "Background.hpp"
+#include "XMLHelper.hpp"
 
 using namespace tinyxml2;
+using namespace XMLHelper;
 
 const Ogre::Vector2 CTile::DEFAULT_TILE_SIZE(1, 1);
 const string CTile::DEFAULT_TILE_TEXTURE_NAME = "tiles/Tile";
@@ -641,25 +643,32 @@ void CMap::readRow(XMLElement *pRow, unsigned int uiRow) {
   }
 }
 void CMap::readSwitch(XMLElement *pSwitch) {
-  CSwitch *pNewSwitch = new CSwitch(this,
-                                    m_p2dManagerMap,
-                                    Ogre::Vector2(pSwitch->FloatAttribute("x"),
-                                                  pSwitch->FloatAttribute("y")),
-                                    pSwitch->IntAttribute("type"),
-                                    strcmp(pSwitch->Attribute("affectsBlocks"), "true") == 0);
+  CSwitch *pNewSwitch =
+    new CSwitch(this,
+		m_p2dManagerMap,
+		Ogre::Vector2(pSwitch->FloatAttribute("x"),
+			      pSwitch->FloatAttribute("y")),
+		pSwitch->IntAttribute("type"),
+		BoolAttribute(pSwitch, "affectsBlocks", true),
+		EnumAttribute<CSwitch::ESwitchStates>(pSwitch,
+						      "state",
+						      CSwitch::SS_DEACTIVATED));
   for (XMLElement *pChange = pSwitch->FirstChildElement(); pChange; pChange = pChange->NextSiblingElement()) {
     if (strcmp(pChange->Value(), "changes") == 0) {
       SSwitchEntry entry;
       entry.uiTileType = pChange->IntAttribute("id");
       entry.uiTilePosX = pChange->IntAttribute("x");
       entry.uiTilePosY = pChange->IntAttribute("y");
+      if (pChange->Attribute("oldid")) {
+	entry.uiOldTileType = pChange->IntAttribute("oldid");
+      }
 
       pNewSwitch->addEntry(entry);
     }
     else if (strcmp(pChange->Value(), "togglesLink") == 0) {
       STogglesLinkEntry entry;
       entry.sLinkID = pChange->Attribute("id");
-      entry.bInitialState = strcmp(pChange->Attribute("initial"), "false") != 0;
+      entry.bInitialState = BoolAttribute(pChange, "initial", true);
 
       pNewSwitch->addEntry(entry);
     }
@@ -808,3 +817,71 @@ void CMap::CExit::debugDraw() {
   }
 }
 #endif // DEBUG_EXIT
+
+void CMap::saveMap(tinyxml2::XMLDocument &doc) {
+  using namespace tinyxml2;
+
+  XMLElement *pMapElem = doc.NewElement("map");
+  doc.InsertEndChild(pMapElem);
+  
+  if (m_pBackground) {
+    pMapElem->SetAttribute("background", m_pBackground->getName().c_str());
+  }
+
+  pMapElem->SetAttribute("sizex", static_cast<unsigned>(m_gridTiles.getSizeX()));
+  pMapElem->SetAttribute("sizey", static_cast<unsigned>(m_gridTiles.getSizeY()));
+
+  XMLElement *pTiles = doc.NewElement("tiles");
+  pMapElem->InsertEndChild(pTiles);
+  pTiles->SetAttribute("invert", false);
+  for (unsigned int y = 0; y < m_gridTiles.getSizeY(); y++) {
+    XMLElement *pRow = doc.NewElement("row");
+    pTiles->InsertEndChild(pRow);
+    std::stringstream ss;
+    for (unsigned int x = 0; x < m_gridTiles.getSizeX(); x++) {
+      ss << m_gridTiles(x, y)->getTileType() << " ";
+    }
+    pRow->SetAttribute("tiles", ss.str().c_str());
+  }
+  
+  XMLElement *pSwitches = doc.NewElement("switches");
+  pMapElem->InsertEndChild(pSwitches);
+  for (CSwitch *pSwitch : m_lSwitches) {
+    XMLElement *pSwitchElem = doc.NewElement("switch");
+    pSwitches->InsertEndChild(pSwitchElem);
+    pSwitchElem->SetAttribute("x", pSwitch->getPosition().x);
+    pSwitchElem->SetAttribute("y", pSwitch->getPosition().y);
+    pSwitchElem->SetAttribute("type", pSwitch->getType());
+    pSwitchElem->SetAttribute("affectsBlocks", pSwitch->doesChangeBlocks());
+    pSwitchElem->SetAttribute("state", pSwitch->getState());
+    for (const SSwitchEntry &entry : pSwitch->getEntries()) {
+      XMLElement *pChange = doc.NewElement("changes");
+      pSwitchElem->InsertEndChild(pChange);
+      pChange->SetAttribute("id", entry.uiTileType);
+      pChange->SetAttribute("oldid", entry.uiOldTileType);
+      pChange->SetAttribute("x", entry.uiTilePosX);
+      pChange->SetAttribute("y", entry.uiTilePosY);
+    }
+    for (const STogglesLinkEntry &entry : pSwitch->getLinkEntries()) {
+      XMLElement *pChange = doc.NewElement("togglesLink");
+      pSwitchElem->InsertEndChild(pChange);
+      pChange->SetAttribute("id", entry.sLinkID.c_str());
+      pChange->SetAttribute("initial", entry.bInitialState);
+    }
+  }
+
+  XMLElement *pEndangeredTiles = doc.NewElement("endangeredTiles");
+  pMapElem->InsertEndChild(pEndangeredTiles);
+  
+  for (unsigned int y = 0; y < m_gridTiles.getSizeY(); y++) {
+    for (unsigned int x = 0; x < m_gridTiles.getSizeX(); x++) {
+      if (m_gridTiles(x,y)->getTileFlags() & CTile::TF_ENDANGERED) {
+	XMLElement *pEndangeredTile = doc.NewElement("tile");
+	pEndangeredTiles->InsertEndChild(pEndangeredTile);
+	pEndangeredTile->SetAttribute("targetTile", m_gridTiles(x, y)->getEndangeredTileType());
+	pEndangeredTile->SetAttribute("x", x);
+	pEndangeredTile->SetAttribute("y", y);
+      }
+    }
+  }
+}
