@@ -210,7 +210,9 @@ void CEnemy::updateKI() {
       }
     }
   }
-  m_vSpeed.x = ENEMY_SPEED[m_eEnemyType] * m_vSpeed.x / abs(m_vSpeed.x);
+  if (m_vSpeed.x != 0) {
+    m_vSpeed.x = ENEMY_SPEED[m_eEnemyType] * m_vSpeed.x / abs(m_vSpeed.x);
+  }
 }
 void CEnemy::setup() {
   init(ENEMY_SPEED[m_eEnemyType], AS_COUNT);
@@ -335,12 +337,9 @@ bool CEnemy::readyForWalking() {
 void CEnemy::writeToXMLElement(tinyxml2::XMLElement *pElem) {
   pElem->SetAttribute("id", getID().c_str());
   pElem->SetAttribute("type", getType() + 1); // offset here of +1
-  SetAttribute(pElem, "", getPosition()); // no label, just x and y
-  pElem->SetAttribute("fDirection", getDirection());
+  pElem->SetAttribute("direction", getDirection());
   SetAttribute(pElem, "speed", getSpeed());
   CHitableObject::writeToXMLElement(pElem);
-  SetAttribute(pElem, "hp", getMaximumHitpoints());
-  SetAttribute(pElem, "curhp", getHitpoints());
-  SetAttribute(pElem, "invunerable", isInvunerable());
   pElem->SetAttribute("jumps", mayJump());
+  CAnimatedSprite::writeToXMLElement(pElem);
 }
