@@ -1,6 +1,12 @@
 #include "AnimatedSprite.hpp"
 
-CAnimatedSprite::CAnimatedSprite(const CSpriteTransformPipeline *pTransformPipeline, Ogre2dManager *pSpriteManager, const Ogre::Vector2 &vPosition, const Ogre::Vector2 &vSize, const Ogre::Vector2 &vScale, const Ogre::Radian radRotation)
+CAnimatedSprite::CAnimatedSprite(
+				 const CSpriteTransformPipeline *pTransformPipeline,
+				 Ogre2dManager *pSpriteManager,
+				 const Ogre::Vector2 &vPosition,
+				 const Ogre::Vector2 &vSize,
+				 const Ogre::Vector2 &vScale,
+				 const Ogre::Radian radRotation)
   : CSprite(pTransformPipeline, pSpriteManager, vPosition, vSize, vScale, radRotation),
     m_uiCurrentAnimationTexture(0),
     m_uiCurrentAnimationSequence(0),
@@ -94,4 +100,12 @@ void CAnimatedSprite::update(Ogre::Real tpf) {
 void CAnimatedSprite::render(Ogre::Real tpf) {
   setTextureToDraw(&m_AnimationSequences[m_uiCurrentAnimationSequence][m_uiCurrentAnimationTexture]);
   CSprite::render(tpf);
+}
+void CAnimatedSprite::writeToXMLElement(tinyxml2::XMLElement *pElem) {
+  pElem->SetAttribute("as_animation_paused", m_bAnimationPaused);
+  pElem->SetAttribute("as_current_as", m_uiCurrentAnimationSequence);
+  pElem->SetAttribute("as_current_at", m_uiCurrentAnimationTexture);
+  pElem->SetAttribute("as_timer", m_fAnimationTimer);
+
+  CSprite::writeToXMLElement(pElem);
 }

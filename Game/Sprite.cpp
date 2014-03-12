@@ -1,5 +1,7 @@
 #include "Sprite.hpp"
 #include "SpriteTransformPipeline.hpp"
+#include "XMLHelper.hpp"
+
 
 const Ogre::Vector2 CSpriteTexture::DEFAULT_TEXTURE_TOP_LEFT(0, 1);
 const Ogre::Vector2 CSpriteTexture::DEFAULT_TEXTURE_BOTTOM_RIGHT(1, 0);
@@ -59,4 +61,13 @@ void CSprite::setTexture(const string &sName) {
     m_Texture.setTexture(Ogre::TextureManager::getSingleton().load(sName,Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME));
     //throw Ogre::Exception(Ogre::Exception::ERR_FILE_NOT_FOUND, sName + " is not found as a texture!", __FILE__);
   }
+}
+void CSprite::writeToXMLElement(tinyxml2::XMLElement *pElem) {
+  using namespace XMLHelper;
+
+  SetAttribute(pElem, "", m_vPosition); // pos without label
+  SetAttribute(pElem, "sp_size", m_vSize);
+  SetAttribute(pElem, "sp_scale", m_vScale);
+  SetAttribute(pElem, "sp_radRotation", m_radRotation.valueRadians());
+  SetAttribute<Ogre::ColourValue>(pElem, "sp_colour", m_Colour);
 }

@@ -7,6 +7,7 @@
 #include <string>
 #include "BoundingBox2d.hpp"
 #include "SpriteTexture.hpp"
+#include <tinyxml2.h>
 
 using namespace std;
 
@@ -22,7 +23,7 @@ protected:
   Ogre::Vector2 m_vScale;				//
   Ogre::Radian m_radRotation;				//
   CSpriteTexture m_Texture;				//!< Texture of the sprite
-  const CSpriteTexture *m_pTextureToDraw;		//!< Texture to draw in the update method (this is modified e.g. by the animated sprite)
+  const CSpriteTexture *m_pTextureToDraw;		//!< Texture to draw in the update method (this is modified e.g. bywriteToXMLElement(tinyxml2::XMLElement *pElem the animated sprite)
   CBoundingBox2d m_bbRelativeBoundingBox;		//!< Bounding box, realative position
   Ogre::ColourValue m_Colour;               //!< The draw colour
 public:
@@ -63,6 +64,8 @@ public:
   const Ogre::ColourValue &getColour() const {return m_Colour;}
 
   void setAlpha(Ogre::Real fAlpha) {m_Colour.a = fAlpha;}
+
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem);
 };
 
 #endif
