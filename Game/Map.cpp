@@ -818,11 +818,10 @@ void CMap::CExit::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
   pElem->SetAttribute("id", m_sID.c_str());
 }
 
-void CMap::saveMap(tinyxml2::XMLDocument &doc) {
+void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
   using namespace tinyxml2;
 
-  XMLElement *pMapElem = doc.NewElement("map");
-  doc.InsertEndChild(pMapElem);
+  XMLDocument &doc = *pMapElem->GetDocument();
   
   if (m_pBackground) {
     pMapElem->SetAttribute("background", m_pBackground->getName().c_str());
@@ -886,7 +885,7 @@ void CMap::saveMap(tinyxml2::XMLDocument &doc) {
 
   XMLElement *pLinks = doc.NewElement("links");
   pMapElem->InsertEndChild(pLinks);
-  for (CLink &link : m_lLinks) {
+  for (const CLink &link : m_lLinks) {
     XMLElement *pLink = doc.NewElement("link");
     pLinks->InsertEndChild(pLink);
     pLink->SetAttribute("id", link.getID().c_str());
@@ -925,7 +924,7 @@ void CMap::saveMap(tinyxml2::XMLDocument &doc) {
   XMLElement *pCamera = doc.NewElement("camera");
   pMapElem->InsertEndChild(pCamera);
   for (const CCameraRestriction &res : m_vCameraRestrictions) {
-    XMLElement *pElem = doc.NewElement("restriction");
+    XMLElement *pElem = doc.NewElement("restriction")            ;
     pCamera->InsertEndChild(pElem);
     res.writeToXMLElement(pElem);
   }
