@@ -61,3 +61,7 @@ void CObject::update(Ogre::Real tpf) {
 
   CAnimatedSprite::update(tpf);
 }
+void CObject::writeToXMLElement(tinyxml2::XMLElement *pElem) {
+  CAnimatedSprite::writeToXMLElement(pElem);
+  pElem->SetAttribute("type", m_eObjectType);
+}
