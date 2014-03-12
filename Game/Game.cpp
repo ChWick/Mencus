@@ -7,6 +7,7 @@
 #include "DebugDefines.hpp"
 #include "ShaderManager.hpp"
 #include "GameInputManager.hpp"
+#include "SnapshotManager.hpp"
 
 using namespace Ogre;
 
@@ -60,6 +61,7 @@ CGame::~CGame(void) {
   if (CSaveStateManager::getSingletonPtr()) {delete CSaveStateManager::getSingletonPtr();}
 
   if (CShaderManager::getSingletonPtr()) {delete CShaderManager::getSingletonPtr();}
+  if (CSnapshotManager::getSingletonPtr()) {delete CSnapshotManager::getSingletonPtr();}
 
   //Remove ourself as a Window listener
   Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);
@@ -408,6 +410,7 @@ void CGame::createScene() {
 
   Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing singleton classes ***");
   //-------------------------------------------------------------------------------------
+  new CSnapshotManager();
   new CShaderManager(mRoot->getRenderSystem());
   m_pGameState = new CGameState();
   new CPauseManager();
@@ -619,6 +622,14 @@ bool CGame::keyPressed( const OIS::KeyEvent &arg )
   else if (arg.key == OIS::KC_E) {
     destroyResources();
   }
+#ifdef DEBUG_LOAD_SAFE
+  if (arg.key == OIS::KC_F1) {
+    CSnapshotManager::getSingleton().makeSnapshot();
+  }
+  else if (arg.key == OIS::KC_F2) {
+    CSnapshotManager::getSingleton().loadFromSnapshot();
+  }
+#endif
 
   //CEGUI::System &sys = CEGUI::System::getSingleton();
   //sys.getDefaultGUIContext().injectKeyDown(static_cast<CEGUI::Key::Scan>(arg.key));
