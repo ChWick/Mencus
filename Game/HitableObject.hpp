@@ -33,7 +33,7 @@ public:
   void addHitpoints(Ogre::Real fHitpoints) {m_fHitpoints = std::min<Ogre::Real>(m_fHitpoints + fHitpoints, m_fMaximumHitpoints);}
 
 
-  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) {
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const {
     pElem->SetAttribute("hp", getMaximumHitpoints());
     pElem->SetAttribute("curhp", getHitpoints());
     pElem->SetAttribute("invunerable", isInvunerable());

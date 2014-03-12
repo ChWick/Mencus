@@ -65,7 +65,7 @@ public:
 
   void setAlpha(Ogre::Real fAlpha) {m_Colour.a = fAlpha;}
 
-  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem);
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
 };
 
 #endif

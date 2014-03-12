@@ -28,7 +28,7 @@ public:
 
   void update(Ogre::Real tpf);
 
-  void writeToXMLElement(tinyxml2::XMLElement *pElem);
+  void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
 
 };
 

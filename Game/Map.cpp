@@ -690,33 +690,28 @@ void CMap::readLink(XMLElement *pLink) {
   Ogre::String sID(Ogre::StringUtil::BLANK);
   if (pLink->Attribute("id")) {sID = pLink->Attribute("id");}
 
-  Ogre::String sLinkDirection;
-  if (pLink->Attribute("direction")) {sID = pLink->Attribute("direction");}
-  CLink::ELinkDirection eLD = CLink::LD_BOTH;
-  if (sLinkDirection.size() == 0 || sLinkDirection == "both") {eLD = CLink::LD_BOTH;}
-  else if (sLinkDirection == "first_to_second") {eLD = CLink::LD_FIRST_TO_SECOND;}
-  else if (sLinkDirection == "second_to_first") {eLD = CLink::LD_SECOND_TO_FIRST;}
-  else {throw Ogre::Exception(0, "Invalid direction in link: " + sLinkDirection, __FILE__);}
-
+  Ogre::String sLinkDirection("both");
+  if (pLink->Attribute("direction")) {sLinkDirection = pLink->Attribute("direction");}
+  CLink::ELinkDirection eLD = CLink::parseLinkDirection(sLinkDirection);
+  
   m_lLinks.push_back(CLink(
                            pLink->IntAttribute("fromx"),
                            pLink->IntAttribute("fromy"),
                            pLink->IntAttribute("tox"),
                            pLink->IntAttribute("toy"),
                            eLD,
-                           sID));
+                           sID,
+			   BoolAttribute(pLink, "activated", true)));
   Ogre::LogManager::getSingleton().logMessage("Parsed: " + m_lLinks.back().toString());
 }
 void CMap::readEnemy(XMLElement *pEnemy) {
-  Ogre::String sID(Ogre::StringUtil::BLANK);
-  if (pEnemy->Attribute("id")) {
-    sID = pEnemy->Attribute("id");
-  }
-  CEnemy::EEnemyTypes eEnemyType = static_cast<CEnemy::EEnemyTypes>(pEnemy->IntAttribute("type") - 1);
-  Ogre::Vector2 vPos(pEnemy->FloatAttribute("x"), pEnemy->FloatAttribute("y"));
+  Ogre::String sID(Attribute(pEnemy, "id"));
+  CEnemy::EEnemyTypes eEnemyType
+    = EnumAttribute<CEnemy::EEnemyTypes>(pEnemy, "type", CEnemy::ET_COUNT, -1);
+  Ogre::Vector2 vPos(Vector2Attribute(pEnemy));
   Ogre::Real fDirection(pEnemy->FloatAttribute("direction"));
   Ogre::Real fHitpoints(pEnemy->FloatAttribute("hp"));
-  bool bJumps = pEnemy->BoolAttribute("jumps");
+  bool bJumps = BoolAttribute(pEnemy, "jumps", true);
 
   CEnemy *pNewEnemy = new CEnemy(*this, vPos, eEnemyType, fDirection, fHitpoints, bJumps, sID);
   m_lEnemies.push_back(pNewEnemy);
@@ -725,9 +720,8 @@ void CMap::readEnemy(XMLElement *pEnemy) {
 }
 void CMap::readObject(XMLElement *pObject) {
   m_lObjects.push_back(new CObject(*this,
-				   Ogre::Vector2(pObject->FloatAttribute("x"),
-						 pObject->FloatAttribute("y")),
-				   static_cast<CObject::EObjectTypes>(pObject->IntAttribute("type"))));
+				   Vector2Attribute(pObject),
+				   EnumAttribute<CObject::EObjectTypes>(pObject, "type", CObject::OT_COUNT)));
 }
 void CMap::readExit(XMLElement *pExitElem) {
   Ogre::String sType = pExitElem->Attribute("type");
@@ -817,6 +811,12 @@ void CMap::CExit::debugDraw() {
   }
 }
 #endif // DEBUG_EXIT
+void CMap::CExit::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+  pElem->SetAttribute("type", m_eExitType);
+  SetAttribute(pElem, "pos", m_BoundingBox.getPosition());
+  SetAttribute(pElem, "size", m_BoundingBox.getSize());
+  pElem->SetAttribute("id", m_sID.c_str());
+}
 
 void CMap::saveMap(tinyxml2::XMLDocument &doc) {
   using namespace tinyxml2;
@@ -872,7 +872,6 @@ void CMap::saveMap(tinyxml2::XMLDocument &doc) {
 
   XMLElement *pEndangeredTiles = doc.NewElement("endangeredTiles");
   pMapElem->InsertEndChild(pEndangeredTiles);
-  
   for (unsigned int y = 0; y < m_gridTiles.getSizeY(); y++) {
     for (unsigned int x = 0; x < m_gridTiles.getSizeX(); x++) {
       if (m_gridTiles(x,y)->getTileFlags() & CTile::TF_ENDANGERED) {
@@ -883,5 +882,51 @@ void CMap::saveMap(tinyxml2::XMLDocument &doc) {
 	pEndangeredTile->SetAttribute("y", y);
       }
     }
+  }
+
+  XMLElement *pLinks = doc.NewElement("links");
+  pMapElem->InsertEndChild(pLinks);
+  for (CLink &link : m_lLinks) {
+    XMLElement *pLink = doc.NewElement("link");
+    pLinks->InsertEndChild(pLink);
+    pLink->SetAttribute("id", link.getID().c_str());
+    pLink->SetAttribute("fromx", link.getFirstX());
+    pLink->SetAttribute("fromy", link.getFirstY());
+    pLink->SetAttribute("tox", link.getSecondX());
+    pLink->SetAttribute("toy", link.getSecondY());
+    pLink->SetAttribute("direction", CLink::toString(link.getLinkDirection()).c_str());
+    pLink->SetAttribute("activated", link.isActivated());
+  }
+
+  XMLElement *pEnemies = doc.NewElement("enemies");
+  pMapElem->InsertEndChild(pEnemies);
+  for (CEnemy *pEnemy : m_lEnemies) {
+    XMLElement *pElem = doc.NewElement("enemy");
+    pEnemies->InsertEndChild(pElem);
+    pEnemy->writeToXMLElement(pElem);
+  }
+
+  XMLElement *pObjects = doc.NewElement("objects");
+  pMapElem->InsertEndChild(pObjects);
+  for (CObject *pObject : m_lObjects) {
+    XMLElement *pElem = doc.NewElement("object");
+    pObjects->InsertEndChild(pElem);
+    pObject->writeToXMLElement(pElem);
+  }
+
+  XMLElement *pExit = doc.NewElement("exit");
+  pMapElem->InsertEndChild(pExit);
+  m_pExit->writeToXMLElement(pExit);
+
+  XMLElement *pPlayer = doc.NewElement("player");
+  pMapElem->InsertEndChild(pPlayer);
+  m_pPlayer->writeToXMLElement(pPlayer);
+
+  XMLElement *pCamera = doc.NewElement("camera");
+  pMapElem->InsertEndChild(pCamera);
+  for (const CCameraRestriction &res : m_vCameraRestrictions) {
+    XMLElement *pElem = doc.NewElement("restriction");
+    pCamera->InsertEndChild(pElem);
+    res.writeToXMLElement(pElem);
   }
 }

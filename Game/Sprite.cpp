@@ -62,7 +62,7 @@ void CSprite::setTexture(const string &sName) {
     //throw Ogre::Exception(Ogre::Exception::ERR_FILE_NOT_FOUND, sName + " is not found as a texture!", __FILE__);
   }
 }
-void CSprite::writeToXMLElement(tinyxml2::XMLElement *pElem) {
+void CSprite::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
   using namespace XMLHelper;
 
   SetAttribute(pElem, "", m_vPosition); // pos without label

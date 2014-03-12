@@ -49,6 +49,7 @@ private:
 #ifdef DEBUG_EXIT
     void debugDraw();
 #endif
+    virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
   };
 public:
 private:

@@ -116,6 +116,9 @@ public:
   Ogre::Real getManapoints() const {return m_fManaPoints;}
   void setManapoints(Ogre::Real fManapoints) {m_fManaPoints = fManapoints;}
 
+  
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
+
 private:
   void setupAnimations();
 
