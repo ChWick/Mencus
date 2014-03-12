@@ -38,6 +38,8 @@ public:
   void changeGameState(EGameStates eNewGameState);
   void setSaveState(const CSaveState *pState) {m_pSaveState = pState;}
   const CSaveState *getSaveState() const {return m_pSaveState;}
+  EGameStates getCurrentGameState() {return m_eCurrentGameState;}
+  CScreenplay *getScreenplay() {return m_pScreenplay;}
 
 private:
   void changeGameStateImpl();
