@@ -277,3 +277,16 @@ void CScreenplay::fadeOutCallback() {
   pause(PAUSE_ALL ^ PAUSE_SCREENPLAY ^ PAUSE_MAP_RENDER ^ PAUSE_MAP_UPDATE);
   m_Fader.startFadeIn(SCREENPLAY_FADE_DURATION);
 }
+void CScreenplay::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+  //pElem->SetAttribute("resourceGroup", m_sResourceGroup.c_str());
+  pElem->SetAttribute("currentAct", m_uiCurrentAct);
+  pElem->SetAttribute("currentScene", m_uiCurrentScene);
+  pElem->SetAttribute("nextAct", m_uiNextAct);
+  pElem->SetAttribute("nextScene", m_uiNextScene);
+}
+void CScreenplay::readFromXMLElement(tinyxml2::XMLElement *pElem) {
+  m_uiCurrentAct = pElem->IntAttribute("currentAct");
+  m_uiCurrentScene = pElem->IntAttribute("currentScene");
+  m_uiNextAct = pElem->IntAttribute("nextAct");
+  m_uiNextScene = pElem->IntAttribute("nextScene");
+}

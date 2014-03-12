@@ -172,6 +172,8 @@ public:
   // CPauseListener
   virtual void screenplayPauseChanged(bool bPause) {m_bPaused = bPause; setInputListenerEnabled(!bPause);}
 
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
+  virtual void readFromXMLElement(tinyxml2::XMLElement *pElem);
 private:
 
   void loadAct(unsigned int uiActId, unsigned int uiSceneId = 1);
