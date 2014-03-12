@@ -17,6 +17,9 @@ public:
   ~CSnapshotManager();
 
   const CSnapshot &makeSnapshot();
+  // this is only for testing
+  void createFromFile(const Ogre::String &name);
+
   void loadFromSnapshot();
   void loadFromSnapshot(CSnapshot &snapshot);
 };

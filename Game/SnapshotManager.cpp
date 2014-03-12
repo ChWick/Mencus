@@ -31,6 +31,7 @@ const CSnapshot &CSnapshotManager::makeSnapshot() {
       CScreenplay *pScreenplay = CGameState::getSingleton().getScreenplay();
       tinyxml2::XMLDocument &doc(snapshot.getXMLDocument());
       tinyxml2::XMLElement *pElem = doc.NewElement("snapshot");
+      pElem->SetAttribute("game_state", snapshot.getGameState());
       doc.InsertEndChild(pElem);
       tinyxml2::XMLElement *pScreenplayElem = doc.NewElement("screenplay");
       pElem->InsertEndChild(pScreenplayElem);
@@ -76,4 +77,12 @@ void CSnapshotManager::loadFromSnapshot(CSnapshot &snapshot) {
     // not supported yet... state is not saved
     break;
   }
+}
+void CSnapshotManager::createFromFile(const Ogre::String &name) {
+  CSnapshot *pSnapshot = new CSnapshot();
+  pSnapshot->getXMLDocument().LoadFile(name.c_str());
+
+  pSnapshot->setGameState(static_cast<CGameState::EGameStates>(pSnapshot->getXMLDocument().FirstChildElement("snapshot")->IntAttribute("game_state")));
+
+  m_vSnapshots.push_back(pSnapshot);
 }

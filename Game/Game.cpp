@@ -464,7 +464,8 @@ void CGame::createScene() {
 
   Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing singleton classes ***");
   //-------------------------------------------------------------------------------------
-  new CSnapshotManager();	
+  new CSnapshotManager();
+  CSnapshotManager::getSingleton().createFromFile("snapshot.xml");
   new CShaderManager(mRoot->getRenderSystem());
   m_pGameState = new CGameState();
   new CPauseManager();
@@ -835,4 +836,12 @@ void CGame::destroyResources() {
     //CGUIManager::getSingleton().destroyResources();
     //new CGUIManager(mSceneMgr, *mWindow);
   }
+}
+void CGame::showLoadingBar() {
+  assert(mTrayMgr);
+  mTrayMgr->showLoadingBar(6, 0);
+}
+void CGame::hideLoadingBar() {
+  assert(mTrayMgr);
+  mTrayMgr->hideLoadingBar();
 }
