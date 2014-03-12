@@ -33,6 +33,8 @@ private:
     EXIT_ENEMY_DEATH,
   };
   class CExit {
+  public:
+    static Ogre::String toString(EExitTypes et);
   private:
     EExitTypes m_eExitType;
     CBoundingBox2d m_BoundingBox;

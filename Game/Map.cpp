@@ -55,8 +55,6 @@ CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayLi
   CHUD::getSingleton().show();
 }
 CMap::~CMap() {
-  if (m_pExit) {delete m_pExit; m_pExit = NULL;}
-
   CHUD::getSingleton().hide();
   clearMap();
 
@@ -73,6 +71,7 @@ CMap::~CMap() {
   Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup("Game");
 }
 void CMap::clearMap() {
+  if (m_pExit) {delete m_pExit; m_pExit = NULL;}
   m_lLinks.clear();
   m_lShotsToDestroy.clear();
   m_lExplosionsToDestroy.clear();
@@ -659,7 +658,7 @@ void CMap::readEnemy(XMLElement *pEnemy) {
   CEnemy *pNewEnemy = new CEnemy(*this, vPos, eEnemyType, fDirection, fHitpoints, bJumps, sID);
   m_lEnemies.push_back(pNewEnemy);
 
-  Ogre::LogManager::getSingleton().logMessage("Parsing Enemy at " + Ogre::StringConverter::toString(vPos));
+  Ogre::LogManager::getSingleton().logMessage("Parsing Enemy (" + Ogre::StringConverter::toString(eEnemyType) + ") at " + Ogre::StringConverter::toString(vPos));
 }
 void CMap::readObject(XMLElement *pObject) {
   m_lObjects.push_back(new CObject(*this,
@@ -678,6 +677,9 @@ void CMap::readExit(XMLElement *pExitElem) {
   }
   else if (sType == "enemyDeath") {
     m_pExit = CExit::newEnemyDeath(pExitElem->Attribute("id"));
+  }
+  else {
+    throw Ogre::Exception(0, sType + " is not a valid exit type", __FILE__);
   }
 }
 void CMap::readPlayer(XMLElement *pPlayerElem) {
@@ -728,6 +730,15 @@ void CMap::destroyEnemy(CEnemy *pEnemy) {
 }
 
 
+Ogre::String CMap::CExit::toString(EExitTypes et) {
+  switch (et) {
+  case CMap::EXIT_REGION:
+    return "region";
+  case CMap::EXIT_ENEMY_DEATH:
+    return "enemyDeath";
+  }
+  throw Ogre::Exception(0, "Unknown exit type", __FILE__);
+}
 bool CMap::CExit::isInExit(CPlayer *pPlayer, CMap *pMap) {
   switch (m_eExitType) {
   case CMap::EXIT_REGION:
@@ -755,7 +766,7 @@ void CMap::CExit::debugDraw() {
 }
 #endif // DEBUG_EXIT
 void CMap::CExit::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
-  pElem->SetAttribute("type", m_eExitType);
+  pElem->SetAttribute("type", toString(m_eExitType).c_str());
   SetAttribute(pElem, "pos", m_BoundingBox.getPosition());
   SetAttribute(pElem, "size", m_BoundingBox.getSize());
   pElem->SetAttribute("id", m_sID.c_str());
@@ -856,9 +867,11 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
     pObject->writeToXMLElement(pElem);
   }
 
-  XMLElement *pExit = doc.NewElement("exit");
-  pMapElem->InsertEndChild(pExit);
-  m_pExit->writeToXMLElement(pExit);
+  if (m_pExit) {
+    XMLElement *pExit = doc.NewElement("exit");
+    pMapElem->InsertEndChild(pExit);
+    m_pExit->writeToXMLElement(pExit);
+  }
 
   XMLElement *pPlayer = doc.NewElement("player");
   pMapElem->InsertEndChild(pPlayer);
@@ -873,6 +886,8 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
   }
 }
 void CMap::readFromXMLElement(tinyxml2::XMLElement *pRoot) {
+  clearMap();
+  
   Ogre::String sBackground = pRoot->Attribute("background");
   if (sBackground.size() > 0) {
     m_pBackground = new CBackground(m_p2dManagerMap, m_vCameraPos, sBackground);
@@ -886,7 +901,7 @@ void CMap::readFromXMLElement(tinyxml2::XMLElement *pRoot) {
   unsigned int uiRow = 0;
   for (XMLElement *pElement = pRoot->FirstChildElement(); pElement; pElement = pElement->NextSiblingElement()) {
     if (std::string(pElement->Value()) == "tiles") {
-      bool bInvert = pElement->BoolAttribute("invert");
+      bool bInvert = BoolAttribute(pElement, "invert");
       for (XMLElement *pRow = pElement->FirstChildElement(); pRow; pRow = pRow->NextSiblingElement()) {
 	if (bInvert)
 	  readRow(pRow, sizeY - 1 - uiRow);
