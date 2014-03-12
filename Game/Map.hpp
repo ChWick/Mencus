@@ -86,6 +86,7 @@ public:
 
   void loadMap(const string &sFilename, const string &sResourceGroup);
   void writeToXMLElement(tinyxml2::XMLElement *pMapElem) const;
+  void readFromXMLElement(tinyxml2::XMLElement *pRoot);
 
   //! Function to check if a line penetrates into a tile a lower position
   /**
