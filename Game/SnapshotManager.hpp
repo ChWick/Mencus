@@ -18,7 +18,7 @@ public:
 
   const CSnapshot &makeSnapshot();
   void loadFromSnapshot();
-  void loadFromSnapshot(const CSnapshot &snapshot);
+  void loadFromSnapshot(CSnapshot &snapshot);
 };
 
 #endif

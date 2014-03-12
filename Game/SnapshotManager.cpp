@@ -62,6 +62,18 @@ void CSnapshotManager::loadFromSnapshot() {
     loadFromSnapshot(*m_vSnapshots.back());
   }
 }
-void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
-
+void CSnapshotManager::loadFromSnapshot(CSnapshot &snapshot) {
+  Ogre::LogManager::getSingleton().logMessage("Loading snapshot");
+  CGameState::getSingleton().changeGameState(snapshot.getGameState(), true, false);
+  switch (snapshot.getGameState()) {
+  case CGameState::GS_GAME:
+    {
+      CScreenplay *pScreenplay = CGameState::getSingleton().getScreenplay();
+      pScreenplay->readFromXMLElement(snapshot.getXMLDocument().FirstChildElement("snapshot")->FirstChildElement("screenplay"));
+    }
+    break;
+  default:
+    // not supported yet... state is not saved
+    break;
+  }
 }
