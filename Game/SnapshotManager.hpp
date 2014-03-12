@@ -9,10 +9,12 @@ class CSnapshotManager :
   public Ogre::Singleton<CSnapshotManager> {
 
 private:
-  std::vector<CSnapshot> m_vSnapshots;
+  std::vector<CSnapshot*> m_vSnapshots;
 public:
   static CSnapshotManager& getSingleton(void);
   static CSnapshotManager* getSingletonPtr(void);
+
+  ~CSnapshotManager();
 
   const CSnapshot &makeSnapshot();
   void loadFromSnapshot();

@@ -13,7 +13,8 @@ private:
   CGameState::EGameStates m_eCurrentGameState;
   tinyxml2::XMLDocument m_XMLDoc;
 public:
-  CSnapshot();
+  CSnapshot() {}
+  
 
   void setGameState(CGameState::EGameStates eGameState) {m_eCurrentGameState = eGameState;}
   CGameState::EGameStates getGameState() const {return m_eCurrentGameState;}
