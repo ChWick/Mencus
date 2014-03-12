@@ -40,11 +40,12 @@ public:
   CLink(unsigned int uiFirstX, unsigned int uiFirstY,
 	unsigned int uiSecondX, unsigned int uiSecondY,
 	ELinkDirection eLinkDirection = LD_BOTH,
-	const Ogre::String &sID = Ogre::StringUtil::BLANK)
+	const Ogre::String &sID = Ogre::StringUtil::BLANK,
+	bool bActivated = true)
     : m_uiFirstX(uiFirstX), m_uiFirstY(uiFirstY),
       m_uiSecondX(uiSecondX), m_uiSecondY(uiSecondY),
       m_sID(sID),
-      m_bActivated(true),
+      m_bActivated(bActivated),
       m_eLinkDirection(eLinkDirection) {
   }
   CLink(const CLink &link)
