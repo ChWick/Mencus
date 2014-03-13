@@ -46,7 +46,7 @@ private:
 public:
   CShot(CMap *pMap,
 	Ogre2dManager *pSpriteManager,
-	const Ogre::Vector2 &vPosition,
+	const Ogre::Vector2 &vCenter,
 	EShotTypes eShotType,
 	EShotDirections eShotDirection,
 	unsigned int uiDmg = DMG_ALL);

@@ -41,14 +41,14 @@ const Ogre::Real BOMB_EXPLOSION_RADIUS = 1.75;
 
 CShot::CShot(CMap *pMap,
              Ogre2dManager *pSpriteManager,
-             const Ogre::Vector2 &vPosition,
+             const Ogre::Vector2 &vCenter,
              EShotTypes eShotType,
              EShotDirections eShotDirection,
              unsigned int uiDmg)
   :
   CAnimatedSprite(pMap,
                   pSpriteManager,
-                  vPosition,
+                  vCenter - SHOT_SIZE[eShotType] * 0.5,
                   SHOT_SIZE[eShotType]),
   m_pMap(pMap),
   m_eShotType(eShotType),
