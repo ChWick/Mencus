@@ -50,9 +50,6 @@ CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayLi
 
   CInputListenerManager::getSingleton().addInputListener(this);
 
-  m_pPlayer = new CPlayer(this, m_p2dManagerMap);
-  m_pPlayer->setPosition(Ogre::Vector2(0, 2));
-
   new CDebugDrawer(this, m_pDebugSpriteManager);
 
   CHUD::getSingleton().show();
@@ -62,7 +59,6 @@ CMap::~CMap() {
   clearMap();
 
   if (CDebugDrawer::getSingletonPtr()) {delete CDebugDrawer::getSingletonPtr();}
-  if (m_pPlayer) {delete m_pPlayer; m_pPlayer = NULL;}
 
   CInputListenerManager::getSingleton().removeInputListener(this);
   m_p2dManagerMap->end();
@@ -106,6 +102,8 @@ void CMap::clearMap() {
     delete m_lEnemies.front();
     m_lEnemies.pop_front();
   }
+
+  if (m_pPlayer) {delete m_pPlayer; m_pPlayer = NULL;}
 
   for (auto pTile : m_gridTiles) {
     delete pTile;
@@ -650,18 +648,10 @@ void CMap::readLink(XMLElement *pLink) {
   Ogre::LogManager::getSingleton().logMessage("Parsed: " + m_lLinks.back().toString());
 }
 void CMap::readEnemy(XMLElement *pEnemy) {
-  Ogre::String sID(Attribute(pEnemy, "id"));
-  CEnemy::EEnemyTypes eEnemyType
-    = EnumAttribute<CEnemy::EEnemyTypes>(pEnemy, "type", CEnemy::ET_COUNT, -1);
-  Ogre::Vector2 vPos(Vector2Attribute(pEnemy));
-  Ogre::Real fDirection(pEnemy->FloatAttribute("direction"));
-  Ogre::Real fHitpoints(pEnemy->FloatAttribute("hp"));
-  bool bJumps = BoolAttribute(pEnemy, "jumps", true);
-
   CEnemy *pNewEnemy = new CEnemy(*this, pEnemy);
   m_lEnemies.push_back(pNewEnemy);
 
-  Ogre::LogManager::getSingleton().logMessage("Parsing Enemy (" + Ogre::StringConverter::toString(eEnemyType) + ") at " + Ogre::StringConverter::toString(vPos));
+  Ogre::LogManager::getSingleton().logMessage("Parsing Enemy (" + Ogre::StringConverter::toString(pNewEnemy->getType()) + ") at " + Ogre::StringConverter::toString(pNewEnemy->getPosition()));
 }
 void CMap::readObject(XMLElement *pObject) {
   m_lObjects.push_back(new CObject(*this,
@@ -686,9 +676,10 @@ void CMap::readExit(XMLElement *pExitElem) {
   }
 }
 void CMap::readPlayer(XMLElement *pPlayerElem) {
-  m_pPlayer->startup(Ogre::Vector2(pPlayerElem->FloatAttribute("posx"),
-                                   pPlayerElem->FloatAttribute("posy")),
-                     pPlayerElem->FloatAttribute("direction"));
+  assert(!m_pPlayer);
+
+  m_pPlayer = new CPlayer(this, pPlayerElem);
+  playerWarped();
 }
 void CMap::readCamera(tinyxml2::XMLElement *pCamera) {
   for (XMLElement *pElement = pCamera->FirstChildElement(); pElement; pElement = pElement->NextSiblingElement()) {

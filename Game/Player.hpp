@@ -93,6 +93,7 @@ private:
 #endif // DEBUG_PLAYER_NO_COLLISION
 public:
   CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager);
+  CPlayer(CMap *pMap, const tinyxml2::XMLElement *pElem);
   ~CPlayer();
 
   void startup(const Ogre::Vector2 &vPosition, Ogre::Real fDirection);
@@ -120,6 +121,7 @@ public:
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
 
 private:
+  void constructor_impl();
   void setupAnimations();
 
 protected:

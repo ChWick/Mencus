@@ -37,8 +37,8 @@ public:
   void setNumberOfAnimationSquences(unsigned int size);
   unsigned int addAnimationSequence();
   void setCurrentAnimationSequence(unsigned int uiCurrentAnimationSequence);
-  CSpriteTexture &addTextureToCurrentAnimationSequence(Ogre::TexturePtr pTexture);
-  CSpriteTexture &addTextureToCurrentAnimationSequence(string sFilename);
+  CSpriteTexture &addTextureToAnimationSequence(unsigned int uiAnimSequence, Ogre::TexturePtr pTexture);
+  CSpriteTexture &addTextureToAnimationSequence(unsigned int uiAnimSequence, string sFilename);
   void setCurrentAnimationTexture(unsigned int uiTextIndex);
 
   void setupAnimation(unsigned int uiAnimSequence,

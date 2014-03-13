@@ -246,19 +246,22 @@ void CEnemy::setup() {
     setDefaultGetPath(&getEnemyTexturePath<1>);
     setupAnimation(AS_WALK_LEFT, "walk_right", 4, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", 4);
-    setCurrentAnimationSequence(AS_ATTACK_LEFT);
     {
-      CSpriteTexture &attackLeft = addTextureToCurrentAnimationSequence(getEnemyTexturePath<1>("attack_right", 1));
+      CSpriteTexture &attackLeft
+	= addTextureToAnimationSequence(AS_ATTACK_LEFT,
+					getEnemyTexturePath<1>("attack_right", 1));
       attackLeft.mirror(CSpriteTexture::MIRROR_Y);
       attackLeft.setSpriteOffset(Ogre::Vector2(-1, 0));
       attackLeft.setSpriteScale(Ogre::Vector2(2, 1));
-      addTextureToCurrentAnimationSequence(getEnemyTexturePath<1>("walk_right", 1)).mirror(CSpriteTexture::MIRROR_Y);
+      addTextureToAnimationSequence(AS_ATTACK_LEFT,
+				    getEnemyTexturePath<1>("walk_right", 1)).mirror(CSpriteTexture::MIRROR_Y);
     }
     {
-      setCurrentAnimationSequence(AS_ATTACK_RIGHT);
-      CSpriteTexture &attackRight = addTextureToCurrentAnimationSequence(getEnemyTexturePath<1>("attack_right", 1));
+      CSpriteTexture &attackRight
+	= addTextureToAnimationSequence(AS_ATTACK_RIGHT,
+					       getEnemyTexturePath<1>("attack_right", 1));
       attackRight.setSpriteScale(Ogre::Vector2(2, 1));
-      addTextureToCurrentAnimationSequence(getEnemyTexturePath<1>("walk_right", 1));
+      addTextureToAnimationSequence(AS_ATTACK_RIGHT, getEnemyTexturePath<1>("walk_right", 1));
     }
     setupAnimation(AS_JUMP_LEFT, "jump_right", 1, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_JUMP_RIGHT, "jump_right", 1);

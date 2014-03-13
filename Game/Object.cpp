@@ -24,23 +24,23 @@ CObject::CObject(CMap &map,
 
   switch (m_eObjectType) {
   case OT_BOMB:
-    addTextureToCurrentAnimationSequence(getBombTexture("bomb"));
+    addTextureToAnimationSequence(0, getBombTexture("bomb"));
     m_bIsPickable = true;
     break;
   case OT_HEALTH_POTION:
-    addTextureToCurrentAnimationSequence(getOtherObjectsTexturePath("health_potion"));
+    addTextureToAnimationSequence(0, getOtherObjectsTexturePath("health_potion"));
     m_bIsPickable = true;
     break;
   case OT_MANA_POTION:
-    addTextureToCurrentAnimationSequence(getOtherObjectsTexturePath("mana_potion"));
+    addTextureToAnimationSequence(0, getOtherObjectsTexturePath("mana_potion"));
     m_bIsPickable = true;
     break;
   case OT_KEY:
-    addTextureToCurrentAnimationSequence(getOtherObjectsTexturePath("key"));
+    addTextureToAnimationSequence(0, getOtherObjectsTexturePath("key"));
     m_bIsPickable = true;
     break;
   case OT_SCRATCH:
-    addTextureToCurrentAnimationSequence(getOtherObjectsTexturePath("scratch"));
+    addTextureToAnimationSequence(0, getOtherObjectsTexturePath("scratch"));
     break;
   case OT_TORCH:
     setupAnimation(0, "torch1", 10, CSpriteTexture::MIRROR_NONE, &getTorchTexturePath);

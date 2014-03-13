@@ -13,7 +13,7 @@
 #include "GameInputCommand.hpp"
 #include "XMLHelper.hpp"
 
-
+using namespace XMLHelper;
 using namespace Weapon;
 
 unsigned int PLAYER_LINK_PAUSE = PAUSE_ENEMY_MOVEMENT | PAUSE_SHOT_MOVEMENT;
@@ -71,7 +71,41 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   m_uiHealthPotionsCount(0),
   m_uiManaPotionsCount(0),
   m_uiBombCount(0) {
-
+  constructor_impl();
+}
+CPlayer::CPlayer(CMap *pMap, const tinyxml2::XMLElement *pElem) 
+  : CAnimatedSprite(pMap, pMap->get2dManager(), pElem, Ogre::Vector2(1, 2)),
+    CHitableObject(pElem),
+    m_Fader(this),
+    m_pMap(pMap),
+    m_fRightPressed(0),
+    m_fLeftPressed(0),
+    m_bAttackPressed(false),
+    m_bJumpPressed(false),
+    m_bActivateLinkPressed(false),
+    m_fMaxWalkSpeed(4),
+    m_fInitialJumpSpeed(11.5),
+    m_vCurrentSpeed(Vector2Attribute(pElem, "speed", Ogre::Vector2::ZERO)),
+    m_bOnGround(true),
+    m_bJumping(false),
+    m_eLastDirection(LD_RIGHT),
+  m_uiCurrentWeapon(IntAttribute(pElem, "pl_cur_weapon", W_BOLT)),
+  m_pBomb(NULL),
+  m_fBombThrowStrength(RealAttribute(pElem, "pl_bomb_throw_str", 0)),
+  m_Shield(pMap, pMap->get2dManager(), Ogre::Vector2::ZERO, Ogre::Vector2(2, 2)),
+  m_bShieldActive(BoolAttribute(pElem, "pl_shield_active", false)),
+  m_eGoToLinkStatus(EnumAttribute<EGoToLinkStatus>(pElem, "pl_gtl_status", GTLS_NONE)),
+  m_vLinkFromPos(Vector2Attribute(pElem, "pl_gtl_from", Ogre::Vector2::ZERO)),
+  m_vLinkToPos(Vector2Attribute(pElem, "pl_gtl_to", Ogre::Vector2::ZERO)),
+  m_fManaPoints(RealAttribute(pElem, "pl_hud_mp", 0)),
+  m_uiKeyCount(IntAttribute(pElem, "pl_hud_key", 0)),
+  m_uiHealthPotionsCount(IntAttribute(pElem, "pl_hud_hp_cnt", 0)),
+  m_uiManaPotionsCount(IntAttribute(pElem, "pl_hud_mp_cnt", 0)),
+  m_uiBombCount(IntAttribute(pElem, "pl_hud_bomb_cnt", 0)) {
+  constructor_impl();
+  startup(getPosition(), RealAttribute(pElem, "direction", 1));
+}
+void CPlayer::constructor_impl() {
 #ifdef DEBUG_PLAYER_NO_COLLISION
   m_bPlayerNoCollisionActivated = false;
 #endif // DEBUG_PLAYER_NO_COLLISION
@@ -82,7 +116,7 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   setupAnimations();
   m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.2, 0));
   m_bbRelativeBoundingBox.setSize(Ogre::Vector2(0.6, 1.8));
-  m_pThrowStrengthIndicator = new CBarIndicator(pMap, pSpriteManager);
+  m_pThrowStrengthIndicator = new CBarIndicator(m_pMap, m_pMap->get2dManager());
 
   m_Shield.init(1, 1);
   m_Shield.setupAnimation(0, "shield", 5, CSpriteTexture::MIRROR_NONE, &getPlayerTexturePath);
@@ -103,7 +137,6 @@ CPlayer::~CPlayer() {
 void CPlayer::startup(const Ogre::Vector2 &vPosition, Ogre::Real fDirection) {
   setPosition(vPosition);
   m_eLastDirection = (fDirection > 0) ? LD_RIGHT : LD_LEFT;
-  m_pMap->playerWarped();
 }
 void CPlayer::setupAnimations() {
   setDefaultGetPath(&getPlayerTexturePath);
@@ -597,6 +630,7 @@ void CPlayer::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
   CAnimatedSprite::writeToXMLElement(pElem);
   CHitableObject::writeToXMLElement(pElem);
 
+  pElem->SetAttribute("direction", m_eLastDirection == LD_RIGHT ? 1.0 : -1.0);
   SetAttribute(pElem, "speed", m_vCurrentSpeed);
   pElem->SetAttribute("pl_cur_weapon", m_uiCurrentWeapon);
   pElem->SetAttribute("pl_bomb_throw_str", m_fBombThrowStrength);

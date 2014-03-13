@@ -31,7 +31,6 @@ CAnimatedSprite::CAnimatedSprite(const CSpriteTransformPipeline *pTransformPipel
 
 void CAnimatedSprite::init(Ogre::Real fAnimationSpeed, unsigned int uiNumberOfAnimation) {
   m_AnimationSequences.resize(uiNumberOfAnimation);
-  setCurrentAnimationSequence(0);
 }
 void CAnimatedSprite::setNumberOfAnimationSquences(unsigned int size) {
   m_AnimationSequences.resize(size);
@@ -43,13 +42,13 @@ unsigned int CAnimatedSprite::addAnimationSequence() {
 void CAnimatedSprite::setCurrentAnimationSequence(unsigned int uiCurrentAnimationSequence) {
   m_uiCurrentAnimationSequence = uiCurrentAnimationSequence;
 }
-CSpriteTexture &CAnimatedSprite::addTextureToCurrentAnimationSequence(Ogre::TexturePtr pTexture) {
-  m_AnimationSequences[m_uiCurrentAnimationSequence].push_back(pTexture);
-  return m_AnimationSequences[m_uiCurrentAnimationSequence].back();
+CSpriteTexture &CAnimatedSprite::addTextureToAnimationSequence(unsigned int uiAnimSequence, Ogre::TexturePtr pTexture) {
+  m_AnimationSequences[uiAnimSequence].push_back(pTexture);
+  return m_AnimationSequences[uiAnimSequence].back();
 }
-CSpriteTexture &CAnimatedSprite::addTextureToCurrentAnimationSequence(string sFilename) {
+CSpriteTexture &CAnimatedSprite::addTextureToAnimationSequence(unsigned int uiAnimSequence, string sFilename) {
   setTexture(sFilename);
-  return addTextureToCurrentAnimationSequence(Ogre::TextureManager::getSingleton().getByName(sFilename));
+  return addTextureToAnimationSequence(uiAnimSequence, Ogre::TextureManager::getSingleton().getByName(sFilename));
 }
 void CAnimatedSprite::setCurrentAnimationTexture(unsigned int uiTextIndex) {
   m_uiCurrentAnimationTexture = uiTextIndex;
@@ -73,13 +72,12 @@ void CAnimatedSprite::setupAnimation(unsigned int uiAnimSequence,
 				     tGetPathFunctionType pGetPathFunction) {
   tGetPathFunctionType pFunc = (pGetPathFunction == NULL) ? m_pDefaultGetPathFunction : pGetPathFunction;
   assert(pFunc);
-  setCurrentAnimationSequence(uiAnimSequence);
   if (uiCount <= 0) {
-    addTextureToCurrentAnimationSequence((*pFunc)(sName, -1)).mirror(eMirrorType);
+    addTextureToAnimationSequence(uiAnimSequence, (*pFunc)(sName, -1)).mirror(eMirrorType);
   }
   else {
     for (int i = 0; i < uiCount; ++i) {
-      addTextureToCurrentAnimationSequence((*pFunc)(sName, i + 1)).mirror(eMirrorType);
+      addTextureToAnimationSequence(uiAnimSequence, (*pFunc)(sName, i + 1)).mirror(eMirrorType);
     }
   }
 }
@@ -90,9 +88,8 @@ void CAnimatedSprite::setupAnimation(unsigned int uiAnimSequence,
 				     tGetPathFunctionType pGetPathFunction) {
   tGetPathFunctionType pFunc = (pGetPathFunction == NULL) ? m_pDefaultGetPathFunction : pGetPathFunction;
   assert(pFunc);
-  setCurrentAnimationSequence(uiAnimSequence);
   for (auto i : uiIDs) {
-    addTextureToCurrentAnimationSequence((*pFunc)(sName, i + 1)).mirror(eMirrorType);
+    addTextureToAnimationSequence(uiAnimSequence, (*pFunc)(sName, i + 1)).mirror(eMirrorType);
   }
 }
 void CAnimatedSprite::update(Ogre::Real tpf) {
