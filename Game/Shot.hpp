@@ -63,7 +63,7 @@ public:
 
   void enemyDestroyed(CEnemy *pEnemy) {if (m_pCatchedEnemy == pEnemy) {m_pCatchedEnemy = NULL;} }
 
-  void writeToXMLElement(tinyxml2::XMLElement *pElement);
+  void writeToXMLElement(tinyxml2::XMLElement *pElement) const;
 private:
   void constructor_impl();
   void hit();
