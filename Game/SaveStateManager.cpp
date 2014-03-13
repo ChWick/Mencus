@@ -2,6 +2,7 @@
 #include "Player.hpp"
 #include "OgreException.h"
 #include <time.h>
+#include "Game.hpp"
 
 const std::string SAVE_STATE_FILE("savestate.xml");
 
@@ -18,7 +19,7 @@ CSaveStateManager &CSaveStateManager::getSingleton() {
 
 CSaveStateManager::CSaveStateManager() {
   using namespace tinyxml2;
-  std::string sFilename(SAVE_STATE_FILE);
+  std::string sFilename(CGame::getSingleton().getFileSystemLayer()->getWritablePath(SAVE_STATE_FILE));
   XMLDocument doc;
   if (doc.LoadFile(sFilename.c_str())) {
     Ogre::LogManager::getSingleton().logMessage(sFilename + " not found.");
@@ -97,7 +98,9 @@ const CSaveState *CSaveStateManager::read(unsigned int uiAct, unsigned int uiSce
 }
 void CSaveStateManager::writeXMLFile() {
   using namespace tinyxml2;
-  std::ofstream outputfile(SAVE_STATE_FILE);
+  Ogre::String sPath(CGame::getSingleton().getFileSystemLayer()->getWritablePath(SAVE_STATE_FILE));
+  Ogre::LogManager::getSingleton().logMessage("Save states path: " + sPath);
+  std::ofstream outputfile(sPath.c_str());
   if (!outputfile) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Save states file could not be created");
     return;
