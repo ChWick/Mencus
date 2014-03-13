@@ -50,6 +50,8 @@ public:
 	EShotTypes eShotType,
 	EShotDirections eShotDirection,
 	unsigned int uiDmg = DMG_ALL);
+  CShot(CMap *pMap,
+	const tinyxml2::XMLElement *pElement);
   //! Lanches a shot with the given speed
   /** This speed will be multiplied with the default speed of the shot
    *  \param[in] vInitialSpeed The initial speed or direction vector
@@ -60,7 +62,10 @@ public:
   void update(Ogre::Real tpf);
 
   void enemyDestroyed(CEnemy *pEnemy) {if (m_pCatchedEnemy == pEnemy) {m_pCatchedEnemy = NULL;} }
+
+  void writeToXMLElement(tinyxml2::XMLElement *pElement);
 private:
+  void constructor_impl();
   void hit();
 };
 

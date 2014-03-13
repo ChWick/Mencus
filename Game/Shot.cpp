@@ -6,6 +6,9 @@
 #include "Explosion.hpp"
 #include "Enemy.hpp"
 #include "Player.hpp"
+#include "XMLHelper.hpp"
+
+using namespace XMLHelper;
 
 const Ogre::Real COLUMN_CATCH_DURATION = 3.0f;
 
@@ -55,9 +58,29 @@ CShot::CShot(CMap *pMap,
   m_bLaunched(false),
   m_uiDamages(uiDmg),
   m_pCatchedEnemy(NULL) {
-
+  constructor_impl();
+}
+CShot::CShot(CMap *pMap,
+	     const tinyxml2::XMLElement *pElement) 
+  : CAnimatedSprite(pMap,
+		   pMap->get2dManager(),
+		   pElement,
+		   SHOT_SIZE[EnumAttribute<EShotTypes>(pElement, "type", ST_COUNT, true)]),
+    m_pMap(pMap),
+    m_eShotType(EnumAttribute<EShotTypes>(pElement, "type", ST_COUNT, true)),
+    m_bAffectedByGravity(BoolAttribute(pElement,
+				       "affected_by_gravity",
+				       SHOT_AFFECTED_BY_GRAVITY[EnumAttribute<EShotTypes>(pElement, "type", ST_COUNT, true)])),
+    m_vSpeed(Vector2Attribute(pElement, "speed", Ogre::Vector2::ZERO)),
+  m_eShotDirection(EnumAttribute<EShotDirections>(pElement, "direction", SD_RIGHT, true)),
+  m_bLaunched(BoolAttribute(pElement, "launched", false)),
+  m_uiDamages(IntAttribute(pElement, "damages", DMG_ALL, true)),
+  m_pCatchedEnemy(pMap->getEnemyById(Attribute(pElement, "catched_enemy"))) {
+  constructor_impl();
+}
+void CShot::constructor_impl() {
   CSpriteTexture::EMirrorTypes eMirrorType = CSpriteTexture::MIRROR_NONE;
-  if (eShotDirection == SD_LEFT) {
+  if (m_eShotDirection == SD_LEFT) {
     eMirrorType = CSpriteTexture::MIRROR_Y;
   }
 
@@ -78,7 +101,6 @@ CShot::CShot(CMap *pMap,
   else if (m_eShotType == ST_COLUMN) {
     init(1, 1);
     setupAnimation(SA_DEFAULT, "column", 2, eMirrorType, &getColumnTexture);
-    setCenter(vPosition);
     m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.4, 0));
     m_bbRelativeBoundingBox.setSize(Ogre::Vector2(0.2, 1.6));
   }
@@ -210,4 +232,15 @@ void CShot::hit() {
       return;
     }
   }
+}
+void CShot::writeToXMLElement(tinyxml2::XMLElement *pElement) {
+  CAnimatedSprite::writeToXMLElement(pElement);
+  pElement->SetAttribute("type", m_eShotType);
+  pElement->SetAttribute("affected_by_gravity", m_bAffectedByGravity);
+  SetAttribute(pElement, "speed", m_vSpeed);
+  pElement->SetAttribute("direction", m_eShotDirection);
+  pElement->SetAttribute("timer", m_fTimer);
+  pElement->SetAttribute("launched", m_bLaunched);
+  pElement->SetAttribute("damages", m_uiDamages);
+  pElement->SetAttribute("catched_enemy", m_pCatchedEnemy->getID().c_str());
 }
