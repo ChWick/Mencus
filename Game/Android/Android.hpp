@@ -69,6 +69,7 @@
 #define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "Ogre", __VA_ARGS__))
 
 #include "AndroidInput.hpp"
+#include "SnapshotManager.hpp"
 
 class OgreAndroidBridge;
     
@@ -79,6 +80,7 @@ class OgreAndroidBridge;
 class OgreAndroidBridge {
 private:
   static bool m_bRenderPaused;
+  static CSnapshot *m_pSnapshot;
 public:
   static void init(struct android_app* state) {
     state->onAppCmd = &OgreAndroidBridge::handleCmd;
@@ -171,9 +173,15 @@ public:
         
   static void handleCmd(struct android_app* app, int32_t cmd)
   {
+    if (app->savedState) {
+      LOGI("loading snapshot ...");
+      CSnapshotManager::getSingleton().setSnapshot(new CSnapshot(app->savedState, app->savedStateSize));
+    }
     switch (cmd) 
       {
       case APP_CMD_SAVE_STATE:
+	LOGI("Saving state");
+	CSnapshotManager::getSingleton().makeSnapshot().saveToMemory(app->savedState, app->savedStateSize);
 	break;
       case APP_CMD_INIT_WINDOW:
 	m_bRenderPaused = false;
@@ -209,8 +217,10 @@ public:
 	  else {
 	    LOGI("... recreating render winow");
 	    static_cast<Ogre::AndroidEGLWindow*>(mRenderWnd)->_createInternalResources(app->window, config);
-	    if (mGame)
+	    if (mGame) {
+	      LOGI("... creating resources");
 	      mGame->createResources();
+	    }
 	  }
                         
 	  AConfiguration_delete(config);
@@ -237,6 +247,14 @@ public:
         
   static void go(struct android_app* state)
   {
+    if (state->savedState) {
+      LOGI("loading snapshot ...");
+      CSnapshotManager::getSingleton().setSnapshot(new CSnapshot(state->savedState, state->savedStateSize));
+    }
+    else {
+      LOGI("no snapshot found, not loading");
+    }
+    LOGI("starting rendering");
     int ident, events;
     struct android_poll_source* source;
             
@@ -244,11 +262,20 @@ public:
       {
 	while ((ident = ALooper_pollAll(0, NULL, &events, (void**)&source)) >= 0)
 	  {
-	    if (source != NULL)
-	      source->process(state, source);
+	    try {
+	      if (source != NULL)
+		source->process(state, source);
                     
-	    if (state->destroyRequested != 0)
-	      return;
+	      if (state->destroyRequested != 0)
+		return;
+	    }
+	    catch (const Ogre::Exception &e) {
+	      LOGW("Error in rendering loop");
+	      LOGW("%s", e.getFullDescription().c_str());
+	    }
+	    catch (...) {
+	      LOGW("Unknown Exception");
+	    }
 	  }
                 
 	if(mRenderWnd != NULL && mRenderWnd->isActive() && !m_bRenderPaused)
@@ -258,11 +285,14 @@ public:
 	      mRoot->renderOneFrame();
 	    }
 	    catch (const Ogre::Exception &e) {
+	      LOGW("Error in rendering loop");
 	      LOGW("%s", e.getFullDescription().c_str());
+	      shutdown();
 	      break;
 	    }
 	    catch (...) {
 	      LOGW("Unknown Exception");
+	      shutdown();
 	      break;
 	    }
 	  }
