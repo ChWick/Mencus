@@ -18,7 +18,7 @@ using namespace Weapon;
 
 unsigned int PLAYER_LINK_PAUSE = PAUSE_ENEMY_MOVEMENT | PAUSE_SHOT_MOVEMENT;
 
-const Ogre::Vector2 PLAYER_BOLT_OFFSET_RIGHT(0.2, 0.0);
+const Ogre::Vector2 PLAYER_BOLT_OFFSET_RIGHT(0.2, 0.125);
 const Ogre::Vector2 PLAYER_BOLT_OFFSET_LEFT(PLAYER_BOLT_OFFSET_RIGHT * Ogre::Vector2(-1, 1));
 
 const Ogre::Vector2 PLAYER_COLUMN_OFFSET_RIGHT(0.2, 0.0);
