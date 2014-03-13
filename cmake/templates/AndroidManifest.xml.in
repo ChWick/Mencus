@@ -6,6 +6,7 @@
 	  android:installLocation="auto">
 
   <uses-sdk android:minSdkVersion="@ANDROID_NATIVE_API_LEVEL@" />
+  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />  
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.INTERNET" /> 
 
