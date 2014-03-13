@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <tinyxml2.h>
+#include "XMLHelper.hpp"
 
 class CHitableObject {
 private:
@@ -14,6 +15,20 @@ public:
     : m_fMaximumHitpoints(fMaxHitpoints),
       m_fHitpoints(fMaxHitpoints),
       m_bInvunerable(false) {
+  }
+  CHitableObject(const tinyxml2::XMLElement *pElem)
+    : m_fMaximumHitpoints(XMLHelper::RealAttribute(pElem, "hp", 0, true)),
+      m_fHitpoints(XMLHelper::RealAttribute(pElem, "curhp", m_fMaximumHitpoints)),
+      m_bInvunerable(XMLHelper::BoolAttribute(pElem, "invunerable", false)) {
+  }
+
+  void init() {
+    if (m_fHitpoints < m_fMaximumHitpoints) {
+      damageTakenCallback();
+    }
+    if (m_fHitpoints <= 0) {
+      killedByDamageCallback();
+    }
   }
 
   void takeDamage(Ogre::Real fHitpoints) {

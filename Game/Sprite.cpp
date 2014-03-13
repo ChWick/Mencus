@@ -2,6 +2,8 @@
 #include "SpriteTransformPipeline.hpp"
 #include "XMLHelper.hpp"
 
+using namespace XMLHelper;
+
 
 const Ogre::Vector2 CSpriteTexture::DEFAULT_TEXTURE_TOP_LEFT(0, 1);
 const Ogre::Vector2 CSpriteTexture::DEFAULT_TEXTURE_BOTTOM_RIGHT(1, 0);
@@ -16,6 +18,20 @@ CSprite::CSprite(const CSpriteTransformPipeline *pTransformPipeline, Ogre2dManag
     m_pTextureToDraw(&m_Texture),
     m_bbRelativeBoundingBox(Ogre::Vector2::ZERO, vSize * vScale),
     m_Colour(Ogre::ColourValue::White) {
+}
+CSprite::CSprite(const CSpriteTransformPipeline *pTransformPipeline,
+		 Ogre2dManager *pSpriteManager,
+		 const tinyxml2::XMLElement *pElem,
+		 const Ogre::Vector2 &vSize)
+  : m_pTransformPipeline(pTransformPipeline),
+    m_pSpriteManager(pSpriteManager),
+    m_vPosition(Vector2Attribute(pElem, "", Ogre::Vector2::ZERO, true)),
+    m_vSize(Vector2Attribute(pElem, "sp_size", vSize)),
+    m_vScale(Vector2Attribute(pElem, "sp_scale", Ogre::Vector2::UNIT_SCALE)),
+    m_radRotation(RealAttribute(pElem, "sp_radRotation", 0)),
+    m_pTextureToDraw(&m_Texture),
+  m_bbRelativeBoundingBox(Ogre::Vector2::ZERO, m_vSize * m_vScale),
+  m_Colour(Ogre::StringConverter::parseColourValue(Attribute(pElem, "sp_colour", "1 1 1 1"), Ogre::ColourValue::White)) {
 }
 CSprite::CSprite(const CSprite &src)
   : m_pSpriteManager(src.m_pSpriteManager),

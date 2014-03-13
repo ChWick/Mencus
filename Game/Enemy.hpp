@@ -54,7 +54,7 @@ public:
     Ogre::Real fHitpoints,
     bool bJumps,
     const Ogre::String &sID);
-  CEnemy(tinyxml2::XMLElement *pElem);
+  CEnemy(CMap &map, const tinyxml2::XMLElement *pElem);
 
   void update(Ogre::Real tpf);
   void render(Ogre::Real tpf);

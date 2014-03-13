@@ -1,4 +1,7 @@
 #include "AnimatedSprite.hpp"
+#include "XMLHelper.hpp"
+
+using namespace XMLHelper;
 
 CAnimatedSprite::CAnimatedSprite(
 				 const CSpriteTransformPipeline *pTransformPipeline,
@@ -14,6 +17,18 @@ CAnimatedSprite::CAnimatedSprite(
   m_fAnimationTimer = 0;
   m_fAnimationSpeed = 1.0 / 20;
 }
+CAnimatedSprite::CAnimatedSprite(const CSpriteTransformPipeline *pTransformPipeline,
+				 Ogre2dManager *pSpriteManager,
+				 const tinyxml2::XMLElement *pElem,
+				 const Ogre::Vector2 &vSize) 
+  : CSprite(pTransformPipeline, pSpriteManager, pElem, vSize),
+    m_uiCurrentAnimationTexture(IntAttribute(pElem, "as_current_at", 0)),
+    m_uiCurrentAnimationSequence(IntAttribute(pElem, "as_current_as", 0)),
+    m_bAnimationPaused(BoolAttribute(pElem, "as_animation_paused", false)),
+    m_fAnimationTimer(RealAttribute(pElem, "as_timer", 0)),
+    m_fAnimationSpeed(1.0 / 20) {
+}
+
 void CAnimatedSprite::init(Ogre::Real fAnimationSpeed, unsigned int uiNumberOfAnimation) {
   m_AnimationSequences.resize(uiNumberOfAnimation);
   setCurrentAnimationSequence(0);

@@ -34,6 +34,11 @@ public:
 	  const Ogre::Vector2 &vScale = Ogre::Vector2::UNIT_SCALE,
 	  const Ogre::Radian radRotation = Ogre::Radian(0));
 
+  CSprite(const CSpriteTransformPipeline *pTransformPipeline,
+	  Ogre2dManager *pSpriteManager,
+	  const tinyxml2::XMLElement *pElem,
+	  const Ogre::Vector2 &vSize = Ogre::Vector2::UNIT_SCALE);
+
   CSprite(const CSprite &src);
   virtual ~CSprite();
 

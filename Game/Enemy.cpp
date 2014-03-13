@@ -68,6 +68,28 @@ CEnemy::CEnemy(CMap &map,
   setup();
   m_HPBar.setSize(Ogre::Vector2(m_vSize.x, m_HPBar.getSize().y));
 }
+CEnemy::CEnemy(CMap &map, const tinyxml2::XMLElement *pElem)
+  : m_eEnemyType(EnumAttribute(pElem, "type", ET_COUNT, -1, true)),
+    CAnimatedSprite(&map,
+		    map.get2dManager(),
+		    pElem,
+		    ENEMY_SIZE[EnumAttribute(pElem, "type", ET_COUNT, -1, true)]),
+    CHitableObject(pElem),
+    m_Map(map),
+    m_vSpeed(Vector2Attribute(pElem,
+			      "speed",
+			      Ogre::Vector2::UNIT_X * RealAttribute(pElem, "direction", 1)
+			      * ENEMY_SPEED[EnumAttribute(pElem, "type", ET_COUNT, -1, true)])),
+    m_bOnGround(false),
+    m_HPBar(&map, map.get2dManager()),
+    m_bJumps(BoolAttribute(pElem, "jumps", true)),
+    m_sID(Attribute(pElem, "id", Ogre::StringUtil::BLANK)),
+    m_vExternalForce(Ogre::Vector2::ZERO),
+    m_bStunned(BoolAttribute(pElem, "stunned", false)),
+    m_bAtLeastOneDamageDone(BoolAttribute(pElem, "oneDmgDone", true)) {
+  setup();
+  m_HPBar.setSize(Ogre::Vector2(m_vSize.x, m_HPBar.getSize().y));
+}
 void CEnemy::update(Ogre::Real tpf) {
   CAnimatedSprite::update(tpf);
 
@@ -215,7 +237,8 @@ void CEnemy::updateKI() {
   }
 }
 void CEnemy::setup() {
-  init(ENEMY_SPEED[m_eEnemyType], AS_COUNT);
+  CAnimatedSprite::init(ENEMY_SPEED[m_eEnemyType], AS_COUNT);
+  CHitableObject::init();
   switch (m_eEnemyType) {
   case ET_GREEN_MONSTER:
     m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.1, 0));
