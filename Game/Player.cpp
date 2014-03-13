@@ -77,7 +77,8 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
 #endif // DEBUG_PLAYER_NO_COLLISION
 
   CInputListenerManager::getSingleton().addInputListener(this);
-  init(1, ANIM_COUNT);
+  CAnimatedSprite::init(1, ANIM_COUNT);
+  CHitableObject::init();
   setupAnimations();
   m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.2, 0));
   m_bbRelativeBoundingBox.setSize(Ogre::Vector2(0.6, 1.8));
