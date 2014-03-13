@@ -66,6 +66,7 @@ public:
     mInputContext.mKeyboard = keyboard;
 
     if(app != NULL) {
+      mNativeActivity = app->activity;
       mAssetMgr = app->activity->assetManager;
       Ogre::ArchiveManager::getSingleton().addArchiveFactory(
         new Ogre::APKFileSystemArchiveFactory(app->activity->assetManager));
@@ -74,6 +75,26 @@ public:
     }
   }
 #endif
+
+  void writeToFile(const Ogre::String &fileName, const Ogre::String &text) {
+#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+    writeToInternalStorageFile(fileName, text);
+#else
+    std::ofstream stream(fileName);
+    stream << text;
+    stream.close();
+#endif
+  }
+  Ogre::String getFileAsText(const Ogre::String &fileName) {
+    #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+    return getTextFromInternalStorageFile(fileName);
+#else
+    std::ifstream stream(fileName);
+    std::string content( (std::istreambuf_iterator<char>(stream) ),
+                       (std::istreambuf_iterator<char>()    ) );
+    return content;
+#endif
+  }
 protected:
 #if OGRE_VERSION >= ((1 << 16) | (9 << 8) | 0)
   Ogre::OverlaySystem *mOverlaySystem;
@@ -150,7 +171,75 @@ private:
     }
     return stream;
   }
+  Ogre::String getTextFromInternalStorageFile(const Ogre::String &fileName) {
+    ANativeActivity* nativeActivity = mNativeActivity;                              
+    const char* internalPath = nativeActivity->internalDataPath;
+    std::string dataPath(internalPath);                               
+    // internalDataPath points directly to the files/ directory                                  
+    std::string configFile = dataPath + "/" + fileName;
+
+    FILE* f = std::fopen(configFile.c_str(), "r");// Determine file size
+    fseek(f, 0, SEEK_END);
+    size_t size = ftell(f);
+
+    char* where = new char[size];
+
+    rewind(f);
+    fread(where, sizeof(char), size, f);
+
+    Ogre::String out(where);
+    delete[] where;
+    return out;
+  }
+  void writeToInternalStorageFile(const Ogre::String &fileName, const Ogre::String &text) {
+    ANativeActivity* nativeActivity = mNativeActivity;                              
+    const char* internalPath = nativeActivity->internalDataPath;
+    std::string dataPath(internalPath);                               
+    // internalDataPath points directly to the files/ directory                                  
+    std::string configFile = dataPath + "/" + fileName;
+
+    // sometimes if this is the first time we run the app 
+    // then we need to create the internal storage "files" directory
+    struct stat sb;
+    int32_t res = stat(dataPath.c_str(), &sb);
+    if (0 == res && sb.st_mode & S_IFDIR) {
+      Ogre::LogManager::getSingleton().logMessage("'files/' dir already in app's internal data storage.");
+    }
+    else {
+        res = mkdir(dataPath.c_str(), 0770);
+    }
+
+    if (0 == res) {
+        // test to see if the config file is already present
+        res = stat(configFile.c_str(), &sb);
+        if (0 == res && sb.st_mode & S_IFREG) {
+            Ogre::LogManager::getSingleton().logMessage("Application config file already present");
+        }
+        else
+        {
+            Ogre::LogManager::getSingleton().logMessage("Application config file does not exist. Creating it ...");
+            // read our application config file from the assets inside the apk
+            // save the config file contents in the application's internal storage
+            Ogre::LogManager::getSingleton().logMessage("Reading config file using the asset manager.\n");
+
+            FILE* appConfigFile = std::fopen(configFile.c_str(), "w+");
+            if (NULL == appConfigFile) {
+	      throw Ogre::Exception(0, "Could not create app configuration file.\n", __FILE__);
+            }
+            else
+            {
+                Ogre::LogManager::getSingleton().logMessage("App config file created successfully. Writing config data ...\n");
+                res = std::fwrite(text.c_str(), sizeof(char), text.size(), appConfigFile);
+                if (text.size() != res) {
+		  throw Ogre::Exception(0, "Error generating app configuration file.\n", __FILE__);
+                }
+            }
+            std::fclose(appConfigFile);
+        }
+    }
+  }
   AAssetManager* mAssetMgr;       // Android asset manager to access files inside apk
+  ANativeActivity* mNativeActivity;
 #endif
 #ifdef INCLUDE_RTSHADER_SYSTEM
   bool initialiseRTShaderSystem(Ogre::SceneManager* sceneMgr);
