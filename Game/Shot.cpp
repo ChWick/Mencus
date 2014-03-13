@@ -75,7 +75,8 @@ CShot::CShot(CMap *pMap,
   m_eShotDirection(EnumAttribute<EShotDirections>(pElement, "direction", SD_RIGHT, true)),
   m_bLaunched(BoolAttribute(pElement, "launched", false)),
   m_uiDamages(IntAttribute(pElement, "damages", DMG_ALL, true)),
-  m_pCatchedEnemy(pMap->getEnemyById(Attribute(pElement, "catched_enemy"))) {
+  m_pCatchedEnemy(pMap->getEnemyById(Attribute(pElement, "catched_enemy"))),
+  m_fTimer(RealAttribute(pElement, "timer", 0)) {
   constructor_impl();
 }
 void CShot::constructor_impl() {
