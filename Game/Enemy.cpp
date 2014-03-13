@@ -8,6 +8,7 @@
 #include "Constants.hpp"
 #include "Shot.hpp"
 #include "XMLHelper.hpp"
+#include "IDGenerator.hpp"
 
 using namespace XMLHelper;
 
@@ -61,7 +62,7 @@ CEnemy::CEnemy(CMap &map,
     m_bOnGround(false),
     m_HPBar(&map, map.get2dManager()),
     m_bJumps(bJumps),
-    m_sID(sID),
+  m_sID(sID.length() == 0 ? Ogre::StringConverter::toString(CIDGenerator::nextID()) : sID),
     m_vExternalForce(Ogre::Vector2::ZERO),
     m_bStunned(false),
     m_bAtLeastOneDamageDone(true) {
@@ -83,7 +84,7 @@ CEnemy::CEnemy(CMap &map, const tinyxml2::XMLElement *pElem)
     m_bOnGround(false),
     m_HPBar(&map, map.get2dManager()),
     m_bJumps(BoolAttribute(pElem, "jumps", true)),
-    m_sID(Attribute(pElem, "id", Ogre::StringUtil::BLANK)),
+  m_sID(Attribute(pElem, "id", Ogre::StringConverter::toString(CIDGenerator::nextID()))),
     m_vExternalForce(Ogre::Vector2::ZERO),
     m_bStunned(BoolAttribute(pElem, "stunned", false)),
     m_bAtLeastOneDamageDone(BoolAttribute(pElem, "oneDmgDone", true)) {
