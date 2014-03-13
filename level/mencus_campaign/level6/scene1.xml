@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map background="clouds" sizex="16" sizey="12">
-    <player posx="13.375000" posy="9.000000" direction="1"/>
+    <player x="13.375000" y="9.000000" direction="1" hp="10"/>
     <tiles invert="true">
         <row tiles="12 6 6 6 6 6 6 6 6 6 6 6 6 6 6 11"/>
         <row tiles="4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3"/>

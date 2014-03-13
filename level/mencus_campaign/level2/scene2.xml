@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map background="fog" sizex="17" sizey="24">
     <exit type="region" posx="16" posy="14" sizex="1" sizey="2" />
-    <player posx="0.156250" posy="16.000000" direction="1"/>
+    <player x="0.156250" y="16.000000" direction="1" hp="10"/>
     <tiles invert="true">
         <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23"/>
         <row tiles="23 23 23 23 23 23 47 48 48 48 48 48 48 48 48 48 48"/>
