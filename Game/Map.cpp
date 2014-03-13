@@ -878,6 +878,14 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
     pCamera->InsertEndChild(pElem);
     res.writeToXMLElement(pElem);
   }
+
+  XMLElement *pShots = doc.NewElement("shots");
+  pMapElem->InsertEndChild(pShots);
+  for (const CShot *pShot : m_lShots) {
+    XMLElement *pElem = doc.NewElement("shot");
+    pShots->InsertEndChild(pElem);
+    pShot->writeToXMLElement(pElem);
+  }
 }
 void CMap::readFromXMLElement(tinyxml2::XMLElement *pRoot) {
   clearMap();
@@ -937,6 +945,11 @@ void CMap::readFromXMLElement(tinyxml2::XMLElement *pRoot) {
     }
     else if (std::string(pElement->Value()) == "camera") {
       readCamera(pElement);
+    }
+    else if (std::string(pElement->Value()) == "shots") {
+      for (XMLElement *pObject = pElement->FirstChildElement(); pObject; pObject = pObject->NextSiblingElement()) {
+        addShot(new CShot(this, pObject));
+      }
     }
   }
 }
