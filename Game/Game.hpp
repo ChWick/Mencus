@@ -42,6 +42,7 @@ public:
   const OgreBites::InputContext &getInputContext() const {return mInputContext;}
 
   OgreBites::ParamsPanel* getDetailsPanel() {return mDetailsPanel;}
+  Ogre::FileSystemLayer* getFileSystemLayer() {return mFSLayer;}
 
   void go();
   void initApp();

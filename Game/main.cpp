@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "SnapshotManager.hpp"
 #include <CEGUI/CEGUI.h>
 #include <OIS.h>
 
@@ -18,6 +19,7 @@ Ogre::RenderWindow* OgreAndroidBridge::mRenderWnd = NULL;
 Ogre::Root* OgreAndroidBridge::mRoot = NULL;
 bool OgreAndroidBridge::mInit = false;
 bool OgreAndroidBridge::m_bRenderPaused = true;
+CSnapshot *OgreAndroidBridge::m_pSnapshot = NULL;
 
 #   ifdef OGRE_STATIC_LIB
 Ogre::StaticPluginLoader* OgreAndroidBridge::mStaticPluginLoader = NULL;
@@ -33,12 +35,18 @@ void android_main(struct android_app* state)
 int main(int argc, char *argv[])
 #endif
 {
+  new CSnapshotManager();
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+  LOGI("Starting");
   app_dummy();
 
+  LOGI("Initialize");
   OgreAndroidBridge::init(state);
+  LOGI("Go");
   OgreAndroidBridge::go(state);
+  LOGI("End");
 #else
+  CSnapshotManager::getSingleton().createFromFile("snapshot.xml");
   // Create application object
   CGame *app = new CGame();
 
@@ -73,4 +81,5 @@ int main(int argc, char *argv[])
   delete app;
   return 0;
 #endif
+  if (CSnapshotManager::getSingletonPtr()) {delete CSnapshotManager::getSingletonPtr();}
 }

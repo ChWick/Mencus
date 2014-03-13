@@ -53,7 +53,7 @@ public:
   ESceneTypes getType() const {return m_eSceneType;}
 
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const {}
-  virtual void readFromXMLElement(tinyxml2::XMLElement *pElem) {}
+  virtual void readFromXMLElement(const tinyxml2::XMLElement *pElem) {}
 };
 
 class CInstructions : public CScene {
@@ -97,7 +97,7 @@ public:
   CMap *getMap() {return m_pMap;}
 
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
-  virtual void readFromXMLElement(tinyxml2::XMLElement *pElem);
+  virtual void readFromXMLElement(const tinyxml2::XMLElement *pElem);
 };
 
 class CAct {
@@ -181,7 +181,7 @@ public:
   virtual void screenplayPauseChanged(bool bPause) {m_bPaused = bPause; setInputListenerEnabled(!bPause);}
 
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
-  virtual void readFromXMLElement(tinyxml2::XMLElement *pElem);
+  virtual void readFromXMLElement(const tinyxml2::XMLElement *pElem);
 private:
 
   void loadAct(unsigned int uiActId, unsigned int uiSceneId = 1);

@@ -569,7 +569,7 @@ bool CMap::isInMap(unsigned int x, unsigned int y) {
 
     return true;
 }
-void CMap::readRow(XMLElement *pRow, unsigned int uiRow) {
+void CMap::readRow(const XMLElement *pRow, unsigned int uiRow) {
   std::string tiles = pRow->Attribute("tiles");
 
   auto vTiles = Ogre::StringUtil::split(tiles, " ");
@@ -585,7 +585,7 @@ void CMap::readRow(XMLElement *pRow, unsigned int uiRow) {
     ++uiColumn;
   }
 }
-void CMap::readSwitch(XMLElement *pSwitch) {
+void CMap::readSwitch(const XMLElement *pSwitch) {
   CSwitch *pNewSwitch =
     new CSwitch(this,
 		m_p2dManagerMap,
@@ -596,7 +596,7 @@ void CMap::readSwitch(XMLElement *pSwitch) {
 		EnumAttribute<CSwitch::ESwitchStates>(pSwitch,
 						      "state",
 						      CSwitch::SS_DEACTIVATED));
-  for (XMLElement *pChange = pSwitch->FirstChildElement(); pChange; pChange = pChange->NextSiblingElement()) {
+  for (const XMLElement *pChange = pSwitch->FirstChildElement(); pChange; pChange = pChange->NextSiblingElement()) {
     if (strcmp(pChange->Value(), "changes") == 0) {
       SSwitchEntry entry;
       entry.uiTileType = pChange->IntAttribute("id");
@@ -619,7 +619,7 @@ void CMap::readSwitch(XMLElement *pSwitch) {
 
   m_lSwitches.push_back(pNewSwitch);
 }
-void CMap::readEndangeredTiles(XMLElement *pTile) {
+void CMap::readEndangeredTiles(const XMLElement *pTile) {
   TileType tt = pTile->IntAttribute("targetTile");
   size_t x = pTile->IntAttribute("x");
   size_t y = pTile->IntAttribute("y");
@@ -629,7 +629,7 @@ void CMap::readEndangeredTiles(XMLElement *pTile) {
   Ogre::LogManager::getSingleton().logMessage("Parsed endangered tile at (" + Ogre::StringConverter::toString(x) + ", " + Ogre::StringConverter::toString(y) + ") with target tile type " + Ogre::StringConverter::toString(tt));
 }
 
-void CMap::readLink(XMLElement *pLink) {
+void CMap::readLink(const XMLElement *pLink) {
   Ogre::String sID(Ogre::StringUtil::BLANK);
   if (pLink->Attribute("id")) {sID = pLink->Attribute("id");}
 
@@ -647,18 +647,7 @@ void CMap::readLink(XMLElement *pLink) {
 			   BoolAttribute(pLink, "activated", true)));
   Ogre::LogManager::getSingleton().logMessage("Parsed: " + m_lLinks.back().toString());
 }
-void CMap::readEnemy(XMLElement *pEnemy) {
-  CEnemy *pNewEnemy = new CEnemy(*this, pEnemy);
-  m_lEnemies.push_back(pNewEnemy);
-
-  Ogre::LogManager::getSingleton().logMessage("Parsing Enemy (" + Ogre::StringConverter::toString(pNewEnemy->getType()) + ") at " + Ogre::StringConverter::toString(pNewEnemy->getPosition()));
-}
-void CMap::readObject(XMLElement *pObject) {
-  m_lObjects.push_back(new CObject(*this,
-				   Vector2Attribute(pObject),
-				   EnumAttribute<CObject::EObjectTypes>(pObject, "type", CObject::OT_COUNT)));
-}
-void CMap::readExit(XMLElement *pExitElem) {
+void CMap::readExit(const XMLElement *pExitElem) {
   Ogre::String sType = pExitElem->Attribute("type");
 
   if (sType == "region") {
@@ -675,14 +664,8 @@ void CMap::readExit(XMLElement *pExitElem) {
     throw Ogre::Exception(0, sType + " is not a valid exit type", __FILE__);
   }
 }
-void CMap::readPlayer(XMLElement *pPlayerElem) {
-  assert(!m_pPlayer);
-
-  m_pPlayer = new CPlayer(this, pPlayerElem);
-  playerWarped();
-}
-void CMap::readCamera(tinyxml2::XMLElement *pCamera) {
-  for (XMLElement *pElement = pCamera->FirstChildElement(); pElement; pElement = pElement->NextSiblingElement()) {
+void CMap::readCamera(const tinyxml2::XMLElement *pCamera) {
+  for (const XMLElement *pElement = pCamera->FirstChildElement(); pElement; pElement = pElement->NextSiblingElement()) {
     if (std::string(pElement->Value()) == "restriction") {
       if (strcmp(pElement->Attribute("type"), "horizontal") == 0){
         m_vCameraRestrictions.push_back(CCameraRestriction(CCameraRestriction::HORIZONTAL_RESTRICTION, TILES_PER_SCREEN, pElement->FloatAttribute("y")));
@@ -887,7 +870,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
     pShot->writeToXMLElement(pElem);
   }
 }
-void CMap::readFromXMLElement(tinyxml2::XMLElement *pRoot) {
+void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
   clearMap();
   
   Ogre::String sBackground = pRoot->Attribute("background");
@@ -901,10 +884,10 @@ void CMap::readFromXMLElement(tinyxml2::XMLElement *pRoot) {
   m_gridTiles.resize(sizeX, sizeY);
 
   unsigned int uiRow = 0;
-  for (XMLElement *pElement = pRoot->FirstChildElement(); pElement; pElement = pElement->NextSiblingElement()) {
+  for (const XMLElement *pElement = pRoot->FirstChildElement(); pElement; pElement = pElement->NextSiblingElement()) {
     if (std::string(pElement->Value()) == "tiles") {
       bool bInvert = BoolAttribute(pElement, "invert");
-      for (XMLElement *pRow = pElement->FirstChildElement(); pRow; pRow = pRow->NextSiblingElement()) {
+      for (const XMLElement *pRow = pElement->FirstChildElement(); pRow; pRow = pRow->NextSiblingElement()) {
 	if (bInvert)
 	  readRow(pRow, sizeY - 1 - uiRow);
 	else
@@ -913,41 +896,49 @@ void CMap::readFromXMLElement(tinyxml2::XMLElement *pRoot) {
       }
     }
     else if (std::string(pElement->Value()) == "switches") {
-      for (XMLElement *pSwitch = pElement->FirstChildElement(); pSwitch; pSwitch = pSwitch->NextSiblingElement()){
+      for (const XMLElement *pSwitch = pElement->FirstChildElement(); pSwitch; pSwitch = pSwitch->NextSiblingElement()){
 	readSwitch(pSwitch);
       }
     }
     else if (std::string(pElement->Value()) == "endangeredTiles") {
-      for (XMLElement *pTile = pElement->FirstChildElement(); pTile; pTile = pTile->NextSiblingElement()) {
+      for (const XMLElement *pTile = pElement->FirstChildElement(); pTile; pTile = pTile->NextSiblingElement()) {
 	readEndangeredTiles(pTile);
       }
     }
     else if (std::string(pElement->Value()) == "links") {
-      for (XMLElement *pLink = pElement->FirstChildElement(); pLink; pLink = pLink->NextSiblingElement()) {
+      for (const XMLElement *pLink = pElement->FirstChildElement(); pLink; pLink = pLink->NextSiblingElement()) {
 	readLink(pLink);
       }
     }
     else if (std::string(pElement->Value()) == "enemies") {
-      for (XMLElement *pEnemy = pElement->FirstChildElement(); pEnemy; pEnemy = pEnemy->NextSiblingElement()) {
-	readEnemy(pEnemy);
+      for (const XMLElement *pEnemy = pElement->FirstChildElement(); pEnemy; pEnemy = pEnemy->NextSiblingElement()) {
+	m_lEnemies.push_back(new CEnemy(*this, pEnemy));
       }
     }
     else if (std::string(pElement->Value()) == "objects") {
-      for (XMLElement *pObject = pElement->FirstChildElement(); pObject; pObject = pObject->NextSiblingElement()) {
-	readObject(pObject);
+      for (const XMLElement *pObject = pElement->FirstChildElement(); pObject; pObject = pObject->NextSiblingElement()) {
+	m_lObjects.
+	  push_back(new CObject(*this,
+				Vector2Attribute(pObject),
+				EnumAttribute<CObject::EObjectTypes>(pObject,
+								     "type",
+								     CObject::OT_COUNT)));
       }
     }
     else if (std::string(pElement->Value()) == "exit") {
       readExit(pElement);
     }
     else if (std::string(pElement->Value()) == "player") {
-      readPlayer(pElement);
+      assert(!m_pPlayer);
+
+      m_pPlayer = new CPlayer(this, pElement);
+      playerWarped();
     }
     else if (std::string(pElement->Value()) == "camera") {
       readCamera(pElement);
     }
     else if (std::string(pElement->Value()) == "shots") {
-      for (XMLElement *pObject = pElement->FirstChildElement(); pObject; pObject = pObject->NextSiblingElement()) {
+      for (const XMLElement *pObject = pElement->FirstChildElement(); pObject; pObject = pObject->NextSiblingElement()) {
         addShot(new CShot(this, pObject));
       }
     }

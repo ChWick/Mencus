@@ -50,7 +50,6 @@ CGame::CGame(void)
 }
 //-------------------------------------------------------------------------------------
 CGame::~CGame(void) {
-  OGRE_DELETE_T(mFSLayer, FileSystemLayer, Ogre::MEMCATEGORY_GENERAL);
   if (mTrayMgr) delete mTrayMgr;
   if (mCameraMan) delete mCameraMan;
   if (CGameState::getSingletonPtr()) { delete CGameState::getSingletonPtr(); }
@@ -61,8 +60,8 @@ CGame::~CGame(void) {
   if (CSaveStateManager::getSingletonPtr()) {delete CSaveStateManager::getSingletonPtr();}
 
   if (CShaderManager::getSingletonPtr()) {delete CShaderManager::getSingletonPtr();}
-  if (CSnapshotManager::getSingletonPtr()) {delete CSnapshotManager::getSingletonPtr();}
 
+  OGRE_DELETE_T(mFSLayer, FileSystemLayer, Ogre::MEMCATEGORY_GENERAL);
   //Remove ourself as a Window listener
   Ogre::WindowEventUtilities::removeWindowEventListener(mWindow, this);
   windowClosed(mWindow);
@@ -464,15 +463,27 @@ void CGame::createScene() {
 
   Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing singleton classes ***");
   //-------------------------------------------------------------------------------------
-  new CSnapshotManager();
-  CSnapshotManager::getSingleton().createFromFile("snapshot.xml");
+  Ogre::LogManager::getSingletonPtr()->logMessage("    ShaderManager ");
   new CShaderManager(mRoot->getRenderSystem());
+  Ogre::LogManager::getSingletonPtr()->logMessage("    GameSate ");
   m_pGameState = new CGameState();
+  Ogre::LogManager::getSingletonPtr()->logMessage("    PauseManager ");
   new CPauseManager();
+  Ogre::LogManager::getSingletonPtr()->logMessage("    SaveStateManager ");
   new CSaveStateManager();
+  Ogre::LogManager::getSingletonPtr()->logMessage("    GUIManager ");
   new CGUIManager(mSceneMgr, *mWindow);
+  Ogre::LogManager::getSingletonPtr()->logMessage("    init GameState ");
   m_pGameState->init();
-  m_pGameState->changeGameState(CGameState::GS_MAIN_MENU);
+
+  Ogre::LogManager::getSingletonPtr()->logMessage("    changing GameState to main menu ");
+  m_pGameState->changeGameState(CGameState::GS_MAIN_MENU, true);
+  if (CSnapshotManager::getSingleton().loadFromSnapshot()) {
+    Ogre::LogManager::getSingletonPtr()->logMessage("    snapshot loaded.");
+  }
+  else {
+    Ogre::LogManager::getSingletonPtr()->logMessage("    no snapshot set");
+  }
 }
 
 bool CGame::frameRenderingQueued(const Ogre::FrameEvent& evt) {

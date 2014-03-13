@@ -88,7 +88,7 @@ public:
 
   void loadMap(const string &sFilename, const string &sResourceGroup);
   void writeToXMLElement(tinyxml2::XMLElement *pMapElem) const;
-  void readFromXMLElement(tinyxml2::XMLElement *pRoot);
+  void readFromXMLElement(const tinyxml2::XMLElement *pRoot);
 
   //! Function to check if a line penetrates into a tile a lower position
   /**
@@ -207,15 +207,12 @@ private:
 
   void clearMap();
 
-  void readRow(tinyxml2::XMLElement *pRow, unsigned int uiRow);
-  void readSwitch(tinyxml2::XMLElement *pSwitch);
-  void readEndangeredTiles(tinyxml2::XMLElement *pTile);
-  void readLink(tinyxml2::XMLElement *pLink);
-  void readEnemy(tinyxml2::XMLElement *pEnemy);
-  void readObject(tinyxml2::XMLElement *pObject);
-  void readExit(tinyxml2::XMLElement *pExit);
-  void readPlayer(tinyxml2::XMLElement *pPlayerElem);
-  void readCamera(tinyxml2::XMLElement *pCamera);
+  void readRow(const tinyxml2::XMLElement *pRow, unsigned int uiRow);
+  void readSwitch(const tinyxml2::XMLElement *pSwitch);
+  void readEndangeredTiles(const tinyxml2::XMLElement *pTile);
+  void readLink(const tinyxml2::XMLElement *pLink);
+  void readExit(const tinyxml2::XMLElement *pExit);
+  void readCamera(const tinyxml2::XMLElement *pCamera);
 };
 
 #endif

@@ -100,7 +100,7 @@ CPlayer::CPlayer(CMap *pMap, const tinyxml2::XMLElement *pElem)
   m_fManaPoints(RealAttribute(pElem, "pl_hud_mp", 0)),
   m_uiKeyCount(IntAttribute(pElem, "pl_hud_key", 0)),
   m_uiHealthPotionsCount(IntAttribute(pElem, "pl_hud_hp_cnt", 0)),
-  m_uiManaPotionsCount(IntAttribute(pElem, "pl_hud_mp_cnt", 0)),
+  m_uiManaPotionsCount(IntAttribute(pElem, "pl_hud_mp_cnt", PLAYER_MAX_MANA_POINTS)),
   m_uiBombCount(IntAttribute(pElem, "pl_hud_bomb_cnt", 0)) {
   constructor_impl();
   startup(getPosition(), RealAttribute(pElem, "direction", 1));

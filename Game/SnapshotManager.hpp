@@ -16,12 +16,23 @@ public:
 
   ~CSnapshotManager();
 
-  const CSnapshot &makeSnapshot();
+  bool loadFromSnapshot() {
+    if (m_vSnapshots.size() == 0) {
+      return false;
+    }
+    loadFromSnapshot(*m_vSnapshots.back());
+    return true;
+  }
+
+  void setSnapshot(CSnapshot *pSnapshot) {
+    m_vSnapshots.push_back(pSnapshot);
+  }
+
+  const CSnapshot &makeSnapshot(CSnapshot *pSnapshot = NULL);
   // this is only for testing
   void createFromFile(const Ogre::String &name);
 
-  void loadFromSnapshot();
-  void loadFromSnapshot(CSnapshot &snapshot);
+  void loadFromSnapshot(const CSnapshot &snapshot);
 };
 
 #endif

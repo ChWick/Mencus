@@ -54,7 +54,7 @@ void CLevel::render(Ogre::Real tpf) {
 void CLevel::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
   m_pMap->writeToXMLElement(pElem);
 }
-void CLevel::readFromXMLElement(tinyxml2::XMLElement *pElem) {
+void CLevel::readFromXMLElement(const tinyxml2::XMLElement *pElem) {
   m_pMap->readFromXMLElement(pElem);
 }
 
@@ -301,7 +301,7 @@ void CScreenplay::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
   pElem->InsertEndChild(pSceneElem);
   m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->writeToXMLElement(pSceneElem);
 }
-void CScreenplay::readFromXMLElement(tinyxml2::XMLElement *pElem) {
+void CScreenplay::readFromXMLElement(const tinyxml2::XMLElement *pElem) {
   m_uiCurrentAct = pElem->IntAttribute("currentAct");
   m_uiCurrentScene = pElem->IntAttribute("currentScene");
   m_uiNextAct = pElem->IntAttribute("nextAct");

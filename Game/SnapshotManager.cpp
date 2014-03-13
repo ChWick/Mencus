@@ -20,8 +20,11 @@ CSnapshotManager::~CSnapshotManager() {
   }
 }
 
-const CSnapshot &CSnapshotManager::makeSnapshot() {
-  CSnapshot *pSnapshot = new CSnapshot();
+const CSnapshot &CSnapshotManager::makeSnapshot(CSnapshot *pSnapshotOrig) {
+  CSnapshot *pSnapshot = pSnapshotOrig;
+  if (!pSnapshotOrig) {
+    pSnapshot = new CSnapshot();
+  }
   CSnapshot &snapshot(*pSnapshot);
 
   snapshot.setGameState(CGameState::getSingleton().getCurrentGameState());
@@ -43,28 +46,27 @@ const CSnapshot &CSnapshotManager::makeSnapshot() {
     break;
   }
   
-  Ogre::LogManager::getSingleton().logMessage("Snapshot crated");
+  //Ogre::LogManager::getSingleton().logMessage("Snapshot crated");
   // output
   // ============================================================
   std::ofstream outputfile("snapshot.xml");
-  tinyxml2::XMLPrinter xmlprinter;
-  snapshot.getXMLDocument().Accept(&xmlprinter);
-
-  outputfile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-  outputfile << xmlprinter.CStr();
-  outputfile.close();
-
-  m_vSnapshots.push_back(pSnapshot);
-  
-  return *m_vSnapshots.back();
-}
-void CSnapshotManager::loadFromSnapshot() {
-  if (m_vSnapshots.size() > 0) {
-    loadFromSnapshot(*m_vSnapshots.back());
+  if (outputfile) {
+    tinyxml2::XMLPrinter xmlprinter;
+    snapshot.getXMLDocument().Accept(&xmlprinter);
+    
+    outputfile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+    outputfile << xmlprinter.CStr();
+    outputfile.close();
   }
+
+  if (!pSnapshotOrig) {
+    m_vSnapshots.push_back(pSnapshot);
+  }
+  
+  return snapshot;
 }
-void CSnapshotManager::loadFromSnapshot(CSnapshot &snapshot) {
-  Ogre::LogManager::getSingleton().logMessage("Loading snapshot");
+void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
+  //Ogre::LogManager::getSingleton().logMessage("Loading snapshot");
   CGameState::getSingleton().changeGameState(snapshot.getGameState(), true, false);
   switch (snapshot.getGameState()) {
   case CGameState::GS_GAME:
@@ -81,6 +83,10 @@ void CSnapshotManager::loadFromSnapshot(CSnapshot &snapshot) {
 void CSnapshotManager::createFromFile(const Ogre::String &name) {
   CSnapshot *pSnapshot = new CSnapshot();
   pSnapshot->getXMLDocument().LoadFile(name.c_str());
+  if (pSnapshot->getXMLDocument().Error()) {
+    delete pSnapshot;
+    return;
+  }
 
   pSnapshot->setGameState(static_cast<CGameState::EGameStates>(pSnapshot->getXMLDocument().FirstChildElement("snapshot")->IntAttribute("game_state")));
 
