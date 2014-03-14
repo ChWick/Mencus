@@ -2,7 +2,7 @@
 #include "Game.hpp"
 #include "GameState.hpp"
 #include "SaveStateManager.hpp"
-
+#include "MathUtil.hpp"
 #include <OgreStringConverter.h>
 #include <iostream>
 
@@ -82,10 +82,15 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   pBackground->setProperty("BackgroundEnabled", "True");
   pBackground->setRiseOnClickEnabled(false);
 
+  CEGUI::Window *pButtonContainer = m_pMMRoot->createChild("DefaultWindow", "ButtonContainer");
+  m_pButtonContainer = pButtonContainer;
+  pButtonContainer->setPosition(UVector2(UDim(0.2f, 0), UDim(0.5f, 0)));
+  pButtonContainer->setSize(USize(UDim(0.5f, 0), UDim(0.4f, 0)));
+
   for (int i = 0; i < NUM_SLOTS; i++) {
-    m_vSlots[i] = m_pMMRoot->createChild("OgreTray/Button", "Slot" + CEGUI::PropertyHelper<int>::toString(i));
-    m_vSlots[i]->setSize(USize(UDim(0.2f, 0), UDim(0.07f, 0)));
-    m_vSlots[i]->setPosition(UVector2(UDim(0.2f, 0), UDim(0.5f + 0.10f * i, 0)));
+    m_vSlots[i] = pButtonContainer->createChild("OgreTray/Button", "Slot" + CEGUI::PropertyHelper<int>::toString(i));
+    m_vSlots[i]->setSize(USize(UDim(0.4f, 0), UDim(0.2f, 0)));
+    m_vSlots[i]->setPosition(UVector2(UDim(0, 0), UDim(0.25f * i, 0)));
     m_vSlots[i]->setAlpha(BUTTON_MIN_ALPHA);
     m_vSlots[i]->setFont("dejavusans12");
     m_vSlots[i]->enable();
@@ -97,9 +102,9 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 				CEGUI::Event::Subscriber(&CMainMenu::buttonSelected, this));
   }
 
-  m_pSaveStatesWindow = dynamic_cast<CEGUI::Listbox*>(m_pMMRoot->createChild("OgreTray/Listbox", "SaveStatesBox"));
-  m_pSaveStatesWindow->setPosition(UVector2(UDim(0.2f, 0), UDim(0.5f, 0)));
-  m_pSaveStatesWindow->setSize(USize(UDim(0.3f, 0), UDim(0.07f + 2 * 0.1f, 0)));
+  m_pSaveStatesWindow = dynamic_cast<CEGUI::Listbox*>(pButtonContainer->createChild("OgreTray/Listbox", "SaveStatesBox"));
+  m_pSaveStatesWindow->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  m_pSaveStatesWindow->setSize(USize(UDim(0.6f, 0), UDim(0.6f, 0)));
   m_pSaveStatesWindow->setFont("dejavusans8");
   m_pSaveStatesWindow->subscribeEvent(
 				      CEGUI::Window::EventMouseEntersArea,
@@ -122,10 +127,16 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 							       &CMainMenu::saveStateListMouseClicked,
 							       this));
 
-  m_pSaveStatePreviewWindow = m_pMMRoot->createChild("OgreTray/StaticImage", "PreviewPricture");
-  m_pSaveStatePreviewWindow->setPosition(UVector2(UDim(0.55f, 0), UDim(0.5f, 0)));
-  m_pSaveStatePreviewWindow->setSize(USize(UDim(0.2f, 0), UDim(0.2f, 0)));
+  m_pSaveStatePreviewWindow = pButtonContainer->createChild("OgreTray/StaticImage", "PreviewPricture");
+  m_pSaveStatePreviewWindow->setPosition(UVector2(UDim(0.65f, 0), UDim(0.1f, 0)));
+  m_pSaveStatePreviewWindow->setSize(USize(UDim(0.35f, 0), UDim(0.4f, 0)));
   m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/none");
+
+#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+  resizeGUI(1);
+#else
+  resizeGUI(0);
+#endif
 }
 CMainMenu::~CMainMenu() {
   CInputListenerManager::getSingleton().removeInputListener(this);
@@ -382,4 +393,38 @@ void CMainMenu::activateLoadState() {
       = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
     changeState(MMS_RESULT_LOAD_GAME);
   }
+}
+void CMainMenu::resizeGUI(Ogre::Real fScaling) {
+  // if 0, then smallest size
+  // if 1, then larges size
+  m_pButtonContainer->
+    setPosition(MathUtil::linearInterpolate(UVector2(UDim(0.2f, 0),
+						     UDim(0.5f, 0)),
+					    UVector2(UDim(0, 10),
+						     UDim(0, 10)),
+					    fScaling));
+  m_pButtonContainer->
+    setSize(MathUtil::linearInterpolate(USize(UDim(0.5f, 0),
+					      UDim(0.4f, 0)),
+					USize(UDim(1.f, -20),
+					      UDim(1.f, -20)),
+					fScaling));
+  
+  CEGUI::String smallfont("dejavusans8");
+  CEGUI::String bigfont("dejavusans12");
+  if (fScaling > 0.667f) {
+    smallfont = "dejavusans20";
+  }
+  else if (fScaling > 0.333f) {
+    smallfont = "dejavusans12";
+  }
+
+  if (fScaling > 0.5f) { 
+    bigfont = "dejavusans20";
+  }
+
+  for (int i = 0; i < NUM_SLOTS; i++) {
+    m_vSlots[i]->setFont(bigfont);
+  }
+  m_pSaveStatesWindow->setFont(smallfont);
 }
