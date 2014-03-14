@@ -97,10 +97,10 @@ CPlayer::CPlayer(CMap *pMap, const tinyxml2::XMLElement *pElem)
   m_eGoToLinkStatus(EnumAttribute<EGoToLinkStatus>(pElem, "pl_gtl_status", GTLS_NONE)),
   m_vLinkFromPos(Vector2Attribute(pElem, "pl_gtl_from", Ogre::Vector2::ZERO)),
   m_vLinkToPos(Vector2Attribute(pElem, "pl_gtl_to", Ogre::Vector2::ZERO)),
-  m_fManaPoints(RealAttribute(pElem, "pl_hud_mp", 0)),
+  m_fManaPoints(RealAttribute(pElem, "pl_hud_mp", PLAYER_MAX_MANA_POINTS)),
   m_uiKeyCount(IntAttribute(pElem, "pl_hud_key", 0)),
   m_uiHealthPotionsCount(IntAttribute(pElem, "pl_hud_hp_cnt", 0)),
-  m_uiManaPotionsCount(IntAttribute(pElem, "pl_hud_mp_cnt", PLAYER_MAX_MANA_POINTS)),
+  m_uiManaPotionsCount(IntAttribute(pElem, "pl_hud_mp_cnt", 0)),
   m_uiBombCount(IntAttribute(pElem, "pl_hud_bomb_cnt", 0)) {
   constructor_impl();
   startup(getPosition(), RealAttribute(pElem, "direction", 1));
