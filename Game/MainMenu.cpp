@@ -5,6 +5,7 @@
 #include "MathUtil.hpp"
 #include <OgreStringConverter.h>
 #include <iostream>
+#include "InputDefines.hpp"
 
 using namespace std;
 using namespace CEGUI;
@@ -55,8 +56,19 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_iTargetState[MMS_LOAD_GAME][LOAD_GAME_BACK] = MMS_GAME;
   m_sButtonLabels[MMS_LOAD_GAME][LOAD_GAME_BACK] = "Back";
 
+  m_iTargetState[MMS_OPTIONS][OPTIONS_VIDEO] = MMS_OPTIONS_VIDEO;
+  m_iTargetState[MMS_OPTIONS][OPTIONS_INPUT] = MMS_OPTIONS_INPUT;
   m_iTargetState[MMS_OPTIONS][OPTIONS_BACK] = MMS_START;
+  m_sButtonLabels[MMS_OPTIONS][OPTIONS_VIDEO] = "Video";
+  m_sButtonLabels[MMS_OPTIONS][OPTIONS_INPUT] = "Input";
   m_sButtonLabels[MMS_OPTIONS][OPTIONS_BACK] = "Back";
+
+
+  m_iTargetState[MMS_OPTIONS_VIDEO][OPTIONS_VIDEO_BACK] = MMS_OPTIONS;
+  m_sButtonLabels[MMS_OPTIONS_VIDEO][OPTIONS_VIDEO_BACK] = "Back";
+
+  m_iTargetState[MMS_OPTIONS_INPUT][OPTIONS_INPUT_BACK] = MMS_OPTIONS;
+  m_sButtonLabels[MMS_OPTIONS_INPUT][OPTIONS_INPUT_BACK] = "Back";
 
   m_iTargetState[MMS_GAME_ESCAPE][GAMES_ESCAPE_BACK_TO_GAME] = MMS_RESULT_BACK_TO_GAME;
   m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_BACK_TO_GAME] = "Back to game";
@@ -91,7 +103,11 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
     m_vSlots[i] = pButtonContainer->createChild("OgreTray/Button", "Slot" + CEGUI::PropertyHelper<int>::toString(i));
     m_vSlots[i]->setSize(USize(UDim(0.4f, 0), UDim(0.2f, 0)));
     m_vSlots[i]->setPosition(UVector2(UDim(0, 0), UDim(0.25f * i, 0)));
+#ifdef INPUT_KEYBOARD_ONLY
     m_vSlots[i]->setAlpha(BUTTON_MIN_ALPHA);
+#else
+    m_vSlots[i]->setAlpha(1);
+#endif
     m_vSlots[i]->setFont("dejavusans12");
     m_vSlots[i]->enable();
     m_vSlots[i]->subscribeEvent(
@@ -152,6 +168,7 @@ void CMainMenu::createResources() {
 void CMainMenu::update(Ogre::Real tpf) {
   if (!m_pMMRoot->isVisible()) { return; }
 
+#ifdef INPUT_KEYBOARD_ONLY
   for (int i = 0; i < NUM_SLOTS; i++) {
     if (i == m_iSelectedSlot) {
       m_vSlots[i]->setAlpha(min(m_vSlots[i]->getAlpha() + tpf * BUTTON_ALPHA_CHANGE_PER_SEC, 1.0f));
@@ -167,14 +184,14 @@ void CMainMenu::update(Ogre::Real tpf) {
       m_pSaveStatesWindow->setAlpha(max(m_pSaveStatesWindow->getAlpha() - tpf * BUTTON_ALPHA_CHANGE_PER_SEC, BUTTON_MIN_ALPHA));
       m_pSaveStatePreviewWindow->setAlpha(max(m_pSaveStatePreviewWindow->getAlpha() - tpf * BUTTON_ALPHA_CHANGE_PER_SEC, BUTTON_MIN_ALPHA));
     }
-
-    for (int i = 0; i < static_cast<int>(m_pSaveStatesWindow->getItemCount()); ++i) {
-      if (m_iSelectedLoadState == i) {
-        dynamic_cast<ListboxTextItem*>(m_pSaveStatesWindow->getListboxItemFromIndex(i))->setTextColours(Colour(1, 1, 1));
-      }
-      else {
-        dynamic_cast<ListboxTextItem*>(m_pSaveStatesWindow->getListboxItemFromIndex(i))->setTextColours(Colour(0, 0, 0));
-      }
+  }
+#endif
+  for (int i = 0; i < static_cast<int>(m_pSaveStatesWindow->getItemCount()); ++i) {
+    if (m_iSelectedLoadState == i) {
+      dynamic_cast<ListboxTextItem*>(m_pSaveStatesWindow->getListboxItemFromIndex(i))->setTextColours(Colour(1, 1, 1));
+    }
+    else {
+      dynamic_cast<ListboxTextItem*>(m_pSaveStatesWindow->getListboxItemFromIndex(i))->setTextColours(Colour(0, 0, 0));
     }
   }
 }
@@ -211,7 +228,9 @@ void CMainMenu::changeState(EMainMenuState eState) {
       if (m_iTargetState[m_eCurrentState][i] != MMS_STATE_NONE) {
         m_vSlots[i]->setVisible(true);
         m_vSlots[i]->setText(m_sButtonLabels[m_eCurrentState][i]);
+#ifdef INPUT_KEYBOARD_ONLY
         m_vSlots[i]->setAlpha(BUTTON_MIN_ALPHA);
+#endif
       }
       else {
         m_vSlots[i]->setVisible(false);
@@ -266,6 +285,7 @@ void CMainMenu::changeState(EMainMenuState eState) {
 }
 bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
   switch (arg.key) {
+#ifdef INPUT_KEYBOARD_ONLY
   case OIS::KC_DOWN:
     if (m_bSaveListSelected) {
         ++m_iSelectedLoadState;
@@ -325,6 +345,7 @@ bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
       }
     }
     break;
+#endif
   default:
     break;
   }

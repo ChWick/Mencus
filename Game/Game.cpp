@@ -8,6 +8,7 @@
 #include "ShaderManager.hpp"
 #include "GameInputManager.hpp"
 #include "SnapshotManager.hpp"
+#include "InputDefines.hpp"
 
 using namespace Ogre;
 
@@ -407,7 +408,10 @@ void CGame::createScene() {
   mTrayMgr->hideCursor();
 #endif // DEBUG_SHOW_OGRE_TRAY
 
-  
+#ifdef INPUT_MOUSE
+#else
+  mTrayMgr->hideCursor();
+#endif  
 
   mRoot->addFrameListener(this);
 

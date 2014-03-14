@@ -19,6 +19,8 @@ public:
     MMS_GAME,
     MMS_LOAD_GAME,
     MMS_OPTIONS,
+    MMS_OPTIONS_VIDEO,
+    MMS_OPTIONS_INPUT,
     MMS_GAME_ESCAPE,
 
     MMS_COUNT,
@@ -42,7 +44,15 @@ public:
     LOAD_GAME_BACK    = NUM_SLOTS - 1,
   };
   enum EOptionsSlots {
+    OPTIONS_VIDEO   = 0,
+    OPTIONS_INPUT   = 1,
     OPTIONS_BACK    = NUM_SLOTS - 1,
+  };
+  enum EOptionsVideoSlots {
+    OPTIONS_VIDEO_BACK = NUM_SLOTS - 1,
+  };
+  enum EOptionsInputSlots {
+    OPTIONS_INPUT_BACK = NUM_SLOTS - 1,
   };
   enum EGamesEscapeSlots {
     GAMES_ESCAPE_BACK_TO_GAME = 0,
