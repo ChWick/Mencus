@@ -122,6 +122,23 @@ CEGUI::Window *CGUIInput::createButton(int bt) {
   
   // this is default for control buttons
   pButton->setPosition(UVector2(UDim(0, 0), UDim(0, (bt - BT_ENTER_LINK) * 100)));
+  switch (bt) {
+  case BT_LEFT:
+    pButton->setProperty("Image", "hud_weapons/left_arrow");
+    break;
+  case BT_RIGHT:
+    pButton->setProperty("Image", "hud_weapons/right_arrow");
+    break;
+  case BT_JUMP:
+    pButton->setProperty("Image", "hud_weapons/up_arrow");
+    break;
+  case BT_ENTER_LINK:
+    pButton->setProperty("Image", "hud_weapons/door");
+    break;
+  case BT_ACTIVATE:
+    pButton->setProperty("Image", "hud_weapons/switch");
+    break;
+  }
   
   return pButton;
 }
@@ -197,6 +214,9 @@ void CGUIInput::setCurrentWeapon(unsigned int uiWeapon) {
   m_uiCurrentWeapon = uiWeapon;
   CGameInputManager::getSingleton().
     injectCommand(CGameInputCommand(GIC_CHANGE_WEAPON, uiWeapon));
+
+  // set the image of the touch button
+  m_pButtons[BT_ATTACK]->setProperty("Image", Weapon::getPicture(uiWeapon));
 }
 void CGUIInput::updateInput() {
   for (auto &state : m_bButtonPressed) {
