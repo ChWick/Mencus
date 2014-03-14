@@ -73,8 +73,9 @@ public:
 
   const std::list<CSaveState> &listSaveState() const {return m_vSaveStates;}
   const CSaveState *getLastSaveState() const {if (m_vSaveStates.size() > 0) {return &m_vSaveStates.back();} return NULL;}
-private:
+
   void writeXMLFile();
+private:
 };
 
 #endif // SAFE_STATE_MANAGER

@@ -29,6 +29,7 @@
 #ifndef _ANDROID_HPP_
 #define _ANDROID_HPP_
 
+#include "SaveStateManager.hpp"
 
 #ifdef INCLUDE_RTSHADER_SYSTEM
 #   include "OgreRTShaderSystem.h"
@@ -182,6 +183,7 @@ public:
       case APP_CMD_SAVE_STATE:
 	LOGI("Saving state");
 	CSnapshotManager::getSingleton().makeSnapshot().saveToMemory(app->savedState, app->savedStateSize);
+	if (CSaveStateManager::getSingletonPtr()) {CSaveStateManager::getSingleton().writeXMLFile();}
 	break;
       case APP_CMD_INIT_WINDOW:
 	m_bRenderPaused = false;

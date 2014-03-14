@@ -19,13 +19,16 @@ CSaveStateManager &CSaveStateManager::getSingleton() {
 
 CSaveStateManager::CSaveStateManager() {
   using namespace tinyxml2;
-  std::string sFilename(CGame::getSingleton().getFileSystemLayer()->getWritablePath(SAVE_STATE_FILE));
   XMLDocument doc;
-  if (doc.LoadFile(sFilename.c_str())) {
-    Ogre::LogManager::getSingleton().logMessage(sFilename + " not found.");
+  Ogre::String text(CGame::getSingleton().getFileAsText(SAVE_STATE_FILE));
+  doc.Parse(text.c_str());
+  if (doc.Error()) {
+    Ogre::LogManager::getSingleton().logMessage(SAVE_STATE_FILE + " not found.");
     return;
   }
-
+  
+  Ogre::LogManager::getSingleton().logMessage("Reading savestates");
+  Ogre::LogManager::getSingleton().logMessage(text);
 
   XMLElement *pRoot = doc.FirstChildElement("save_states");
   if (!pRoot) {
@@ -49,6 +52,8 @@ CSaveStateManager::CSaveStateManager() {
 
     m_vSaveStates.push_front(CSaveState(uiActID, uiSceneID, fHP, fMP, bAccessible, tmTime));
   }
+  Ogre::LogManager::getSingleton().
+    logMessage(Ogre::StringConverter::toString(m_vSaveStates.size()) + " savestates read.");
 }
 CSaveStateManager::~CSaveStateManager() {
   writeXMLFile();
@@ -97,14 +102,10 @@ const CSaveState *CSaveStateManager::read(unsigned int uiAct, unsigned int uiSce
   return NULL;
 }
 void CSaveStateManager::writeXMLFile() {
-  using namespace tinyxml2;
-  Ogre::String sPath(CGame::getSingleton().getFileSystemLayer()->getWritablePath(SAVE_STATE_FILE));
-  Ogre::LogManager::getSingleton().logMessage("Save states path: " + sPath);
-  std::ofstream outputfile(sPath.c_str());
-  if (!outputfile) {
-    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Save states file could not be created");
+  if (!CGame::getSingletonPtr()) {
     return;
   }
+  using namespace tinyxml2;
 
   XMLDocument doc;
   XMLElement *pStatesElem = doc.NewElement("save_states");
@@ -129,6 +130,10 @@ void CSaveStateManager::writeXMLFile() {
   XMLPrinter xmlprinter;
   doc.Accept(&xmlprinter);
 
-  outputfile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-  outputfile << xmlprinter.CStr();
+  Ogre::String header("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+  Ogre::String text(xmlprinter.CStr());
+
+  CGame::getSingleton().writeToFile(SAVE_STATE_FILE, header + text);
+  Ogre::LogManager::getSingleton().logMessage("Save state file written");
+  Ogre::LogManager::getSingleton().logMessage(header + text);
 }
