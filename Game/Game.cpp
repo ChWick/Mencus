@@ -383,7 +383,7 @@ void CGame::createScene() {
 
 #ifdef DEBUG_SHOW_OGRE_TRAY
   mTrayMgr->showFrameStats(OgreBites::TL_BOTTOMLEFT);
-  mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
+  //mTrayMgr->showLogo(OgreBites::TL_BOTTOMRIGHT);
 
   // create a params panel for displaying sample details
   Ogre::StringVector items;
