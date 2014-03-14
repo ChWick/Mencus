@@ -1,4 +1,5 @@
 #include "HUD.hpp"
+#include "GUIInput.hpp"
 #include <OgreStringConverter.h>
 #include <iostream>
 
@@ -18,8 +19,9 @@ CHUD &CHUD::getSingleton() {
   return *msSingleton;
 }
 
-CHUD::CHUD(CEGUI::Window *pGUIRoot)
-  : m_fTimer(0),
+CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
+  : m_pGUIInput(pGUIInput),
+    m_fTimer(0),
     m_fHP(1),
     m_fMP(1)
 {
@@ -199,4 +201,16 @@ std::string CHUD::getHexValue(const Ogre::ColourValue &c) const {
   sprintf( &out[0], "FF%02x%02x%02x", min(255, static_cast<int>(c.r * 255)), min(255, static_cast<int>(c.g * 255)), min(255, static_cast<int>(c.b * 255)));
   Ogre::StringUtil::toUpperCase(out);
   return out;
+}
+void CHUD::show() {
+  m_pHudRoot->setVisible(true);
+  if (m_pGUIInput) {
+    m_pGUIInput->show();
+  }
+}
+void CHUD::hide() {
+  m_pHudRoot->setVisible(false);
+  if (m_pGUIInput) {
+    m_pGUIInput->hide();
+  }
 }

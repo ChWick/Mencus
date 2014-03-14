@@ -45,7 +45,9 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
 		   Window::EventMouseLeavesArea,
 		   Event::Subscriber(&CGUIInput::onDragMoved, this));
 
-  void buttonSizeChanged(float fSize);
+  pDragButton->setProperty("HorzFormatting", "Tiled");
+  pDragButton->setProperty("VertFormatting", "CentreAligned");
+  //pDragButton->setProperty("Image", "OgreTrayImages/SeparatorM");
   m_pDragButton = pDragButton;
 
   // create drag frame
@@ -66,6 +68,11 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
   createWeaponButtonLabel(Weapon::I_MANA_POTION);
   createWeaponButtonLabel(Weapon::I_KEY);
 
+  m_pDirectionButtonContainer->setAlwaysOnTop(true);
+  m_pControlButtonContainer->setAlwaysOnTop(true);
+  m_pDragButton->setAlwaysOnTop(true);
+  m_pDragWindow->setAlwaysOnTop(true);
+  m_pDragButton->setAlpha(0);
 
   setCurrentWeapon(0);
   this->buttonSizeChanged(85);
@@ -180,6 +187,13 @@ CEGUI::Window *CGUIInput::createWeaponButtonLabel(unsigned int uiWeapon) {
   return pButton;
 }
 void CGUIInput::update(float tpf) {
+  if (m_eDragState == DS_DRAGGING || m_eDragState == DS_OPEN || m_eDragState == DS_OPENING) {
+    m_pDragButton->setAlpha(0.5);
+  }
+  else {
+    m_pDragButton->setAlpha(0);
+  }
+
   if (m_eDragState == DS_CLOSING) {
     m_pDragButton->setPosition(m_pDragButton->getPosition() +
 			       UVector2(UDim(0, 0), UDim(0, -tpf * 10 * m_fButtonSize)));
@@ -334,7 +348,7 @@ void CGUIInput::pressReleased() {
     return;
   }
   if (m_fDragVelocity < 0) {
-    if (m_fDragVelocity < -10 || m_fLastDragPos < 70) {
+    if (m_fDragVelocity < -2 || m_fLastDragPos < 70) {
       m_eDragState = DS_CLOSING;
       unpause(PAUSE_MAP_UPDATE);
     }
@@ -343,7 +357,7 @@ void CGUIInput::pressReleased() {
     }
   }
   else {
-    if (m_fDragVelocity > 10 || m_fLastDragPos > m_fButtonSize * 2 - 70) {
+    if (m_fDragVelocity > 2 || m_fLastDragPos > m_fButtonSize * 2 - 70) {
       m_eDragState = DS_OPENING;
     }
     else {
@@ -351,4 +365,16 @@ void CGUIInput::pressReleased() {
       unpause(PAUSE_MAP_UPDATE);
     }
   }
+}
+void CGUIInput::show() {
+  m_pDirectionButtonContainer->setVisible(true);
+  m_pControlButtonContainer->setVisible(true);
+  m_pDragButton->setVisible(true);
+  m_pDragWindow->setVisible(true);
+}
+void CGUIInput::hide() {
+  m_pDirectionButtonContainer->setVisible(false);
+  m_pControlButtonContainer->setVisible(false);
+  m_pDragButton->setVisible(false);
+  m_pDragWindow->setVisible(false);
 }

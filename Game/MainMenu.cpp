@@ -400,14 +400,14 @@ void CMainMenu::resizeGUI(Ogre::Real fScaling) {
   m_pButtonContainer->
     setPosition(MathUtil::linearInterpolate(UVector2(UDim(0.2f, 0),
 						     UDim(0.5f, 0)),
-					    UVector2(UDim(0, 10),
-						     UDim(0, 10)),
+					    UVector2(UDim(0.1f, 0),
+						     UDim(0.1f, 0)),
 					    fScaling));
   m_pButtonContainer->
     setSize(MathUtil::linearInterpolate(USize(UDim(0.5f, 0),
 					      UDim(0.4f, 0)),
-					USize(UDim(1.f, -20),
-					      UDim(1.f, -20)),
+					USize(UDim(0.8f, 0),
+					      UDim(0.8f, 0)),
 					fScaling));
   
   CEGUI::String smallfont("dejavusans8");

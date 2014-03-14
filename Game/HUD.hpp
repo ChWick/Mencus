@@ -5,8 +5,11 @@
 #include <CEGUI/CEGUI.h>
 #include "Weapon.hpp"
 
+class CGUIInput;
+
 class CHUD : public Ogre::Singleton<CHUD> {
 private:
+  CGUIInput *m_pGUIInput;
   CEGUI::Window *m_pHudRoot;
   CEGUI::Window *m_pFpsText;
   CEGUI::Window *m_pHealthBar;
@@ -23,7 +26,7 @@ public:
   static CHUD &getSingleton();
   static CHUD *getSingletonPtr();
 
-  CHUD(CEGUI::Window *pGUIRoot);
+  CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput);
 
   void update(Ogre::Real tpf);
 
@@ -36,8 +39,8 @@ public:
 
   void setCurrentWeapon(unsigned int uiWeapon);
 
-  void show() {m_pHudRoot->setVisible(true);}
-  void hide() {m_pHudRoot->setVisible(false);}
+  void show();
+  void hide();
 private:
   Ogre::ColourValue getHPColourmap() const;
   Ogre::ColourValue getMPColourmap() const;

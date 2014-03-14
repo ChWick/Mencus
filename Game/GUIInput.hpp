@@ -55,6 +55,9 @@ public:
   bool touchCancelled(const OIS::MultiTouchEvent& evt) {pressReleased();return true;}
   bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {pressReleased(); return true;}
 
+  void show();
+  void hide();
+
 private:
   void buttonSizeChanged(float fSize);
   

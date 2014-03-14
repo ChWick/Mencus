@@ -62,11 +62,11 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
 
   //destroyResources();
 
-  new CHUD(guiRoot);
+  m_pGUIInput = new CGUIInput(guiRoot); // gui input before hud, since hud depends
+  new CHUD(guiRoot, m_pGUIInput);
   new CGUIInstructions(guiRoot);
   new CGUIGameOver(guiRoot);
   new CMainMenu(guiRoot);
-  m_pGUIInput = new CGUIInput(guiRoot);
 
 }
 CGUIManager::~CGUIManager() {
