@@ -20,7 +20,8 @@ CHUD &CHUD::getSingleton() {
 }
 
 CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
-  : m_pGUIInput(pGUIInput),
+  : m_bShotToolIndicators(pGUIInput == NULL), 
+    m_pGUIInput(pGUIInput),
     m_fTimer(0),
     m_fHP(1),
     m_fMP(1)
@@ -33,21 +34,34 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
   ImageManager::getSingleton().loadImageset("white.imageset");
   ImageManager::getSingleton().loadImageset("hud_weapons.imageset");
 
-  CEGUI::Window *pMain = m_pHudRoot->createChild("OgreTray/StaticImage", "main");
-  pMain->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
-  pMain->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(1, 0)));
-  pMain->setProperty("Image", "hud/main");
-  pMain->setProperty("FrameEnabled","False");
-  pMain->setProperty("BackgroundEnabled","False");
+  CEGUI::Window *pMain = m_pHudRoot->createChild("DefaultWindow", "main");
+  pMain->setRiseOnClickEnabled(false);
+  CEGUI::Window *pTopBar = pMain->createChild("OgreTray/StaticImage", "top_bar");
+  pTopBar->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
+  pTopBar->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(0.1667f, 0)));
+  pTopBar->setProperty("Image", "hud/top_bar");
+  pTopBar->setProperty("FrameEnabled","False");
+  pTopBar->setProperty("BackgroundEnabled","False");
+  pTopBar->setRiseOnClickEnabled(false);
 
-  m_pFpsText = pMain->createChild("OgreTray/StaticText", "fpstext");
+
+  Window *pBottomBar = pMain->createChild("OgreTray/StaticImage", "bottom_bar");
+  pBottomBar->setSize(USize(UDim(0, 288), UDim(0, 45)));
+  pBottomBar->setPosition(UVector2(UDim(0.5, -144), UDim(1, -45)));
+  pBottomBar->setProperty("Image", "hud/bottom_bar");
+  pBottomBar->setProperty("FrameEnabled","False");
+  pBottomBar->setProperty("BackgroundEnabled","False");
+  pBottomBar->setRiseOnClickEnabled(false);
+
+  m_pFpsText = pBottomBar->createChild("OgreTray/StaticText", "fpstext");
   m_pFpsText->setProperty("TextColours", "FFFFFFFF");
   m_pFpsText->setProperty("FrameEnabled","False");
   m_pFpsText->setProperty("BackgroundEnabled","False");
-  m_pFpsText->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
-  m_pFpsText->setPosition(CEGUI::UVector2(CEGUI::UDim(0.267, 0), CEGUI::UDim(0.98, 0)));
+  m_pFpsText->setSize(USize(UDim(0, 25), UDim(0, 20)));
+  m_pFpsText->setPosition(UVector2(UDim(0, 173), UDim(0, 27)));
   m_pFpsText->setText("00");
-  m_pFpsText->setFont("dejavusans8");
+  m_pFpsText->setFont("dejavusans12");
+  m_pFpsText->setRiseOnClickEnabled(false);
 
   m_pHealthBar = pMain->createChild("OgreTray/StaticImage", "healthbar");
   m_pHealthBar->setProperty("ImageColours", "FFFF00FF");
@@ -55,6 +69,7 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
   m_pHealthBar->setProperty("FrameEnabled","False");
   m_pHealthBar->setProperty("BackgroundEnabled","True");
   m_pHealthBar->setPosition(UVector2(UDim(0.051757813, 0), UDim(0.026041667, 0)));
+  m_pHealthBar->setRiseOnClickEnabled(false);
 
   m_pManaBar = pMain->createChild("OgreTray/StaticImage", "manabar");
   m_pManaBar->setProperty("ImageColours", "FFFF00FF");
@@ -62,76 +77,79 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
   m_pManaBar->setProperty("FrameEnabled", "False");
   m_pManaBar->setProperty("BackgroundEnabled", "True");
   m_pManaBar->setPosition(UVector2(UDim(0.772460938, 0), UDim(0.026041667, 0)));
+  m_pManaBar->setRiseOnClickEnabled(false);
 
-  m_pWeapon = pMain->createChild("OgreTray/StaticImage", "weapon");
-  m_pWeapon->setProperty("FrameEnabled", "False");
-  m_pWeapon->setProperty("BackgroundEnabled", "True");
-  m_pWeapon->setPosition(UVector2(UDim(0.020507813, 0), UDim(0.936197917, 0)));
-  m_pWeapon->setSize(USize(UDim(0.028320313, 0), UDim(0.037760417, 0)));
+  if (m_bShotToolIndicators) {
+    m_pWeapon = pMain->createChild("OgreTray/StaticImage", "weapon");
+    m_pWeapon->setProperty("FrameEnabled", "False");
+    m_pWeapon->setProperty("BackgroundEnabled", "True");
+    m_pWeapon->setPosition(UVector2(UDim(0.020507813, 0), UDim(0.936197917, 0)));
+    m_pWeapon->setSize(USize(UDim(0.028320313, 0), UDim(0.037760417, 0)));
 
-  Window *pImg = pMain->createChild("OgreTray/StaticImage", "HPImg");
-  pImg->setProperty("FrameEnabled","False");
-  pImg->setProperty("BackgroundEnabled","False");
-  pImg->setSize(CEGUI::USize(UDim(0, 32), UDim(0, 32)));
-  pImg->setPosition(CEGUI::UVector2(CEGUI::UDim(0.8, -16), CEGUI::UDim(0.98, -24)));
-  pImg->setProperty("Image", "hud_weapons/health_potion");
+    Window *pImg = pMain->createChild("OgreTray/StaticImage", "HPImg");
+    pImg->setProperty("FrameEnabled","False");
+    pImg->setProperty("BackgroundEnabled","False");
+    pImg->setSize(CEGUI::USize(UDim(0, 32), UDim(0, 32)));
+    pImg->setPosition(CEGUI::UVector2(CEGUI::UDim(0.8, -16), CEGUI::UDim(0.98, -24)));
+    pImg->setProperty("Image", "hud_weapons/health_potion");
 
-  m_pHealthPotionsCount = pMain->createChild("OgreTray/StaticText", "HPCount");
-  m_pHealthPotionsCount->setProperty("TextColours", "FFFFFFFF");
-  m_pHealthPotionsCount->setProperty("FrameEnabled","False");
-  m_pHealthPotionsCount->setProperty("BackgroundEnabled","False");
-  m_pHealthPotionsCount->setFont("dejavusans8");
-  m_pHealthPotionsCount->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
-  m_pHealthPotionsCount->setPosition(CEGUI::UVector2(CEGUI::UDim(0.8, 0), CEGUI::UDim(0.98, -8)));
-  m_pHealthPotionsCount->setText("0");
+    m_pHealthPotionsCount = pMain->createChild("OgreTray/StaticText", "HPCount");
+    m_pHealthPotionsCount->setProperty("TextColours", "FFFFFFFF");
+    m_pHealthPotionsCount->setProperty("FrameEnabled","False");
+    m_pHealthPotionsCount->setProperty("BackgroundEnabled","False");
+    m_pHealthPotionsCount->setFont("dejavusans8");
+    m_pHealthPotionsCount->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
+    m_pHealthPotionsCount->setPosition(CEGUI::UVector2(CEGUI::UDim(0.8, 0), CEGUI::UDim(0.98, -8)));
+    m_pHealthPotionsCount->setText("0");
 
-  pImg = pMain->createChild("OgreTray/StaticImage", "MPImg");
-  pImg->setProperty("FrameEnabled","False");
-  pImg->setProperty("BackgroundEnabled","False");
-  pImg->setSize(CEGUI::USize(UDim(0, 32), UDim(0, 32)));
-  pImg->setPosition(CEGUI::UVector2(CEGUI::UDim(0.84, -16), CEGUI::UDim(0.98, -24)));
-  pImg->setProperty("Image", "hud_weapons/mana_potion");
+    pImg = pMain->createChild("OgreTray/StaticImage", "MPImg");
+    pImg->setProperty("FrameEnabled","False");
+    pImg->setProperty("BackgroundEnabled","False");
+    pImg->setSize(CEGUI::USize(UDim(0, 32), UDim(0, 32)));
+    pImg->setPosition(CEGUI::UVector2(CEGUI::UDim(0.84, -16), CEGUI::UDim(0.98, -24)));
+    pImg->setProperty("Image", "hud_weapons/mana_potion");
 
-  m_pManaPotionsCount = pMain->createChild("OgreTray/StaticText", "MPCount");
-  m_pManaPotionsCount->setProperty("TextColours", "FFFFFFFF");
-  m_pManaPotionsCount->setProperty("FrameEnabled","False");
-  m_pManaPotionsCount->setProperty("BackgroundEnabled","False");
-  m_pManaPotionsCount->setFont("dejavusans8");
-  m_pManaPotionsCount->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
-  m_pManaPotionsCount->setPosition(CEGUI::UVector2(CEGUI::UDim(0.84, 0), CEGUI::UDim(0.98, -8)));
-  m_pManaPotionsCount->setText("0");
+    m_pManaPotionsCount = pMain->createChild("OgreTray/StaticText", "MPCount");
+    m_pManaPotionsCount->setProperty("TextColours", "FFFFFFFF");
+    m_pManaPotionsCount->setProperty("FrameEnabled","False");
+    m_pManaPotionsCount->setProperty("BackgroundEnabled","False");
+    m_pManaPotionsCount->setFont("dejavusans8");
+    m_pManaPotionsCount->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
+    m_pManaPotionsCount->setPosition(CEGUI::UVector2(CEGUI::UDim(0.84, 0), CEGUI::UDim(0.98, -8)));
+    m_pManaPotionsCount->setText("0");
 
-  pImg = pMain->createChild("OgreTray/StaticImage", "KeyImg");
-  pImg->setProperty("FrameEnabled","False");
-  pImg->setProperty("BackgroundEnabled","False");
-  pImg->setSize(CEGUI::USize(UDim(0, 32), UDim(0, 32)));
-  pImg->setPosition(CEGUI::UVector2(CEGUI::UDim(0.88, -16), CEGUI::UDim(0.98, -20)));
-  pImg->setProperty("Image", "hud_weapons/keys");
+    pImg = pMain->createChild("OgreTray/StaticImage", "KeyImg");
+    pImg->setProperty("FrameEnabled","False");
+    pImg->setProperty("BackgroundEnabled","False");
+    pImg->setSize(CEGUI::USize(UDim(0, 32), UDim(0, 32)));
+    pImg->setPosition(CEGUI::UVector2(CEGUI::UDim(0.88, -16), CEGUI::UDim(0.98, -20)));
+    pImg->setProperty("Image", "hud_weapons/keys");
 
-  m_pKeyCount = pMain->createChild("OgreTray/StaticText", "KeyCount");
-  m_pKeyCount->setProperty("TextColours", "FFFFFFFF");
-  m_pKeyCount->setProperty("FrameEnabled","False");
-  m_pKeyCount->setProperty("BackgroundEnabled","False");
-  m_pKeyCount->setFont("dejavusans8");
-  m_pKeyCount->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
-  m_pKeyCount->setPosition(CEGUI::UVector2(CEGUI::UDim(0.88, 0), CEGUI::UDim(0.98, -8)));
-  m_pKeyCount->setText("0");
+    m_pKeyCount = pMain->createChild("OgreTray/StaticText", "KeyCount");
+    m_pKeyCount->setProperty("TextColours", "FFFFFFFF");
+    m_pKeyCount->setProperty("FrameEnabled","False");
+    m_pKeyCount->setProperty("BackgroundEnabled","False");
+    m_pKeyCount->setFont("dejavusans8");
+    m_pKeyCount->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
+    m_pKeyCount->setPosition(CEGUI::UVector2(CEGUI::UDim(0.88, 0), CEGUI::UDim(0.98, -8)));
+    m_pKeyCount->setText("0");
 
-  pImg = pMain->createChild("OgreTray/StaticImage", "BombImg");
-  pImg->setProperty("FrameEnabled","False");
-  pImg->setProperty("BackgroundEnabled","False");
-  pImg->setSize(CEGUI::USize(UDim(0, 32), UDim(0, 32)));
-  pImg->setPosition(CEGUI::UVector2(CEGUI::UDim(0.92, -16), CEGUI::UDim(0.98, -24)));
-  pImg->setProperty("Image", "hud_weapons/bomb");
+    pImg = pMain->createChild("OgreTray/StaticImage", "BombImg");
+    pImg->setProperty("FrameEnabled","False");
+    pImg->setProperty("BackgroundEnabled","False");
+    pImg->setSize(CEGUI::USize(UDim(0, 32), UDim(0, 32)));
+    pImg->setPosition(CEGUI::UVector2(CEGUI::UDim(0.92, -16), CEGUI::UDim(0.98, -24)));
+    pImg->setProperty("Image", "hud_weapons/bomb");
 
-  m_pBombCount = pMain->createChild("OgreTray/StaticText", "BombCount");
-  m_pBombCount->setProperty("TextColours", "FFFFFFFF");
-  m_pBombCount->setProperty("FrameEnabled","False");
-  m_pBombCount->setProperty("BackgroundEnabled","False");
-  m_pBombCount->setFont("dejavusans8");
-  m_pBombCount->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
-  m_pBombCount->setPosition(CEGUI::UVector2(CEGUI::UDim(0.92, 0), CEGUI::UDim(0.98, -8)));
-  m_pBombCount->setText("0");
+    m_pBombCount = pMain->createChild("OgreTray/StaticText", "BombCount");
+    m_pBombCount->setProperty("TextColours", "FFFFFFFF");
+    m_pBombCount->setProperty("FrameEnabled","False");
+    m_pBombCount->setProperty("BackgroundEnabled","False");
+    m_pBombCount->setFont("dejavusans8");
+    m_pBombCount->setSize(CEGUI::USize(UDim(0.1, 0), UDim(0.02,0)));
+    m_pBombCount->setPosition(CEGUI::UVector2(CEGUI::UDim(0.92, 0), CEGUI::UDim(0.98, -8)));
+    m_pBombCount->setText("0");
+  }
 
   // initialise hp, mp
   setHP(m_fHP);
@@ -162,19 +180,29 @@ void CHUD::setMP(Ogre::Real fMP) {
   m_pManaBar->setSize(USize(UDim(0.204101563 * m_fMP, 0), UDim(0.009114583, 0)));
 }
 void CHUD::setHealthPotionCount(unsigned int uiCount) {
-  m_pHealthPotionsCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
+  if (m_bShotToolIndicators) {
+    m_pHealthPotionsCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
+  }
 }
 void CHUD::setManaPotionCount(unsigned int uiCount) {
-  m_pManaPotionsCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
+  if (m_bShotToolIndicators) {
+    m_pManaPotionsCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
+  }
 }
 void CHUD::setKeysCount(unsigned int uiCount) {
-  m_pKeyCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
+  if (m_bShotToolIndicators) {
+    m_pKeyCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
+  }
 }
 void CHUD::setBombCount(unsigned int uiCount) {
-  m_pBombCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
+  if (m_bShotToolIndicators) {
+    m_pBombCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
+  }
 }
 void CHUD::setCurrentWeapon(unsigned int uiWeapon) {
-  m_pWeapon->setProperty("Image", Weapon::getPicture(uiWeapon));
+  if (m_bShotToolIndicators) {
+    m_pWeapon->setProperty("Image", Weapon::getPicture(uiWeapon));
+  }
 }
 Ogre::ColourValue CHUD::getHPColourmap() const {
   if (m_fHP == 1.0f) {

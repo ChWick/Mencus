@@ -9,6 +9,7 @@ class CGUIInput;
 
 class CHUD : public Ogre::Singleton<CHUD> {
 private:
+  const bool m_bShotToolIndicators;
   CGUIInput *m_pGUIInput;
   CEGUI::Window *m_pHudRoot;
   CEGUI::Window *m_pFpsText;

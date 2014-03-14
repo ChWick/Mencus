@@ -80,6 +80,9 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
 CGUIInput::~CGUIInput() {
   CInputListenerManager::getSingleton().removeInputListener(this);
 }
+void CGUIInput::windowResized() {
+  buttonSizeChanged(m_fButtonSize);
+}
 void CGUIInput::buttonSizeChanged(float fSize) {
   m_fButtonSize = fSize;
 

@@ -742,6 +742,10 @@ void CGame::windowResized(Ogre::RenderWindow* rw) {
     ms.height = rw->getHeight();
   }
 #endif
+  if (CGUIManager::getSingletonPtr()) {
+    CGUIManager::getSingleton().resize(CEGUI::Sizef(rw->getWidth(),
+						     rw->getHeight()));
+  }
 }
 
 //Unattach OIS before window shutdown (very important under Linux)

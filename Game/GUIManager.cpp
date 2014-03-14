@@ -213,6 +213,10 @@ void CGUIManager::reloadResources() {
     CEGUI::FontManager::getSingleton().get(sFontName).notifyDisplaySizeChanged(m_vNativeRes);
   }
 }
-
-
-
+void CGUIManager::resize(const CEGUI::Sizef &vSize) {
+  m_vNativeRes = vSize;
+  m_pCEGuiOgreRenderer->setDisplaySize(vSize);
+  if (m_pGUIInput) {
+    m_pGUIInput->windowResized();
+  }
+}
