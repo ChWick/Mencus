@@ -91,7 +91,6 @@ private:
   bool saveStateListMouseClicked(const CEGUI::EventArgs&);
 
   void resizeGUI(Ogre::Real fScaling);
-
 };
 
 #endif // MAIN_MENU_HPP

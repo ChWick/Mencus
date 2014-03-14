@@ -5,8 +5,9 @@
 #include <OgreVector2.h>
 #include "Weapon.hpp"
 #include "PauseCaller.hpp"
+#include "InputListener.hpp"
 
-class CGUIInput : public CPauseCaller {
+class CGUIInput : public CPauseCaller, public CInputListener {
 private:
   enum EButtonTypes {
     BT_LEFT,
@@ -50,6 +51,10 @@ public:
 
   void update(float tpf);
 
+  bool touchReleased(const OIS::MultiTouchEvent& evt) {pressReleased(); return true;}
+  bool touchCancelled(const OIS::MultiTouchEvent& evt) {pressReleased();return true;}
+  bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {pressReleased(); return true;}
+
 private:
   void buttonSizeChanged(float fSize);
   
@@ -71,6 +76,9 @@ private:
   bool onDragMoved(const CEGUI::EventArgs&);
 
   bool onWeaponClick(const CEGUI::EventArgs&);
+
+
+  void pressReleased();
 };
 
 #endif

@@ -10,6 +10,8 @@ using namespace CEGUI;
 
 CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
   : m_uiCurrentWeapon(0) {
+  CInputListenerManager::getSingleton().addInputListener(this);
+
   m_pDirectionButtonContainer = pGUIRoot->createChild("DefaultWindow", "ButtonContainer");
   m_pDirectionButtonContainer->setInheritsAlpha(false);
 
@@ -69,6 +71,7 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
   this->buttonSizeChanged(85);
 }
 CGUIInput::~CGUIInput() {
+  CInputListenerManager::getSingleton().removeInputListener(this);
 }
 void CGUIInput::buttonSizeChanged(float fSize) {
   m_fButtonSize = fSize;
@@ -293,24 +296,7 @@ bool CGUIInput::onDragPressed(const CEGUI::EventArgs&) {
   return true;
 }
 bool CGUIInput::onDragReleased(const CEGUI::EventArgs&) {
-  if (m_fDragVelocity < 0) {
-    if (m_fDragVelocity < -10 || m_fLastDragPos < 70) {
-      m_eDragState = DS_CLOSING;
-      unpause(PAUSE_MAP_UPDATE);
-    }
-    else {
-      m_eDragState = DS_OPENING;
-    }
-  }
-  else {
-    if (m_fDragVelocity > 10 || m_fLastDragPos > m_fButtonSize * 2 - 70) {
-      m_eDragState = DS_OPENING;
-    }
-    else {
-      m_eDragState = DS_CLOSING;
-      unpause(PAUSE_MAP_UPDATE);
-    }
-  }
+  pressReleased();
   return true;
 }
 bool CGUIInput::onDragMoved(const CEGUI::EventArgs& args) {
@@ -342,4 +328,27 @@ bool CGUIInput::onWeaponClick(const CEGUI::EventArgs& args) {
   }
   
   return true;
+}
+void CGUIInput::pressReleased() {
+  if (m_eDragState != DS_DRAGGING) {
+    return;
+  }
+  if (m_fDragVelocity < 0) {
+    if (m_fDragVelocity < -10 || m_fLastDragPos < 70) {
+      m_eDragState = DS_CLOSING;
+      unpause(PAUSE_MAP_UPDATE);
+    }
+    else {
+      m_eDragState = DS_OPENING;
+    }
+  }
+  else {
+    if (m_fDragVelocity > 10 || m_fLastDragPos > m_fButtonSize * 2 - 70) {
+      m_eDragState = DS_OPENING;
+    }
+    else {
+      m_eDragState = DS_CLOSING;
+      unpause(PAUSE_MAP_UPDATE);
+    }
+  }
 }
