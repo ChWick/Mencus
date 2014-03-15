@@ -75,7 +75,9 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
   m_pDragButton->setAlpha(0);
 
   setCurrentWeapon(0);
-  this->buttonSizeChanged(85);
+
+  // initial size will be set by options input, the following line would have no effect
+  // this->buttonSizeChanged(85);
 }
 CGUIInput::~CGUIInput() {
   CInputListenerManager::getSingleton().removeInputListener(this);

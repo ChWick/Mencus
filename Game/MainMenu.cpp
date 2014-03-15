@@ -151,6 +151,9 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 
 
   // option pages
+  // ======================
+  
+  // input
   m_pOptionPages[OPTIONS_INPUT] = pButtonContainer->createChild("OgreTray/Group", "InputContainer");
   m_pOptionPages[OPTIONS_INPUT]->setText("Input");
   m_pOptionPages[OPTIONS_INPUT]->setSize(USize(UDim(1, 0), UDim(1, 0)));
@@ -167,13 +170,34 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   pButtonSizeSlider->subscribeEvent(Slider::EventValueChanged,
 				    Event::Subscriber(&CMainMenu::buttonSizeSliderValueChanged,
 						      this));
-  pButtonSizeSlider->setCurrentValue(65);
-  
+  // this will also set the initial value for the touch buttons
+  pButtonSizeSlider->setCurrentValue(85);
 
+  m_pOptionPages[OPTIONS_INPUT]->setVisible(false);
+
+  // video
+  m_pOptionPages[OPTIONS_VIDEO] = pButtonContainer->createChild("OgreTray/Group", "OptionsContainer");
+  m_pOptionPages[OPTIONS_VIDEO]->setText("Input");
+  m_pOptionPages[OPTIONS_VIDEO]->setSize(USize(UDim(1, 0), UDim(1, 0)));
+  Window *pMenuSizeText = m_pOptionPages[OPTIONS_VIDEO]->createChild("OgreTray/StaticText", "MenuSizeText");
+  pMenuSizeText->setPosition(UVector2(UDim(0, 0), UDim(0.00, 0)));
+  pMenuSizeText->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
+  pMenuSizeText->setProperty("FrameEnabled", "False");
+  pMenuSizeText->setProperty("BackgroundEnabled", "False");
+  Slider * pMenuSizeSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_VIDEO]->createChild("OgreTray/Slider", "MenuSizeSlider"));
+  pMenuSizeSlider->setPosition(UVector2(UDim(0, 0), UDim(0.12, 0)));
+  pMenuSizeSlider->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
+  pMenuSizeSlider->setMaxValue(1);
+  pMenuSizeSlider->setClickStep(0.1);
+  pMenuSizeSlider->subscribeEvent(Slider::EventValueChanged,
+				    Event::Subscriber(&CMainMenu::menuSizeSliderValueChanged,
+						      this));
+  pMenuSizeSlider->setCurrentValue(0.5); // to force call of event
+  // initial value
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-  resizeGUI(1);
+  pMenuSizeSlider->setCurrentValue(1);
 #else
-  resizeGUI(0);
+  pMenuSizeSlider->setCurrentValue(0);
 #endif
 }
 CMainMenu::~CMainMenu() {
@@ -472,6 +496,8 @@ void CMainMenu::resizeGUI(Ogre::Real fScaling) {
   m_pSaveStatesWindow->setFont(smallfont);
   m_pOptionPages[OPTIONS_INPUT]->setFont(bigfont);
   m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSliderText")->setFont(smallfont);
+  m_pOptionPages[OPTIONS_VIDEO]->setFont(bigfont);
+  m_pOptionPages[OPTIONS_VIDEO]->getChild("MenuSizeText")->setFont(smallfont);
 }
 bool CMainMenu::buttonSizeSliderValueChanged(const EventArgs &args) {
   const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
@@ -480,6 +506,16 @@ bool CMainMenu::buttonSizeSliderValueChanged(const EventArgs &args) {
   m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSliderText")->setText("Touch button size: " + PropertyHelper<int>::toString(pSlider->getCurrentValue()) + " px");
 
   CGUIManager::getSingleton().changeTouchButtonSize(pSlider->getCurrentValue());
+  
+  return true;
+}
+bool CMainMenu::menuSizeSliderValueChanged(const EventArgs &args) {
+  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
+  const Slider *pSlider = dynamic_cast<const Slider*>(wndArgs.window);
+
+  m_pOptionPages[OPTIONS_VIDEO]->getChild("MenuSizeText")->setText("Main menu size: " + PropertyHelper<int>::toString(pSlider->getCurrentValue() * 100) + " %");
+
+  resizeGUI(pSlider->getCurrentValue());
   
   return true;
 }

@@ -102,6 +102,7 @@ private:
   bool saveStateListMouseClicked(const CEGUI::EventArgs&);
 
   bool buttonSizeSliderValueChanged(const CEGUI::EventArgs&);
+  bool menuSizeSliderValueChanged(const CEGUI::EventArgs&);
 
   void resizeGUI(Ogre::Real fScaling);
 };
