@@ -1,6 +1,10 @@
 #ifndef DEBUG_DEFINES_H
 #define DEBUG_DEFINES_H
 
+#include "GlobalBuildDefines.hpp"
+
+#ifdef USE_DEBUG_DEFINES
+
 #ifdef ANDROID
 
 //#define DEBUG_SHOW_OGRE_TRAY
@@ -19,4 +23,6 @@
 
 #endif
 
-#endif
+#endif // USE_DEBUG_DEFINES
+
+#endif // DEBUG_DEFINES_H

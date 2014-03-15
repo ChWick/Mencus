@@ -5,6 +5,7 @@
 #include "GUIGameOver.hpp"
 #include <OgreSceneManager.h>
 #include "GUIInput.hpp"
+#include "InputDefines.hpp"
 
 using namespace CEGUI;
 
@@ -21,6 +22,7 @@ CGUIManager& CGUIManager::getSingleton(void)
 
 CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &target)
 : m_pSceneManager(pSceneManager),
+  m_pGUIInput(NULL),
   m_nRenderQueue(Ogre::RENDER_QUEUE_OVERLAY),
   m_bPostQueue(false),
   m_bRenderPause(false),
@@ -49,8 +51,12 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   guiRoot->setSize(USize(UDim(1, 0), UDim(1, 0)));
   //guiRoot->setProperty("BackgroundEnabled", "false");
   CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(guiRoot);
+#ifdef INPUT_MOUSE
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setPosition(CEGUI::Vector2f(0,0));
+#else
+  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setVisible(false);
+#endif
 
   createFreeTypeFont("dejavusans12", 12, "DejaVuSans.ttf");
   createFreeTypeFont("dejavusans8", 8, "DejaVuSans.ttf");
@@ -62,7 +68,9 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
 
   //destroyResources();
 
+#ifdef INPUT_TOUCH
   m_pGUIInput = new CGUIInput(guiRoot); // gui input before hud, since hud depends
+#endif
   new CHUD(guiRoot, m_pGUIInput);
   new CGUIInstructions(guiRoot);
   new CGUIGameOver(guiRoot);
@@ -76,7 +84,9 @@ CGUIManager::~CGUIManager() {
   delete CGUIInstructions::getSingletonPtr();
   delete CGUIGameOver::getSingletonPtr();
   delete CMainMenu::getSingletonPtr();
+#ifdef INPUT_TOUCH
   delete m_pGUIInput;
+#endif
   
   if (CEGUI::System::getSingletonPtr()) {CEGUI::OgreRenderer::destroySystem();}
 }
@@ -85,7 +95,9 @@ void CGUIManager::update(Ogre::Real tpf) {
   if (m_bRenderPause) {return;}
   CHUD::getSingleton().update(tpf);
   CMainMenu::getSingleton().update(tpf);
+#ifdef INPUT_TOUCH
   m_pGUIInput->update(tpf);
+#endif
 }
 void CGUIManager::renderQueueStarted(Ogre::uint8 id, const Ogre::String& invocation, bool& skipThisQueue) {
    // make sure you check the invocation string, or you can end up rendering the GUI multiple times
@@ -190,7 +202,9 @@ void CGUIManager::createResources() {
   CEGUI::ImageManager::getSingleton().loadImageset("hud.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("game_over.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("white.imageset");
+#ifdef INPUT_KEYBOARD
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
+#endif
 }
 void CGUIManager::destroyResources() {
   m_bRenderPause = true;
@@ -216,13 +230,13 @@ void CGUIManager::reloadResources() {
 void CGUIManager::resize(const CEGUI::Sizef &vSize) {
   m_vNativeRes = vSize;
   m_pCEGuiOgreRenderer->setDisplaySize(vSize);
-  if (m_pGUIInput) {
-    m_pGUIInput->windowResized();
-  }
+#ifdef INPUT_TOUCH
+  m_pGUIInput->windowResized();
+#endif
   CMainMenu::getSingleton().windowSizeChanged(vSize);
 }
 void CGUIManager::changeTouchButtonSize(float fSize) {
-  if (m_pGUIInput) {
+#ifdef INPUT_TOUCH
     m_pGUIInput->buttonSizeChanged(fSize);
-  }
+#endif
 }

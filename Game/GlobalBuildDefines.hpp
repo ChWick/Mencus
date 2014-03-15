@@ -1,0 +1,8 @@
+#ifndef GLOBAL_BUILD_DEFINES_HPP_
+#define GLOBAL_BUILD_DEFINES_HPP_
+
+//#define ENABLE_CHEATS
+//#define INPUT_ENABLE_ALL
+//#define USE_DEBUG_DEFINES
+
+#endif
