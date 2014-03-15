@@ -55,6 +55,9 @@ public:
   bool touchCancelled(const OIS::MultiTouchEvent& evt) {pressReleased();return true;}
   bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {pressReleased(); return true;}
 
+  void setItemCount(Weapon::EItems eItem, unsigned int uiCount);
+  void setCurrentWeapon(unsigned int uiCurrentWeapon);
+
   void show();
   void hide();
 
@@ -71,7 +74,6 @@ private:
   CEGUI::Window *createWeaponButton(unsigned int uiWeapon);
   CEGUI::Window *createWeaponButtonLabel(unsigned int uiWeapon);
 
-  void setCurrentWeapon(unsigned int uiCurrentWeapon);
 
   void updateDragButtonPosition(const CEGUI::EventArgs&);
   void updateDragBar(float fPosY);

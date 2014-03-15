@@ -229,6 +229,8 @@ void CGUIInput::update(float tpf) {
   updateInput();
 }
 void CGUIInput::setCurrentWeapon(unsigned int uiWeapon) {
+  if (m_uiCurrentWeapon == uiWeapon) {return;}
+
   m_pWeapons[m_uiCurrentWeapon]->setProperty("BackgroundEnabled", "False");
   m_pWeapons[m_uiCurrentWeapon]->setProperty("FrameEnabled", "False");
   m_pWeapons[uiWeapon]->setProperty("BackgroundEnabled", "True");
@@ -382,4 +384,9 @@ void CGUIInput::hide() {
   m_pControlButtonContainer->setVisible(false);
   m_pDragButton->setVisible(false);
   m_pDragWindow->setVisible(false);
+}
+void CGUIInput::setItemCount(Weapon::EItems eItem, unsigned int uiCount) {
+  if (m_pWeaponLabels[eItem]) {
+    m_pWeaponLabels[eItem]->setText(PropertyHelper<int>::toString(uiCount));
+  }
 }

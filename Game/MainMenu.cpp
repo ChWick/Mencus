@@ -541,5 +541,5 @@ bool CMainMenu::menuSizeSliderValueChanged(const EventArgs &args) {
 }
 void CMainMenu::windowSizeChanged(const CEGUI::Sizef &vSize) {
   Slider *pSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSizeSlider"));
-  pSlider->setMaxValue(min(vSize.d_height / 4.0, vSize.d_width / 8.0));
+  pSlider->setMaxValue(min(vSize.d_height / 4.0, vSize.d_width / 8.0));;
 }

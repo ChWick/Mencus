@@ -183,25 +183,40 @@ void CHUD::setHealthPotionCount(unsigned int uiCount) {
   if (m_bShotToolIndicators) {
     m_pHealthPotionsCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
   }
+  if (m_pGUIInput) {
+    m_pGUIInput->setItemCount(Weapon::I_HEALTH_POTION, uiCount);
+  }
 }
 void CHUD::setManaPotionCount(unsigned int uiCount) {
   if (m_bShotToolIndicators) {
     m_pManaPotionsCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
+  }
+  if (m_pGUIInput) {
+    m_pGUIInput->setItemCount(Weapon::I_MANA_POTION, uiCount);
   }
 }
 void CHUD::setKeysCount(unsigned int uiCount) {
   if (m_bShotToolIndicators) {
     m_pKeyCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
   }
+  if (m_pGUIInput) {
+    m_pGUIInput->setItemCount(Weapon::I_KEY, uiCount);
+  }
 }
 void CHUD::setBombCount(unsigned int uiCount) {
   if (m_bShotToolIndicators) {
     m_pBombCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
   }
+  if (m_pGUIInput) {
+    m_pGUIInput->setItemCount(Weapon::I_BOMB, uiCount);
+  }
 }
 void CHUD::setCurrentWeapon(unsigned int uiWeapon) {
   if (m_bShotToolIndicators) {
     m_pWeapon->setProperty("Image", Weapon::getPicture(uiWeapon));
+  }
+  if (m_pGUIInput) {
+    m_pGUIInput->setCurrentWeapon(uiWeapon);
   }
 }
 Ogre::ColourValue CHUD::getHPColourmap() const {
