@@ -90,6 +90,7 @@ public:
   void show() { m_pMMRoot->setVisible(true); setInputListenerEnabled(true); }
   void hide() { m_pMMRoot->setVisible(false); setInputListenerEnabled(false); }
 
+  void windowSizeChanged(const CEGUI::Sizef &vSize);
 private:
   void selectedSaveStateChanged();
   void activateLoadState();

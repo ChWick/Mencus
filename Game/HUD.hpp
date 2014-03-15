@@ -4,10 +4,11 @@
 #include <OgreSingleton.h>
 #include <CEGUI/CEGUI.h>
 #include "Weapon.hpp"
+#include "PauseListener.hpp"
 
 class CGUIInput;
 
-class CHUD : public Ogre::Singleton<CHUD> {
+class CHUD : public Ogre::Singleton<CHUD>, public CPauseListener {
 private:
   const bool m_bShotToolIndicators;
   CGUIInput *m_pGUIInput;
@@ -42,6 +43,9 @@ public:
 
   void show();
   void hide();
+
+
+  virtual void mapRenderPauseChanged(bool bPause) {if (bPause) hide(); else show();}
 private:
   Ogre::ColourValue getHPColourmap() const;
   Ogre::ColourValue getMPColourmap() const;

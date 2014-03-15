@@ -154,9 +154,9 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   // ======================
   
   // input
-  m_pOptionPages[OPTIONS_INPUT] = pButtonContainer->createChild("OgreTray/Group", "InputContainer");
+  m_pOptionPages[OPTIONS_INPUT] = pButtonContainer->createChild("OgreTray/Group", "InputOptionsContainer");
   m_pOptionPages[OPTIONS_INPUT]->setText("Input");
-  m_pOptionPages[OPTIONS_INPUT]->setSize(USize(UDim(1, 0), UDim(1, 0)));
+  m_pOptionPages[OPTIONS_INPUT]->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
   Window *pButtonSizeText = m_pOptionPages[OPTIONS_INPUT]->createChild("OgreTray/StaticText", "ButtonSliderText");
   pButtonSizeText->setPosition(UVector2(UDim(0, 0), UDim(0.00, 0)));
   pButtonSizeText->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
@@ -176,9 +176,9 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pOptionPages[OPTIONS_INPUT]->setVisible(false);
 
   // video
-  m_pOptionPages[OPTIONS_VIDEO] = pButtonContainer->createChild("OgreTray/Group", "OptionsContainer");
+  m_pOptionPages[OPTIONS_VIDEO] = pButtonContainer->createChild("OgreTray/Group", "VideoOptionsContainer");
   m_pOptionPages[OPTIONS_VIDEO]->setText("Input");
-  m_pOptionPages[OPTIONS_VIDEO]->setSize(USize(UDim(1, 0), UDim(1, 0)));
+  m_pOptionPages[OPTIONS_VIDEO]->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
   Window *pMenuSizeText = m_pOptionPages[OPTIONS_VIDEO]->createChild("OgreTray/StaticText", "MenuSizeText");
   pMenuSizeText->setPosition(UVector2(UDim(0, 0), UDim(0.00, 0)));
   pMenuSizeText->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
@@ -199,6 +199,8 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 #else
   pMenuSizeSlider->setCurrentValue(0);
 #endif
+  
+  m_pOptionPages[OPTIONS_VIDEO]->setVisible(false);
 }
 CMainMenu::~CMainMenu() {
   CInputListenerManager::getSingleton().removeInputListener(this);
@@ -245,6 +247,12 @@ void CMainMenu::changeState(EMainMenuState eState) {
   switch (m_eCurrentState) {
   case MMS_RESULT_NEW_GAME:
     break;
+ case MMS_OPTIONS_VIDEO:
+   m_pOptionPages[OPTIONS_VIDEO]->setVisible(false);
+   break;
+ case MMS_OPTIONS_INPUT:
+   m_pOptionPages[OPTIONS_INPUT]->setVisible(false);
+   break;
   default:
     break;
   }
@@ -252,6 +260,18 @@ void CMainMenu::changeState(EMainMenuState eState) {
   m_bSaveListSelected = false;
   m_eCurrentState = eState;
   m_iSelectedSlot = 0;
+
+  
+  switch (m_eCurrentState) {
+ case MMS_OPTIONS_VIDEO:
+   m_pOptionPages[OPTIONS_VIDEO]->setVisible(true);
+   break;
+ case MMS_OPTIONS_INPUT:
+   m_pOptionPages[OPTIONS_INPUT]->setVisible(true);
+   break;
+  default:
+    break;
+  }
 
   switch (eState) {
   case MMS_RESULT_NEW_GAME:
@@ -518,4 +538,8 @@ bool CMainMenu::menuSizeSliderValueChanged(const EventArgs &args) {
   resizeGUI(pSlider->getCurrentValue());
   
   return true;
+}
+void CMainMenu::windowSizeChanged(const CEGUI::Sizef &vSize) {
+  Slider *pSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSizeSlider"));
+  pSlider->setMaxValue(min(vSize.d_height / 4.0, vSize.d_width / 8.0));
 }

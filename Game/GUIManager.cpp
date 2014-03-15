@@ -219,6 +219,7 @@ void CGUIManager::resize(const CEGUI::Sizef &vSize) {
   if (m_pGUIInput) {
     m_pGUIInput->windowResized();
   }
+  CMainMenu::getSingleton().windowSizeChanged(vSize);
 }
 void CGUIManager::changeTouchButtonSize(float fSize) {
   if (m_pGUIInput) {

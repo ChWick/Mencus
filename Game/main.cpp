@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
   OgreAndroidBridge::go(state);
   LOGI("End");
 #else
-  CSnapshotManager::getSingleton().createFromFile("snapshot.xml");
+  //CSnapshotManager::getSingleton().createFromFile("snapshot.xml");
   // Create application object
   CGame *app = new CGame();
 
