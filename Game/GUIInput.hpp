@@ -60,8 +60,8 @@ public:
 
   void windowResized();
 
-private:
   void buttonSizeChanged(float fSize);
+private:
   
   void updateInput();
   void checkForButtonPress(const Ogre::Vector2 &vPos);

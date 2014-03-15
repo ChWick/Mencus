@@ -220,3 +220,8 @@ void CGUIManager::resize(const CEGUI::Sizef &vSize) {
     m_pGUIInput->windowResized();
   }
 }
+void CGUIManager::changeTouchButtonSize(float fSize) {
+  if (m_pGUIInput) {
+    m_pGUIInput->buttonSizeChanged(fSize);
+  }
+}

@@ -66,6 +66,7 @@ public:
   virtual bool touchCancelled(const OIS::MultiTouchEvent& evt);
 
   void resize(const CEGUI::Sizef &vSize);
+  void changeTouchButtonSize(float fSize);
 private:
   void createFreeTypeFont(const CEGUI::String &name, int size, const CEGUI::String &ttfFile);
 private:

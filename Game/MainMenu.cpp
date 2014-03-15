@@ -6,6 +6,7 @@
 #include <OgreStringConverter.h>
 #include <iostream>
 #include "InputDefines.hpp"
+#include "GUIManager.hpp"
 
 using namespace std;
 using namespace CEGUI;
@@ -147,6 +148,27 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pSaveStatePreviewWindow->setPosition(UVector2(UDim(0.65f, 0), UDim(0.1f, 0)));
   m_pSaveStatePreviewWindow->setSize(USize(UDim(0.35f, 0), UDim(0.4f, 0)));
   m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/none");
+
+
+  // option pages
+  m_pOptionPages[OPTIONS_INPUT] = pButtonContainer->createChild("OgreTray/Group", "InputContainer");
+  m_pOptionPages[OPTIONS_INPUT]->setText("Input");
+  m_pOptionPages[OPTIONS_INPUT]->setSize(USize(UDim(1, 0), UDim(1, 0)));
+  Window *pButtonSizeText = m_pOptionPages[OPTIONS_INPUT]->createChild("OgreTray/StaticText", "ButtonSliderText");
+  pButtonSizeText->setPosition(UVector2(UDim(0, 0), UDim(0.00, 0)));
+  pButtonSizeText->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
+  pButtonSizeText->setProperty("FrameEnabled", "False");
+  pButtonSizeText->setProperty("BackgroundEnabled", "False");
+  Slider * pButtonSizeSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->createChild("OgreTray/Slider", "ButtonSizeSlider"));
+  pButtonSizeSlider->setPosition(UVector2(UDim(0, 0), UDim(0.12, 0)));
+  pButtonSizeSlider->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
+  pButtonSizeSlider->setMaxValue(300);
+  pButtonSizeSlider->setClickStep(20);
+  pButtonSizeSlider->subscribeEvent(Slider::EventValueChanged,
+				    Event::Subscriber(&CMainMenu::buttonSizeSliderValueChanged,
+						      this));
+  pButtonSizeSlider->setCurrentValue(65);
+  
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
   resizeGUI(1);
@@ -448,4 +470,16 @@ void CMainMenu::resizeGUI(Ogre::Real fScaling) {
     m_vSlots[i]->setFont(bigfont);
   }
   m_pSaveStatesWindow->setFont(smallfont);
+  m_pOptionPages[OPTIONS_INPUT]->setFont(bigfont);
+  m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSliderText")->setFont(smallfont);
+}
+bool CMainMenu::buttonSizeSliderValueChanged(const EventArgs &args) {
+  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
+  const Slider *pSlider = dynamic_cast<const Slider*>(wndArgs.window);
+
+  m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSliderText")->setText("Touch button size: " + PropertyHelper<int>::toString(pSlider->getCurrentValue()) + " px");
+
+  CGUIManager::getSingleton().changeTouchButtonSize(pSlider->getCurrentValue());
+  
+  return true;
 }

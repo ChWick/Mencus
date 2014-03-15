@@ -61,6 +61,7 @@ public:
 private:
   CEGUI::Window *m_pMMRoot;
   CEGUI::Window *m_pButtonContainer;
+  CEGUI::Window *m_pOptionPages[OPTIONS_BACK];
   std::vector<CEGUI::Window *> m_vSlots;
   EMainMenuState m_iTargetState[MMS_COUNT][NUM_SLOTS];
   CEGUI::String m_sButtonLabels[MMS_COUNT][NUM_SLOTS];
@@ -99,6 +100,8 @@ private:
   bool saveStateListLeaved(const CEGUI::EventArgs&);
   bool saveStateListMouseMoved(const CEGUI::EventArgs&);
   bool saveStateListMouseClicked(const CEGUI::EventArgs&);
+
+  bool buttonSizeSliderValueChanged(const CEGUI::EventArgs&);
 
   void resizeGUI(Ogre::Real fScaling);
 };
