@@ -109,16 +109,20 @@ Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Could not creat
 bool CFileManager::openFile(std::fstream &stream,
 			    const std::string &sFileName,
 			    EStorageLocation eLocation) {
-assert(m_bInitialized);
-std::string path(getValidPath(sFileName));
-fclose(fopen(path.c_str(), "w+"));
-stream.open(path);
-if (!stream) {
-    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "File " + path + " not found");
-    return false;
+  assert(m_bInitialized);
+  std::string path(getValidPath(sFileName));
+  stream.open(path);
+  if (!stream) {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "Creating file at path" + path);
+    fclose(fopen(path.c_str(), "w+"));
+    stream.open(path);
+    if (!stream) {
+      Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "File " + path + " not found");
+      return false;
+    }
   }
   else {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "File " + path  + " openened");
   }
-return true;
+  return true;
 }
