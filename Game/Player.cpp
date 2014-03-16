@@ -526,7 +526,7 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
     }
     break;
   case GIC_USE_HEALTH_POTION:
-    if (m_uiHealthPotionsCount > 0 && cmd.getState() == GIS_PRESSED) {
+    if (m_uiHealthPotionsCount > 0 && (cmd.getState() == GIS_PRESSED || cmd.getState() == GIS_CLICKED)) {
       --m_uiHealthPotionsCount;
       addHitpoints(PLAYER_HEALTH_POTION_REGAIN_PERCENTAGE * getMaximumHitpoints());
       CHUD::getSingleton().setHealthPotionCount(m_uiHealthPotionsCount);
@@ -534,7 +534,7 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
     }
     break;
   case GIC_USE_MANA_POTION:
-    if (m_uiManaPotionsCount > 0 && cmd.getState() == GIS_PRESSED) {
+    if (m_uiManaPotionsCount > 0 && (cmd.getState() == GIS_PRESSED || cmd.getState() == GIS_CLICKED)) {
       --m_uiManaPotionsCount;
       m_fManaPoints = min(PLAYER_MAX_MANA_POINTS, m_fManaPoints + PLAYER_MANA_POTION_REGAIN_PERCENTAGE * PLAYER_MAX_MANA_POINTS);
       CHUD::getSingleton().setManaPotionCount(m_uiManaPotionsCount);

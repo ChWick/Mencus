@@ -329,19 +329,18 @@ bool CGUIInput::onDragMoved(const CEGUI::EventArgs& args) {
   return true;
 }
 bool CGUIInput::onWeaponClick(const CEGUI::EventArgs& args) {
-  Ogre::LogManager::getSingleton().logMessage("onWeaponClick");
   CEGUI::Window *pBtn = dynamic_cast<const WindowEventArgs*>(&args)->window;
 
   if (m_pWeapons[Weapon::I_HEALTH_POTION] == pBtn ||
       m_pWeaponLabels[Weapon::I_HEALTH_POTION] == pBtn) {
     CGameInputManager::getSingleton().
-      injectCommand(CGameInputCommand(GIC_USE_HEALTH_POTION));
+      injectCommand(CGameInputCommand(GIC_USE_HEALTH_POTION, 1, GIS_CLICKED));
     return true;
   }
   else if (m_pWeapons[Weapon::I_MANA_POTION] == pBtn ||
 	   m_pWeaponLabels[Weapon::I_MANA_POTION] == pBtn) {
     CGameInputManager::getSingleton().
-      injectCommand(CGameInputCommand(GIC_USE_MANA_POTION));
+      injectCommand(CGameInputCommand(GIC_USE_MANA_POTION, 1, GIS_CLICKED));
     return true;
   }
 

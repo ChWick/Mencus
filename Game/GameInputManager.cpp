@@ -79,6 +79,10 @@ bool CGameInputManager::touchPressed(const OIS::MultiTouchEvent& evt) {return tr
 bool CGameInputManager::touchReleased(const OIS::MultiTouchEvent& evt) {return true;}
 bool CGameInputManager::touchCancelled(const OIS::MultiTouchEvent& evt) {return true;}
 void CGameInputManager::injectCommand( const CGameInputCommand &cmd) {
+  if (cmd.getState() == GIS_CLICKED) {
+    sendCommandToListeners(CGameInputCommand(cmd));
+    return;
+  }
   if (cmd.getFloatValue() > 0.5) {
     switch (m_InputStates[cmd.getType()]) {
     case GIS_RELEASED:

@@ -19,6 +19,7 @@ enum EGameInputState {
   GIS_PRESSED,
   GIS_HOLD,
   GIS_RELEASED,
+  GIS_CLICKED,
 };
 
 class CGameInputCommand {
