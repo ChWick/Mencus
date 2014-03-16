@@ -3,6 +3,7 @@
 #include <CEGUI/CEGUI.h>
 #include <OIS.h>
 #include "FileManager.hpp"
+#include "Settings.hpp"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_DEFAULT_LIBS
@@ -41,15 +42,18 @@ int main(int argc, char *argv[])
   LOGI("Starting");
   app_dummy();
 
-  LOGI("Initialize");
-  OgreAndroidBridge::init(state);
   LOGI("Init FileManager");
   CFileManager::init(state->activity);
+  new CSettings();
+
+  LOGI("Initialize");
+  OgreAndroidBridge::init(state);
   LOGI("Go");
   OgreAndroidBridge::go(state);
   LOGI("End");
 #else
   CFileManager::init();
+  new CSettings();
   //CSnapshotManager::getSingleton().createFromFile("snapshot.xml");
   // Create application object
   CGame *app = new CGame();
@@ -82,8 +86,14 @@ int main(int argc, char *argv[])
       "Unknown Error" << std::endl;
 #endif
   }
+#endif
+
+  // For all platforms
+  if (CSnapshotManager::getSingletonPtr()) {delete CSnapshotManager::getSingletonPtr();}
+  if (CSettings::getSingletonPtr()) {delete CSettings::getSingletonPtr();}
+
+#if OGRE_PLATFORM != OGRE_PLATFORM_ANDROID
   delete app;
   return 0;
 #endif
-  if (CSnapshotManager::getSingletonPtr()) {delete CSnapshotManager::getSingletonPtr();}
 }
