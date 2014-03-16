@@ -9,7 +9,7 @@
 using namespace CEGUI;
 
 CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
-  : m_uiCurrentWeapon(0) {
+  : m_uiCurrentWeapon(0), m_fTimeSinceLastTouchMoveEvent(0) {
   CInputListenerManager::getSingleton().addInputListener(this);
 
   m_pDirectionButtonContainer = pGUIRoot->createChild("DefaultWindow", "ButtonContainer");
@@ -194,6 +194,9 @@ CEGUI::Window *CGUIInput::createWeaponButtonLabel(unsigned int uiWeapon) {
 void CGUIInput::update(float tpf) {
   if (m_eDragState == DS_DRAGGING || m_eDragState == DS_OPEN || m_eDragState == DS_OPENING) {
     m_pDragButton->setAlpha(0.5);
+    if (m_eDragState == DS_DRAGGING) {
+      m_fTimeSinceLastTouchMoveEvent += tpf;
+    }
   }
   else {
     m_pDragButton->setAlpha(0);
@@ -221,10 +224,7 @@ void CGUIInput::update(float tpf) {
     }
   }
 
-  m_fDragVelocity = (m_pDragButton->getPosition().d_y.d_offset - m_fLastDragPos) / tpf;
-  m_fLastDragPos = m_pDragButton->getPosition().d_y.d_offset;
-
-  m_pDragWindow->setPosition(UVector2(UDim(0, 0), UDim(0, m_fLastDragPos - m_pDragWindow->getSize().d_height.d_offset)));
+  m_pDragWindow->setPosition(UVector2(UDim(0, 0), UDim(0, m_pDragButton->getPosition().d_y.d_offset - m_pDragWindow->getSize().d_height.d_offset)));
 
   updateInput();
 }
@@ -314,6 +314,7 @@ void CGUIInput::updateDragBar(float fPosY) {
 bool CGUIInput::onDragPressed(const CEGUI::EventArgs&) {
   pause(PAUSE_MAP_UPDATE);
   m_eDragState = DS_DRAGGING;
+  m_fLastDragPos = m_pDragButton->getPosition().d_y.d_offset;
   return true;
 }
 bool CGUIInput::onDragReleased(const CEGUI::EventArgs&) {
@@ -322,7 +323,9 @@ bool CGUIInput::onDragReleased(const CEGUI::EventArgs&) {
 }
 bool CGUIInput::onDragMoved(const CEGUI::EventArgs& args) {
   updateDragButtonPosition(args);
-  
+  m_fDragVelocity = (m_pDragButton->getPosition().d_y.d_offset - m_fLastDragPos) / m_fTimeSinceLastTouchMoveEvent;
+  m_fLastDragPos = m_pDragButton->getPosition().d_y.d_offset;
+  m_fTimeSinceLastTouchMoveEvent = 0;
   return true;
 }
 bool CGUIInput::onWeaponClick(const CEGUI::EventArgs& args) {
@@ -354,8 +357,9 @@ void CGUIInput::pressReleased() {
   if (m_eDragState != DS_DRAGGING) {
     return;
   }
+  Ogre::LogManager::getSingleton().logMessage(Ogre::StringConverter::toString(m_fDragVelocity));
   if (m_fDragVelocity < 0) {
-    if (m_fDragVelocity < -2 || m_fLastDragPos < m_pDragWindow->getSize().d_height.d_offset * 0.2) {
+    if (m_fDragVelocity < -m_pDragWindow->getSize().d_height.d_offset * 0.05 || m_fLastDragPos < m_pDragWindow->getSize().d_height.d_offset * 0.2) {
       m_eDragState = DS_CLOSING;
       unpause(PAUSE_MAP_UPDATE);
     }
@@ -364,7 +368,7 @@ void CGUIInput::pressReleased() {
     }
   }
   else {
-    if (m_fDragVelocity > 2 || m_fLastDragPos > m_pDragWindow->getSize().d_height.d_offset * 0.8) {
+    if (m_fDragVelocity > m_pDragWindow->getSize().d_height.d_offset * 0.05 || m_fLastDragPos > m_pDragWindow->getSize().d_height.d_offset * 0.8) {
       m_eDragState = DS_OPENING;
     }
     else {
