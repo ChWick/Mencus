@@ -46,8 +46,8 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
 
 
   Window *pBottomBar = pMain->createChild("OgreTray/StaticImage", "bottom_bar");
-  pBottomBar->setSize(USize(UDim(0, 288), UDim(0, 45)));
-  pBottomBar->setPosition(UVector2(UDim(0.5, -144), UDim(1, -45)));
+  pBottomBar->setSize(USize(UDim(0.28125, 0), UDim(0.05859375, 0)));
+  pBottomBar->setPosition(UVector2(UDim(0.359375, 0), UDim(0.94140625, 0)));
   pBottomBar->setProperty("Image", "hud/bottom_bar");
   pBottomBar->setProperty("FrameEnabled","False");
   pBottomBar->setProperty("BackgroundEnabled","False");
@@ -57,10 +57,10 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
   m_pFpsText->setProperty("TextColours", "FFFFFFFF");
   m_pFpsText->setProperty("FrameEnabled","False");
   m_pFpsText->setProperty("BackgroundEnabled","False");
-  m_pFpsText->setSize(USize(UDim(0, 25), UDim(0, 20)));
-  m_pFpsText->setPosition(UVector2(UDim(0, 173), UDim(0, 27)));
+  m_pFpsText->setSize(USize(UDim(0.2, 0), UDim(0.3, 0)));
+  m_pFpsText->setPosition(UVector2(UDim(0.605, 0), UDim(0.66, 0)));
   m_pFpsText->setText("00");
-  m_pFpsText->setFont("dejavusans12");
+  m_pFpsText->setFont("dejavusans8");
   m_pFpsText->setRiseOnClickEnabled(false);
 
   m_pHealthBar = pMain->createChild("OgreTray/StaticImage", "healthbar");
@@ -80,6 +80,14 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
   m_pManaBar->setRiseOnClickEnabled(false);
 
   if (m_bShotToolIndicators) {
+    Window *pWeaponContainer = pMain->createChild("OgreTray/StaticImage", "weaponContainer");
+    pWeaponContainer->setProperty("FrameEnabled", "False");
+    pWeaponContainer->setProperty("BackgroundEnabled", "False");
+    pWeaponContainer->setProperty("Image", "hud/weapon_indicator");
+    pWeaponContainer->setPosition(UVector2(UDim(0, 0), UDim(0.908854, 0)));
+    pWeaponContainer->setSize(USize(UDim(0.0683594, 0), UDim(0.091145833, 0)));
+    
+    
     m_pWeapon = pMain->createChild("OgreTray/StaticImage", "weapon");
     m_pWeapon->setProperty("FrameEnabled", "False");
     m_pWeapon->setProperty("BackgroundEnabled", "True");
