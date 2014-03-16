@@ -284,18 +284,18 @@ public:
 	  {
 	    try {
 	      mRenderWnd->windowMovedOrResized();
-	      mRoot->renderOneFrame();
+	      if (!mRoot->renderOneFrame()) {
+		ANativeActivity_finish(state->activity);
+	      }
 	    }
 	    catch (const Ogre::Exception &e) {
 	      LOGW("Error in rendering loop");
 	      LOGW("%s", e.getFullDescription().c_str());
-	      shutdown();
-	      break;
+	      ANativeActivity_finish(state->activity);
 	    }
 	    catch (...) {
 	      LOGW("Unknown Exception");
-	      shutdown();
-	      break;
+	      ANativeActivity_finish(state->activity);
 	    }
 	  }
       }
