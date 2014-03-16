@@ -3,6 +3,7 @@
 #include "OgreException.h"
 #include <time.h>
 #include "Game.hpp"
+#include "FileManager.hpp"
 
 const std::string SAVE_STATE_FILE("savestate.xml");
 
@@ -20,15 +21,16 @@ CSaveStateManager &CSaveStateManager::getSingleton() {
 CSaveStateManager::CSaveStateManager() {
   using namespace tinyxml2;
   XMLDocument doc;
-  Ogre::String text(CGame::getSingleton().getFileAsText(SAVE_STATE_FILE));
-  doc.Parse(text.c_str());
+
+  //Ogre::String text(CGame::getSingleton().getFileAsText(SAVE_STATE_FILE));
+  doc.LoadFile(CFileManager::getValidPath(SAVE_STATE_FILE).c_str());
   if (doc.Error()) {
     Ogre::LogManager::getSingleton().logMessage(SAVE_STATE_FILE + " not found.");
     return;
   }
   
   Ogre::LogManager::getSingleton().logMessage("Reading savestates");
-  Ogre::LogManager::getSingleton().logMessage(text);
+  //Ogre::LogManager::getSingleton().logMessage(text);
 
   XMLElement *pRoot = doc.FirstChildElement("save_states");
   if (!pRoot) {
@@ -133,7 +135,16 @@ void CSaveStateManager::writeXMLFile() {
   Ogre::String header("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
   Ogre::String text(xmlprinter.CStr());
 
-  CGame::getSingleton().writeToFile(SAVE_STATE_FILE, header + text);
-  Ogre::LogManager::getSingleton().logMessage("Save state file written");
-  Ogre::LogManager::getSingleton().logMessage(header + text);
+  fstream stream;
+  if (!CFileManager::openFile(stream, SAVE_STATE_FILE)) {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Save state file could not be opened");
+  }
+  else {
+    stream << header;
+    stream << text;
+    stream.close();
+    //CGame::getSingleton().writeToFile(SAVE_STATE_FILE, header + text);
+    Ogre::LogManager::getSingleton().logMessage("Save state file written");
+    Ogre::LogManager::getSingleton().logMessage(header + text);
+  }
 }
