@@ -56,6 +56,7 @@ public:
   };
   enum EGamesEscapeSlots {
     GAMES_ESCAPE_BACK_TO_GAME = 0,
+    GAMES_ESCAPE_OPTIONS      = 1,
     GAMES_ESCAPE_EXIT_GAME    = NUM_SLOTS - 1,
   };
 private:

@@ -73,6 +73,8 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 
   m_iTargetState[MMS_GAME_ESCAPE][GAMES_ESCAPE_BACK_TO_GAME] = MMS_RESULT_BACK_TO_GAME;
   m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_BACK_TO_GAME] = "Back to game";
+  m_iTargetState[MMS_GAME_ESCAPE][GAMES_ESCAPE_OPTIONS] = MMS_OPTIONS;
+  m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_OPTIONS] = "Options";
   m_iTargetState[MMS_GAME_ESCAPE][GAMES_ESCAPE_EXIT_GAME] = MMS_START;
   m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_EXIT_GAME] = "Exit game";
 
@@ -157,6 +159,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pOptionPages[OPTIONS_INPUT] = pButtonContainer->createChild("OgreTray/Group", "InputOptionsContainer");
   m_pOptionPages[OPTIONS_INPUT]->setText("Input");
   m_pOptionPages[OPTIONS_INPUT]->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
+#ifdef INPUT_TOUCH
   Window *pButtonSizeText = m_pOptionPages[OPTIONS_INPUT]->createChild("OgreTray/StaticText", "ButtonSliderText");
   pButtonSizeText->setPosition(UVector2(UDim(0, 0), UDim(0.00, 0)));
   pButtonSizeText->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
@@ -172,6 +175,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 						      this));
   // this will also set the initial value for the touch buttons
   pButtonSizeSlider->setCurrentValue(85);
+#endif
 
   m_pOptionPages[OPTIONS_INPUT]->setVisible(false);
 
@@ -244,6 +248,10 @@ void CMainMenu::update(Ogre::Real tpf) {
   }
 }
 void CMainMenu::changeState(EMainMenuState eState) {
+  if (eState == MMS_OPTIONS && (m_eCurrentState == MMS_GAME_ESCAPE || m_eCurrentState == MMS_START)) {
+    m_iTargetState[MMS_OPTIONS][OPTIONS_BACK] = m_eCurrentState;
+  }
+
   switch (m_eCurrentState) {
   case MMS_RESULT_NEW_GAME:
     break;
@@ -515,7 +523,9 @@ void CMainMenu::resizeGUI(Ogre::Real fScaling) {
   }
   m_pSaveStatesWindow->setFont(smallfont);
   m_pOptionPages[OPTIONS_INPUT]->setFont(bigfont);
+#ifdef INPUT_TOUCH
   m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSliderText")->setFont(smallfont);
+#endif
   m_pOptionPages[OPTIONS_VIDEO]->setFont(bigfont);
   m_pOptionPages[OPTIONS_VIDEO]->getChild("MenuSizeText")->setFont(smallfont);
 }
