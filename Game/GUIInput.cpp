@@ -329,6 +329,7 @@ bool CGUIInput::onDragMoved(const CEGUI::EventArgs& args) {
   return true;
 }
 bool CGUIInput::onWeaponClick(const CEGUI::EventArgs& args) {
+  Ogre::LogManager::getSingleton().logMessage("onWeaponClick");
   CEGUI::Window *pBtn = dynamic_cast<const WindowEventArgs*>(&args)->window;
 
   if (m_pWeapons[Weapon::I_HEALTH_POTION] == pBtn ||
