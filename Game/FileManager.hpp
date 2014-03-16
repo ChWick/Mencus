@@ -31,13 +31,12 @@ public:
     mNativeActivity = pNativeActivity;
 #endif
     m_bInitialized = true;
-    Ogre::LogManager::getSingleton().logMessage("FileManager initialised");
   }
   static bool openFile(std::fstream &stream,
 		       const std::string &sFileName,
 		       EStorageLocation eLocation = SL_EXTERNAL);
   static std::string getValidPath(const std::string &sFileName,
-				  EStorageLocation eLocation = SL_EXTERNAL);
+				  EStorageLocation eLocation = SL_INTERNAL);
 };
 
 #endif
