@@ -2,6 +2,7 @@
 #include "SnapshotManager.hpp"
 #include <CEGUI/CEGUI.h>
 #include <OIS.h>
+#include "FileManager.hpp"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_DEFAULT_LIBS
@@ -42,10 +43,13 @@ int main(int argc, char *argv[])
 
   LOGI("Initialize");
   OgreAndroidBridge::init(state);
+  LOGI("Init FileManager");
+  CFileManager::init(state->activity);
   LOGI("Go");
   OgreAndroidBridge::go(state);
   LOGI("End");
 #else
+  CFileManager::init();
   //CSnapshotManager::getSingleton().createFromFile("snapshot.xml");
   // Create application object
   CGame *app = new CGame();
