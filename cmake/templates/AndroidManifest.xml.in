@@ -13,12 +13,12 @@
   <!-- This .apk has no Java code itself, so set hasCode to false. -->
   <application android:label="Mencus"
 	       android:icon="@drawable/ic_launcher"
-	       android:hasCode="false">
+	       android:hasCode="false"
+	       android:allowBackup="true">
     <activity android:name="android.app.NativeActivity"
               android:label="Mencus"
 	      android:screenOrientation="landscape"
               android:configChanges="orientation@SCREEN_SIZE@|keyboardHidden"
-	      android:debuggable="true"
 	      android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen">
       <!-- Tell NativeActivity the name of or .so -->
       <meta-data android:name="android.app.lib_name" android:value="Mencus" />
