@@ -45,6 +45,7 @@ private:
   float m_fLastDragPos;
 
   float m_fButtonSize;
+  float m_fTimeSinceLastTouchMoveEvent;
 public:
   CGUIInput(CEGUI::Window *pGUIRoot);
   ~CGUIInput();
