@@ -7,6 +7,7 @@
 #include <iostream>
 #include "InputDefines.hpp"
 #include "GUIManager.hpp"
+#include "Settings.hpp"
 
 using namespace std;
 using namespace CEGUI;
@@ -174,7 +175,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 				    Event::Subscriber(&CMainMenu::buttonSizeSliderValueChanged,
 						      this));
   // this will also set the initial value for the touch buttons
-  pButtonSizeSlider->setCurrentValue(85);
+  pButtonSizeSlider->setCurrentValue(CSettings::getSingleton().getInputSettings().m_fTouchButtonSize);
 #endif
 
   m_pOptionPages[OPTIONS_INPUT]->setVisible(false);
@@ -193,16 +194,12 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   pMenuSizeSlider->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
   pMenuSizeSlider->setMaxValue(1);
   pMenuSizeSlider->setClickStep(0.1);
+  pMenuSizeSlider->setCurrentValue(0.24152342); // to force call of event
   pMenuSizeSlider->subscribeEvent(Slider::EventValueChanged,
 				    Event::Subscriber(&CMainMenu::menuSizeSliderValueChanged,
 						      this));
-  pMenuSizeSlider->setCurrentValue(0.5); // to force call of event
   // initial value
-#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-  pMenuSizeSlider->setCurrentValue(1);
-#else
-  pMenuSizeSlider->setCurrentValue(0);
-#endif
+  pMenuSizeSlider->setCurrentValue(CSettings::getSingleton().getVideoSettings().m_fHUDSize);
   
   m_pOptionPages[OPTIONS_VIDEO]->setVisible(false);
 }
@@ -257,9 +254,11 @@ void CMainMenu::changeState(EMainMenuState eState) {
     break;
  case MMS_OPTIONS_VIDEO:
    m_pOptionPages[OPTIONS_VIDEO]->setVisible(false);
+   CSettings::getSingleton().writeToFile();
    break;
  case MMS_OPTIONS_INPUT:
    m_pOptionPages[OPTIONS_INPUT]->setVisible(false);
+   CSettings::getSingleton().writeToFile();
    break;
   default:
     break;
@@ -536,6 +535,7 @@ bool CMainMenu::buttonSizeSliderValueChanged(const EventArgs &args) {
   m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSliderText")->setText("Touch button size: " + PropertyHelper<int>::toString(pSlider->getCurrentValue()) + " px");
 
   CGUIManager::getSingleton().changeTouchButtonSize(pSlider->getCurrentValue());
+  CSettings::getSingleton().getInputSettings().m_fTouchButtonSize = pSlider->getCurrentValue();
   
   return true;
 }
@@ -546,6 +546,7 @@ bool CMainMenu::menuSizeSliderValueChanged(const EventArgs &args) {
   m_pOptionPages[OPTIONS_VIDEO]->getChild("MenuSizeText")->setText("Main menu size: " + PropertyHelper<int>::toString(pSlider->getCurrentValue() * 100) + " %");
 
   resizeGUI(pSlider->getCurrentValue());
+  CSettings::getSingleton().getVideoSettings().m_fHUDSize = pSlider->getCurrentValue();
   
   return true;
 }

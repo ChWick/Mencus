@@ -29,13 +29,13 @@ public:
   CSettings();
   ~CSettings();
 
-  const SInputSettings &getInputSettings() const {return m_InputSettings;}
-  const SVideoSettings &getVideoSettings() const {return m_VideoSettings;}
-  
+  SInputSettings &getInputSettings() {return m_InputSettings;}
+  SVideoSettings &getVideoSettings() {return m_VideoSettings;}  
+
+  void writeToFile();
 private:
 
   void readFromFile();
-  void writeToFile();
 };
 
 #endif
