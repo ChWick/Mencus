@@ -357,7 +357,7 @@ void CGUIInput::pressReleased() {
   if (m_eDragState != DS_DRAGGING) {
     return;
   }
-  Ogre::LogManager::getSingleton().logMessage(Ogre::StringConverter::toString(m_fDragVelocity));
+  //Ogre::LogManager::getSingleton().logMessage(Ogre::StringConverter::toString(m_fDragVelocity));
   if (m_fDragVelocity < 0) {
     if (m_fDragVelocity < -m_pDragWindow->getSize().d_height.d_offset * 0.05 || m_fLastDragPos < m_pDragWindow->getSize().d_height.d_offset * 0.2) {
       m_eDragState = DS_CLOSING;
