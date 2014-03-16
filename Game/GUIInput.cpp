@@ -355,7 +355,7 @@ void CGUIInput::pressReleased() {
     return;
   }
   if (m_fDragVelocity < 0) {
-    if (m_fDragVelocity < -2 || m_fLastDragPos < 70) {
+    if (m_fDragVelocity < -2 || m_fLastDragPos < m_pDragWindow->getSize().d_height.d_offset * 0.2) {
       m_eDragState = DS_CLOSING;
       unpause(PAUSE_MAP_UPDATE);
     }
@@ -364,7 +364,7 @@ void CGUIInput::pressReleased() {
     }
   }
   else {
-    if (m_fDragVelocity > 2 || m_fLastDragPos > m_fButtonSize * 2 - 70) {
+    if (m_fDragVelocity > 2 || m_fLastDragPos > m_pDragWindow->getSize().d_height.d_offset * 0.8) {
       m_eDragState = DS_OPENING;
     }
     else {
