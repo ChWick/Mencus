@@ -488,6 +488,9 @@ void CGame::createScene() {
   else {
     Ogre::LogManager::getSingletonPtr()->logMessage("    no snapshot set");
   }
+
+  // call window resized once to adjust settings
+  windowResized(mWindow);
 }
 
 bool CGame::frameRenderingQueued(const Ogre::FrameEvent& evt) {
