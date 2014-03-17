@@ -202,7 +202,7 @@ void CGUIManager::createResources() {
   CEGUI::ImageManager::getSingleton().loadImageset("hud.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("game_over.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("white.imageset");
-#ifdef INPUT_KEYBOARD
+#ifdef INPUT_MOUSE
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
 #endif
 }
