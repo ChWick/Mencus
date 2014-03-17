@@ -12,6 +12,9 @@
 @RESOURCES_USING_APK@FileSystem=@RESOURCES_PREFIX@/materials
 @RESOURCES_USING_APK@FileSystem=@RESOURCES_PREFIX@/overlays
 
+[level_user]
+@RESOURCES_USING_APK@FileSystem=@RESOURCES_PREFIX@/level/user
+
 [Imagesets]
 @RESOURCES_USING_APK@FileSystem=@RESOURCES_PREFIX@/cegui/imagesets
 [Fonts]
