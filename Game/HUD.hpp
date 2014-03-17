@@ -14,6 +14,7 @@ private:
   CGUIInput *m_pGUIInput;
   CEGUI::Window *m_pHudRoot;
   CEGUI::Window *m_pFpsText;
+  CEGUI::Window *m_pTimeText;
   CEGUI::Window *m_pHealthBar;
   CEGUI::Window *m_pManaBar;
   CEGUI::Window *m_pWeapon;
@@ -32,6 +33,7 @@ public:
 
   void update(Ogre::Real tpf);
 
+  void setCurrentTime(Ogre::Real fTime);
   void setHP(Ogre::Real fHP);
   void setMP(Ogre::Real fMP);
   void setHealthPotionCount(unsigned int uiCount);

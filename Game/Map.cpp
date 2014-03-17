@@ -36,7 +36,8 @@ CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayLi
     m_pExit(NULL),
     m_pScreenplayListener(pScreenplayListener),
     m_bUpdatePause(false),
-    m_bRenderPause(false) {
+    m_bRenderPause(false),
+    m_fPlayingTime(0) {
   CGame::getSingleton().showLoadingBar();
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
   CGame::getSingleton().hideLoadingBar();
@@ -432,6 +433,9 @@ bool CMap::keyReleased( const OIS::KeyEvent &arg ) {
 }
 void CMap::update(Ogre::Real tpf) {
   if (!m_bUpdatePause) {
+    m_fPlayingTime += tpf;
+    CHUD::getSingleton().setCurrentTime(m_fPlayingTime);
+
     updateCameraPos(tpf);
 
     // order of updates exquates drawing order, last one will be on top

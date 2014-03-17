@@ -61,6 +61,9 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
   pRetryButton->setFont("dejavusans12");
   pRetryButton->setText("Retry");
   m_pButtons[BT_RETRY] = pRetryButton;
+  pRetryButton->subscribeEvent(
+			       CEGUI::PushButton::EventClicked,
+			       CEGUI::Event::Subscriber(&CGUIStatistics::onRetryClicked, this));
   
 
   CEGUI::Window *pToMenuButton = pButtonContainer->createChild("OgreTray/Button", "ToMenu");
@@ -68,7 +71,14 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
   pToMenuButton->setSize(USize(UDim(0.2, 0), UDim(0.1, 0)));
   pToMenuButton->setFont("dejavusans12");
   pToMenuButton->setText("To main menu");
+  pToMenuButton->subscribeEvent(
+				CEGUI::PushButton::EventClicked,
+				CEGUI::Event::Subscriber(&CGUIStatistics::onToMenuClicked, this));
   m_pButtons[BT_TO_MENU] = pToMenuButton;
+
+  for (int i = 0; i < L_COUNT; i++) {
+    createLabel(i, pStatisticsGroup);
+  }
 
   hide();
 }
@@ -120,4 +130,39 @@ void CGUIStatistics::resize(const CEGUI::String &smallfont, const CEGUI::String 
   Window *pButtonContainer = m_pStatisticsRoot->getChild("ButtonContainer");
   pButtonContainer->getChild("text")->setFont(smallfont);
   pButtonContainer->getChild("statisticsgroup")->setFont(smallfont);
+
+  for (int i = 0; i < L_COUNT; i++) {
+    pButtonContainer->getChild("statisticsgroup")->getChild("Label" + PropertyHelper<int>::toString(i))->setFont(smallfont);
+
+  }
+}
+void CGUIStatistics::createLabel(int iLabel, CEGUI::Window *pParent) {
+  Window *pLabel = pParent->createChild("OgreTray/StaticText", "Label" + PropertyHelper<int>::toString(iLabel));
+  pLabel->setProperty("FrameEnabled", "False");
+  pLabel->setProperty("BackgroundEnabled", "False");
+  pLabel->setPosition(UVector2(UDim(0.05, 0), UDim(0.05 + iLabel * 0.1, 0)));
+  pLabel->setSize(USize(UDim(0.4, 0), UDim(0.09, 0)));
+
+  switch (iLabel) {
+  case L_TIME:
+    pLabel->setText("Time");
+    break;
+  case L_HITPOINTS:
+    pLabel->setText("Hitpoints");
+    break;
+  case L_MANAPOINTS:
+    pLabel->setText("Manapoints");
+    break;
+  default:
+    pLabel->setText("unset");
+    break;
+  }
+}
+bool CGUIStatistics::onRetryClicked(const CEGUI::EventArgs&) {
+  activateButton(BT_RETRY);
+  return true;
+}
+bool CGUIStatistics::onToMenuClicked(const CEGUI::EventArgs&) {
+  activateButton(BT_TO_MENU);
+  return true;
 }

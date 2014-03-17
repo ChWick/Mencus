@@ -12,6 +12,12 @@ private:
     BT_TO_MENU,
     BT_COUNT
   };
+  enum ELabels {
+    L_TIME = 0,
+    L_HITPOINTS,
+    L_MANAPOINTS,
+    L_COUNT,
+  };
 
   CEGUI::Window *m_pStatisticsRoot;
   CEGUI::Window *m_pButtons[BT_COUNT];
@@ -35,7 +41,9 @@ public:
   void resize(const CEGUI::String &smallFont, const CEGUI::String &bigfont);
 
 private:
-  
+  void createLabel(int iLabel, CEGUI::Window *pParent);
+  bool onRetryClicked(const CEGUI::EventArgs&);
+  bool onToMenuClicked(const CEGUI::EventArgs&);
 };
 
 #endif

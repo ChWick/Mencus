@@ -83,6 +83,7 @@ private:
   CScreenplayListener *m_pScreenplayListener;
   bool m_bUpdatePause;
   bool m_bRenderPause;
+  Ogre::Real m_fPlayingTime;
 public:
   CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayListener);
   ~CMap();

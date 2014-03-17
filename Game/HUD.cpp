@@ -63,6 +63,16 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
   m_pFpsText->setFont("dejavusans8");
   m_pFpsText->setRiseOnClickEnabled(false);
 
+  m_pTimeText = pBottomBar->createChild("OgreTray/StaticText", "timetext");
+  m_pTimeText->setProperty("TextColours", "FFFFFFFF");
+  m_pTimeText->setProperty("FrameEnabled","False");
+  m_pTimeText->setProperty("BackgroundEnabled","False");
+  m_pTimeText->setSize(USize(UDim(0.2, 0), UDim(0.3, 0)));
+  m_pTimeText->setPosition(UVector2(UDim(0.25, 0), UDim(0.66, 0)));
+  m_pTimeText->setText("0:00:00");
+  m_pTimeText->setFont("dejavusans8");
+  m_pTimeText->setRiseOnClickEnabled(false);
+
   m_pHealthBar = pMain->createChild("OgreTray/StaticImage", "healthbar");
   m_pHealthBar->setProperty("ImageColours", "FFFF00FF");
   m_pHealthBar->setProperty("Image", "white/full_image");
@@ -252,6 +262,15 @@ std::string CHUD::getHexValue(const Ogre::ColourValue &c) const {
   sprintf( &out[0], "FF%02x%02x%02x", min(255, static_cast<int>(c.r * 255)), min(255, static_cast<int>(c.g * 255)), min(255, static_cast<int>(c.b * 255)));
   Ogre::StringUtil::toUpperCase(out);
   return out;
+}
+void CHUD::setCurrentTime(Ogre::Real fTime) {
+  int iHours = static_cast<int>(fTime / 3600);
+  int iMinutes = static_cast<int>((fTime - iHours * 3600) / 60);
+  int iSeconds = static_cast<int>(fTime - iHours * 3600 - iMinutes * 60);
+
+  m_pTimeText->setText((Ogre::StringConverter::toString(iHours, 1) + ":"
+			+ Ogre::StringConverter::toString(iMinutes, 2, '0') + ":"
+			+ Ogre::StringConverter::toString(iSeconds, 2, '0')).c_str());
 }
 void CHUD::show() {
   m_pHudRoot->setVisible(true);
