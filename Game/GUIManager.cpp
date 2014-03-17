@@ -222,6 +222,7 @@ void CGUIManager::reloadResources() {
   m_pCEGuiOgreRenderer->getTexture("hud").loadFromFile("hud_main.png", "Imagesets");
   m_pCEGuiOgreRenderer->getTexture("save_pictures").loadFromFile("save_pictures.png", "Imagesets");
   m_pCEGuiOgreRenderer->getTexture("white").loadFromFile("white.png", "Imagesets");
+  m_pCEGuiOgreRenderer->getTexture("instructions").loadFromFile("instr_scroll.jpg", "Imagesets");
 
   for (auto &sFontName : m_vFonts) {
     CEGUI::FontManager::getSingleton().get(sFontName).notifyDisplaySizeChanged(m_vNativeRes);

@@ -11,8 +11,10 @@ template<> CSettings *Ogre::Singleton<CSettings>::msSingleton = 0;
 const std::string SETTINGS_FILE_PATH("settings.xml");
 
 // default values
-SInputSettings::SInputSettings() 
-  : m_fTouchButtonSize(85) {
+SInputSettings::SInputSettings() {
+#ifdef INPUT_TOUCH
+  m_fTouchButtonSize = 85;
+#endif
 }
 SVideoSettings::SVideoSettings()
   : 

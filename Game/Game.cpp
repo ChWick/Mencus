@@ -365,8 +365,8 @@ void CGame::createScene() {
   // create viewports
   // Create one viewport, entire window
   Ogre::Viewport* vp = mWindow->addViewport(mCamera);
-  vp->setBackgroundColour(Ogre::ColourValue(0,0,1));
-  vp->setClearEveryFrame(true);
+  vp->setBackgroundColour(Ogre::ColourValue(0,0,0));
+  //vp->setClearEveryFrame(true);
  
   // Alter the camera aspect ratio to match the viewport
   mCamera->setAspectRatio(Ogre::Real(vp->getActualWidth()) / Ogre::Real(vp->getActualHeight()));

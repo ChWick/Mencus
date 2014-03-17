@@ -34,7 +34,7 @@ public:
   }
   static bool openFile(std::fstream &stream,
 		       const std::string &sFileName,
-		       EStorageLocation eLocation = SL_EXTERNAL);
+		       EStorageLocation eLocation = SL_INTERNAL);
   static std::string getValidPath(const std::string &sFileName,
 				  EStorageLocation eLocation = SL_INTERNAL);
 };

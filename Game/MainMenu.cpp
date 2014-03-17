@@ -529,6 +529,7 @@ void CMainMenu::resizeGUI(Ogre::Real fScaling) {
   m_pOptionPages[OPTIONS_VIDEO]->getChild("MenuSizeText")->setFont(smallfont);
 }
 bool CMainMenu::buttonSizeSliderValueChanged(const EventArgs &args) {
+#ifdef INPUT_TOUCH
   const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
   const Slider *pSlider = dynamic_cast<const Slider*>(wndArgs.window);
 
@@ -536,6 +537,7 @@ bool CMainMenu::buttonSizeSliderValueChanged(const EventArgs &args) {
 
   CGUIManager::getSingleton().changeTouchButtonSize(pSlider->getCurrentValue());
   CSettings::getSingleton().getInputSettings().m_fTouchButtonSize = pSlider->getCurrentValue();
+#endif
   
   return true;
 }
@@ -551,6 +553,8 @@ bool CMainMenu::menuSizeSliderValueChanged(const EventArgs &args) {
   return true;
 }
 void CMainMenu::windowSizeChanged(const CEGUI::Sizef &vSize) {
+#ifdef INPUT_TOUCH
   Slider *pSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSizeSlider"));
-  pSlider->setMaxValue(min(vSize.d_height / 4.0, vSize.d_width / 8.0));;
+  pSlider->setMaxValue(min(vSize.d_height / 4.0, vSize.d_width / 8.0));
+#endif
 }
