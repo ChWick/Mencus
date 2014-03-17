@@ -238,6 +238,21 @@ void CGUIManager::resize(const CEGUI::Sizef &vSize) {
   m_pGUIInput->windowResized();
 #endif
   CMainMenu::getSingleton().windowSizeChanged(vSize);
+
+  CEGUI::String smallfont("dejavusans8");
+  CEGUI::String bigfont("dejavusans12");
+  if (vSize.d_height > 800) {
+    smallfont = "dejavusans20";
+  }
+  else if (vSize.d_height > 500) {
+    smallfont = "dejavusans12";
+  }
+
+  if (vSize.d_height > 600) { 
+    bigfont = "dejavusans20";
+  }
+
+  CGUIStatistics::getSingleton().resize(smallfont, bigfont);
 }
 void CGUIManager::changeTouchButtonSize(float fSize) {
 #ifdef INPUT_TOUCH

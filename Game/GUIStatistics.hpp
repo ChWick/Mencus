@@ -32,6 +32,8 @@ public:
 
   void activateButton(int iBtn);
 
+  void resize(const CEGUI::String &smallFont, const CEGUI::String &bigfont);
+
 private:
   
 };

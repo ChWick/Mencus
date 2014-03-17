@@ -43,6 +43,18 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
   pButtonContainer->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pButtonContainer->setSize(USize(UDim(1, 0), UDim(1, 0)));
 
+  CEGUI::Window *pFinishedText = pButtonContainer->createChild("OgreTray/StaticText", "text");
+  pFinishedText->setFont("dejavusans12");
+  pFinishedText->setText("Mission accomplished");
+  pFinishedText->setPosition(UVector2(UDim(0.05,0), UDim(0.05,0)));
+  pFinishedText->setSize(USize(UDim(0.9, 0), UDim(0.1, 0))); 
+
+  CEGUI::Window *pStatisticsGroup = pButtonContainer->createChild("OgreTray/Group", "statisticsgroup");
+  pStatisticsGroup->setFont("dejavusans12");
+  pStatisticsGroup->setText("Statistics");
+  pStatisticsGroup->setPosition(UVector2(UDim(0.2, 0), UDim(0.2, 0)));
+  pStatisticsGroup->setSize(USize(UDim(0.6, 0), UDim(0.5, 0)));
+
   CEGUI::Window *pRetryButton = pButtonContainer->createChild("OgreTray/Button", "Retry");
   pRetryButton->setPosition(UVector2(UDim(0.2, 0), UDim(0.85, 0)));
   pRetryButton->setSize(USize(UDim(0.2, 0), UDim(0.1, 0)));
@@ -100,4 +112,12 @@ void CGUIStatistics::activateButton(int iBtn) {
     CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);
     break;
   }
+}
+void CGUIStatistics::resize(const CEGUI::String &smallfont, const CEGUI::String &bigfont) {
+  for (int i = 0; i < BT_COUNT; i++) {
+    m_pButtons[i]->setFont(smallfont);
+  }
+  Window *pButtonContainer = m_pStatisticsRoot->getChild("ButtonContainer");
+  pButtonContainer->getChild("text")->setFont(smallfont);
+  pButtonContainer->getChild("statisticsgroup")->setFont(smallfont);
 }

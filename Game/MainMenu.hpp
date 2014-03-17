@@ -46,7 +46,6 @@ public:
   enum EGameSlots {
 #ifdef DISABLE_CAMPAIGN
     GAME_USER_GAME    = 0,
-    GAME_LOAD_GAME    = 1,
 #else
     GAME_NEW_GAME     = 0,
     GAME_USER_GAME    = 1,
