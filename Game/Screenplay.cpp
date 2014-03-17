@@ -122,7 +122,20 @@ void CScreenplay::clear() {
 }
 void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   Ogre::LogManager::getSingleton().logMessage("Switching to act " + Ogre::StringConverter::toString(uiActId) + " at scene " + Ogre::StringConverter::toString(uiSceneId));
+
+  if (m_mapActs.find(uiActId) == m_mapActs.end()) {
+    CLevel *pLevel = dynamic_cast<CLevel*>(m_pOldScene);
+    if (pLevel) {
+      CGameState::getSingleton().changeGameState(CGameState::GS_STATISTICS, pLevel->getMapInfo());
+    }
+    else {
+      CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);
+    }
+    return;
+  }
+
   if (m_pOldScene) {m_pOldScene->stop(); m_pOldScene->exit();}
+
 
   m_uiCurrentAct = uiActId;
   m_uiCurrentScene = uiSceneId;

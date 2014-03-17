@@ -15,6 +15,7 @@ public:
     GS_MAIN_MENU,
     GS_GAME,
     GS_GAME_OVER,
+    GS_STATISTICS,
     GS_CREDITS,
 
     GS_COUNT

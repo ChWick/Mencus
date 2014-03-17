@@ -49,11 +49,13 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_sButtonLabels[MMS_START][START_OPTIONS] = "Options";
   m_sButtonLabels[MMS_START][START_EXIT] = "Exit";
 
-  m_iTargetState[MMS_GAME][GAME_NEW_GAME] = MMS_RESULT_NEW_GAME;
   m_iTargetState[MMS_GAME][GAME_USER_GAME] = MMS_USER_GAME;
   m_iTargetState[MMS_GAME][GAME_LOAD_GAME] = MMS_LOAD_GAME;
   m_iTargetState[MMS_GAME][GAME_BACK] = MMS_START;
+#ifndef DISABLE_CAMPAIGN
+  m_iTargetState[MMS_GAME][GAME_NEW_GAME] = MMS_RESULT_NEW_GAME;
   m_sButtonLabels[MMS_GAME][GAME_NEW_GAME] = "New game";
+#endif
   m_sButtonLabels[MMS_GAME][GAME_USER_GAME] = "User game";
   m_sButtonLabels[MMS_GAME][GAME_LOAD_GAME] = "Load game";
   m_sButtonLabels[MMS_GAME][GAME_BACK] = "Back";

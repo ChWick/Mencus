@@ -4,6 +4,7 @@
 #include "GUIGameOver.hpp"
 #include "AdDisplayManager.hpp"
 #include "MapInfo.hpp"
+#include "GUIStatistics.hpp"
 
 template<> CGameState *Ogre::Singleton<CGameState>::msSingleton = 0;
 
@@ -66,6 +67,9 @@ void CGameState::changeGameStateImpl() {
   case GS_GAME_OVER:
     CGUIGameOver::getSingleton().hide();
     break;
+  case GS_STATISTICS:
+    CGUIStatistics::getSingleton().hide();
+    break;
   default:
     break;
   }
@@ -82,6 +86,9 @@ void CGameState::changeGameStateImpl() {
       break;
     case GS_GAME_OVER:
       CGUIGameOver::getSingleton().show();
+      break;
+    case GS_STATISTICS:
+      CGUIStatistics::getSingleton().show();
       break;
     default:
       break;
@@ -105,6 +112,9 @@ void CGameState::update(Ogre::Real tpf) {
     break;
   case GS_GAME_OVER:
     CGUIGameOver::getSingleton().update(tpf);
+    break;
+  case GS_STATISTICS:
+    CGUIStatistics::getSingleton().update(tpf);
     break;
   default:
     break;

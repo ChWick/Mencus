@@ -8,9 +8,13 @@
 #include "InputListener.hpp"
 #include "PauseCaller.hpp"
 #include <memory>
+#include "GlobalBuildDefines.hpp"
 
 class CMapInfo;
 class CSaveState;
+
+extern const float BUTTON_MIN_ALPHA;
+extern const float BUTTON_ALPHA_CHANGE_PER_SEC;
 
 class CMainMenu : public Ogre::Singleton<CMainMenu>, public CInputListener, public CPauseCaller {
 public:
@@ -40,9 +44,14 @@ public:
     START_EXIT        = NUM_SLOTS - 1,
   };
   enum EGameSlots {
+#ifdef DISABLE_CAMPAIGN
+    GAME_USER_GAME    = 0,
+    GAME_LOAD_GAME    = 1,
+#else
     GAME_NEW_GAME     = 0,
     GAME_USER_GAME    = 1,
     GAME_LOAD_GAME    = 2,
+#endif
     GAME_BACK         = NUM_SLOTS - 1,
   };
   enum ELoadGameSlots {

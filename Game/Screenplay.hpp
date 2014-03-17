@@ -96,6 +96,7 @@ public:
   void update(Ogre::Real tpf);
   void render(Ogre::Real tpf);
 
+  std::shared_ptr<const CMapInfo> getMapInfo() const {return m_pMapInfo;}
   CMap *getMap() {return m_pMap;}
 
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;

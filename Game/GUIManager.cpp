@@ -6,6 +6,7 @@
 #include <OgreSceneManager.h>
 #include "GUIInput.hpp"
 #include "InputDefines.hpp"
+#include "GUIStatistics.hpp"
 
 using namespace CEGUI;
 
@@ -75,6 +76,7 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   new CGUIInstructions(guiRoot);
   new CGUIGameOver(guiRoot);
   new CMainMenu(guiRoot);
+  new CGUIStatistics(guiRoot);
 
 }
 CGUIManager::~CGUIManager() {
@@ -84,6 +86,7 @@ CGUIManager::~CGUIManager() {
   delete CGUIInstructions::getSingletonPtr();
   delete CGUIGameOver::getSingletonPtr();
   delete CMainMenu::getSingletonPtr();
+  delete CGUIStatistics::getSingletonPtr();
 #ifdef INPUT_TOUCH
   delete m_pGUIInput;
 #endif
