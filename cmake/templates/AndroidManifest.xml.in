@@ -9,13 +9,17 @@
   <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />  
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
   <uses-permission android:name="android.permission.INTERNET" /> 
+  <!-- Used to avoid sending an ad request if there is no connectivity. -->
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-  <!-- This .apk has no Java code itself, so set hasCode to false. -->
   <application android:label="Mencus"
 	       android:icon="@drawable/ic_launcher"
-	       android:hasCode="false"
+	       android:hasCode="true"
 	       android:allowBackup="true">
-    <activity android:name="android.app.NativeActivity"
+    <meta-data
+        android:name="com.google.android.gms.version"
+        android:value="@integer/google_play_services_version" />
+    <activity android:name=".MencusNativeActivity"
               android:label="Mencus"
 	      android:screenOrientation="landscape"
               android:configChanges="orientation@SCREEN_SIZE@|keyboardHidden"
@@ -26,7 +30,12 @@
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />
       </intent-filter>
-    </activity> 
+    </activity>
+    <!-- Activity required to show ad overlays. -->
+    <activity
+        android:name="com.google.android.gms.ads.AdActivity"
+        android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
+
   </application>
 
 </manifest>

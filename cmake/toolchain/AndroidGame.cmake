@@ -19,7 +19,7 @@ if (ANDROID)
     MATH(EXPR ANDROID_SDK_API_LEVEL "${ANDROID_NATIVE_API_LEVEL}+1")
   else()
     SET(ANDROID_SDK_API_LEVEL "${ANDROID_NATIVE_API_LEVEL}")
-    //SET(SCREEN_SIZE "|screenSize")
+    #SET(SCREEN_SIZE "|screenSize")
   endif()
   
   if(OGRE_CONFIG_ENABLE_GLES2_GLSL_OPTIMISER)
@@ -60,6 +60,9 @@ if (ANDROID)
 
   # copy resource files (icons e.g.)
   file(COPY "${CMAKE_SOURCE_DIR}/android/res" DESTINATION "${NDKOUT}")
+
+  # copy the java src code files
+  file(COPY "${CMAKE_SOURCE_DIR}/android/src" DESTINATION "${NDKOUT}")
   
   add_custom_command(
     TARGET Game
