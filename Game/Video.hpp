@@ -54,6 +54,8 @@ public:
 
     void start();
     void stop();
+    
+    CSprite &getSprite() {return m_Sprite;}
 
     void addEffect(CEffect *pEffect) {m_vEffects.push_back(pEffect);}
     Ogre::Real getDuration() const {return m_fDuration;}

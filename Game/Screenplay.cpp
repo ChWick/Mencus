@@ -9,8 +9,10 @@
 #include "SaveStateManager.hpp"
 #include "SaveStateManager.hpp"
 #include "GameState.hpp"
+#include "XMLHelper.hpp"
 
 using namespace tinyxml2;
+using namespace XMLHelper;
 
 const Ogre::Real SCREENPLAY_FADE_DURATION = 0.5;
 
@@ -194,7 +196,14 @@ void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sReso
           for (XMLElement *pPictureElem = pPartElem->FirstChildElement(); pPictureElem; pPictureElem = pPictureElem->NextSiblingElement()) {
             Ogre::String sFile = pPictureElem->Attribute("file");
             Ogre::Real fDuration = pPictureElem->FloatAttribute("duration");
+	    Ogre::Vector2 texPos(0, 1);
+	    Ogre::Vector2 texSize(1, 0);
             CVideo::CPicture *pPicture = new CVideo::CPicture(dir + "/" + sFile, fDuration, pVideo->getSpriteManager());
+	    Ogre::String texStyle(Attribute(pPictureElem, "texstyle", "default"));
+	    if (texStyle == "widescreen") {
+	      texPos = Ogre::Vector2(0, 0.667);
+	    }
+	    pPicture->getSprite().setTextureCoords(texPos, texSize);
             pPart->addPicture(pPicture);
             for (XMLElement *pChildElem = pPictureElem->FirstChildElement(); pChildElem; pChildElem = pChildElem->NextSiblingElement()) {
               if (std::string(pChildElem->Value()) == "effect") {
