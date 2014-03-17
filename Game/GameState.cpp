@@ -2,6 +2,7 @@
 #include "MainMenu.hpp"
 #include "Screenplay.hpp"
 #include "GUIGameOver.hpp"
+#include "AdDisplayManager.hpp"
 
 template<> CGameState *Ogre::Singleton<CGameState>::msSingleton = 0;
 
@@ -59,6 +60,7 @@ void CGameState::changeGameStateImpl() {
     m_eCurrentGameState = m_eNextGameState;
     switch (m_eCurrentGameState) {
     case GS_GAME:
+      CAdDisplayManager::showAdPopup();
       m_pScreenplay = new CScreenplay();
       break;
     case GS_MAIN_MENU:
