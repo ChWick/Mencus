@@ -16,6 +16,7 @@
 #include "ScreenplayListener.hpp"
 #include "PauseListener.hpp"
 #include "CameraRestriction.hpp"
+#include "MapInfo.hpp"
 
 class CTile;
 class CPlayer;
@@ -87,6 +88,7 @@ public:
   ~CMap();
 
   void loadMap(const string &sFilename, const string &sResourceGroup);
+  void loadMap(const CMapInfoConstPtr pMapInfo);
   void writeToXMLElement(tinyxml2::XMLElement *pMapElem) const;
   void readFromXMLElement(const tinyxml2::XMLElement *pRoot);
 

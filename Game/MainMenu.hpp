@@ -7,7 +7,9 @@
 #include <list>
 #include "InputListener.hpp"
 #include "PauseCaller.hpp"
+#include <memory>
 
+class CMapInfo;
 class CSaveState;
 
 class CMainMenu : public Ogre::Singleton<CMainMenu>, public CInputListener, public CPauseCaller {
@@ -81,6 +83,7 @@ private:
   int m_iSelectedLoadState;
   const CSaveState *m_pStateToLoad;
   std::vector<Ogre::String> m_vUserFiles;
+  std::shared_ptr<CMapInfo> m_pMapInfo;
 public:
   static CMainMenu &getSingleton();
   static CMainMenu *getSingletonPtr();

@@ -9,10 +9,12 @@
 #include "PauseCaller.hpp"
 #include "PauseListener.hpp"
 #include "InputListener.hpp"
+#include <memory>
 
 class CMap;
 class CScreenplay;
 class CAct;
+class CMapInfo;
 
 class CScene {
 public:
@@ -74,14 +76,14 @@ public:
 
 class CLevel : public CScene {
 private:
-  const Ogre::String m_sFilename;
+  std::shared_ptr<const CMapInfo> m_pMapInfo;
   CMap *m_pMap;
   CScreenplayListener *m_pScreenplayListener;
   
 public:
-  CLevel(const CAct &act, unsigned int uiID, const Ogre::String &sFilename, CScreenplayListener *pScreenplayListener)
+  CLevel(const CAct &act, unsigned int uiID, std::shared_ptr<const CMapInfo> pMapInfo, CScreenplayListener *pScreenplayListener)
     : CScene(act, uiID, ST_LEVEL),
-      m_sFilename(sFilename),
+      m_pMapInfo(pMapInfo),
       m_pMap(NULL),
       m_pScreenplayListener(pScreenplayListener) {
   }
@@ -159,6 +161,8 @@ private:
 public:
   CScreenplay();
   virtual ~CScreenplay();
+
+  void clear();
 
   void setNextAct(unsigned int uiActId, unsigned int uiSceneId) {m_uiNextAct = uiActId; m_uiNextScene = uiSceneId;}
 

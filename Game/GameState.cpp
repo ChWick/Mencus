@@ -3,6 +3,7 @@
 #include "Screenplay.hpp"
 #include "GUIGameOver.hpp"
 #include "AdDisplayManager.hpp"
+#include "MapInfo.hpp"
 
 template<> CGameState *Ogre::Singleton<CGameState>::msSingleton = 0;
 
@@ -33,9 +34,21 @@ void CGameState::init() {
 }
 void CGameState::changeGameState(EGameStates eNewGameState, bool bNow, bool bForce) {
   m_eNextGameState = eNewGameState;
+  m_pMapInfo.reset();
+  m_pSaveState = NULL;
   if (bNow) {
     changeGameStateImpl();
   }
+}
+void CGameState::changeGameState(EGameStates eNewGameState, const CSaveState *pState) {
+  m_eNextGameState = eNewGameState;
+  m_pMapInfo.reset();
+  m_pSaveState = pState;
+}
+void CGameState::changeGameState(EGameStates eNewGameState, std::shared_ptr<const CMapInfo> pInfo) {
+  m_eNextGameState = eNewGameState;
+  m_pMapInfo = pInfo;
+  m_pSaveState = NULL;
 }
 void CGameState::changeGameStateImpl() {
   if (!m_bForce && m_eCurrentGameState == m_eNextGameState) {

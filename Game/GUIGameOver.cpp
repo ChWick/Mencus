@@ -77,8 +77,8 @@ bool CGUIGameOver::keyPressed( const OIS::KeyEvent &arg ) {
   }
   else if (arg.key == OIS::KC_RETURN) {
     if (m_iSelectedText == 0) {
-      CGameState::getSingleton().setSaveState(CSaveStateManager::getSingleton().getLastSaveState());
-      CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
+      CGameState::getSingleton().
+	changeGameState(CGameState::GS_GAME, CSaveStateManager::getSingleton().getLastSaveState());
     }
     else {
       CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);

@@ -2,10 +2,12 @@
 #define GAMESTATE_HPP
 
 #include <OgreSingleton.h>
+#include <memory>
 
 class CMainMenu;
 class CScreenplay;
 class CSaveState;
+class CMapInfo;
 
 class CGameState : public Ogre::Singleton<CGameState> {
 public:
@@ -23,6 +25,7 @@ private:
   CMainMenu *m_pMainMenu;
   CScreenplay *m_pScreenplay;
   const CSaveState *m_pSaveState;
+  std::shared_ptr<const CMapInfo> m_pMapInfo;
   bool m_bForce;
 
 public:
@@ -37,8 +40,10 @@ public:
   void update(Ogre::Real tpf);
 
   void changeGameState(EGameStates eNewGameState, bool bNow = false, bool bForce = true);
-  void setSaveState(const CSaveState *pState) {m_pSaveState = pState;}
+  void changeGameState(EGameStates eNewGameState, const CSaveState *pState);
+  void changeGameState(EGameStates eNewGameState, std::shared_ptr<const CMapInfo> pInfo);
   const CSaveState *getSaveState() const {return m_pSaveState;}
+  std::shared_ptr<const CMapInfo> getMapInfo() const {return m_pMapInfo;}
   EGameStates getCurrentGameState() {return m_eCurrentGameState;}
   CScreenplay *getScreenplay() {return m_pScreenplay;}
 

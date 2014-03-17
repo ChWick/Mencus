@@ -110,6 +110,17 @@ void CMap::clearMap() {
   }
   m_gridTiles.clear();
 }
+void CMap::loadMap(const CMapInfoConstPtr pMapInfo) {
+  clearMap();
+
+  const XMLElement *pRoot = pMapInfo->getDocument().FirstChildElement("map");
+  readFromXMLElement(pRoot);
+
+  // Initialise everything
+  for (auto pSwitch : m_lSwitches) {
+    pSwitch->initialize(this);
+  }
+}
 void CMap::loadMap(const string &sFilename, const string &sResourceGroup) {
   clearMap();
 

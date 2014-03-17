@@ -10,6 +10,7 @@
 #include "SaveStateManager.hpp"
 #include "GameState.hpp"
 #include "XMLHelper.hpp"
+#include "MapInfo.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -31,7 +32,7 @@ CLevel::~CLevel() {
   }
 }
 void CLevel::start() {
-  m_pMap->loadMap(m_sFilename, m_Act.getScreenplay().getResourceGroup());
+  m_pMap->loadMap(m_pMapInfo);
 }
 void CLevel::stop() {
   
@@ -85,21 +86,35 @@ CScreenplay::CScreenplay()
     m_bPaused(false) {
   CInputListenerManager::getSingleton().addInputListener(this);
   CGUIInstructions::getSingleton().setScreenplayListener(this);
-  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(m_sResourceGroup);
   
-  parse("screenplay.xml", m_sResourceGroup);
-
   m_uiNextAct = 1;
   m_uiNextScene = 1;
-  const CSaveState *pSaveState = CGameState::getSingleton().getSaveState();
-  if (pSaveState) {
-    m_uiNextAct = pSaveState->getActID();
-    m_uiNextScene = pSaveState->getSceneID();
+
+  std::shared_ptr<const CMapInfo> pMapInfo = CGameState::getSingleton().getMapInfo();
+  if (pMapInfo) {
+    CAct *pAct = new CAct(*this, 1, "");
+    CScene *pScene = new CLevel(*pAct, 1, pMapInfo, this);
+    pAct->addScene(pScene);
+    m_mapActs[1] = pAct;
+  }
+  else {
+    parse("screenplay.xml", m_sResourceGroup);
+
+    m_uiNextAct = 1;
+    m_uiNextScene = 1;
+    const CSaveState *pSaveState = CGameState::getSingleton().getSaveState();
+    if (pSaveState) {
+      m_uiNextAct = pSaveState->getActID();
+      m_uiNextScene = pSaveState->getSceneID();
+    }
   }
   m_Fader.startFadeOut(0);
 }
 CScreenplay::~CScreenplay() {
+  clear();
   CInputListenerManager::getSingleton().removeInputListener(this);
+}
+void CScreenplay::clear() {
   for (auto &p : m_mapActs) {
     delete p.second;
   }
@@ -140,6 +155,8 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   m_pOldScene = pScene;
 }
 void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sResourceGroup) {
+  clear();
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(m_sResourceGroup);
   tinyxml2::XMLDocument doc; // namespace required for windoof...
   Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource(sFilename, sResourceGroup);
 
@@ -167,7 +184,7 @@ void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sReso
       if (type == "level") {
         XMLElement *pLevelElem = pSceneElem->FirstChildElement("level");
         Ogre::String file = pLevelElem->Attribute("file");
-        pScene = new CLevel(*pAct, id, dir + "/" + file, this);
+        pScene = new CLevel(*pAct, id, shared_ptr<CMapInfo>(new CMapInfo(dir + "/" + file, sResourceGroup)), this);
       }
       else if (type == "instructions") {
         XMLElement *pInstructionsElem = pSceneElem->FirstChildElement("instructions");

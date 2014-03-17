@@ -8,6 +8,7 @@
 #include "InputDefines.hpp"
 #include "GUIManager.hpp"
 #include "Settings.hpp"
+#include "MapInfo.hpp"
 
 using namespace std;
 using namespace CEGUI;
@@ -294,12 +295,18 @@ void CMainMenu::changeState(EMainMenuState eState) {
 
   switch (eState) {
   case MMS_RESULT_NEW_GAME:
-    CGameState::getSingleton().setSaveState(NULL);
     CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
     break;
   case MMS_RESULT_LOAD_GAME:
-    CGameState::getSingleton().setSaveState(m_pStateToLoad);
-    CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
+    if (m_pStateToLoad) {
+      CGameState::getSingleton().changeGameState(CGameState::GS_GAME, m_pStateToLoad);
+    }
+    else if (m_pMapInfo) {
+      CGameState::getSingleton().changeGameState(CGameState::GS_GAME, m_pMapInfo);
+    }
+    else {
+      CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
+    }
     break;
   case MMS_RESULT_EXIT:
     CGame::getSingleton().shutDown();
@@ -478,7 +485,8 @@ void CMainMenu::selectedSaveStateChanged() {
       m_pMapInfoWindow->setText("");
       return;
     }
-    m_pMapInfoWindow->setText(m_vUserFiles[m_iSelectedLoadState]);
+    m_pMapInfo = std::shared_ptr<CMapInfo>(new CMapInfo(m_vUserFiles[m_iSelectedLoadState], "level_user"));
+    m_pMapInfoWindow->setText(m_pMapInfo->generateInfoText());
   }
   m_pSaveStatesWindow->ensureItemIsVisible(m_iSelectedLoadState);
   m_pSaveStatesWindow->setItemSelectState(m_iSelectedLoadState, true);
@@ -532,8 +540,14 @@ bool CMainMenu::saveStateListMouseClicked(const CEGUI::EventArgs& args) {
 void CMainMenu::activateLoadState() {
   if (m_iSelectedLoadState >= 0
       && m_iSelectedLoadState < static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
-    m_pStateToLoad
-      = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
+    if (m_eCurrentState == MMS_LOAD_GAME) {
+      m_pStateToLoad
+	= static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
+      m_pMapInfo.reset();
+    }
+    else if (m_eCurrentState == MMS_USER_GAME) {
+      m_pStateToLoad = NULL;
+    }
     changeState(MMS_RESULT_LOAD_GAME);
   }
 }
