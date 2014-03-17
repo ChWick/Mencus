@@ -55,6 +55,7 @@
 
 
 #include <android_native_app_glue.h>
+#include <jni.h>
 #include <android/log.h>
 #include <EGL/egl.h>
 #include "OgrePlatform.h"
@@ -84,6 +85,7 @@ private:
   static CSnapshot *m_pSnapshot;
 public:
   static void init(struct android_app* state) {
+    mActivity = state->activity;
     state->onAppCmd = &OgreAndroidBridge::handleCmd;
     state->onInputEvent = &OgreAndroidBridge::handleInput;
             
@@ -305,8 +307,27 @@ public:
   {
     return mRenderWnd;
   }
+
+  static void showAdPopup() {
+    // Get the android application's activity.
+    ANativeActivity* activity = mActivity;
+    JavaVM* jvm = mActivity->vm;
+    JNIEnv* env = NULL;
+    (jvm)->GetEnv((void **)&env, JNI_VERSION_1_6);
+    jint res = (jvm)->AttachCurrentThread(&env, NULL);
+    if (res == JNI_ERR) {
+      LOGI("Failed to retrieve JVM environment");
+      // Failed to retrieve JVM environment
+      return; 
+    }
+    jclass clazz = (env)->GetObjectClass(activity->clazz);
+    jmethodID methodID = (env)->GetMethodID(clazz, "showAdPopup", "()V");
+    (env)->CallVoidMethod(activity->clazz, methodID);
+    (jvm)->DetachCurrentThread();
+  }
             
 private:
+  static ANativeActivity *mActivity;
   static CGame* mGame;
   static AndroidInputInjector* mInputInjector;
   static AndroidMultiTouch* mTouch;
