@@ -49,9 +49,11 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_sButtonLabels[MMS_START][START_EXIT] = "Exit";
 
   m_iTargetState[MMS_GAME][GAME_NEW_GAME] = MMS_RESULT_NEW_GAME;
+  m_iTargetState[MMS_GAME][GAME_USER_GAME] = MMS_USER_GAME;
   m_iTargetState[MMS_GAME][GAME_LOAD_GAME] = MMS_LOAD_GAME;
   m_iTargetState[MMS_GAME][GAME_BACK] = MMS_START;
   m_sButtonLabels[MMS_GAME][GAME_NEW_GAME] = "New game";
+  m_sButtonLabels[MMS_GAME][GAME_USER_GAME] = "User game";
   m_sButtonLabels[MMS_GAME][GAME_LOAD_GAME] = "Load game";
   m_sButtonLabels[MMS_GAME][GAME_BACK] = "Back";
 
@@ -78,6 +80,9 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_OPTIONS] = "Options";
   m_iTargetState[MMS_GAME_ESCAPE][GAMES_ESCAPE_EXIT_GAME] = MMS_START;
   m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_EXIT_GAME] = "Exit game";
+
+  m_iTargetState[MMS_USER_GAME][USER_GAME_BACK] = MMS_GAME;
+  m_sButtonLabels[MMS_USER_GAME][USER_GAME_BACK] = "Back";
 
   // create cegui windows/buttons
   m_pMMRoot = pGUIRoot->createChild("DefaultWindow", "MainMenuRoot");
@@ -151,6 +156,11 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pSaveStatePreviewWindow->setPosition(UVector2(UDim(0.65f, 0), UDim(0.1f, 0)));
   m_pSaveStatePreviewWindow->setSize(USize(UDim(0.35f, 0), UDim(0.4f, 0)));
   m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/none");
+
+  m_pMapInfoWindow = pButtonContainer->createChild("OgreTray/StaticText", "MapInfo");
+  m_pMapInfoWindow->setPosition(UVector2(UDim(0.6f, 0), UDim(0, 0)));
+  m_pMapInfoWindow->setSize(USize(UDim(0.4f, 0), UDim(0.6f, 0)));
+  m_pMapInfoWindow->setText("Difficulty: easy");
 
 
   // option pages
@@ -228,10 +238,12 @@ void CMainMenu::update(Ogre::Real tpf) {
     if (m_bSaveListSelected){
       m_pSaveStatesWindow->setAlpha(min(m_pSaveStatesWindow->getAlpha() + tpf * BUTTON_ALPHA_CHANGE_PER_SEC, 1.0f));
       m_pSaveStatePreviewWindow->setAlpha(min(m_pSaveStatePreviewWindow->getAlpha() + tpf * BUTTON_ALPHA_CHANGE_PER_SEC, 1.0f));
+      m_pMapInfoWindow->setAlpha(min(m_pSaveStatePreviewWindow->getAlpha() + tpf * BUTTON_ALPHA_CHANGE_PER_SEC, 1.0f));
     }
     else {
       m_pSaveStatesWindow->setAlpha(max(m_pSaveStatesWindow->getAlpha() - tpf * BUTTON_ALPHA_CHANGE_PER_SEC, BUTTON_MIN_ALPHA));
       m_pSaveStatePreviewWindow->setAlpha(max(m_pSaveStatePreviewWindow->getAlpha() - tpf * BUTTON_ALPHA_CHANGE_PER_SEC, BUTTON_MIN_ALPHA));
+      m_pMapInfoWindow->setAlpha(max(m_pSaveStatePreviewWindow->getAlpha() - tpf * BUTTON_ALPHA_CHANGE_PER_SEC, BUTTON_MIN_ALPHA));
     }
   }
 #endif
@@ -321,6 +333,7 @@ void CMainMenu::changeState(EMainMenuState eState) {
   if (eState == MMS_LOAD_GAME) {
     m_pSaveStatesWindow->setVisible(true);
     m_pSaveStatePreviewWindow->setVisible(true);
+    m_pMapInfoWindow->setVisible(false);
 
     while (m_pSaveStatesWindow->getItemCount() > 0) {
       m_pSaveStatesWindow->removeItem(m_pSaveStatesWindow->getListboxItemFromIndex(0));
@@ -343,9 +356,31 @@ void CMainMenu::changeState(EMainMenuState eState) {
 
     selectedSaveStateChanged();
   }
+  else if (eState == MMS_USER_GAME) {
+    m_pSaveStatesWindow->setVisible(true);
+    m_pSaveStatePreviewWindow->setVisible(false);
+    m_pMapInfoWindow->setVisible(true);
+
+    while (m_pSaveStatesWindow->getItemCount() > 0) {
+      m_pSaveStatesWindow->removeItem(m_pSaveStatesWindow->getListboxItemFromIndex(0));
+    }
+    m_vUserFiles.clear();
+    int i = 0;
+    Ogre::FileInfoListPtr ptr(Ogre::ResourceGroupManager::getSingleton().findResourceFileInfo("level_user", "*.xml"));
+    m_vUserFiles.resize(ptr->size());
+    for (Ogre::FileInfo &file : *ptr.get()) {
+      m_vUserFiles[i] = file.basename;
+      ListboxTextItem *pItem = new ListboxTextItem(file.filename.substr(0, file.filename.rfind(".")));
+      m_pSaveStatesWindow->addItem(pItem);
+      i++;
+    }
+
+    selectedSaveStateChanged();
+  }
   else {
     m_pSaveStatesWindow->setVisible(false);
     m_pSaveStatePreviewWindow->setVisible(false);
+    m_pMapInfoWindow->setVisible(false);
   }
 
   if (eState == MMS_GAME_ESCAPE) {
@@ -408,13 +443,18 @@ bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
     }
     break;
   case OIS::KC_TAB:
-    if (m_eCurrentState == MMS_LOAD_GAME) {
+    if (m_eCurrentState == MMS_LOAD_GAME || m_eCurrentState == MMS_USER_GAME) {
       m_bSaveListSelected = !m_bSaveListSelected;
       if (m_bSaveListSelected) {
         m_iSelectedSlot = -1;
       }
       else {
-        m_iSelectedSlot = LOAD_GAME_BACK;
+	if (m_eCurrentState == MMS_LOAD_GAME) {
+	  m_iSelectedSlot = LOAD_GAME_BACK;
+	}
+	else if (m_eCurrentState == MMS_USER_GAME) {
+	  m_iSelectedSlot = USER_GAME_BACK;
+	}
       }
     }
     break;
@@ -425,12 +465,21 @@ bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
   return true;
 }
 void CMainMenu::selectedSaveStateChanged() {
-  if (m_iSelectedLoadState < 0 || m_iSelectedLoadState >= static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
-    m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/none");
-    return;
+  if (m_eCurrentState == MMS_LOAD_GAME) {
+    if (m_iSelectedLoadState < 0 || m_iSelectedLoadState >= static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
+      m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/none");
+      return;
+    }
+    m_pStateToLoad = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
+    m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/" + PropertyHelper<int>::toString(m_pStateToLoad->getActID()) + "-" + PropertyHelper<int>::toString(m_pStateToLoad->getSceneID()));
   }
-  m_pStateToLoad = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
-  m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/" + PropertyHelper<int>::toString(m_pStateToLoad->getActID()) + "-" + PropertyHelper<int>::toString(m_pStateToLoad->getSceneID()));
+  else if (m_eCurrentState == MMS_USER_GAME) {
+    if (m_iSelectedLoadState < 0 || m_iSelectedLoadState >= static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
+      m_pMapInfoWindow->setText("");
+      return;
+    }
+    m_pMapInfoWindow->setText(m_vUserFiles[m_iSelectedLoadState]);
+  }
   m_pSaveStatesWindow->ensureItemIsVisible(m_iSelectedLoadState);
   m_pSaveStatesWindow->setItemSelectState(m_iSelectedLoadState, true);
 }
@@ -521,6 +570,7 @@ void CMainMenu::resizeGUI(Ogre::Real fScaling) {
     m_vSlots[i]->setFont(bigfont);
   }
   m_pSaveStatesWindow->setFont(smallfont);
+  m_pMapInfoWindow->setFont(smallfont);
   m_pOptionPages[OPTIONS_INPUT]->setFont(bigfont);
 #ifdef INPUT_TOUCH
   m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSliderText")->setFont(smallfont);

@@ -4,6 +4,7 @@
 #include <CEGUI/CEGUI.h>
 #include <OgreSingleton.h>
 #include <vector>
+#include <list>
 #include "InputListener.hpp"
 #include "PauseCaller.hpp"
 
@@ -22,6 +23,7 @@ public:
     MMS_OPTIONS_VIDEO,
     MMS_OPTIONS_INPUT,
     MMS_GAME_ESCAPE,
+    MMS_USER_GAME,
 
     MMS_COUNT,
 
@@ -37,7 +39,8 @@ public:
   };
   enum EGameSlots {
     GAME_NEW_GAME     = 0,
-    GAME_LOAD_GAME    = 1,
+    GAME_USER_GAME    = 1,
+    GAME_LOAD_GAME    = 2,
     GAME_BACK         = NUM_SLOTS - 1,
   };
   enum ELoadGameSlots {
@@ -59,6 +62,9 @@ public:
     GAMES_ESCAPE_OPTIONS      = 1,
     GAMES_ESCAPE_EXIT_GAME    = NUM_SLOTS - 1,
   };
+  enum EUserGameSlots {
+    USER_GAME_BACK    = NUM_SLOTS - 1,
+  };
 private:
   CEGUI::Window *m_pMMRoot;
   CEGUI::Window *m_pButtonContainer;
@@ -70,9 +76,11 @@ private:
   int m_iSelectedSlot;
   CEGUI::Listbox *m_pSaveStatesWindow;
   CEGUI::Window *m_pSaveStatePreviewWindow;
+  CEGUI::Window *m_pMapInfoWindow;
   bool m_bSaveListSelected;
   int m_iSelectedLoadState;
   const CSaveState *m_pStateToLoad;
+  std::vector<Ogre::String> m_vUserFiles;
 public:
   static CMainMenu &getSingleton();
   static CMainMenu *getSingletonPtr();

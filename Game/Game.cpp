@@ -208,6 +208,7 @@ void CGame::loadResources() {
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Schemes");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("LookNFeel");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Layouts");
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("level_user");
   hideLoadingBar();
 }
 void CGame::setupInput(bool nograb) {
