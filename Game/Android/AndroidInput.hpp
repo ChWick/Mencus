@@ -89,20 +89,21 @@ public:
   void clearStates() {
     mTouch->clearStates();
   }
-  void injectKeyEvent(int action, int32_t keyCode)
-  {
-    if(keyCode == AKEYCODE_BACK)
-      {
-	OIS::KeyEvent evt(mKeyboard, OIS::KC_ESCAPE, 0);
-	if(action == 0)
-	  {
-	    mInputListenerManager->keyPressed(evt);
-	  }
-	else
-	  {
-	    mInputListenerManager->keyReleased(evt);
-	  }
-      }
+  void injectKeyEvent(int action, int32_t keyCode) {
+    OIS::KeyCode key = OIS::KC_UNASSIGNED;
+    if(keyCode == AKEYCODE_BACK) {
+      key = OIS::KC_ESCAPE;
+    }
+    else if (keyCode == AKEYCODE_SEARCH) {
+      key = OIS::KC_RMENU;
+    }
+    OIS::KeyEvent evt(mKeyboard, key, 0);
+    if (action == 0) {
+      mInputListenerManager->keyPressed(evt);
+    }
+    else {
+      mInputListenerManager->keyReleased(evt);
+    }
   }
         
   void injectTouchEvent(int action, float x, float y, int pointerId)
