@@ -7,6 +7,7 @@
 #include "GUIInput.hpp"
 #include "InputDefines.hpp"
 #include "GUIStatistics.hpp"
+#include "GUITutorial.hpp"
 
 using namespace CEGUI;
 
@@ -68,7 +69,6 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
 
 
   //destroyResources();
-
 #ifdef INPUT_TOUCH
   m_pGUIInput = new CGUIInput(guiRoot); // gui input before hud, since hud depends
 #endif
@@ -77,6 +77,7 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   new CGUIGameOver(guiRoot);
   new CMainMenu(guiRoot);
   new CGUIStatistics(guiRoot);
+  new CGUITutorial(guiRoot);
 
 }
 CGUIManager::~CGUIManager() {
@@ -87,6 +88,7 @@ CGUIManager::~CGUIManager() {
   delete CGUIGameOver::getSingletonPtr();
   delete CMainMenu::getSingletonPtr();
   delete CGUIStatistics::getSingletonPtr();
+  delete CGUITutorial::getSingletonPtr();
 #ifdef INPUT_TOUCH
   delete m_pGUIInput;
 #endif

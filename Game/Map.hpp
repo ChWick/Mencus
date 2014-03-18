@@ -26,6 +26,7 @@ class CExplosion;
 class CEnemy;
 class CObject;
 class CBackground;
+class CTutorialManager;
 struct SStatistics;
 
 class CMap : public CSpriteTransformPipeline, public CInputListener, public CPauseListener {
@@ -57,6 +58,7 @@ private:
   };
 public:
 private:
+  CTutorialManager *m_pTutorialManager;
   std::list<CEnemy*> m_lEnemiesToDestroy;
   std::list<CShot*> m_lShotsToDestroy;
   std::list<CExplosion*> m_lExplosionsToDestroy;
@@ -183,6 +185,9 @@ public:
   CTile *getTile(unsigned int x, unsigned int y) const {return m_gridTiles(x, y);}
   CLink *getLinkById(const Ogre::String &id);
   CEnemy *getEnemyById(const Ogre::String &id);
+  const std::list<CSwitch*> &getSwitches() const {return m_lSwitches;}
+  const std::list<CEnemy*> &getEnemies() const {return m_lEnemies;}
+  const std::list<CLink> &getLinks() const {return m_lLinks;}
 
   bool isInMap(unsigned int x, unsigned int y);
 
@@ -199,8 +204,6 @@ public:
   void destroyEnemy(CEnemy *pEnemy);
 
   void destroyObject(CObject *pObject) {if (find(m_lObjectsToDestroy.begin(), m_lObjectsToDestroy.end(), pObject) == m_lObjectsToDestroy.end()) m_lObjectsToDestroy.push_back(pObject);}
-
-  const std::list<CEnemy*> &getEnemies() const {return m_lEnemies;}
 
   void playerWarped();
 

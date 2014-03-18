@@ -15,6 +15,7 @@
 #include "Background.hpp"
 #include "XMLHelper.hpp"
 #include "Statistics.hpp"
+#include "TutorialManager.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -30,7 +31,8 @@ const Ogre::Real CAMERA_MAX_MOVE_SPEED(10);
 CMap::CMap(Ogre::SceneManager *pSceneManager,
 	   CScreenplayListener *pScreenplayListener,
 	   SStatistics &statistics)
-  : m_p2dManagerMap(NULL),
+  : m_pTutorialManager(new CTutorialManager(*this)), 
+    m_p2dManagerMap(NULL),
     m_pBackground(NULL),
     m_vCameraPos(Ogre::Vector2::ZERO),
     m_vCameraTargetPos(Ogre::Vector2::ZERO),
@@ -60,6 +62,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
   CHUD::getSingleton().show();
 }
 CMap::~CMap() {
+  delete m_pTutorialManager;
   CHUD::getSingleton().hide();
   clearMap();
 
@@ -439,6 +442,8 @@ void CMap::update(Ogre::Real tpf) {
   if (!m_bUpdatePause) {
     m_fPlayingTime += tpf;
     CHUD::getSingleton().setCurrentTime(m_fPlayingTime);
+
+    m_pTutorialManager->update();
 
     updateCameraPos(tpf);
 
