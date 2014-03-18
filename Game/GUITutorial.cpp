@@ -1,4 +1,6 @@
 #include "GUITutorial.hpp"
+#include <OgreLogManager.h>
+#include <OgreException.h>
 
 using namespace CEGUI;
 
@@ -17,11 +19,12 @@ CGUITutorial::CGUITutorial(Window *pRoot)
   : m_pRoot(pRoot) {
 }
 CEGUI::Window *CGUITutorial::createMessageBox(const CEGUI::String &label) {
-  FrameWindow *pWnd = dynamic_cast<FrameWindow*>(m_pRoot->createChild("OgreTray/FrameWindow", label));
-  pWnd->setCloseButtonEnabled(true);
-  pWnd->setRollupEnabled(false);
-  pWnd->getTitlebar()->setFont("dejavusans12");
-  pWnd->moveToFront();
+  if (!m_pRoot) {
+    throw Ogre::Exception(0, "Root has not been set", __FILE__);
+  }
+  Window *pWnd = m_pRoot->createChild("DefaultWindow", label);
+  // FrameWindow crashes on android, use default window
+  //FrameWindow *pWnd = dynamic_cast<FrameWindow*>(m_pRoot->createChild("OgreTray/FrameWindow", label));
   pWnd->setFont("dejavusans12");
   pWnd->setPosition(UVector2(UDim(0.2, 0), UDim(0.2, 0)));
   pWnd->setSize(USize(UDim(0.6, 0), UDim(0.6, 0)));
@@ -65,6 +68,7 @@ void CGUITutorial::showSmallEnemyInformationWindow() {
 }
 void CGUITutorial::showSimpleTextMessageBox(const CEGUI::String &label, const CEGUI::String &content) {
   pause(PAUSE_MAP_UPDATE);
+
   Window *pContent = createMessageBox(label);
   Window *pText = pContent->createChild("OgreTray/StaticText", "Text");
   pText->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));

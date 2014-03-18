@@ -17,6 +17,7 @@ void CTutorialManager::update() {
   if (!m_bInformationShown[IS_MOTION]) {
     CGUITutorial::getSingleton().showMoveInformationWindow();
     m_bInformationShown[IS_MOTION] = true;
+    return;
   }
   const CPlayer *pPlayer = m_Map.getPlayer();
   if (!m_bInformationShown[IS_SWITCH]) {
