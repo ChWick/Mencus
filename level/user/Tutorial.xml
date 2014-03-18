@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map background="forest" sizex="161" sizey="15">
+<map background="forest" sizex="161" sizey="15" tutorial="true" difficulty="easy" description="This map is the tutorial for the game" name="Tutorial">
     <exit type="region" posx="130" posy="0" sizex="2" sizey="15"/>
     <player x="0.093750" y="2.000000" direction="1" hp="10"/>
     <tiles invert="false">
