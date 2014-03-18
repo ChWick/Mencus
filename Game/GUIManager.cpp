@@ -54,10 +54,10 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(guiRoot);
 #ifdef INPUT_MOUSE
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
-  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setPosition(CEGUI::Vector2f(0,0));
 #else
-  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setVisible(false);
+  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseInvisible");
 #endif
+  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setPosition(CEGUI::Vector2f(0,0));
 
   createFreeTypeFont("dejavusans12", 12, "DejaVuSans.ttf");
   createFreeTypeFont("dejavusans8", 8, "DejaVuSans.ttf");
@@ -207,6 +207,8 @@ void CGUIManager::createResources() {
   CEGUI::ImageManager::getSingleton().loadImageset("white.imageset");
 #ifdef INPUT_MOUSE
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
+#else
+  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseInvisible");
 #endif
 }
 void CGUIManager::destroyResources() {
