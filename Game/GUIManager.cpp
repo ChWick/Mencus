@@ -149,7 +149,7 @@ CEGUI::MouseButton convertButton(OIS::MouseButtonID buttonID) {
 }
 bool CGUIManager::mouseMoved( const OIS::MouseEvent &arg ) {
   CEGUI::System &sys = CEGUI::System::getSingleton();
-  sys.getDefaultGUIContext().injectMouseMove(arg.state.X.rel, arg.state.Y.rel);
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(arg.state.X.abs, arg.state.Y.abs);
   // Scroll wheel.
   if (arg.state.Z.rel)
     sys.getDefaultGUIContext().injectMouseWheelChange(arg.state.Z.rel / 120.0f);

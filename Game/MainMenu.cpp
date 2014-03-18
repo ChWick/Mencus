@@ -130,30 +130,23 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 				CEGUI::Event::Subscriber(&CMainMenu::buttonSelected, this));
   }
 
+#ifndef INPUT_KEYBOARD_ONLY
+  m_pSelectButton = pButtonContainer->createChild("OgreTray/Button", "SelectButton");
+  m_pSelectButton->setText("Start");
+  m_pSelectButton->setFont("dejavusans12");
+  m_pSelectButton->setPosition(UVector2(UDim(0.6, 0), UDim(0.75f, 0)));
+  m_pSelectButton->setSize(USize(UDim(0.4f, 0), UDim(0.2f, 0)));
+  m_pSelectButton->subscribeEvent(CEGUI::PushButton::EventClicked,
+				  CEGUI::Event::Subscriber(&CMainMenu::onSelectButtonClicked, this));
+#endif
+
   m_pSaveStatesWindow = dynamic_cast<CEGUI::Listbox*>(pButtonContainer->createChild("OgreTray/Listbox", "SaveStatesBox"));
   m_pSaveStatesWindow->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   m_pSaveStatesWindow->setSize(USize(UDim(0.6f, 0), UDim(0.6f, 0)));
   m_pSaveStatesWindow->setFont("dejavusans8");
-  m_pSaveStatesWindow->subscribeEvent(
-				      CEGUI::Window::EventMouseEntersArea,
-				      CEGUI::Event::Subscriber(
-							       &CMainMenu::saveStateListEntered,
-							       this));
-  m_pSaveStatesWindow->subscribeEvent(
-				      CEGUI::Window::EventMouseLeavesArea,
-				      CEGUI::Event::Subscriber(
-							       &CMainMenu::saveStateListLeaved,
-							       this));
-  m_pSaveStatesWindow->subscribeEvent(
-				      CEGUI::Window::EventMouseMove,
-				      CEGUI::Event::Subscriber(
-							       &CMainMenu::saveStateListMouseMoved,
-							       this));
-  m_pSaveStatesWindow->subscribeEvent(
-				      CEGUI::Window::EventMouseClick,
-				      CEGUI::Event::Subscriber(
-							       &CMainMenu::saveStateListMouseClicked,
-							       this));
+#ifndef INPUT_KEYBOARD_ONLY
+  m_pSaveStatesWindow->subscribeEvent(Listbox::EventSelectionChanged, Event::Subscriber(&CMainMenu::onSelectionChanged, this));
+#endif
 
   m_pSaveStatePreviewWindow = pButtonContainer->createChild("OgreTray/StaticImage", "PreviewPricture");
   m_pSaveStatePreviewWindow->setPosition(UVector2(UDim(0.65f, 0), UDim(0.1f, 0)));
@@ -282,6 +275,7 @@ void CMainMenu::changeState(EMainMenuState eState) {
   m_bSaveListSelected = false;
   m_eCurrentState = eState;
   m_iSelectedSlot = 0;
+  m_iSelectedLoadState = 0;
 
   
   switch (m_eCurrentState) {
@@ -343,6 +337,9 @@ void CMainMenu::changeState(EMainMenuState eState) {
     m_pSaveStatesWindow->setVisible(true);
     m_pSaveStatePreviewWindow->setVisible(true);
     m_pMapInfoWindow->setVisible(false);
+#ifndef INPUT_KEYBOARD_ONLY
+    m_pSelectButton->setVisible(true);
+#endif
 
     while (m_pSaveStatesWindow->getItemCount() > 0) {
       m_pSaveStatesWindow->removeItem(m_pSaveStatesWindow->getListboxItemFromIndex(0));
@@ -369,6 +366,9 @@ void CMainMenu::changeState(EMainMenuState eState) {
     m_pSaveStatesWindow->setVisible(true);
     m_pSaveStatePreviewWindow->setVisible(false);
     m_pMapInfoWindow->setVisible(true);
+#ifndef INPUT_KEYBOARD_ONLY
+    m_pSelectButton->setVisible(true);
+#endif
 
     while (m_pSaveStatesWindow->getItemCount() > 0) {
       m_pSaveStatesWindow->removeItem(m_pSaveStatesWindow->getListboxItemFromIndex(0));
@@ -390,6 +390,9 @@ void CMainMenu::changeState(EMainMenuState eState) {
     m_pSaveStatesWindow->setVisible(false);
     m_pSaveStatePreviewWindow->setVisible(false);
     m_pMapInfoWindow->setVisible(false);
+#ifndef INPUT_KEYBOARD_ONLY
+    m_pSelectButton->setVisible(false);
+#endif
   }
 
   if (eState == MMS_GAME_ESCAPE) {
@@ -521,22 +524,17 @@ bool CMainMenu::saveStateListLeaved(const CEGUI::EventArgs&) {
   return true;
 }
 bool CMainMenu::saveStateListMouseMoved(const CEGUI::EventArgs& args) {
-  const CEGUI::MouseEventArgs *mea = dynamic_cast<const CEGUI::MouseEventArgs*>(&args);
+    /*const CEGUI::MouseEventArgs *mea = dynamic_cast<const CEGUI::MouseEventArgs*>(&args);
   CEGUI::ListboxItem *pItem = m_pSaveStatesWindow->getItemAtPoint(mea->position);
   if (!pItem) {return true;}
 
   m_iSelectedLoadState = m_pSaveStatesWindow->getItemIndex(pItem);
-  selectedSaveStateChanged();
+  selectedSaveStateChanged();*/
   return true;
 }
-bool CMainMenu::saveStateListMouseClicked(const CEGUI::EventArgs& args) {
-  const CEGUI::MouseEventArgs *mea = dynamic_cast<const CEGUI::MouseEventArgs*>(&args);
-  CEGUI::ListboxItem *pItem = m_pSaveStatesWindow->getItemAtPoint(mea->position);
-  if (!pItem) {return true;}
-
-  m_iSelectedLoadState = m_pSaveStatesWindow->getItemIndex(pItem);
+bool CMainMenu::onSelectionChanged(const CEGUI::EventArgs& args) {
+  m_iSelectedLoadState = m_pSaveStatesWindow->getItemIndex(m_pSaveStatesWindow->getFirstSelectedItem());
   selectedSaveStateChanged();
-  activateLoadState();
   return true;
 }
 void CMainMenu::activateLoadState() {
@@ -593,6 +591,10 @@ void CMainMenu::resizeGUI(Ogre::Real fScaling) {
 #endif
   m_pOptionPages[OPTIONS_VIDEO]->setFont(bigfont);
   m_pOptionPages[OPTIONS_VIDEO]->getChild("MenuSizeText")->setFont(smallfont);
+
+#ifndef INPUT_KEYBOARD_ONLY
+  m_pSelectButton->setFont(bigfont);
+#endif
 }
 bool CMainMenu::buttonSizeSliderValueChanged(const EventArgs &args) {
 #ifdef INPUT_TOUCH
@@ -623,4 +625,8 @@ void CMainMenu::windowSizeChanged(const CEGUI::Sizef &vSize) {
   Slider *pSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSizeSlider"));
   pSlider->setMaxValue(min(vSize.d_height / 4.0, vSize.d_width / 8.0));
 #endif
+}
+bool CMainMenu::onSelectButtonClicked(const CEGUI::EventArgs &args) {
+  activateLoadState();
+  return true;
 }
