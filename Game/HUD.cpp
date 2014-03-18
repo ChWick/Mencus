@@ -40,7 +40,7 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
   pMain->setProperty("FrameEnabled", "false");
   pMain->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pMain->setSize(USize(UDim(1, 0), UDim(1, 0)));
-  pMain->setText("test");
+  //pMain->setText("test");
   //pMain->setAlpha(0.5);
 
   CEGUI::Window *pTopBar = pMain->createChild("OgreTray/StaticImage", "top_bar");
