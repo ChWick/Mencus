@@ -43,6 +43,7 @@ public:
 
   OgreBites::ParamsPanel* getDetailsPanel() {return mDetailsPanel;}
   Ogre::FileSystemLayer* getFileSystemLayer() {return mFSLayer;}
+  Ogre::Root *getRoot() {return mRoot;}
 
   void go();
   void initApp();
@@ -52,15 +53,18 @@ public:
   
   void createResources();
   void destroyResources();
-
+  
   void showLoadingBar();
   void hideLoadingBar();
+  
+  bool renderOneFrame();
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
   void initAppForAndroid(Ogre::RenderWindow *window, struct android_app* app, OIS::MultiTouch *mouse, OIS::Keyboard *keyboard) {
     Ogre::LogManager::getSingletonPtr()->logMessage("Initializing App for Android");
     assert(mouse);
     assert(keyboard);
+    mApp = app;
     mWindow = window;
     mInputContext.mMultiTouch = mouse;
     mInputContext.mKeyboard = keyboard;
@@ -152,6 +156,7 @@ private:
     }
     return stream;
   }
+  struct android_app* mApp;
   AAssetManager* mAssetMgr;       // Android asset manager to access files inside apk
   ANativeActivity* mNativeActivity;
 #endif

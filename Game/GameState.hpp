@@ -17,6 +17,7 @@ public:
     GS_GAME_OVER,
     GS_STATISTICS,
     GS_CREDITS,
+    GS_AD,
 
     GS_COUNT
   };
@@ -28,6 +29,7 @@ private:
   const CSaveState *m_pSaveState;
   std::shared_ptr<const CMapInfo> m_pMapInfo;
   bool m_bForce;
+  bool m_bAdShown;
 
 public:
   static CGameState &getSingleton();

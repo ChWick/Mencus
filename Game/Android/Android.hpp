@@ -248,6 +248,49 @@ public:
 	break;
       }
   }
+
+  static bool renderOneFrame(struct android_app* state) {
+    int ident, events;
+    struct android_poll_source* source;
+
+    while ((ident = ALooper_pollAll(0, NULL, &events, (void**)&source)) >= 0)
+      {
+	try {
+	  if (source != NULL)
+	    source->process(state, source);
+                    
+	  if (state->destroyRequested != 0)
+	    return false;
+	}
+	catch (const Ogre::Exception &e) {
+	  LOGW("Error in rendering loop");
+	  LOGW("%s", e.getFullDescription().c_str());
+	}
+	catch (...) {
+	  LOGW("Unknown Exception");
+	}
+      }
+                
+    if(mRenderWnd != NULL && mRenderWnd->isActive() && !m_bRenderPaused)
+      {
+	try {
+	  mRenderWnd->windowMovedOrResized();
+	  if (!mRoot->renderOneFrame()) {
+	    ANativeActivity_finish(state->activity);
+	  }
+	}
+	catch (const Ogre::Exception &e) {
+	  LOGW("Error in rendering loop");
+	  LOGW("%s", e.getFullDescription().c_str());
+	  ANativeActivity_finish(state->activity);
+	}
+	catch (...) {
+	  LOGW("Unknown Exception");
+	  ANativeActivity_finish(state->activity);
+	}
+      }
+    return true;
+  }
         
   static void go(struct android_app* state)
   {
@@ -258,49 +301,8 @@ public:
     else {
       LOGI("no snapshot found, not loading");
     }
-    LOGI("starting rendering");
-    int ident, events;
-    struct android_poll_source* source;
-            
-    while (true)
-      {
-	while ((ident = ALooper_pollAll(0, NULL, &events, (void**)&source)) >= 0)
-	  {
-	    try {
-	      if (source != NULL)
-		source->process(state, source);
-                    
-	      if (state->destroyRequested != 0)
-		return;
-	    }
-	    catch (const Ogre::Exception &e) {
-	      LOGW("Error in rendering loop");
-	      LOGW("%s", e.getFullDescription().c_str());
-	    }
-	    catch (...) {
-	      LOGW("Unknown Exception");
-	    }
-	  }
-                
-	if(mRenderWnd != NULL && mRenderWnd->isActive() && !m_bRenderPaused)
-	  {
-	    try {
-	      mRenderWnd->windowMovedOrResized();
-	      if (!mRoot->renderOneFrame()) {
-		ANativeActivity_finish(state->activity);
-	      }
-	    }
-	    catch (const Ogre::Exception &e) {
-	      LOGW("Error in rendering loop");
-	      LOGW("%s", e.getFullDescription().c_str());
-	      ANativeActivity_finish(state->activity);
-	    }
-	    catch (...) {
-	      LOGW("Unknown Exception");
-	      ANativeActivity_finish(state->activity);
-	    }
-	  }
-      }
+    LOGI("starting rendering");            
+    while (renderOneFrame(state)) {}
   }
         
   static Ogre::RenderWindow* getRenderWindow()
@@ -324,6 +326,31 @@ public:
     jmethodID methodID = (env)->GetMethodID(clazz, "showAdPopup", "()V");
     (env)->CallVoidMethod(activity->clazz, methodID);
     (jvm)->DetachCurrentThread();
+  }
+  static bool adPopupClosed() {
+    // Get the android application's activity.
+    ANativeActivity* activity = mActivity;
+    JavaVM* jvm = mActivity->vm;
+    JNIEnv* env = NULL;
+    (jvm)->GetEnv((void **)&env, JNI_VERSION_1_6);
+    jint res = (jvm)->AttachCurrentThread(&env, NULL);
+    if (res == JNI_ERR) {
+      LOGI("Failed to retrieve JVM environment");
+      // Failed to retrieve JVM environment
+      return true; 
+    }
+    jclass clazz = (env)->GetObjectClass(activity->clazz);
+    jmethodID methodID = (env)->GetMethodID(clazz, "adPopupClosed", "()Z");
+    if (!methodID) {
+      LOGW("Method adPopupClosed not found");
+    }
+    jboolean r = (env)->CallBooleanMethod(activity->clazz, methodID);
+    if(env->ExceptionOccurred() != NULL) {
+      LOGW("Exception while calling adPopupClosed().");
+    }
+    (jvm)->DetachCurrentThread();
+
+    return r == JNI_TRUE;
   }
             
 private:

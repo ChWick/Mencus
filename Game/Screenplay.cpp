@@ -12,6 +12,7 @@
 #include "XMLHelper.hpp"
 #include "MapInfo.hpp"
 #include "GUIStatistics.hpp"
+#include "Game.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -173,7 +174,11 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
 }
 void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sResourceGroup) {
   clear();
+
+  CGame::getSingleton().showLoadingBar();
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(m_sResourceGroup);
+  CGame::getSingleton().hideLoadingBar();
+
   tinyxml2::XMLDocument doc; // namespace required for windoof...
   Ogre::DataStreamPtr pStream = Ogre::ResourceGroupManager::getSingleton().openResource(sFilename, sResourceGroup);
 

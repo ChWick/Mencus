@@ -5,6 +5,7 @@
 #include "AdDisplayManager.hpp"
 #include "MapInfo.hpp"
 #include "GUIStatistics.hpp"
+#include <unistd.h>
 
 template<> CGameState *Ogre::Singleton<CGameState>::msSingleton = 0;
 
@@ -22,7 +23,8 @@ CGameState::CGameState()
   m_pMainMenu(NULL),
   m_pScreenplay(NULL),
   m_pSaveState(NULL),
-  m_bForce(true) {
+  m_bForce(true),
+  m_bAdShown(false) {
 }
 CGameState::~CGameState() {
   if (m_pScreenplay) {
@@ -32,6 +34,7 @@ CGameState::~CGameState() {
 }
 void CGameState::init() {
   m_pMainMenu = CMainMenu::getSingletonPtr();
+  m_bAdShown = false;
 }
 void CGameState::changeGameState(EGameStates eNewGameState, bool bNow, bool bForce) {
   m_eNextGameState = eNewGameState;
@@ -56,11 +59,16 @@ void CGameState::changeGameStateImpl() {
     return;
   }
   auto ePreviousGameState = m_eCurrentGameState;
+  if (m_eNextGameState == GS_GAME && !m_bAdShown) {
+    m_eNextGameState = GS_AD;
+  }
   switch (m_eCurrentGameState) {
   case GS_GAME:
     delete m_pScreenplay;
     m_pScreenplay = NULL;
     break;
+  case GS_AD:
+    m_bAdShown = false;
   case GS_MAIN_MENU:
     m_pMainMenu->hide();
     break;
@@ -77,7 +85,6 @@ void CGameState::changeGameStateImpl() {
     m_eCurrentGameState = m_eNextGameState;
     switch (m_eCurrentGameState) {
     case GS_GAME:
-      CAdDisplayManager::showAdPopup();
       m_pScreenplay = new CScreenplay();
       break;
     case GS_MAIN_MENU:
@@ -89,6 +96,9 @@ void CGameState::changeGameStateImpl() {
       break;
     case GS_STATISTICS:
       CGUIStatistics::getSingleton().show();
+      break;
+    case GS_AD:
+      CAdDisplayManager::showAdPopup();
       break;
     default:
       break;
@@ -116,7 +126,17 @@ void CGameState::update(Ogre::Real tpf) {
   case GS_STATISTICS:
     CGUIStatistics::getSingleton().update(tpf);
     break;
-  default:
+  case GS_AD:
+    if (CAdDisplayManager::adPopupClosed()) {
+      m_bAdShown = true;
+      Ogre::LogManager::getSingleton().logMessage("Add finished");
+      m_eNextGameState = GS_GAME;
+      changeGameStateImpl();
+    }
+    else {  
+      Ogre::LogManager::getSingleton().logMessage("Waiting for add finished");
+      usleep(1000 * 500); // 0.5 secs  default:
+    }
     break;
   }
 }
