@@ -60,7 +60,7 @@ void CGameState::changeGameStateImpl() {
   }
   auto ePreviousGameState = m_eCurrentGameState;
   if (m_eNextGameState == GS_GAME && !m_bAdShown) {
-    m_eNextGameState = GS_AD;
+    //m_eNextGameState = GS_AD;
   }
   switch (m_eCurrentGameState) {
   case GS_GAME:

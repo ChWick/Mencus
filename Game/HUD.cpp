@@ -34,8 +34,15 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
   ImageManager::getSingleton().loadImageset("white.imageset");
   ImageManager::getSingleton().loadImageset("hud_weapons.imageset");
 
-  CEGUI::Window *pMain = m_pHudRoot->createChild("DefaultWindow", "main");
+  CEGUI::Window *pMain = m_pHudRoot->createChild("OgreTray/StaticText", "main");
   pMain->setRiseOnClickEnabled(false);
+  pMain->setProperty("BackgroundEnabled", "false");
+  pMain->setProperty("FrameEnabled", "false");
+  pMain->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  pMain->setSize(USize(UDim(1, 0), UDim(1, 0)));
+  pMain->setText("test");
+  //pMain->setAlpha(0.5);
+
   CEGUI::Window *pTopBar = pMain->createChild("OgreTray/StaticImage", "top_bar");
   pTopBar->setPosition(CEGUI::UVector2(CEGUI::UDim(0, 0), CEGUI::UDim(0, 0)));
   pTopBar->setSize(CEGUI::USize(CEGUI::UDim(1, 0), CEGUI::UDim(0.1667f, 0)));
