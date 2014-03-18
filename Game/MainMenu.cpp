@@ -533,8 +533,10 @@ bool CMainMenu::saveStateListMouseMoved(const CEGUI::EventArgs& args) {
   return true;
 }
 bool CMainMenu::onSelectionChanged(const CEGUI::EventArgs& args) {
-  m_iSelectedLoadState = m_pSaveStatesWindow->getItemIndex(m_pSaveStatesWindow->getFirstSelectedItem());
-  selectedSaveStateChanged();
+  if (m_pSaveStatesWindow->getFirstSelectedItem()) {
+    m_iSelectedLoadState = m_pSaveStatesWindow->getItemIndex(m_pSaveStatesWindow->getFirstSelectedItem());
+    selectedSaveStateChanged();
+  }
   return true;
 }
 void CMainMenu::activateLoadState() {
