@@ -10,6 +10,7 @@
 #include "PauseListener.hpp"
 #include "InputListener.hpp"
 #include <memory>
+#include "Statistics.hpp"
 
 class CMap;
 class CScreenplay;
@@ -79,6 +80,7 @@ private:
   std::shared_ptr<const CMapInfo> m_pMapInfo;
   CMap *m_pMap;
   CScreenplayListener *m_pScreenplayListener;
+  SStatistics m_Statistics;
   
 public:
   CLevel(const CAct &act, unsigned int uiID, std::shared_ptr<const CMapInfo> pMapInfo, CScreenplayListener *pScreenplayListener)
@@ -97,6 +99,7 @@ public:
   void render(Ogre::Real tpf);
 
   std::shared_ptr<const CMapInfo> getMapInfo() const {return m_pMapInfo;}
+  const SStatistics &getStatistics() const {return m_Statistics;}
   CMap *getMap() {return m_pMap;}
 
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;

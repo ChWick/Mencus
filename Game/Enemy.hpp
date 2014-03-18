@@ -75,7 +75,7 @@ public:
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElem);
 
 protected:
-  void damageTakenCallback();
+  void damageTakenCallback(Ogre::Real fHitpoints);
   void killedByDamageCallback();
   void animationTextureChangedCallback(unsigned int uiOldText, unsigned uiNewText);
   bool readyForWalking();

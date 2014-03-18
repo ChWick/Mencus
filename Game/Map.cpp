@@ -14,6 +14,7 @@
 #include "Game.hpp"
 #include "Background.hpp"
 #include "XMLHelper.hpp"
+#include "Statistics.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -26,7 +27,9 @@ const Ogre::Real SCREEN_RATIO = TILES_PER_SCREEN.y / TILES_PER_SCREEN.x;
 
 const Ogre::Real CAMERA_MAX_MOVE_SPEED(10);
 
-CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayListener)
+CMap::CMap(Ogre::SceneManager *pSceneManager,
+	   CScreenplayListener *pScreenplayListener,
+	   SStatistics &statistics)
   : m_p2dManagerMap(NULL),
     m_pBackground(NULL),
     m_vCameraPos(Ogre::Vector2::ZERO),
@@ -37,7 +40,8 @@ CMap::CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayLi
     m_pScreenplayListener(pScreenplayListener),
     m_bUpdatePause(false),
     m_bRenderPause(false),
-    m_fPlayingTime(0) {
+    m_fPlayingTime(0),
+    m_Statistics(statistics) {
   CGame::getSingleton().showLoadingBar();
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
   CGame::getSingleton().hideLoadingBar();
@@ -514,6 +518,8 @@ void CMap::update(Ogre::Real tpf) {
 #endif // DEBUG_EXIT
     }
   }
+
+  m_Statistics.fTime = m_fPlayingTime;
 }
 void CMap::render(Ogre::Real tpf) {
   // order of updates exquates drawing order, last one will be on top
@@ -946,7 +952,7 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
     else if (std::string(pElement->Value()) == "player") {
       assert(!m_pPlayer);
 
-      m_pPlayer = new CPlayer(this, pElement);
+      m_pPlayer = new CPlayer(this, pElement, m_Statistics);
       playerWarped();
     }
     else if (std::string(pElement->Value()) == "camera") {

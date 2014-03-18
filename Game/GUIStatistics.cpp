@@ -3,6 +3,8 @@
 #include "InputDefines.hpp"
 #include "GameState.hpp"
 #include "SaveStateManager.hpp"
+#include "Statistics.hpp"
+#include <OgreStringConverter.h>
 
 using namespace CEGUI;
 
@@ -77,7 +79,8 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
   m_pButtons[BT_TO_MENU] = pToMenuButton;
 
   for (int i = 0; i < L_COUNT; i++) {
-    createLabel(i, pStatisticsGroup);
+    createLabel(i, pStatisticsGroup, false);
+    createLabel(i, pStatisticsGroup, true);
   }
 
   hide();
@@ -133,29 +136,66 @@ void CGUIStatistics::resize(const CEGUI::String &smallfont, const CEGUI::String 
 
   for (int i = 0; i < L_COUNT; i++) {
     pButtonContainer->getChild("statisticsgroup")->getChild("Label" + PropertyHelper<int>::toString(i))->setFont(smallfont);
+    pButtonContainer->getChild("statisticsgroup")->getChild("Data" + PropertyHelper<int>::toString(i))->setFont(smallfont);
 
   }
 }
-void CGUIStatistics::createLabel(int iLabel, CEGUI::Window *pParent) {
-  Window *pLabel = pParent->createChild("OgreTray/StaticText", "Label" + PropertyHelper<int>::toString(iLabel));
+void CGUIStatistics::showStatistics(const SStatistics &stats) {
+  Window *pButtonContainer = m_pStatisticsRoot->getChild("ButtonContainer");
+  Window *group = pButtonContainer->getChild("statisticsgroup");
+
+  int iHours = static_cast<int>(stats.fTime / 3600);
+  int iMinutes = static_cast<int>((stats.fTime - iHours * 3600) / 60);
+  int iSeconds = static_cast<int>(stats.fTime - iHours * 3600 - iMinutes * 60);
+
+  group->getChild("Data" + PropertyHelper<int>::toString(L_TIME))
+    ->setText((Ogre::StringConverter::toString(iHours, 1) + ":"
+	       + Ogre::StringConverter::toString(iMinutes, 2, '0') + ":"
+	       + Ogre::StringConverter::toString(iSeconds, 2, '0')).c_str());
+
+  group->getChild("Data" + PropertyHelper<int>::toString(L_HITPOINTS))
+    ->setText(PropertyHelper<int>::toString(stats.fHitpoints));
+  
+  group->getChild("Data" + PropertyHelper<int>::toString(L_MANAPOINTS))
+    ->setText(PropertyHelper<int>::toString(stats.fManapoints));
+
+  group->getChild("Data" + PropertyHelper<int>::toString(L_LOST_HITPOINTS))
+    ->setText(PropertyHelper<int>::toString(stats.fLostHitpoints));
+
+  group->getChild("Data" + PropertyHelper<int>::toString(L_USED_MANAPOINTS))
+    ->setText(PropertyHelper<int>::toString(stats.fUsedManapoints));
+}
+void CGUIStatistics::createLabel(int iLabel, CEGUI::Window *pParent, bool bData) {
+  Window *pLabel = pParent->createChild("OgreTray/StaticText", ((!bData) ? "Label" : "Data") + PropertyHelper<int>::toString(iLabel));
   pLabel->setProperty("FrameEnabled", "False");
   pLabel->setProperty("BackgroundEnabled", "False");
-  pLabel->setPosition(UVector2(UDim(0.05, 0), UDim(0.05 + iLabel * 0.1, 0)));
-  pLabel->setSize(USize(UDim(0.4, 0), UDim(0.09, 0)));
+  pLabel->setPosition(UVector2(UDim(bData ? 0.4 : 0.05, 0), UDim(0.05 + iLabel * 0.1, 0)));
+  pLabel->setSize(USize(UDim(bData ? 0.55 : 0.4, 0), UDim(0.09, 0)));
 
-  switch (iLabel) {
-  case L_TIME:
-    pLabel->setText("Time");
-    break;
-  case L_HITPOINTS:
-    pLabel->setText("Hitpoints");
-    break;
-  case L_MANAPOINTS:
-    pLabel->setText("Manapoints");
-    break;
-  default:
-    pLabel->setText("unset");
-    break;
+  if (bData) {
+    pLabel->setText("to be filled");
+  }
+  else {
+    switch (iLabel) {
+    case L_TIME:
+      pLabel->setText("Time");
+      break;
+    case L_HITPOINTS:
+      pLabel->setText("Hitpoints");
+      break;
+    case L_MANAPOINTS:
+      pLabel->setText("Manapoints");
+      break;
+    case L_LOST_HITPOINTS:
+      pLabel->setText("Lost hitpoints");
+      break;
+    case L_USED_MANAPOINTS:
+      pLabel->setText("Used manapoints");
+      break;
+    default:
+      pLabel->setText("unset");
+      break;
+    }
   }
 }
 bool CGUIStatistics::onRetryClicked(const CEGUI::EventArgs&) {

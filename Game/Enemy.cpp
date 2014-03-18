@@ -328,7 +328,7 @@ void CEnemy::setup() {
     throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Enemy type '" + Ogre::StringConverter::toString(m_eEnemyType) + "' is unknown", __FILE__);
   }
 }
-void CEnemy::damageTakenCallback() {
+void CEnemy::damageTakenCallback(Ogre::Real fHitpoints) {
   m_HPBar.show();
   m_HPBar.setValue(getHitpoints() / getMaximumHitpoints());
 }

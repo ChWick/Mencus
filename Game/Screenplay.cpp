@@ -11,6 +11,7 @@
 #include "GameState.hpp"
 #include "XMLHelper.hpp"
 #include "MapInfo.hpp"
+#include "GUIStatistics.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -39,7 +40,9 @@ void CLevel::stop() {
 }
 void CLevel::init() {
   if (!m_pMap) {
-    m_pMap = new CMap(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"), m_pScreenplayListener);
+    m_pMap = new CMap(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"),
+		      m_pScreenplayListener,
+		      m_Statistics);
   }
 }
 void CLevel::exit() {
@@ -126,6 +129,7 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   if (m_mapActs.find(uiActId) == m_mapActs.end()) {
     CLevel *pLevel = dynamic_cast<CLevel*>(m_pOldScene);
     if (pLevel) {
+      CGUIStatistics::getSingleton().showStatistics(pLevel->getStatistics());
       CGameState::getSingleton().changeGameState(CGameState::GS_STATISTICS, pLevel->getMapInfo());
     }
     else {

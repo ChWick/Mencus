@@ -33,7 +33,6 @@ private:
   EMapDifficulty m_eDifficulty;
   std::string m_sName;
   std::string m_sDescription;
-  
 public:
   CMapInfo(const std::string &sFileName, const std::string &sResourceGroup);
 

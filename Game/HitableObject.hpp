@@ -24,7 +24,7 @@ public:
 
   void init() {
     if (m_fHitpoints < m_fMaximumHitpoints) {
-      damageTakenCallback();
+      damageTakenCallback(0);
     }
     if (m_fHitpoints <= 0) {
       killedByDamageCallback();
@@ -35,7 +35,7 @@ public:
     if (m_bInvunerable) {return;}
 
     m_fHitpoints -= fHitpoints;
-    damageTakenCallback();
+    damageTakenCallback(fHitpoints);
     if (m_fHitpoints <= 0) {
       killedByDamageCallback();
     }
@@ -54,7 +54,7 @@ public:
     pElem->SetAttribute("invunerable", isInvunerable());
   }
 protected:
-  virtual void damageTakenCallback() {}
+  virtual void damageTakenCallback(Ogre::Real fHitpoints) {}
   virtual void killedByDamageCallback() {}
 };
 

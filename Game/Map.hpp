@@ -26,6 +26,7 @@ class CExplosion;
 class CEnemy;
 class CObject;
 class CBackground;
+struct SStatistics;
 
 class CMap : public CSpriteTransformPipeline, public CInputListener, public CPauseListener {
 private:
@@ -84,8 +85,11 @@ private:
   bool m_bUpdatePause;
   bool m_bRenderPause;
   Ogre::Real m_fPlayingTime;
+  SStatistics &m_Statistics;
 public:
-  CMap(Ogre::SceneManager *pSceneManager, CScreenplayListener *pScreenplayListener);
+  CMap(Ogre::SceneManager *pSceneManager,
+       CScreenplayListener *pScreenplayListener,
+       SStatistics &statistics);
   ~CMap();
 
   void loadMap(const string &sFilename, const string &sResourceGroup);

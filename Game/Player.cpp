@@ -12,6 +12,7 @@
 #include "GameState.hpp"
 #include "GameInputCommand.hpp"
 #include "XMLHelper.hpp"
+#include "Statistics.hpp"
 
 using namespace XMLHelper;
 using namespace Weapon;
@@ -44,7 +45,7 @@ const Ogre::Real PLAYER_MANA_POTION_REGAIN_PERCENTAGE(0.5f);
 
 const Ogre::Real SPIKES_DAMANGE_PER_HIT(1);
 
-CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
+CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager, SStatistics &statistics)
   :
   CAnimatedSprite(pMap, pSpriteManager, Ogre::Vector2(0, 0), Ogre::Vector2(1, 2)),
   CHitableObject(10),
@@ -70,10 +71,11 @@ CPlayer::CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager)
   m_uiKeyCount(0),
   m_uiHealthPotionsCount(0),
   m_uiManaPotionsCount(0),
-  m_uiBombCount(0) {
+  m_uiBombCount(0),
+  m_Statistics(statistics) {
   constructor_impl();
 }
-CPlayer::CPlayer(CMap *pMap, const tinyxml2::XMLElement *pElem) 
+CPlayer::CPlayer(CMap *pMap, const tinyxml2::XMLElement *pElem, SStatistics &statistics) 
   : CAnimatedSprite(pMap, pMap->get2dManager(), pElem, Ogre::Vector2(1, 2)),
     CHitableObject(pElem),
     m_Fader(this),
@@ -101,7 +103,8 @@ CPlayer::CPlayer(CMap *pMap, const tinyxml2::XMLElement *pElem)
   m_uiKeyCount(IntAttribute(pElem, "pl_hud_key", 0)),
   m_uiHealthPotionsCount(IntAttribute(pElem, "pl_hud_hp_cnt", 0)),
   m_uiManaPotionsCount(IntAttribute(pElem, "pl_hud_mp_cnt", 0)),
-  m_uiBombCount(IntAttribute(pElem, "pl_hud_bomb_cnt", 0)) {
+  m_uiBombCount(IntAttribute(pElem, "pl_hud_bomb_cnt", 0)),
+  m_Statistics(statistics) {
   constructor_impl();
   startup(getPosition(), RealAttribute(pElem, "direction", 1));
 }
@@ -262,6 +265,7 @@ void CPlayer::update(Ogre::Real tpf) {
           }
           if (fLockPenetration != 0) {
             m_uiKeyCount--;
+	    m_Statistics.uiUsedItems[Weapon::I_KEY]++;
             m_pMap->unlock(pTile->getMapPosX(), pTile->getMapPosY());
           }
         }
@@ -335,6 +339,7 @@ void CPlayer::update(Ogre::Real tpf) {
           m_pBomb = new CShot(m_pMap, m_pSpriteManager, getCenter(), CShot::ST_BOMB, (m_eLastDirection == LD_LEFT) ? CShot::SD_LEFT : CShot::SD_RIGHT);
           m_pMap->addShot(m_pBomb);
           m_uiBombCount--;
+	  m_Statistics.uiUsedItems[Weapon::I_BOMB]++;
           CHUD::getSingleton().setBombCount(m_uiBombCount);
         }
         m_pBomb->setCenter(getCenter() + PLAYER_BOMB_OFFSET);
@@ -382,6 +387,7 @@ void CPlayer::update(Ogre::Real tpf) {
   CAnimatedSprite::update(tpf);
   if (m_bShieldActive) {
     m_fManaPoints -= PLAYER_SHIELD_MANA_COSTS_PER_SEC * tpf;
+    m_Statistics.fUsedManapoints += PLAYER_SHIELD_MANA_COSTS_PER_SEC * tpf;;
     if (m_fManaPoints <= 0) {
       m_bShieldActive = 0;
       m_fManaPoints = 0;
@@ -392,6 +398,10 @@ void CPlayer::update(Ogre::Real tpf) {
   }
 
   setInvunerable(m_bShieldActive);
+
+
+  m_Statistics.fHitpoints = getHitpoints();
+  m_Statistics.fManapoints = getManapoints();
 }
 void CPlayer::render(Ogre::Real tpf) {
   CAnimatedSprite::render(tpf);
@@ -531,6 +541,7 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
       addHitpoints(PLAYER_HEALTH_POTION_REGAIN_PERCENTAGE * getMaximumHitpoints());
       CHUD::getSingleton().setHealthPotionCount(m_uiHealthPotionsCount);
       CHUD::getSingleton().setHP(getHitpoints() / getMaximumHitpoints());
+      m_Statistics.uiUsedItems[Weapon::I_HEALTH_POTION]++;
     }
     break;
   case GIC_USE_MANA_POTION:
@@ -539,6 +550,7 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
       m_fManaPoints = min(PLAYER_MAX_MANA_POINTS, m_fManaPoints + PLAYER_MANA_POTION_REGAIN_PERCENTAGE * PLAYER_MAX_MANA_POINTS);
       CHUD::getSingleton().setManaPotionCount(m_uiManaPotionsCount);
       CHUD::getSingleton().setMP(m_fManaPoints / PLAYER_MAX_MANA_POINTS);
+      m_Statistics.uiUsedItems[Weapon::I_MANA_POTION]++;
     }
     break;
   case GIC_CHANGE_WEAPON:
@@ -560,6 +572,7 @@ void CPlayer::animationTextureChangedCallback(unsigned int uiOldText, unsigned i
         return;
       }
       m_fManaPoints -= fManaCosts;
+      m_Statistics.fUsedManapoints += fManaCosts;
 
       CShot::EShotTypes eShotType = CShot::ST_BOLT;
       Ogre::Vector2 vOffset = getPosition();
@@ -612,8 +625,9 @@ void CPlayer::fadeOutCallback() {
   }
 }
 
-void CPlayer::damageTakenCallback() {
+void CPlayer::damageTakenCallback(Ogre::Real fHitpoints) {
   CHUD::getSingleton().setHP(getHitpoints() / getMaximumHitpoints());
+  m_Statistics.fLostHitpoints += fHitpoints;
 }
 
 void CPlayer::killedByDamageCallback() {

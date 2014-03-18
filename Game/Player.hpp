@@ -14,6 +14,7 @@
 class CMap;
 class CShot;
 class CBarIndicator;
+class SStatistics;
 
 class CPlayer : public CAnimatedSprite,
 		public CInputListener,
@@ -88,12 +89,14 @@ private:
   unsigned int m_uiManaPotionsCount;
   unsigned int m_uiBombCount;
 
+  SStatistics &m_Statistics;
+
 #ifdef DEBUG_PLAYER_NO_COLLISION
   bool m_bPlayerNoCollisionActivated;
 #endif // DEBUG_PLAYER_NO_COLLISION
 public:
-  CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager);
-  CPlayer(CMap *pMap, const tinyxml2::XMLElement *pElem);
+  CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager, SStatistics &statistics);
+  CPlayer(CMap *pMap, const tinyxml2::XMLElement *pElem, SStatistics &statistics);
   ~CPlayer();
 
   void startup(const Ogre::Vector2 &vPosition, Ogre::Real fDirection);
@@ -126,7 +129,7 @@ private:
 
 protected:
   virtual void animationTextureChangedCallback(unsigned int uiOldText, unsigned int uiNewText);
-  virtual void damageTakenCallback();
+  virtual void damageTakenCallback(Ogre::Real fHitpoints);
   virtual void killedByDamageCallback();
 };
 

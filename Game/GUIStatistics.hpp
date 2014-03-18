@@ -4,6 +4,7 @@
 #include <OgreSingleton.h>
 #include <CEGUI/CEGUI.h>
 #include "InputListener.hpp"
+#include "Statistics.hpp"
 
 class CGUIStatistics : public Ogre::Singleton<CGUIStatistics>, public CInputListener {
 private:
@@ -16,6 +17,8 @@ private:
     L_TIME = 0,
     L_HITPOINTS,
     L_MANAPOINTS,
+    L_LOST_HITPOINTS,
+    L_USED_MANAPOINTS,
     L_COUNT,
   };
 
@@ -37,11 +40,12 @@ public:
   void hide() { m_pStatisticsRoot->setVisible(false); setInputListenerEnabled(false); }
 
   void activateButton(int iBtn);
+  void showStatistics(const SStatistics &stats);
 
   void resize(const CEGUI::String &smallFont, const CEGUI::String &bigfont);
 
 private:
-  void createLabel(int iLabel, CEGUI::Window *pParent);
+  void createLabel(int iLabel, CEGUI::Window *pParent, bool bData);
   bool onRetryClicked(const CEGUI::EventArgs&);
   bool onToMenuClicked(const CEGUI::EventArgs&);
 };
