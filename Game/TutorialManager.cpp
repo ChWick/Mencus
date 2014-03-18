@@ -6,12 +6,14 @@
 #include "Enemy.hpp"
 
 CTutorialManager::CTutorialManager(const CMap &map)
-  : m_Map(map) {
+  : m_Map(map),
+    m_bEnabled(false) {
   m_bInformationShown.resize(IS_COUNT, false);
 }
 void CTutorialManager::start() {
 }
 void CTutorialManager::update() {
+  if (!m_bEnabled) {return;}
   if (!m_bInformationShown[IS_MOTION]) {
     CGUITutorial::getSingleton().showMoveInformationWindow();
     m_bInformationShown[IS_MOTION] = true;

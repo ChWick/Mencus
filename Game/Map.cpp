@@ -899,6 +899,8 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
 void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
   clearMap();
   
+  m_pTutorialManager->setEnabled(BoolAttribute(pRoot, "tutorial", false));
+
   Ogre::String sBackground = pRoot->Attribute("background");
   if (sBackground.size() > 0) {
     m_pBackground = new CBackground(m_p2dManagerMap, m_vCameraPos, sBackground);
