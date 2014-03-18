@@ -15,8 +15,10 @@ public class MencusNativeActivity extends NativeActivity {
 
 	MencusNativeActivity _activity;
 	private InterstitialAd mInterstitial;
+	private boolean mAddClosed = false;
 	
 	InterstitialAd getInterstitialAd() {return mInterstitial;}
+	void setAdClosed(boolean addClosed) {mAddClosed = addClosed;}
 
 	public void onCreate(Bundle savedInstanceState) {
 		_activity = this;
@@ -30,6 +32,7 @@ public class MencusNativeActivity extends NativeActivity {
 
 	// Our popup window, you will call it from your C/C++ code later
 	public void showAdPopup() {
+		mAddClosed = false;
 		 _activity.runOnUiThread(new Runnable()  {
 			 @Override
 			 public void run()  {
@@ -44,5 +47,9 @@ public class MencusNativeActivity extends NativeActivity {
 	        		.build());
 			 }
 		 });
+	}
+	
+	public boolean adPopupClosed() {
+		return mAddClosed;
 	}
 }

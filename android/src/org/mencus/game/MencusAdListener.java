@@ -38,6 +38,7 @@ public class MencusAdListener extends AdListener {
         }
         Toast.makeText(mContext, String.format("onAdFailedToLoad(%s)", errorReason),
                 Toast.LENGTH_SHORT).show();
+        mContext.setAdClosed(true);
     }
 
     @Override
@@ -48,6 +49,7 @@ public class MencusAdListener extends AdListener {
     @Override
     public void onAdClosed() {
         //Toast.makeText(mContext, "onAdClosed()", Toast.LENGTH_SHORT).show();
+    	mContext.setAdClosed(true);
     }
 
     @Override
