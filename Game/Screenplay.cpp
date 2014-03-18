@@ -130,6 +130,7 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   if (m_mapActs.find(uiActId) == m_mapActs.end()) {
     CLevel *pLevel = dynamic_cast<CLevel*>(m_pOldScene);
     if (pLevel) {
+      pLevel->getStatistics().eMissionState = MS_ACCOMPLISHED;
       CGUIStatistics::getSingleton().showStatistics(pLevel->getStatistics());
       CGameState::getSingleton().changeGameState(CGameState::GS_STATISTICS, pLevel->getMapInfo());
     }

@@ -13,6 +13,7 @@
 #include "GameInputCommand.hpp"
 #include "XMLHelper.hpp"
 #include "Statistics.hpp"
+#include "GUIStatistics.hpp"
 
 using namespace XMLHelper;
 using namespace Weapon;
@@ -631,7 +632,9 @@ void CPlayer::damageTakenCallback(Ogre::Real fHitpoints) {
 }
 
 void CPlayer::killedByDamageCallback() {
-  CGameState::getSingleton().changeGameState(CGameState::GS_GAME_OVER);
+  m_Statistics.eMissionState = MS_FAILED;
+  CGUIStatistics::getSingleton().showStatistics(m_Statistics);
+  CGameState::getSingleton().changeGameState(CGameState::GS_STATISTICS);
 }
 
 void CPlayer::playerInputPauseChanged(bool bPause) {

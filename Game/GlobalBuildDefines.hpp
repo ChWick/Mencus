@@ -4,7 +4,7 @@
 
 #define DISABLE_CAMPAIGN
 #define ENABLE_CHEATS
-//#define INPUT_ENABLE_ALL
+#define INPUT_ENABLE_ALL
 //#define USE_DEBUG_DEFINES
 
 #endif

@@ -38,8 +38,8 @@ void CGameState::init() {
 }
 void CGameState::changeGameState(EGameStates eNewGameState, bool bNow, bool bForce) {
   m_eNextGameState = eNewGameState;
-  m_pMapInfo.reset();
-  m_pSaveState = NULL;
+  //m_pMapInfo.reset();
+  //m_pSaveState = NULL;
   if (bNow) {
     changeGameStateImpl();
   }

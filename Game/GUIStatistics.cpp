@@ -45,7 +45,7 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
   pButtonContainer->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pButtonContainer->setSize(USize(UDim(1, 0), UDim(1, 0)));
 
-  CEGUI::Window *pFinishedText = pButtonContainer->createChild("OgreTray/StaticText", "text");
+  CEGUI::Window *pFinishedText = pButtonContainer->createChild("OgreTray/Titlebar", "text");
   pFinishedText->setFont("dejavusans12");
   pFinishedText->setText("Mission accomplished");
   pFinishedText->setPosition(UVector2(UDim(0.05,0), UDim(0.05,0)));
@@ -143,10 +143,25 @@ void CGUIStatistics::resize(const CEGUI::String &smallfont, const CEGUI::String 
 void CGUIStatistics::showStatistics(const SStatistics &stats) {
   Window *pButtonContainer = m_pStatisticsRoot->getChild("ButtonContainer");
   Window *group = pButtonContainer->getChild("statisticsgroup");
+  Window *pTopText = pButtonContainer->getChild("text");
 
   int iHours = static_cast<int>(stats.fTime / 3600);
   int iMinutes = static_cast<int>((stats.fTime - iHours * 3600) / 60);
   int iSeconds = static_cast<int>(stats.fTime - iHours * 3600 - iMinutes * 60);
+
+  switch (stats.eMissionState) {
+  case MS_ACCOMPLISHED:
+    pTopText->setText("Mission accomplished");
+    pTopText->setProperty("CaptionColour", "FF66FF66");
+    break;
+  case MS_FAILED:
+    pTopText->setText("Mission failed");
+    pTopText->setProperty("CaptionColour", "FF992222");
+    break;
+  default:
+    pTopText->setText("Unknown mission state");
+    break;
+  }
 
   group->getChild("Data" + PropertyHelper<int>::toString(L_TIME))
     ->setText((Ogre::StringConverter::toString(iHours, 1) + ":"
@@ -166,9 +181,10 @@ void CGUIStatistics::showStatistics(const SStatistics &stats) {
     ->setText(PropertyHelper<int>::toString(stats.fUsedManapoints));
 }
 void CGUIStatistics::createLabel(int iLabel, CEGUI::Window *pParent, bool bData) {
-  Window *pLabel = pParent->createChild("OgreTray/StaticText", ((!bData) ? "Label" : "Data") + PropertyHelper<int>::toString(iLabel));
-  pLabel->setProperty("FrameEnabled", "False");
-  pLabel->setProperty("BackgroundEnabled", "False");
+  Window *pLabel = pParent->createChild("OgreTray/Label", ((!bData) ? "Label" : "Data") + PropertyHelper<int>::toString(iLabel));
+  //pLabel->setProperty("FrameEnabled", "False");
+  //pLabel->setProperty("BackgroundEnabled", "False");
+  pLabel->setProperty("HorzFormatting", "LeftAligned");
   pLabel->setPosition(UVector2(UDim(bData ? 0.4 : 0.05, 0), UDim(0.05 + iLabel * 0.1, 0)));
   pLabel->setSize(USize(UDim(bData ? 0.55 : 0.4, 0), UDim(0.09, 0)));
 

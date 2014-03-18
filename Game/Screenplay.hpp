@@ -100,6 +100,7 @@ public:
 
   std::shared_ptr<const CMapInfo> getMapInfo() const {return m_pMapInfo;}
   const SStatistics &getStatistics() const {return m_Statistics;}
+  SStatistics &getStatistics() {return m_Statistics;}
   CMap *getMap() {return m_pMap;}
 
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;

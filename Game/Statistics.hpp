@@ -3,9 +3,14 @@
 
 #include "Weapon.hpp"
 
+enum EMissionState {
+  MS_ACCOMPLISHED,
+  MS_FAILED
+};
 struct SStatistics {
   SStatistics() 
-    : fTime(0),
+    : eMissionState(MS_FAILED),
+      fTime(0),
       fHitpoints(0),
       fLostHitpoints(0),
       fUsedManapoints(0) {
@@ -13,6 +18,9 @@ struct SStatistics {
       ic = 0;
     }
   }
+  
+  EMissionState eMissionState;
+
   float fTime;
   
   // player data
