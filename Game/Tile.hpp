@@ -2,10 +2,10 @@
 #define TILE_HPP
 
 #include "Sprite.hpp"
+#include "TileTypes.hpp"
 
 class Ogre2dManager;
 
-typedef unsigned int TileType;
 
 class CTile : public CSprite {
 public:

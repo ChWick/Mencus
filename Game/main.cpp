@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
 #else
   CFileManager::init();
   new CSettings();
-  //CSnapshotManager::getSingleton().createFromFile("snapshot.xml");
+  CSnapshotManager::getSingleton().createFromFile("snapshot.xml");
   // Create application object
   CGame *app = new CGame();
 

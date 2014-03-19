@@ -8,6 +8,7 @@
 #include "InputDefines.hpp"
 #include "GUIStatistics.hpp"
 #include "GUITutorial.hpp"
+#include "MapEditor.hpp"
 
 using namespace CEGUI;
 
@@ -65,6 +66,7 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   createFreeTypeFont("diploma15", 15, "diploma.ttf");
   createFreeTypeFont("diploma20", 20, "diploma.ttf");
   createFreeTypeFont("dejavusans20", 20, "DejaVuSans.ttf");
+  CEGUI::System::getSingleton().getDefaultGUIContext().setDefaultFont( "dejavusans12" );
   guiRoot->setFont("dejavusans12");
 
 
@@ -78,6 +80,9 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   new CMainMenu(guiRoot);
   new CGUIStatistics(guiRoot);
   new CGUITutorial(guiRoot);
+#ifdef MAP_EDITOR_ENABLED
+  new CMapEditor(guiRoot);
+#endif
 
 }
 CGUIManager::~CGUIManager() {
@@ -91,6 +96,9 @@ CGUIManager::~CGUIManager() {
   delete CGUITutorial::getSingletonPtr();
 #ifdef INPUT_TOUCH
   delete m_pGUIInput;
+#endif
+#ifdef MAP_EDITOR_ENABLED
+  delete CMapEditor::getSingletonPtr();
 #endif
   
   if (CEGUI::System::getSingletonPtr()) {CEGUI::OgreRenderer::destroySystem();}

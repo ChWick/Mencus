@@ -44,6 +44,7 @@ public:
   OgreBites::ParamsPanel* getDetailsPanel() {return mDetailsPanel;}
   Ogre::FileSystemLayer* getFileSystemLayer() {return mFSLayer;}
   Ogre::Root *getRoot() {return mRoot;}
+  Ogre::RenderWindow *getRenderWindow() {return mWindow;}
 
   void go();
   void initApp();

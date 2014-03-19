@@ -16,6 +16,7 @@
 #include "XMLHelper.hpp"
 #include "Statistics.hpp"
 #include "TutorialManager.hpp"
+#include "MapEditor.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -44,6 +45,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_bRenderPause(false),
     m_fPlayingTime(0),
     m_Statistics(statistics) {
+  CMapEditor::getSingleton().init(this);
   CGame::getSingleton().showLoadingBar();
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
   CGame::getSingleton().hideLoadingBar();
@@ -62,6 +64,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
   CHUD::getSingleton().show();
 }
 CMap::~CMap() {
+  CMapEditor::getSingleton().exit();
   delete m_pTutorialManager;
   CHUD::getSingleton().hide();
   clearMap();
@@ -581,6 +584,11 @@ void CMap::updateCameraPos(Ogre::Real tpf) {
   m_vCameraPos.y = max(m_vCameraPos.y, static_cast<Ogre::Real>(0));
   m_vCameraPos.x = min(m_vCameraPos.x, m_gridTiles.getSizeX() - TILES_PER_SCREEN.x);
   m_vCameraPos.y = min(m_vCameraPos.y, m_gridTiles.getSizeY() - TILES_PER_SCREEN.y);
+}
+Ogre::Vector2 CMap::mouseToMapPos(const Ogre::Vector2 &vMousePos) const {
+  Ogre::RenderWindow *pWnd = CGame::getSingleton().getRenderWindow();
+
+  return m_vCameraPos + TILES_PER_SCREEN * (Ogre::Vector2(0, 1) + vMousePos / Ogre::Vector2(pWnd->getWidth(), -static_cast<Ogre::Real>(pWnd->getHeight())));
 }
 Ogre::Vector2 CMap::transformPosition(const Ogre::Vector2 &vPosition) const {
   Ogre::Vector2 vOffset(m_vCameraPos + m_vCameraDebugOffset);
