@@ -23,6 +23,12 @@ public:
         
   /** @copydoc Object::_initialize */
   virtual void _initialize(){}
+
+  void setStatesToNone(int n) {
+    for (int i = n; i < mStates.size(); i++) {
+      mStates[i].touchType = OIS::MT_None;
+    }
+  }
         
   OIS::MultiTouchState &getMultiTouchState(int i){
     while(i >= mStates.size()){
@@ -114,9 +120,11 @@ public:
             
     switch(action)
       {
+      case 5:
       case 0:
 	state.touchType = OIS::MT_Pressed;
 	break;
+      case 6:
       case 1:
 	state.touchType = OIS::MT_Released;
 	break;

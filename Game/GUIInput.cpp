@@ -255,9 +255,10 @@ void CGUIInput::updateInput() {
 
   OIS::MultiTouch *pMultiTouch = CGame::getSingleton().getInputContext().mMultiTouch;
   if (pMultiTouch) {
-    std::vector<OIS::MultiTouchState> mts = pMultiTouch->getMultiTouchStates();
+    const std::vector<OIS::MultiTouchState> &mts = pMultiTouch->getMultiTouchStates();
     for (auto &state : mts) {
-      if (state.touchType == OIS::MT_Moved) {
+      if (state.touchType == OIS::MT_Moved || state.touchType == OIS::MT_Pressed) {
+	//Ogre::LogManager::getSingleton().logMessage("Pressed buttons: " + Ogre::StringConverter::toString(mts.size()));
 	checkForButtonPress(Ogre::Vector2(state.X.abs,
 					  state.Y.abs));
       }

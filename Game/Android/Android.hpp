@@ -145,22 +145,36 @@ public:
       {
 	if (AInputEvent_getType(event) == AINPUT_EVENT_TYPE_MOTION) 
 	  {
-	    mTouch->clearStates();
-	    for (size_t pi = 0; pi < AMotionEvent_getPointerCount(event); pi++) {
-	      // LOGI("Count %d", AMotionEvent_getPointerCount(event));
-	      int action = (int)(AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction(event));
+	    mTouch->setStatesToNone(AMotionEvent_getPointerCount(event));
+	    for (size_t n = 0; n < AMotionEvent_getPointerCount(event); n++) {
+	      int nPointerId = AMotionEvent_getPointerId( event, n );
+	      int nAction = AMOTION_EVENT_ACTION_MASK & AMotionEvent_getAction( event );
+	      int nRawAction = AMotionEvent_getAction( event );
+	      int nPointerIndex = n;
 	      
-	      if(action == 0)
+	      if( nAction == AMOTION_EVENT_ACTION_POINTER_DOWN || nAction == AMOTION_EVENT_ACTION_POINTER_UP)
+		{
+		  nPointerIndex = (AMotionEvent_getAction( event ) & AMOTION_EVENT_ACTION_POINTER_INDEX_MASK) >> AMOTION_EVENT_ACTION_POINTER_INDEX_SHIFT;
+		  nPointerId = AMotionEvent_getPointerId( event, nPointerIndex );
+		}
+
+	      int action = nAction;
+	      int id = nPointerId;
+	      if(action == 0 || action == 5)
 		mInputInjector->
 		  injectTouchEvent(2,
-				   AMotionEvent_getRawX(event, pi),
-				   AMotionEvent_getRawY(event, pi), pi );
+				   AMotionEvent_getRawX(event, nPointerIndex),
+				   AMotionEvent_getRawY(event, nPointerIndex), nPointerIndex );
                     
 	      mInputInjector->
 		injectTouchEvent(action,
-				 AMotionEvent_getRawX(event, pi),
-				 AMotionEvent_getRawY(event, pi), pi);
+				 AMotionEvent_getRawX(event, nPointerIndex),
+				 AMotionEvent_getRawY(event, nPointerIndex), nPointerIndex );
 	      //LOGI("Action of %d: %d", pi, action);
+	      if (nAction != 2) {
+		// not moved action, do not iterate
+		break;
+	      }
 	    }
 	    //LOGI("Pointer Count: %d  Number of states: %d", AMotionEvent_getPointerCount(event), mTouch->getMultiTouchStates().size());
 	  }
