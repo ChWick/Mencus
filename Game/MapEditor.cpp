@@ -39,10 +39,14 @@ void CMapEditor::init(CMap *pMap) {
   m_pMap = pMap;
 
   float fTabSize = 0.3;
-  int iTilesCountX = 3;
-  float fButtonSize = 100;
+  int iTilesCountX = 5;
+  float fButtonSize = 30;
   
 
+  Ogre::LogManager::getSingleton().logMessage("*** Creating MapEditor");
+
+
+  Ogre::LogManager::getSingleton().logMessage("    TabControl");
   TabControl *pTabPane = dynamic_cast<TabControl*>(m_pRoot->createChild("OgreTray/TabControl", "TilesGroup"));
   m_pTabControl = pTabPane;
   pTabPane->setPosition(UVector2(UDim(1 - fTabSize, 0), UDim(0, 0)));
@@ -51,7 +55,7 @@ void CMapEditor::init(CMap *pMap) {
 
   // Brush content pane
   // ==================
-
+  Ogre::LogManager::getSingleton().logMessage("    Brush content pane");
   Window *pBrushPane = pTabPane->createChild("OgreTray/TabContentPane", "BrushContentPane");
   //pTabPane->addTab(pBrushPane);
   pBrushPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
@@ -63,21 +67,39 @@ void CMapEditor::init(CMap *pMap) {
   pBrushScrollPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pBrushScrollPane->setSize(USize(UDim(1, 0), UDim(1, 0)));
 
+  float fCurrentHeight = 0;
   for (int i = 0; i < B_COUNT; i++) {
     RadioButton *pBrushSelection = dynamic_cast<RadioButton*>(pBrushScrollPane->createChild("OgreTray/RadioButton", MAP_EDITOR_BRUSH_LABELS[i]));
     pBrushSelection->setText(MAP_EDITOR_BRUSH_LABELS[i]);
-    pBrushSelection->setPosition(UVector2(UDim(0, 0), UDim(0, fButtonSize * i * 0.5)));
+    pBrushSelection->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
     pBrushSelection->setSize(USize(UDim(1, 0), UDim(0, fButtonSize * 0.5)));
     pBrushSelection->setGroupID(812723);
     pBrushSelection->setID(i);
     pBrushSelection->setSelected(false);
     pBrushSelection->subscribeEvent(RadioButton::EventSelectStateChanged,
 				    Event::Subscriber(&CMapEditor::onBrushSelectionChanged, this));
+    fCurrentHeight += fButtonSize * 0.5;
   }
   dynamic_cast<RadioButton*>(pBrushScrollPane->getChild(MAP_EDITOR_BRUSH_LABELS[B_PLACE]))->setSelected(true);
 
+  // offset
+  fCurrentHeight += 10;
+
+  // create check buttons
+  ToggleButton *pSnapToGridButton = dynamic_cast<ToggleButton*>(pBrushScrollPane->createChild("OgreTray/Checkbox", "SnapToGrid"));
+  pSnapToGridButton->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
+  pSnapToGridButton->setSize(USize(UDim(1, 0), UDim(0, fButtonSize * 0.5)));
+  fCurrentHeight += fButtonSize * 0.5;
+  pSnapToGridButton->setText("Snap to grid");
+  pSnapToGridButton->setEnabled(false);
+  pSnapToGridButton->subscribeEvent(ToggleButton::EventSelectStateChanged,
+				    Event::Subscriber(&CMapEditor::onSnapToGridChanged, this));
+  pSnapToGridButton->setEnabled(true);
+  
+
   // Tiles content pane
   // ==================
+  Ogre::LogManager::getSingleton().logMessage("    Tiles content pane");
   Window *pTilesTabContentPane = pTabPane->createChild("OgreTray/TabContentPane", "TilesContentPane");
   //pTabPane->addTab(pTilesTabContentPane);
   pTilesTabContentPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
@@ -199,13 +221,17 @@ bool CMapEditor::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id
   return true;
 }
 bool CMapEditor::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
+  if (m_bPressed) {
+    handleBrushReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+  }
   m_bPressed = false;
   return true;
 }
 bool CMapEditor::mouseMoved( const OIS::MouseEvent &arg ) {
   if (!m_bPressed) {return true;}
 
-  handleBrushMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+  handleBrushMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs),
+		   Ogre::Vector2(arg.state.X.rel, arg.state.Y.rel));
   return true;
 }
 bool CMapEditor::selectSprite(const Ogre::Vector2 &vPos) {
@@ -243,12 +269,31 @@ void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
     selectSprite(vPos);
     break;
   }
-  handleBrushMoved(vPos);
+  handleBrushMoved(vPos, Ogre::Vector2::ZERO);
 }
-void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos) {
+void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2 &vDelta) {
   switch (m_eSelectedBrush) {
   case B_PLACE:
     placeCurrentTile(vPos);
+    break;
+  case B_MOVE:
+    if (m_pSelectedSprite) {
+      Ogre::Vector2 vMapPos(m_pMap->mouseToMapSize(vDelta));
+      m_pSelectedSprite->translate(vMapPos);
+    }
+    break;
+  }
+}
+void CMapEditor::handleBrushReleased(const Ogre::Vector2 &vPos) {
+  switch (m_eSelectedBrush) {
+  case B_PLACE:
+    break;
+  case B_MOVE:
+    float fGridSize = 0.5;
+    if (m_pSelectedSprite && m_bSnapToGrid) {
+      Ogre::Vector2 v(m_pSelectedSprite->getPosition() / fGridSize);
+      m_pSelectedSprite->setPosition(Ogre::Vector2(floor(v.x + 0.5), floor(v.y + 0.5)) * fGridSize);
+    }
     break;
   }
 }
@@ -272,4 +317,9 @@ bool CMapEditor::onBrushSelectionChanged(const EventArgs &args) {
   }
   return true;
 }
-
+bool CMapEditor::onSnapToGridChanged(const EventArgs &args) {
+  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
+  ToggleButton *pCB = dynamic_cast<ToggleButton*>(wndArgs.window);
+  m_bSnapToGrid = pCB->isSelected();
+  return true;
+}

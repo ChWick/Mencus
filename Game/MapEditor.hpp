@@ -31,6 +31,7 @@ private:
   CMap *m_pMap;
   EBrushes m_eSelectedBrush;
   CSprite *m_pSelectedSprite;
+  bool m_bSnapToGrid;
 public:
   static CMapEditor &getSingleton();
   static CMapEditor *getSingletonPtr();
@@ -54,11 +55,13 @@ public:
   virtual bool keyPressed( const OIS::KeyEvent &arg );
 private:
   void handleBrushPressed(const Ogre::Vector2 &vPos);
-  void handleBrushMoved(const Ogre::Vector2 &vPos);
+  void handleBrushReleased(const Ogre::Vector2 &vPos);
+  void handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2 &vDelta);
   void placeCurrentTile(const Ogre::Vector2 &vPos);
   void selectTile(unsigned int uiTile);
   bool onTileClicked(const CEGUI::EventArgs &args);
   bool onBrushSelectionChanged(const CEGUI::EventArgs &args);
+  bool onSnapToGridChanged(const CEGUI::EventArgs &args);
 
   bool dummyReturnFalse(const CEGUI::EventArgs &args) {return false;}
 
