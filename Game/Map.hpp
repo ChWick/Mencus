@@ -216,6 +216,7 @@ public:
   void playerWarped();
 
   Ogre::Vector2 mouseToMapPos(const Ogre::Vector2 &vMousePos) const;
+  Ogre::Vector2 mouseToMapSize(const Ogre::Vector2 &vMouseSize) const;
 
   // PauseListener
   virtual void mapUpdatePauseChanged(bool bPause) {m_bUpdatePause = bPause;}

@@ -612,6 +612,11 @@ Ogre::Vector2 CMap::mouseToMapPos(const Ogre::Vector2 &vMousePos) const {
 
   return m_vCameraPos + TILES_PER_SCREEN * (Ogre::Vector2(0, 1) + vMousePos / Ogre::Vector2(pWnd->getWidth(), -static_cast<Ogre::Real>(pWnd->getHeight())));
 }
+Ogre::Vector2 CMap::mouseToMapSize(const Ogre::Vector2 &vMousePos) const {
+  Ogre::RenderWindow *pWnd = CGame::getSingleton().getRenderWindow();
+
+  return TILES_PER_SCREEN * vMousePos / Ogre::Vector2(pWnd->getWidth(), -static_cast<Ogre::Real>(pWnd->getHeight()));
+}
 // SpriteTransformPipeline
 Ogre::Vector2 CMap::transformPosition(const Ogre::Vector2 &vPosition) const {
   Ogre::Vector2 vOffset(m_vCameraPos + m_vCameraDebugOffset);
