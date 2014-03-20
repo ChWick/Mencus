@@ -45,7 +45,9 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_bRenderPause(false),
     m_fPlayingTime(0),
     m_Statistics(statistics) {
+#ifdef MAP_EDITOR_ENABLED
   CMapEditor::getSingleton().init(this);
+#endif
   CGame::getSingleton().showLoadingBar();
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
   CGame::getSingleton().hideLoadingBar();
@@ -67,7 +69,9 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
 		       CGame::getSingleton().getRenderWindow()->getHeight()));
 }
 CMap::~CMap() {
+#ifdef MAP_EDITOR_ENABLED
   CMapEditor::getSingleton().exit();
+#endif
   delete m_pTutorialManager;
   CHUD::getSingleton().hide();
   clearMap();
@@ -448,7 +452,9 @@ bool CMap::keyPressed( const OIS::KeyEvent &arg ) {
       m_vCameraDebugOffset.y -=1;
     }
     else if (arg.key == OIS::KC_TAB) {
+#ifdef MAP_EDITOR_ENABLED
       CMapEditor::getSingleton().start();
+#endif
     }
   }
 
