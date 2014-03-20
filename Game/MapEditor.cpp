@@ -34,9 +34,10 @@ CMapEditor::CMapEditor(Window *pRoot)
     m_pTabControl(NULL) {
   //init(0);
 }
-void CMapEditor::init(CMap *pMap) {
+void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
   CInputListenerManager::getSingleton().addInputListener(this);
   m_pMap = pMap;
+  m_pMapInfo = std::shared_ptr<CMapInfo>(new CMapInfo(pMapInfo));
 
   float fTabSize = 0.3;
   int iTilesCountX = 5;
@@ -95,6 +96,16 @@ void CMapEditor::init(CMap *pMap) {
   pSnapToGridButton->subscribeEvent(ToggleButton::EventSelectStateChanged,
 				    Event::Subscriber(&CMapEditor::onSnapToGridChanged, this));
   pSnapToGridButton->setEnabled(true);
+
+  // offset
+  fCurrentHeight += 10;
+  Window *pSaveButton = pBrushScrollPane->createChild("OgreTray/Button", "SaveButton");
+  pSaveButton->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
+  pSaveButton->setSize(USize(UDim(1, 0), UDim(0, fButtonSize)));
+  fCurrentHeight += fButtonSize;
+  pSaveButton->setText("Save to file");
+  pSaveButton->subscribeEvent(PushButton::EventClicked, 
+			      Event::Subscriber(&CMapEditor::onSaveMap, this));
   
 
   // Tiles content pane
@@ -149,6 +160,7 @@ void CMapEditor::init(CMap *pMap) {
   }
   
   selectTile(1);
+  m_bVisible = false;
   stop();
 }
 void CMapEditor::exit() {
@@ -165,15 +177,24 @@ void CMapEditor::start() {
   Sizef vSize(m_pTabControl->getPixelSize());
   m_pMap->resize(Ogre::Vector2(CGame::getSingleton().getRenderWindow()->getWidth() - vSize.d_width, vSize.d_height));
   m_pSelectedSprite = NULL;
+  
+  //reset map, but store camera pos
+  Ogre::Vector2 vCamPos(m_pMap->getCameraTargetPos());
+  m_pMap->loadMap(m_pMapInfo);
+  m_pMap->setCameraPos(vCamPos);
 }
 void CMapEditor::stop() {
   setInputListenerEnabled(false);
   unpause(PAUSE_MAP_UPDATE);
   CHUD::getSingleton().show();
-  m_bVisible = false;
   m_pTabControl->setVisible(false);
   m_pMap->resize(Ogre::Vector2(CGame::getSingleton().getRenderWindow()->getWidth(),
 			       CGame::getSingleton().getRenderWindow()->getHeight()));
+
+  if (m_bVisible) {
+    m_pMap->writeToXMLElement(m_pMapInfo->getEmptyRootNode());
+    m_bVisible = false;
+  }
 }
 void CMapEditor::render() {
   if (!m_bVisible) {return;}
@@ -328,4 +349,10 @@ bool CMapEditor::onSnapToGridChanged(const EventArgs &args) {
   ToggleButton *pCB = dynamic_cast<ToggleButton*>(wndArgs.window);
   m_bSnapToGrid = pCB->isSelected();
   return true;
+}
+bool CMapEditor::onSaveMap(const EventArgs &args) {
+  tinyxml2::XMLPrinter printer;
+  m_pMapInfo->getDocument().Accept(&printer);
+
+  cout << printer.CStr() << endl;
 }

@@ -11,6 +11,11 @@ enum EMapDifficulty {
   D_HARD,
   D_COUNT
 };
+
+class CMapInfo;
+typedef std::shared_ptr<const CMapInfo> CMapInfoConstPtr;
+typedef std::shared_ptr<CMapInfo> CMapInfoPtr;
+
 class CMapInfo {
 public:
   static EMapDifficulty parseMapDifficlty(const std::string &s) {
@@ -28,6 +33,7 @@ public:
     }
   }
 private:
+  tinyxml2::XMLPrinter m_xmlprinter;
   tinyxml2::XMLDocument m_Document;
   bool m_bValid;
   EMapDifficulty m_eDifficulty;
@@ -35,16 +41,22 @@ private:
   std::string m_sDescription;
 public:
   CMapInfo(const std::string &sFileName, const std::string &sResourceGroup);
+  CMapInfo(const CMapInfoConstPtr src);
 
   std::string generateInfoText() const;
 
+  tinyxml2::XMLElement *getEmptyRootNode();
   const tinyxml2::XMLDocument &getDocument() const {return m_Document;}
+  const tinyxml2::XMLPrinter &getPrinter() const {return m_xmlprinter;}
   bool isValid() const {return m_bValid;}
   EMapDifficulty getDifficulty() const {return m_eDifficulty;}
   std::string getDifficultyAsString() const {return toString(m_eDifficulty);}
+
+  std::string getXMLText();
+
+private:
+  void constructor_impl();
 };
 
-typedef std::shared_ptr<const CMapInfo> CMapInfoConstPtr;
-typedef std::shared_ptr<CMapInfo> CMapInfoPtr;
 
 #endif

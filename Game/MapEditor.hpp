@@ -5,6 +5,7 @@
 #include <CEGUI/CEGUI.h>
 #include "InputListener.hpp"
 #include "PauseCaller.hpp"
+#include "MapInfo.hpp"
 
 class CSprite;
 class CMap;
@@ -32,6 +33,7 @@ private:
   EBrushes m_eSelectedBrush;
   CSprite *m_pSelectedSprite;
   bool m_bSnapToGrid;
+  CMapInfoPtr m_pMapInfo;
 public:
   static CMapEditor &getSingleton();
   static CMapEditor *getSingletonPtr();
@@ -40,7 +42,7 @@ public:
 
 
   void toggle();
-  void init(CMap *pMap);
+  void init(CMap *pMap, const CMapInfoConstPtr pMapInfo);
   void start();
   void stop();
   void exit();
@@ -62,6 +64,7 @@ private:
   bool onTileClicked(const CEGUI::EventArgs &args);
   bool onBrushSelectionChanged(const CEGUI::EventArgs &args);
   bool onSnapToGridChanged(const CEGUI::EventArgs &args);
+  bool onSaveMap(const CEGUI::EventArgs &args);
 
   bool dummyReturnFalse(const CEGUI::EventArgs &args) {return false;}
 

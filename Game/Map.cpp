@@ -31,7 +31,8 @@ const Ogre::Real CAMERA_MAX_MOVE_SPEED(10);
 
 CMap::CMap(Ogre::SceneManager *pSceneManager,
 	   CScreenplayListener *pScreenplayListener,
-	   SStatistics &statistics)
+	   SStatistics &statistics,
+	   const CMapInfoConstPtr pMapInfo)
   : m_pTutorialManager(new CTutorialManager(*this)), 
     m_p2dManagerMap(NULL),
     m_pBackground(NULL),
@@ -44,9 +45,10 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_bUpdatePause(false),
     m_bRenderPause(false),
     m_fPlayingTime(0),
-    m_Statistics(statistics) {
+  m_Statistics(statistics),
+  m_pMapInfo(pMapInfo) {
 #ifdef MAP_EDITOR_ENABLED
-  CMapEditor::getSingleton().init(this);
+  CMapEditor::getSingleton().init(this, pMapInfo);
 #endif
   CGame::getSingleton().showLoadingBar();
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
@@ -89,6 +91,7 @@ CMap::~CMap() {
 }
 void CMap::clearMap() {
   if (m_pExit) {delete m_pExit; m_pExit = NULL;}
+  m_vCameraRestrictions.clear();
   m_lLinks.clear();
   m_lShotsToDestroy.clear();
   m_lExplosionsToDestroy.clear();
@@ -119,6 +122,10 @@ void CMap::clearMap() {
   while (m_lEnemies.size() > 0) {
     delete m_lEnemies.front();
     m_lEnemies.pop_front();
+  }
+  while (m_lObjects.size() > 0) {
+    delete m_lObjects.front();
+    m_lObjects.pop_front();
   }
 
   if (m_pPlayer) {delete m_pPlayer; m_pPlayer = NULL;}

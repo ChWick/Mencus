@@ -91,10 +91,12 @@ private:
   bool m_bRenderPause;
   Ogre::Real m_fPlayingTime;
   SStatistics &m_Statistics;
+  const CMapInfoConstPtr m_pMapInfo;
 public:
   CMap(Ogre::SceneManager *pSceneManager,
        CScreenplayListener *pScreenplayListener,
-       SStatistics &statistics);
+       SStatistics &statistics,
+       const CMapInfoConstPtr m_pMapInfo);
   ~CMap();
 
   void loadMap(const string &sFilename, const string &sResourceGroup);
@@ -218,6 +220,9 @@ public:
 
   Ogre::Vector2 mouseToMapPos(const Ogre::Vector2 &vMousePos) const;
   Ogre::Vector2 mouseToMapSize(const Ogre::Vector2 &vMouseSize) const;
+
+  void setCameraPos(const Ogre::Vector2 &vPos) {m_vCameraTargetPos = m_vCameraPos = vPos;}
+  const Ogre::Vector2 &getCameraTargetPos() const {return m_vCameraTargetPos;}
   void translateCamera(const Ogre::Vector2 &vOffset) {m_vCameraTargetPos = m_vCameraPos += vOffset;}
 
   // PauseListener

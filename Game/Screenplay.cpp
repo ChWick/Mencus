@@ -43,7 +43,8 @@ void CLevel::init() {
   if (!m_pMap) {
     m_pMap = new CMap(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"),
 		      m_pScreenplayListener,
-		      m_Statistics);
+		      m_Statistics,
+		      m_pMapInfo);
   }
 }
 void CLevel::exit() {
