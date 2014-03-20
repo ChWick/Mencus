@@ -284,7 +284,7 @@ void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sReso
 void CScreenplay::update(Ogre::Real tpf) {
   if (m_bPaused) {return;}
 
-  if (tpf > 0.2) {
+  if (m_Fader.isFading() && tpf > 0.2) {
     m_Fader.fade(0);
     // Probably loading causes this fps, next time step update
     return;
@@ -293,7 +293,19 @@ void CScreenplay::update(Ogre::Real tpf) {
   m_Fader.fade(tpf);
 
   if (m_pCurrentScene) {
-    m_pCurrentScene->update(tpf);
+    if (tpf > 0.05) {
+      float fUpdated = 0.05;
+      while (1) {
+	m_pCurrentScene->update(0.05);
+	fUpdated += 0.05;
+	if (fUpdated > tpf) {
+	  m_pCurrentScene->update(fUpdated - tpf);
+	  break;
+	}
+      }
+    } else {
+      m_pCurrentScene->update(tpf);
+    }
     m_pCurrentScene->render(tpf);
   }
 

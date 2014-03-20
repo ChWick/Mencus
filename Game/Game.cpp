@@ -528,10 +528,6 @@ bool CGame::frameStarted(const Ogre::FrameEvent& evt) {
   //Need to capture/update each device
   mInputContext.capture();
 
-  if (evt.timeSinceLastFrame > 0.1) {
-    return true;
-  }
-
   if (CGUIManager::getSingletonPtr()) {
     CGUIManager::getSingleton().update(evt.timeSinceLastFrame);
   }
