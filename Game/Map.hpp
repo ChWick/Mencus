@@ -76,6 +76,9 @@ private:
 
   CBackground *m_pBackground;
 
+  Ogre::Vector2 m_vMapSize;
+  Ogre::Vector2 m_vTransformedStartPos;
+  Ogre::Vector2 m_vTransformedEndPos;
   Ogre::Vector2 m_vCameraPos;
   Ogre::Vector2 m_vCameraTargetPos;
   Ogre::Vector2 m_vCameraDebugOffset;
@@ -98,6 +101,7 @@ public:
   void loadMap(const CMapInfoConstPtr pMapInfo);
   void writeToXMLElement(tinyxml2::XMLElement *pMapElem) const;
   void readFromXMLElement(const tinyxml2::XMLElement *pRoot);
+  void resize(const Ogre::Vector2 &vSize, const Ogre::Vector2 &vOrigin = Ogre::Vector2::ZERO);
 
   //! Function to check if a line penetrates into a tile a lower position
   /**
@@ -179,7 +183,10 @@ public:
   virtual bool keyPressed( const OIS::KeyEvent &arg );
   virtual bool keyReleased( const OIS::KeyEvent &arg );
 
+  // SpriteTransformPipeline
   Ogre::Vector2 transformPosition(const Ogre::Vector2 &vPosition) const;
+  bool isVisible(const Ogre::Vector2 &vPosition) const ;
+  bool isVisible(const Ogre::Vector2 &vStart, const Ogre::Vector2 &vEnd) const;
 
   CTile* &getTile(unsigned int x, unsigned int y) {return m_gridTiles(x, y);}
   CTile *getTile(unsigned int x, unsigned int y) const {return m_gridTiles(x, y);}
@@ -188,6 +195,7 @@ public:
   const std::list<CSwitch*> &getSwitches() const {return m_lSwitches;}
   const std::list<CEnemy*> &getEnemies() const {return m_lEnemies;}
   const std::list<CLink> &getLinks() const {return m_lLinks;}
+  const std::list<CObject*> &getObjects() const {return m_lObjects;}
 
   bool isInMap(unsigned int x, unsigned int y);
 

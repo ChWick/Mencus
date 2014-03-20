@@ -111,6 +111,9 @@ void CGUIManager::update(Ogre::Real tpf) {
 #ifdef INPUT_TOUCH
   m_pGUIInput->update(tpf);
 #endif
+#ifdef MAP_EDITOR_ENABLED
+  CMapEditor::getSingleton().render();
+#endif
 }
 void CGUIManager::renderQueueStarted(Ogre::uint8 id, const Ogre::String& invocation, bool& skipThisQueue) {
    // make sure you check the invocation string, or you can end up rendering the GUI multiple times
@@ -164,17 +167,31 @@ bool CGUIManager::mouseMoved( const OIS::MouseEvent &arg ) {
   if (arg.state.Z.rel)
     sys.getDefaultGUIContext().injectMouseWheelChange(arg.state.Z.rel / 120.0f);
 
+
+  CEGUI::MouseEventArgs args(NULL);
+  args.position = CEGUI::Vector2f(arg.state.X.abs, arg.state.Y.abs);
+  args.moveDelta = CEGUI::Vector2f(arg.state.X.rel, arg.state.Y.rel);
+  CEGUI::GlobalEventSet::getSingleton().fireEvent(CEGUI::Window::EventMouseMove, args);
+
   return true;
 }
 bool CGUIManager::mousePressed(const OIS::MouseEvent& arg, OIS::MouseButtonID id) {
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(arg.state.X.abs, arg.state.Y.abs);
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(convertButton(id));
+  CEGUI::MouseEventArgs args(NULL);
+  args.position = CEGUI::Vector2f(arg.state.X.abs, arg.state.Y.abs);
+  args.moveDelta = CEGUI::Vector2f(arg.state.X.rel, arg.state.Y.rel);
+  CEGUI::GlobalEventSet::getSingleton().fireEvent(CEGUI::Window::EventMouseButtonDown, args);
 
   return true;
 }
 bool CGUIManager::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(arg.state.X.abs, arg.state.Y.abs);
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(convertButton(id));
+  CEGUI::MouseEventArgs args(NULL);
+  args.position = CEGUI::Vector2f(arg.state.X.abs, arg.state.Y.abs);
+  args.moveDelta = CEGUI::Vector2f(arg.state.X.rel, arg.state.Y.rel);
+  CEGUI::GlobalEventSet::getSingleton().fireEvent(CEGUI::Window::EventMouseButtonUp, args);
 
   return true;
 }

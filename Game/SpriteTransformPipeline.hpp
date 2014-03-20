@@ -6,6 +6,8 @@
 class CSpriteTransformPipeline {
 public:
   virtual Ogre::Vector2 transformPosition(const Ogre::Vector2 &vPosition) const = 0;
+  virtual bool isVisible(const Ogre::Vector2 &vPosition) const ;
+  virtual bool isVisible(const Ogre::Vector2 &vStart, const Ogre::Vector2 &vEnd) const;
 };
 
 class CDefaultSpriteTransformPipeline : public CSpriteTransformPipeline {

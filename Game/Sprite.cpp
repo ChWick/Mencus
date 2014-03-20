@@ -53,7 +53,7 @@ void CSprite::render(Ogre::Real tpf) {
   Ogre::Vector2 vStart = m_pTransformPipeline->transformPosition(m_vPosition + m_pTextureToDraw->getSpriteOffset());
   Ogre::Vector2 vEnd = m_pTransformPipeline->transformPosition(m_vPosition + m_pTextureToDraw->getSpriteOffset() + m_vSize * m_pTextureToDraw->getSpriteScale());
 
-  if (vEnd.x < -1 || vEnd.y < -1 || vStart.x > 1 || vStart.y > 1) {
+  if (!m_pTransformPipeline->isVisible(vStart, vEnd)) {
     // not visible
     return;
   }

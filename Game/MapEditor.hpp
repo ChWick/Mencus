@@ -6,20 +6,31 @@
 #include "InputListener.hpp"
 #include "PauseCaller.hpp"
 
+class CSprite;
 class CMap;
 
 class CMapEditor 
   : public Ogre::Singleton<CMapEditor>,
     public CInputListener,
     public CPauseCaller {
+public:
+  enum EBrushes {
+    B_PLACE,
+    B_EDIT,
+    B_MOVE,
+
+    B_COUNT,
+  };
 private:
   bool m_bPressed;
   bool m_bVisible;
   CEGUI::Window *m_pRoot;
   CEGUI::TabControl *m_pTabControl;
-  CEGUI::Window *m_pTilesContainer;
+  CEGUI::ScrollablePane *m_pTilesContainer;
   unsigned int m_uiCurrentTile;
   CMap *m_pMap;
+  EBrushes m_eSelectedBrush;
+  CSprite *m_pSelectedSprite;
 public:
   static CMapEditor &getSingleton();
   static CMapEditor *getSingletonPtr();
@@ -32,6 +43,7 @@ public:
   void start();
   void stop();
   void exit();
+  void render();
 
   CEGUI::Window *getTileFromType(unsigned int uiTile);
   unsigned int getTypeFromTile(CEGUI::Window *pTile);
@@ -41,10 +53,16 @@ public:
   virtual bool mouseMoved( const OIS::MouseEvent &arg );
   virtual bool keyPressed( const OIS::KeyEvent &arg );
 private:
+  void handleBrushPressed(const Ogre::Vector2 &vPos);
+  void handleBrushMoved(const Ogre::Vector2 &vPos);
+  void placeCurrentTile(const Ogre::Vector2 &vPos);
   void selectTile(unsigned int uiTile);
   bool onTileClicked(const CEGUI::EventArgs &args);
+  bool onBrushSelectionChanged(const CEGUI::EventArgs &args);
 
   bool dummyReturnFalse(const CEGUI::EventArgs &args) {return false;}
+
+  bool selectSprite(const Ogre::Vector2 &vPos);
 };
 
 #endif

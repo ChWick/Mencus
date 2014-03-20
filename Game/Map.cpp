@@ -62,6 +62,9 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
   new CDebugDrawer(this, m_pDebugSpriteManager);
 
   CHUD::getSingleton().show();
+
+  resize(Ogre::Vector2(CGame::getSingleton().getRenderWindow()->getWidth(),
+		       CGame::getSingleton().getRenderWindow()->getHeight()));
 }
 CMap::~CMap() {
   CMapEditor::getSingleton().exit();
@@ -120,6 +123,14 @@ void CMap::clearMap() {
     delete pTile;
   }
   m_gridTiles.clear();
+}
+void CMap::resize(const Ogre::Vector2 &vSize, const Ogre::Vector2 &vOrigin) {
+  m_vMapSize = vSize;
+  Ogre::Vector2 vScreenSize(CGame::getSingleton().getRenderWindow()->getWidth(),
+			    CGame::getSingleton().getRenderWindow()->getHeight());
+  Ogre::Vector2 vScale(m_vMapSize / vScreenSize);
+  m_vTransformedStartPos = vOrigin / vScreenSize - Ogre::Vector2(1, 1);
+  m_vTransformedEndPos = m_vTransformedStartPos + 2 * vScale;
 }
 void CMap::loadMap(const CMapInfoConstPtr pMapInfo) {
   clearMap();
@@ -423,17 +434,22 @@ void CMap::swapBoxes() {
   }
 }
 bool CMap::keyPressed( const OIS::KeyEvent &arg ) {
-  if (arg.key == OIS::KC_H) {
-    m_vCameraDebugOffset.x -= 1;
-  }
-  else if (arg.key == OIS::KC_K) {
-    m_vCameraDebugOffset.x += 1;
-  }
-  else if (arg.key == OIS::KC_U) {
-    m_vCameraDebugOffset.y += 1;
-  }
-  else if (arg.key == OIS::KC_J) {
-    m_vCameraDebugOffset.y -=1;
+  if (!m_bUpdatePause) {
+    if (arg.key == OIS::KC_H) {
+      m_vCameraDebugOffset.x -= 1;
+    }
+    else if (arg.key == OIS::KC_K) {
+      m_vCameraDebugOffset.x += 1;
+    }
+    else if (arg.key == OIS::KC_U) {
+      m_vCameraDebugOffset.y += 1;
+    }
+    else if (arg.key == OIS::KC_J) {
+      m_vCameraDebugOffset.y -=1;
+    }
+    else if (arg.key == OIS::KC_TAB) {
+      CMapEditor::getSingleton().start();
+    }
   }
 
   return true;
@@ -590,9 +606,20 @@ Ogre::Vector2 CMap::mouseToMapPos(const Ogre::Vector2 &vMousePos) const {
 
   return m_vCameraPos + TILES_PER_SCREEN * (Ogre::Vector2(0, 1) + vMousePos / Ogre::Vector2(pWnd->getWidth(), -static_cast<Ogre::Real>(pWnd->getHeight())));
 }
+// SpriteTransformPipeline
 Ogre::Vector2 CMap::transformPosition(const Ogre::Vector2 &vPosition) const {
   Ogre::Vector2 vOffset(m_vCameraPos + m_vCameraDebugOffset);
   return ((vPosition - vOffset) / TILES_PER_SCREEN * 2 - Ogre::Vector2(1, 1));
+}
+bool CMap::isVisible(const Ogre::Vector2 &vPosition) const {
+  return m_vTransformedStartPos.y <= vPosition.y
+    && m_vTransformedStartPos.x <= vPosition.x
+    && m_vTransformedEndPos.y >= vPosition.y
+    && m_vTransformedEndPos.x >= vPosition.x;
+}
+bool CMap::isVisible(const Ogre::Vector2 &vStart,
+					 const Ogre::Vector2 &vEnd) const {
+  return !(vEnd.x < m_vTransformedStartPos.x || vEnd.y < m_vTransformedStartPos.y || vStart.x > m_vTransformedEndPos.x || vStart.y > m_vTransformedEndPos.y);
 }
 bool CMap::isInMap(unsigned int x, unsigned int y) {
     if (x < 0) {return false;}
