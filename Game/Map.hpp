@@ -131,6 +131,7 @@ public:
    *  \returns Whether the bb is out of the map
    */
   bool outOfMap(const CBoundingBox2d &bb, ECollisionCheckDirections eCollisionCheckDirection = CCD_ALL) const;
+  bool outOfMap(int x, int y) const {return x < 0 || y < 0 || x >= m_gridTiles.getSizeX() && y >= m_gridTiles.getSizeY();}
   //! Function to check whether a bounding box collides with the map margin
   /**
    *  \param[in] bb The bounding box
@@ -217,6 +218,7 @@ public:
 
   Ogre::Vector2 mouseToMapPos(const Ogre::Vector2 &vMousePos) const;
   Ogre::Vector2 mouseToMapSize(const Ogre::Vector2 &vMouseSize) const;
+  void translateCamera(const Ogre::Vector2 &vOffset) {m_vCameraTargetPos = m_vCameraPos += vOffset;}
 
   // PauseListener
   virtual void mapUpdatePauseChanged(bool bPause) {m_bUpdatePause = bPause;}

@@ -277,9 +277,13 @@ void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2
     placeCurrentTile(vPos);
     break;
   case B_MOVE:
+    Ogre::Vector2 vMapPos(m_pMap->mouseToMapSize(vDelta));
     if (m_pSelectedSprite) {
-      Ogre::Vector2 vMapPos(m_pMap->mouseToMapSize(vDelta));
       m_pSelectedSprite->translate(vMapPos);
+    }
+    else {
+      // move map
+      m_pMap->translateCamera(-vMapPos);
     }
     break;
   }
@@ -303,6 +307,8 @@ void CMapEditor::placeCurrentTile(const Ogre::Vector2 &vPos) {
 
   int x = static_cast<int>(vMapPos.x);
   int y = static_cast<int>(vMapPos.y);
+
+  if (m_pMap->outOfMap(x, y)) {return;}
 
   if (m_uiCurrentTile < TT_COUNT) {
     delete m_pMap->getTile(x, y);
