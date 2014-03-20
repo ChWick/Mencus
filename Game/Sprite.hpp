@@ -56,6 +56,8 @@ public:
   const Ogre::Vector2 &getPosition() const {return m_vPosition;}
   void setPosition(const Ogre::Vector2 &vPosition) {m_vPosition = vPosition;}
 
+  void translate(const Ogre::Vector2 &vOffset) {m_vPosition += vOffset;}
+
   const Ogre::Vector2 &getSize() const {return m_vSize;}
   void setSize(const Ogre::Vector2 &vSize) {m_vSize = vSize;}
 
