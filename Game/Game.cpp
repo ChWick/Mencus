@@ -203,7 +203,9 @@ void CGame::locateResources() {
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
   // add cusom maps file location
   Ogre::ResourceGroupManager::getSingleton().
-    addResourceLocation(CFileManager::DIRECTORY_LEVEL, "FileSystem", "level_user");
+    addResourceLocation(CFileManager::getValidPath(CFileManager::DIRECTORY_LEVEL,
+						   CFileManager::SL_EXTERNAL),
+			"FileSystem", "level_user");
 #endif
 }
 void CGame::loadResources() {
