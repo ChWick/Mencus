@@ -330,7 +330,6 @@ void CMainMenu::changeState(EMainMenuState eState) {
     break;
   case MMS_RESULT_BACK_TO_GAME:
     hide();
-    unpause(PAUSE_ALL);
     break;
   default:
     for (int i = 0; i < NUM_SLOTS; i++) {
@@ -420,12 +419,9 @@ void CMainMenu::changeState(EMainMenuState eState) {
 #endif
   }
 
-  if (eState == MMS_GAME_ESCAPE) {
-    setPause(PAUSE_ALL);
-  }
   if (eState == MMS_START) {
     CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);
-    unpause(PAUSE_ALL);
+    show();
   }
 }
 bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
@@ -672,12 +668,10 @@ bool CMainMenu::onSelectButtonClicked(const CEGUI::EventArgs &args) {
 void CMainMenu::show() {
   m_pMMRoot->setVisible(true);
   setInputListenerEnabled(true);
-  pause(PAUSE_MAP_RENDER);
-  pause(PAUSE_MAP_UPDATE);
+  pause(PAUSE_ALL);
 }
 void CMainMenu::hide() {
   m_pMMRoot->setVisible(false);
   setInputListenerEnabled(false);
-  unpause(PAUSE_MAP_RENDER);
-  unpause(PAUSE_MAP_UPDATE);
+  unpause(PAUSE_ALL);
 }

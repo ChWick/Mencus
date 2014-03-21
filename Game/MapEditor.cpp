@@ -36,7 +36,8 @@ CMapEditor::CMapEditor(Window *pRoot)
     m_pTabControl(NULL),
     m_pSelectedSprite(NULL),
     m_bVisible(false),
-    m_bRenderPause(false) {
+    m_bRenderPause(false),
+    m_bInitialized(false) {
   //init(0);
 }
 void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
@@ -199,9 +200,18 @@ void CMapEditor::resize(float fButtonSize) {
   selectTile(1);
 }
 void CMapEditor::exit() {
+  cout << ImageManager::getSingleton().getImageCount() << endl;
+  Ogre::LogManager::getSingleton().logMessage("MapEditor exit ...");
+  for (int i = 1; i < TT_COUNT; i++) {
+    String tileName = "Tile" + PropertyHelper<int>::toString(i) + ".png";
+    ImageManager::getSingleton().destroy(tileName);
+  }
+  cout << ImageManager::getSingleton().getImageCount() << endl;
+  stop();
   m_bInitialized = false;
   CInputListenerManager::getSingleton().removeInputListener(this);
   m_pTabControl->destroy();
+  Ogre::LogManager::getSingleton().logMessage("   ... done");
 }
 void CMapEditor::start() {
   setInputListenerEnabled(true);
