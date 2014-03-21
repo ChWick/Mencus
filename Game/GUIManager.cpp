@@ -80,10 +80,11 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   new CMainMenu(guiRoot);
   new CGUIStatistics(guiRoot);
   new CGUITutorial(guiRoot);
+  Ogre::LogManager::getSingleton().logMessage("Singleton for map editor");
 #ifdef MAP_EDITOR_ENABLED
   new CMapEditor(guiRoot);
 #endif
-
+  Ogre::LogManager::getSingleton().logMessage("GUIManager initialized...");
 }
 CGUIManager::~CGUIManager() {
   CInputListenerManager::getSingleton().removeInputListener(this);
