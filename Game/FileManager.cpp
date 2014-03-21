@@ -69,6 +69,13 @@ int mkpath(const char *path, mode_t mode)
     return (status);
 }
 
+// define paths
+#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+const std::string CFileManager::DIRECTORY_LEVEL("level/");
+#else
+const std::string CFileManager::DIRECTORY_LEVEL("../level/user/");
+#endif
+
 bool CFileManager::m_bInitialized(false);
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
 ANativeActivity *CFileManager::mNativeActivity(NULL);

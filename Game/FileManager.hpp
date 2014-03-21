@@ -17,6 +17,7 @@ private:
   static ANativeActivity *mNativeActivity;
 #endif
 public:
+  static const std::string DIRECTORY_LEVEL;
   enum EStorageLocation {
     SL_INTERNAL,
     SL_EXTERNAL
