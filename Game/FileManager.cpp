@@ -117,7 +117,7 @@ bool CFileManager::openFile(std::fstream &stream,
 			    const std::string &sFileName,
 			    EStorageLocation eLocation) {
   assert(m_bInitialized);
-  std::string path(getValidPath(sFileName));
+  std::string path(getValidPath(sFileName, eLocation));
   stream.open(path);
   if (!stream) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "Creating file at path" + path);
@@ -128,7 +128,7 @@ bool CFileManager::openFile(std::fstream &stream,
       return false;
     }
   }
-  else {
+  if (stream) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "File " + path  + " openened");
   }
   return true;
