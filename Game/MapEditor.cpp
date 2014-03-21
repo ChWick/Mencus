@@ -32,7 +32,9 @@ CMapEditor::CMapEditor(Window *pRoot)
   : m_uiCurrentTile(2),
     m_pRoot(pRoot),
     m_pMap(NULL),
-    m_pTabControl(NULL) {
+    m_pTabControl(NULL),
+    m_pSelectedSprite(NULL),
+    m_bVisible(false) {
   //init(0);
 }
 void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
