@@ -16,7 +16,10 @@ class CSaveState;
 extern const float BUTTON_MIN_ALPHA;
 extern const float BUTTON_ALPHA_CHANGE_PER_SEC;
 
-class CMainMenu : public Ogre::Singleton<CMainMenu>, public CInputListener, public CPauseCaller {
+class CMainMenu :
+  public Ogre::Singleton<CMainMenu>,
+  public CInputListener,
+  public CPauseCaller {
 public:
   static const int NUM_SLOTS = 4;
   enum EMainMenuState {
@@ -108,8 +111,8 @@ public:
 
   virtual bool keyPressed(const OIS::KeyEvent &arg);
 
-  void show() { m_pMMRoot->setVisible(true); setInputListenerEnabled(true); }
-  void hide() { m_pMMRoot->setVisible(false); setInputListenerEnabled(false); }
+  void show();
+  void hide();
 
   void windowSizeChanged(const CEGUI::Sizef &vSize);
 private:
@@ -124,6 +127,7 @@ private:
   bool onSelectionChanged(const CEGUI::EventArgs&);
 
   bool buttonSizeSliderValueChanged(const CEGUI::EventArgs&);
+  bool mapEditorButtonSizeSliderValueChanged(const CEGUI::EventArgs&);
   bool menuSizeSliderValueChanged(const CEGUI::EventArgs&);
 
   bool onSelectButtonClicked(const CEGUI::EventArgs&);

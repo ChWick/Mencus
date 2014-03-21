@@ -11,7 +11,8 @@ template<> CSettings *Ogre::Singleton<CSettings>::msSingleton = 0;
 const std::string SETTINGS_FILE_PATH("settings.xml");
 
 // default values
-SInputSettings::SInputSettings() {
+SInputSettings::SInputSettings() 
+  : m_fMapEditorButtonSize(50) {
 #ifdef INPUT_TOUCH
   m_fTouchButtonSize = 85;
 #endif
@@ -47,6 +48,11 @@ void CSettings::readFromFile() {
   XMLElement *pInput = pRoot->FirstChildElement("input");
   if (!pInput) {return;}
 
+  m_InputSettings.m_fMapEditorButtonSize
+    = RealAttribute(pInput,
+		    "map_editor_button_size",
+		    m_InputSettings.m_fMapEditorButtonSize);
+
   for (XMLElement *pElem = pInput->FirstChildElement(); pElem; pElem = pElem->NextSiblingElement()) {
 #ifdef INPUT_TOUCH
     if (strcmp(pElem->Value(), "touch") == 0) {
@@ -69,6 +75,9 @@ void CSettings::writeToFile() {
   // Input
   XMLElement *pInput = doc.NewElement("input");
   pSettingsElem->InsertEndChild(pInput);
+
+  pInput->SetAttribute("map_editor_button_size",
+		       m_InputSettings.m_fMapEditorButtonSize);
   
 #ifdef INPUT_TOUCH
   XMLElement *pInputTouch = doc.NewElement("touch");
