@@ -8,6 +8,7 @@
 #include "Object.hpp"
 #include "DebugDrawer.hpp"
 #include "Player.hpp"
+#include "FileManager.hpp"
 
 using namespace CEGUI;
 
@@ -351,8 +352,21 @@ bool CMapEditor::onSnapToGridChanged(const EventArgs &args) {
   return true;
 }
 bool CMapEditor::onSaveMap(const EventArgs &args) {
+  // write file to map info
+  m_pMap->writeToXMLElement(m_pMapInfo->getEmptyRootNode());
   tinyxml2::XMLPrinter printer;
   m_pMapInfo->getDocument().Accept(&printer);
 
-  cout << printer.CStr() << endl;
+  fstream stream;
+  if (!CFileManager::openFile(stream, CFileManager::DIRECTORY_LEVEL + m_pMapInfo->getFileName(), CFileManager::SL_EXTERNAL)) {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Could not open stream for saving the map!");
+    return true;
+  }
+
+  stream << printer.CStr();
+  stream.close();
+  Ogre::LogManager::getSingleton().logMessage("Map was saved!");
+  
+
+  return true;
 }
