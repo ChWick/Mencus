@@ -23,6 +23,7 @@ CPauseManager::CPauseManager()
   m_mapPauseListener[PAUSE_MAP_UPDATE] = &CPauseListener::mapUpdatePauseChanged;
   m_mapPauseListener[PAUSE_MAP_RENDER] = &CPauseListener::mapRenderPauseChanged;
   m_mapPauseListener[PAUSE_SCREENPLAY] = &CPauseListener::screenplayPauseChanged;
+  m_mapPauseListener[PAUSE_MAP_EDITOR] = &CPauseListener::mapEditorUpdatePauseChanged;
 }
 
 void CPauseManager::update() {

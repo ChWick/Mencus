@@ -19,6 +19,7 @@ public:
   virtual void mapUpdatePauseChanged(bool bPause) {}
   virtual void mapRenderPauseChanged(bool bPause) {}
   virtual void screenplayPauseChanged(bool bPause) {}
+  virtual void mapEditorUpdatePauseChanged(bool bPause) {}
 };
 
 #endif // PAUSE_LISTENER_HPP

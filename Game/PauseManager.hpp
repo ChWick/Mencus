@@ -26,7 +26,9 @@ enum EPauseTypes {
 
   PAUSE_SCREENPLAY        = 1024,
 
-  PAUSE_ALL               = 2047,
+  PAUSE_MAP_EDITOR        = 2048,
+
+  PAUSE_ALL               = 4095,
 };
 
 class CPauseManager : public Ogre::Singleton<CPauseManager> {
