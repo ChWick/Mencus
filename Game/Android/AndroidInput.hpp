@@ -103,6 +103,10 @@ public:
     else if (keyCode == AKEYCODE_SEARCH) {
       key = OIS::KC_RMENU;
     }
+    else if (keyCode == AKEYCODE_MENU) {
+      key = OIS::KC_RWIN;
+    }
+
     OIS::KeyEvent evt(mKeyboard, key, 0);
     if (action == 0) {
       mInputListenerManager->keyPressed(evt);
