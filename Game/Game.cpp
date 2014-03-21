@@ -9,6 +9,7 @@
 #include "GameInputManager.hpp"
 #include "SnapshotManager.hpp"
 #include "InputDefines.hpp"
+#include "FileManager.hpp"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
 #include "Android/Android.hpp"
@@ -198,6 +199,12 @@ void CGame::locateResources() {
       Ogre::ResourceGroupManager::getSingleton().addResourceLocation(arch, type, sec);
     }
   }
+
+#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+  // add cusom maps file location
+  Ogre::ResourceGroupManager::getSingleton().
+    addResourceLocation(CFileManager::DIRECTORY_LEVEL, "FileSystem", "level_user");
+#endif
 }
 void CGame::loadResources() {
   //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
