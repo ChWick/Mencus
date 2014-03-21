@@ -266,6 +266,31 @@ void CMapEditor::resize(float fButtonSize) {
     if (id == CEnemy::ET_COUNT) {break;}
   }
   fCurrentHeight += (CEnemy::ET_COUNT / iTilesCountX + 1) * fButtonSize;
+
+  // edit tab
+  // ========
+  Ogre::LogManager::getSingleton().logMessage("    Edit content pane");
+  Window *pEditTabContentPane = pTabPane->createChild("OgreTray/TabContentPane", "EditContentPane");
+  //pTabPane->addTab(pTilesTabContentPane);
+  pEditTabContentPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  pEditTabContentPane->setSize(USize(UDim(1, 0), UDim(1, 0)));
+  pEditTabContentPane->setText("Edit");
+
+  ScrollablePane *pEditScrollBar = dynamic_cast<ScrollablePane*>(pEditTabContentPane->createChild("OgreTray/ScrollablePane", "ScrollPane"));
+  pEditScrollBar->setDragIgnoreZone(fDragIgnoreZone);
+  m_pEditContainer = pEditScrollBar;
+  pEditScrollBar->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  pEditScrollBar->setSize(USize(UDim(1, 0), UDim(1, 0)));
+
+  fCurrentHeight = 0;
+  Window *pDeleteButton = pEditScrollBar->createChild("OgreTray/Button", "Delete");
+  pDeleteButton->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
+  pDeleteButton->setSize(USize(UDim(1, 0), UDim(0, fButtonSize)));
+  fCurrentHeight += fButtonSize + 5;
+  pDeleteButton->setText("Delete selection");
+  pDeleteButton->subscribeEvent(PushButton::EventClicked,
+				Event::Subscriber(&CMapEditor::onDelete, this));
+  
   
 
   // initial state
@@ -605,6 +630,22 @@ bool CMapEditor::onSaveMap(const EventArgs &args) {
   stream.close();
   Ogre::LogManager::getSingleton().logMessage("Map was saved!");
   
+
+  return true;
+}
+bool CMapEditor::onDelete(const CEGUI::EventArgs &args) {
+  if (!m_pSelectedSprite) {return true;}
+
+  if (dynamic_cast<CObject*>(m_pSelectedSprite)) {
+    CObject *pObject = dynamic_cast<CObject*>(m_pSelectedSprite);
+    m_pMap->destroyObject(pObject, false);
+  }
+  else if (dynamic_cast<CEnemy*>(m_pSelectedSprite)) {
+    CEnemy *pEnemy = dynamic_cast<CEnemy*>(m_pSelectedSprite);
+    m_pMap->destroyEnemy(pEnemy, false);
+  }
+
+  m_pSelectedSprite = NULL;
 
   return true;
 }

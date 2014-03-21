@@ -31,6 +31,7 @@ private:
   CEGUI::TabControl *m_pTabControl;
   CEGUI::ScrollablePane *m_pTilesContainer;
   CEGUI::ScrollablePane *m_pObjectsContainer;
+  CEGUI::ScrollablePane *m_pEditContainer;
   unsigned int m_uiCurrentTile;
   unsigned int m_uiCurrentObject;
   CMap *m_pMap;
@@ -88,6 +89,7 @@ private:
   bool onBrushSelectionChanged(const CEGUI::EventArgs &args);
   bool onSnapToGridChanged(const CEGUI::EventArgs &args);
   bool onSaveMap(const CEGUI::EventArgs &args);
+  bool onDelete(const CEGUI::EventArgs &args);
 
   bool dummyReturnFalse(const CEGUI::EventArgs &args) {return false;}
 
