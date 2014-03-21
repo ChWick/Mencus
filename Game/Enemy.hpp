@@ -42,8 +42,8 @@ private:
   Ogre::Vector2 m_vSpeed;
   bool m_bOnGround;
   CBarIndicator m_HPBar;
-  const bool m_bJumps;
-  const Ogre::String m_sID;
+  bool m_bJumps;
+  Ogre::String m_sID;
   Ogre::Vector2 m_vExternalForce;
   bool m_bStunned;
   bool m_bAtLeastOneDamageDone;
@@ -63,11 +63,13 @@ public:
   void addExternalForce(const Ogre::Vector2 &vForce) {m_vExternalForce += vForce;}
 
   const Ogre::String &getID() const {return m_sID;}
+  Ogre::String &getID() {return m_sID;}
   EEnemyTypes getType() const {return m_eEnemyType;}
 
   void setStunned(bool bStunned) {m_bStunned = bStunned;}
   bool isStunned() const {return m_bStunned;}
 
+  void setMayJump(bool bJumps) {m_bJumps = bJumps;}
   bool mayJump() const {return m_bJumps;}
 
   Ogre::Real getDirection() const {return m_vSpeed.x > 0 ? 1 : -1;}
