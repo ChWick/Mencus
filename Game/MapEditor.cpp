@@ -412,6 +412,7 @@ void CMapEditor::start() {
   m_pMap->setCameraPos(vCamPos);
 }
 void CMapEditor::stop() {
+  selectedSprite(NULL);
   setInputListenerEnabled(false);
   unpause(PAUSE_MAP_UPDATE);
   CHUD::getSingleton().show();
@@ -568,6 +569,9 @@ bool CMapEditor::selectSprite(const Ogre::Vector2 &vPos) {
 void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
   switch (m_eSelectedBrush) {
   case B_PLACE:
+    if (m_uiCurrentObject < CObject::OT_COUNT + CEnemy::ET_COUNT) {
+      placeCurrentObject(vPos);
+    }
     break;
   case B_EDIT:
   case B_MOVE:
@@ -581,9 +585,6 @@ void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2
   case B_PLACE:
     if (m_uiCurrentTile != TT_COUNT) {
       placeCurrentTile(vPos);
-    }
-    else if (m_uiCurrentObject < CObject::OT_COUNT + CEnemy::ET_COUNT) {
-      placeCurrentObject(vPos);
     }
     break;
   case B_MOVE:
@@ -637,14 +638,14 @@ void CMapEditor::placeCurrentObject(const Ogre::Vector2 &vPos) {
     // set center to curser pos
     pObject->setCenter(snappedPos(vMapPos));
     m_pMap->addObject(pObject); 
-    m_pSelectedSprite = pObject;
+    selectedSprite(pObject);
   }
   else {
     int id = m_uiCurrentObject - CObject::OT_COUNT;
     CEnemy *pEnemy = new CEnemy(*m_pMap, vMapPos, static_cast<CEnemy::EEnemyTypes>(id), 1, 1, true, Ogre::StringConverter::toString(CIDGenerator::nextID()));
     pEnemy->setCenter(snappedPos(vMapPos));
     m_pMap->addEnemy(pEnemy);
-    m_pSelectedSprite = pEnemy;
+    selectedSprite(pEnemy);
   }
 }
 bool CMapEditor::onBrushSelectionChanged(const EventArgs &args) {
@@ -662,6 +663,8 @@ bool CMapEditor::onSnapToGridChanged(const EventArgs &args) {
   return true;
 }
 bool CMapEditor::onSaveMap(const EventArgs &args) {
+  selectedSprite(NULL);
+
   // write file to map info
   m_pMap->writeToXMLElement(m_pMapInfo->getEmptyRootNode());
   tinyxml2::XMLPrinter printer;
@@ -683,23 +686,40 @@ bool CMapEditor::onSaveMap(const EventArgs &args) {
 bool CMapEditor::onDelete(const CEGUI::EventArgs &args) {
   if (!m_pSelectedSprite) {return true;}
 
-  if (dynamic_cast<CObject*>(m_pSelectedSprite)) {
-    CObject *pObject = dynamic_cast<CObject*>(m_pSelectedSprite);
+  CSprite *pBuffer = m_pSelectedSprite;
+  selectedSprite(NULL);
+
+  if (dynamic_cast<CObject*>(pBuffer)) {
+    CObject *pObject = dynamic_cast<CObject*>(pBuffer);
     m_pMap->destroyObject(pObject, false);
   }
-  else if (dynamic_cast<CEnemy*>(m_pSelectedSprite)) {
-    CEnemy *pEnemy = dynamic_cast<CEnemy*>(m_pSelectedSprite);
+  else if (dynamic_cast<CEnemy*>(pBuffer)) {
+    CEnemy *pEnemy = dynamic_cast<CEnemy*>(pBuffer);
     m_pMap->destroyEnemy(pEnemy, false);
   }
   
-  selectedSprite(NULL);
 
   return true;
 }
 float tesst = 10;
 bool CMapEditor::onEditFloat(const CEGUI::EventArgs &args) {
   const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
-  m_pEditValueWindow = new CEditBoxFloat(m_pRoot, m_fButtonSize, wndArgs.window->getText(), tesst);
+  int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
+  switch (id) {
+  case EB_HITPOINTS:
+    m_pEditValueWindow = new CEditBoxFloat(m_pRoot,
+					   m_fButtonSize,
+					   wndArgs.window->getText(),
+					   dynamic_cast<CHitableObject*>(m_pSelectedSprite)
+					   ->getMaximumHitpoints());
+    break;
+  case EB_DAMAGE:
+    m_pEditValueWindow = new CEditBoxFloat(m_pRoot,
+					   m_fButtonSize,
+					   wndArgs.window->getText(),
+					   tesst);
+    break;
+  }
   return true;
 }
 Ogre::Vector2 CMapEditor::snappedPos(const Ogre::Vector2 &vPos) {
@@ -714,11 +734,22 @@ Ogre::Vector2 CMapEditor::snappedPos(const Ogre::Vector2 &vPos) {
   return v;
 }
 void CMapEditor::selectedSprite(CSprite *pSprite) {
+  if (m_pSelectedSprite) {
+    // check for updates
+    if (dynamic_cast<CHitableObject*>(m_pSelectedSprite)) {
+      dynamic_cast<CHitableObject*>(m_pSelectedSprite)->
+	setHitpoints(dynamic_cast<CHitableObject*>(m_pSelectedSprite)->getMaximumHitpoints());
+    }
+  }
   m_pSelectedSprite = pSprite;
 
   m_pEditSprite->setVisible(false);
 
   if (m_pSelectedSprite) {
     m_pEditSprite->setVisible(true);
+
+    m_pEditSprite->
+      getChild(PropertyHelper<int>::toString(EB_HITPOINTS))->
+      setEnabled(dynamic_cast<CHitableObject*>(m_pSelectedSprite));
   }
 }
