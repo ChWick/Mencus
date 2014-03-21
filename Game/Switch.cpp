@@ -78,3 +78,6 @@ void CSwitch::place(CMap *pMap, const SSwitchEntry &entry) {
 		Ogre::Vector2(entry.uiTilePosX, entry.uiTilePosY),
 		ttToSet);
 }
+Ogre::String CSwitch::getPreviewImageName(int iType) {
+  return getSwitchTexture(iType, false);
+}

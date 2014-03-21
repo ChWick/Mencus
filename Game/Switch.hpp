@@ -30,6 +30,7 @@ public:
     SS_ACTIVATED,
     SS_DEACTIVATED,
   };
+  static Ogre::String getPreviewImageName(int iType);
   const SwitchType m_stSwitchType;
   ESwitchStates m_eSwitchState;
   vector<SSwitchEntry> m_vEntries;
