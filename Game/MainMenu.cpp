@@ -396,6 +396,10 @@ void CMainMenu::changeState(EMainMenuState eState) {
     }
     m_vUserFiles.clear();
     int i = 0;
+    // reload resources
+    Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup("level_user");
+    Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("level_user");
+    Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("level_user");
     Ogre::FileInfoListPtr ptr(Ogre::ResourceGroupManager::getSingleton().findResourceFileInfo("level_user", "*.xml"));
     m_vUserFiles.resize(ptr->size());
     for (Ogre::FileInfo &file : *ptr.get()) {

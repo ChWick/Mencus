@@ -9,6 +9,7 @@
 #include "DebugDrawer.hpp"
 #include "Player.hpp"
 #include "FileManager.hpp"
+#include "Settings.hpp"
 
 using namespace CEGUI;
 
@@ -34,18 +35,52 @@ CMapEditor::CMapEditor(Window *pRoot)
     m_pMap(NULL),
     m_pTabControl(NULL),
     m_pSelectedSprite(NULL),
-    m_bVisible(false) {
+    m_bVisible(false),
+    m_bRenderPause(false) {
   //init(0);
 }
 void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
+  for (int i = 1; i < TT_COUNT; i++) {
+    String tileName = "Tile" + PropertyHelper<int>::toString(i) + ".png";
+    ImageManager::getSingleton().addFromImageFile(tileName, tileName, "General");
+  }
   CInputListenerManager::getSingleton().addInputListener(this);
   m_pMap = pMap;
   m_pMapInfo = std::shared_ptr<CMapInfo>(new CMapInfo(pMapInfo));
-
-  float fTabSize = 0.3;
-  int iTilesCountX = 5;
-  float fButtonSize = 30;
   
+  m_bVisible = false;
+  m_bInitialized = true;
+  
+  resize(CSettings::getSingleton().getInputSettings().m_fMapEditorButtonSize);
+  stop();
+}
+void CMapEditor::setVisible(bool bVisible) {
+  m_bRenderPause = !bVisible;
+  if (m_pTabControl && m_bVisible) {
+    m_pTabControl->setVisible(bVisible);
+    setInputListenerEnabled(bVisible);
+    if (bVisible) {
+      pause(PAUSE_MAP_UPDATE);
+      CHUD::getSingleton().hide();
+    }
+    else {
+      unpause(PAUSE_MAP_UPDATE);
+      CHUD::getSingleton().hide();
+    }
+  }
+}
+void CMapEditor::resize(float fButtonSize) {
+  if (!m_bInitialized) {return;}
+  if (m_pTabControl) {
+    m_pTabControl->destroy();
+  }
+  float fDragIgnoreZone = fButtonSize * 0.2;
+#ifdef INPUT_TOUCH
+  fDragIgnoreZone = CSettings::getSingleton().getInputSettings().m_fTouchButtonSize * 0.2;
+#endif
+  float fTabSize = 0.3;
+  float fTabPixelWidth = CGame::getSingleton().getRenderWindow()->getWidth() * fTabSize;
+  int iTilesCountX = static_cast<int>(fTabPixelWidth / fButtonSize - 0.999);
 
   Ogre::LogManager::getSingleton().logMessage("*** Creating MapEditor");
 
@@ -67,7 +102,7 @@ void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
   pBrushPane->setText("Brush");
 
   ScrollablePane *pBrushScrollPane = dynamic_cast<ScrollablePane*>(pBrushPane->createChild("OgreTray/ScrollablePane", "ScrollPane"));
-  pBrushScrollPane->setDragIgnoreZone(fButtonSize * 0.2);
+  pBrushScrollPane->setDragIgnoreZone(fDragIgnoreZone);
   pBrushScrollPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pBrushScrollPane->setSize(USize(UDim(1, 0), UDim(1, 0)));
 
@@ -76,13 +111,13 @@ void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
     RadioButton *pBrushSelection = dynamic_cast<RadioButton*>(pBrushScrollPane->createChild("OgreTray/RadioButton", MAP_EDITOR_BRUSH_LABELS[i]));
     pBrushSelection->setText(MAP_EDITOR_BRUSH_LABELS[i]);
     pBrushSelection->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
-    pBrushSelection->setSize(USize(UDim(1, 0), UDim(0, fButtonSize * 0.5)));
+    pBrushSelection->setSize(USize(UDim(1, 0), UDim(0, fButtonSize)));
     pBrushSelection->setGroupID(812723);
     pBrushSelection->setID(i);
     pBrushSelection->setSelected(false);
     pBrushSelection->subscribeEvent(RadioButton::EventSelectStateChanged,
 				    Event::Subscriber(&CMapEditor::onBrushSelectionChanged, this));
-    fCurrentHeight += fButtonSize * 0.5;
+    fCurrentHeight += fButtonSize;
   }
   dynamic_cast<RadioButton*>(pBrushScrollPane->getChild(MAP_EDITOR_BRUSH_LABELS[B_PLACE]))->setSelected(true);
 
@@ -92,8 +127,8 @@ void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
   // create check buttons
   ToggleButton *pSnapToGridButton = dynamic_cast<ToggleButton*>(pBrushScrollPane->createChild("OgreTray/Checkbox", "SnapToGrid"));
   pSnapToGridButton->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
-  pSnapToGridButton->setSize(USize(UDim(1, 0), UDim(0, fButtonSize * 0.5)));
-  fCurrentHeight += fButtonSize * 0.5;
+  pSnapToGridButton->setSize(USize(UDim(1, 0), UDim(0, fButtonSize)));
+  fCurrentHeight += fButtonSize;
   pSnapToGridButton->setText("Snap to grid");
   pSnapToGridButton->setEnabled(false);
   pSnapToGridButton->subscribeEvent(ToggleButton::EventSelectStateChanged,
@@ -123,7 +158,7 @@ void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
   
   
   ScrollablePane *pTilesScrollBar = dynamic_cast<ScrollablePane*>(pTilesTabContentPane->createChild("OgreTray/ScrollablePane", "ScrollPane"));
-  pTilesScrollBar->setDragIgnoreZone(fButtonSize * 0.2);
+  pTilesScrollBar->setDragIgnoreZone(fDragIgnoreZone);
   m_pTilesContainer = pTilesScrollBar;
   pTilesScrollBar->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pTilesScrollBar->setSize(USize(UDim(1, 0), UDim(1, 0)));
@@ -138,8 +173,7 @@ void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
 	break;
       }
 
-      String tileName = "Tile" + PropertyHelper<int>::toString(id) + ".png";
-      ImageManager::getSingleton().addFromImageFile(tileName, tileName, "General");
+      String tileName = "Tile" + PropertyHelper<int>::toString(id) + ".png";;
       Window *pTile = pTilesScrollBar->createChild("OgreTray/StaticImage", tileName);
       //pTile->setProperty("BackgroundEnabled", "False");
       pTile->setProperty("FrameEnabled", "False");
@@ -163,10 +197,9 @@ void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
   }
   
   selectTile(1);
-  m_bVisible = false;
-  stop();
 }
 void CMapEditor::exit() {
+  m_bInitialized = false;
   CInputListenerManager::getSingleton().removeInputListener(this);
   m_pTabControl->destroy();
 }
@@ -200,7 +233,7 @@ void CMapEditor::stop() {
   }
 }
 void CMapEditor::render() {
-  if (!m_bVisible) {return;}
+  if (!m_bVisible || m_bRenderPause) {return;}
   if (m_pSelectedSprite) {
     CDebugDrawer::getSingleton().draw(m_pSelectedSprite->getWorldBoundingBox());
   }
@@ -210,7 +243,7 @@ void CMapEditor::toggle() {
   else {start();}
 }
 bool CMapEditor::keyPressed( const OIS::KeyEvent &arg ) {
-  if (arg.key == OIS::KC_TAB) {
+  if (arg.key == OIS::KC_TAB || arg.key == OIS::KC_RWIN) {
     stop();
   }
   return true;
@@ -257,6 +290,33 @@ bool CMapEditor::mouseMoved( const OIS::MouseEvent &arg ) {
   handleBrushMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs),
 		   Ogre::Vector2(arg.state.X.rel, arg.state.Y.rel));
   return true;
+}
+bool CMapEditor::touchMoved(const OIS::MultiTouchEvent& evt) {
+  if (!m_bPressed) {return true;}
+
+  
+  handleBrushMoved(Ogre::Vector2(evt.state.X.abs, evt.state.Y.abs),
+		   Ogre::Vector2(evt.state.X.rel, evt.state.Y.rel));
+  return true;
+}
+bool CMapEditor::touchPressed(const OIS::MultiTouchEvent& arg) {
+ Ogre::Vector2 vMapPos(m_pMap->mouseToMapPos(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs)));
+  if (!m_pMap->isVisible(m_pMap->transformPosition(vMapPos))) {return true;}
+
+  // only pressed when clicked on map!
+  m_bPressed = true;
+  handleBrushPressed(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+  return true;
+}
+bool CMapEditor::touchReleased(const OIS::MultiTouchEvent& arg) {
+if (m_bPressed) {
+    handleBrushReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
+  }
+  m_bPressed = false;
+  return true;
+}
+bool CMapEditor::touchCancelled(const OIS::MultiTouchEvent& arg) {
+  return touchReleased(arg);
 }
 bool CMapEditor::selectSprite(const Ogre::Vector2 &vPos) {
   Ogre::Vector2 vMapPos(m_pMap->mouseToMapPos(vPos));

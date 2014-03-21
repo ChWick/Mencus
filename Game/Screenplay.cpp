@@ -283,7 +283,9 @@ void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sReso
   }
 }
 void CScreenplay::update(Ogre::Real tpf) {
-  if (m_bPaused) {return;}
+  if (m_bPaused) {
+    return;
+  }
 
   if (m_Fader.isFading() && tpf > 0.2) {
     m_Fader.fade(0);
@@ -291,7 +293,9 @@ void CScreenplay::update(Ogre::Real tpf) {
     return;
   }
 
-  m_Fader.fade(tpf);
+  if (m_Fader.isFading()) {
+    m_Fader.fade(tpf);
+  }
 
   if (m_pCurrentScene) {
     if (tpf > 0.05) {

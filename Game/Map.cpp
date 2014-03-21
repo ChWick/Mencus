@@ -47,11 +47,11 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_fPlayingTime(0),
   m_Statistics(statistics),
   m_pMapInfo(pMapInfo) {
+  CGame::getSingleton().showLoadingBar();
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
 #ifdef MAP_EDITOR_ENABLED
   CMapEditor::getSingleton().init(this, pMapInfo);
 #endif
-  CGame::getSingleton().showLoadingBar();
-  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
   CGame::getSingleton().hideLoadingBar();
 
   m_p2dManagerMap = new Ogre2dManager();
@@ -458,17 +458,23 @@ bool CMap::keyPressed( const OIS::KeyEvent &arg ) {
     else if (arg.key == OIS::KC_J) {
       m_vCameraDebugOffset.y -=1;
     }
-    else if (arg.key == OIS::KC_TAB) {
 #ifdef MAP_EDITOR_ENABLED
+    else if (arg.key == OIS::KC_TAB || arg.key == OIS::KC_RWIN) {
       CMapEditor::getSingleton().start();
-#endif
     }
+#endif
   }
 
   return true;
 }
 bool CMap::keyReleased( const OIS::KeyEvent &arg ) {
   return true;
+}
+void CMap::mapRenderPauseChanged(bool bPause) {
+  m_bRenderPause = bPause;
+#ifdef MAP_EDITOR_ENABLED
+  CMapEditor::getSingleton().setVisible(!bPause);
+#endif
 }
 void CMap::update(Ogre::Real tpf) {
   if (!m_bUpdatePause) {
@@ -559,6 +565,7 @@ void CMap::update(Ogre::Real tpf) {
   m_Statistics.fTime = m_fPlayingTime;
 }
 void CMap::render(Ogre::Real tpf) {
+  if (m_bRenderPause) {return;}
   // order of updates exquates drawing order, last one will be on top
   renderBackground(tpf);
   for (auto pTile : m_gridTiles) {

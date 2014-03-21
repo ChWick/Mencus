@@ -5,6 +5,7 @@
 #include <CEGUI/CEGUI.h>
 #include "InputListener.hpp"
 #include "PauseCaller.hpp"
+#include "PauseListener.hpp"
 #include "MapInfo.hpp"
 
 class CSprite;
@@ -23,6 +24,7 @@ public:
     B_COUNT,
   };
 private:
+  bool m_bRenderPause;
   bool m_bPressed;
   bool m_bVisible;
   CEGUI::Window *m_pRoot;
@@ -34,6 +36,7 @@ private:
   CSprite *m_pSelectedSprite;
   bool m_bSnapToGrid;
   CMapInfoPtr m_pMapInfo;
+  bool m_bInitialized;
 public:
   static CMapEditor &getSingleton();
   static CMapEditor *getSingletonPtr();
@@ -54,7 +57,16 @@ public:
   virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
   virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
   virtual bool mouseMoved( const OIS::MouseEvent &arg );
+
+  virtual bool touchMoved(const OIS::MultiTouchEvent& evt);
+  virtual bool touchPressed(const OIS::MultiTouchEvent& evt);
+  virtual bool touchReleased(const OIS::MultiTouchEvent& evt);
+  virtual bool touchCancelled(const OIS::MultiTouchEvent& evt);
+
   virtual bool keyPressed( const OIS::KeyEvent &arg );
+
+  void resize(float fButtonSize);
+  void setVisible(bool bVisible);
 private:
   void handleBrushPressed(const Ogre::Vector2 &vPos);
   void handleBrushReleased(const Ogre::Vector2 &vPos);

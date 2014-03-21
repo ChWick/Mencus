@@ -227,7 +227,7 @@ public:
 
   // PauseListener
   virtual void mapUpdatePauseChanged(bool bPause) {m_bUpdatePause = bPause;}
-  virtual void mapRenderPauseChanged(bool bPause) {m_bRenderPause = bPause;}
+  virtual void mapRenderPauseChanged(bool bPause);
 private:
   void updateBackground(Ogre::Real tpf);
   void renderBackground(Ogre::Real tpf);

@@ -47,6 +47,7 @@ int main(int argc, char *argv[])
 
   LOGI("Init FileManager");
   CFileManager::init(state->activity);
+  LOGI("Init Settings");
   new CSettings();
 
   LOGI("Initialize");
