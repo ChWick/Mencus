@@ -493,7 +493,7 @@ void CMapEditor::render() {
     CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
     if (pSwitch) {
       for (const SSwitchEntry &entry : pSwitch->getEntries()) {
-	
+	CDebugDrawer::getSingleton().draw(entry);
       }
     }
   }
