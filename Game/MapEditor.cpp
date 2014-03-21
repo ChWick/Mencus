@@ -490,6 +490,12 @@ void CMapEditor::render() {
   if (!m_bVisible || m_bRenderPause) {return;}
   if (m_pSelectedSprite) {
     CDebugDrawer::getSingleton().draw(m_pSelectedSprite->getWorldBoundingBox());
+    CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
+    if (pSwitch) {
+      for (const SSwitchEntry &entry : pSwitch->getEntries()) {
+	
+      }
+    }
   }
 }
 void CMapEditor::toggle() {
