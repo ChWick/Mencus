@@ -32,6 +32,7 @@ private:
   CEGUI::ScrollablePane *m_pTilesContainer;
   CEGUI::ScrollablePane *m_pObjectsContainer;
   unsigned int m_uiCurrentTile;
+  unsigned int m_uiCurrentObject;
   CMap *m_pMap;
   EBrushes m_eSelectedBrush;
   CSprite *m_pSelectedSprite;
@@ -54,6 +55,9 @@ public:
 
   CEGUI::Window *getTileFromType(unsigned int uiTile);
   unsigned int getTypeFromTile(CEGUI::Window *pTile);
+  
+  CEGUI::Window *getObjectFromType(unsigned int uiObject);
+  unsigned int getTypeFromObject(CEGUI::Window *pTile);
 
   virtual bool mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
   virtual bool mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id );
@@ -74,8 +78,10 @@ private:
   void handleBrushReleased(const Ogre::Vector2 &vPos);
   void handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2 &vDelta);
   void placeCurrentTile(const Ogre::Vector2 &vPos);
+  void placeCurrentObject(const Ogre::Vector2 &vPos);
   void selectTile(unsigned int uiTile);
   bool onTileClicked(const CEGUI::EventArgs &args);
+  void selectObject(unsigned int uiObject);
   bool onObjectClicked(const CEGUI::EventArgs &args);
   bool onBrushSelectionChanged(const CEGUI::EventArgs &args);
   bool onSnapToGridChanged(const CEGUI::EventArgs &args);

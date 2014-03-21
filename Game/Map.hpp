@@ -214,6 +214,7 @@ public:
 
   void destroyEnemy(CEnemy *pEnemy);
 
+  void addObject(CObject *pObject) {m_lObjects.push_back(pObject);}
   void destroyObject(CObject *pObject) {if (find(m_lObjectsToDestroy.begin(), m_lObjectsToDestroy.end(), pObject) == m_lObjectsToDestroy.end()) m_lObjectsToDestroy.push_back(pObject);}
 
   void playerWarped();

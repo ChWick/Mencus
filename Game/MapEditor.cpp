@@ -221,7 +221,7 @@ void CMapEditor::resize(float fButtonSize) {
       if (id == CObject::OT_COUNT) {break;}
       
       String objectName(CObject::getPreviewImageName(id));
-      Window *pObject = pObjectsScrollBar->createChild("OgreTray/StaticImage", objectName);
+      Window *pObject = pObjectsScrollBar->createChild("OgreTray/StaticImage", PropertyHelper<int>::toString(id));
       pObject->setProperty("FrameEnabled", "False");
       pObject->setProperty("Image", objectName);
       pObject->setProperty("HorzFormatting", "CentreAligned");
@@ -338,8 +338,13 @@ unsigned int CMapEditor::getTypeFromTile(CEGUI::Window *pTile) {
   return PropertyHelper<int>::fromString(pTile->getName().substr(4, pTile->getName().size() - 8));
 }
 void CMapEditor::selectTile(unsigned int uiTile) {
-  getTileFromType(m_uiCurrentTile)->setProperty("FrameEnabled", "False");
-  getTileFromType(uiTile)->setProperty("FrameEnabled", "True");
+  if (m_uiCurrentTile != TT_COUNT) {
+    getTileFromType(m_uiCurrentTile)->setProperty("FrameEnabled", "False");
+  }
+  if (uiTile != TT_COUNT) {
+    getTileFromType(uiTile)->setProperty("FrameEnabled", "True");
+    selectObject(CObject::OT_COUNT);
+  }
   m_uiCurrentTile = uiTile;
 }
 bool CMapEditor::onTileClicked(const EventArgs &args) {
@@ -349,10 +354,27 @@ bool CMapEditor::onTileClicked(const EventArgs &args) {
 
   return true;
 }
+CEGUI::Window *CMapEditor::getObjectFromType(unsigned int uiObject) {
+  return m_pObjectsContainer->getChild(PropertyHelper<int>::toString(uiObject));
+}
+unsigned int CMapEditor::getTypeFromObject(CEGUI::Window *pObject) {
+  return PropertyHelper<int>::fromString(pObject->getName());
+}
+void CMapEditor::selectObject(unsigned int uiObject) {
+  if (m_uiCurrentObject < CObject::OT_COUNT) {
+    getObjectFromType(m_uiCurrentObject)->setProperty("FrameEnabled", "False");
+  }
+  if (uiObject < CObject::OT_COUNT) {
+    getObjectFromType(uiObject)->setProperty("FrameEnabled", "True");
+    selectTile(TT_COUNT);
+  }
+  m_uiCurrentObject = uiObject;
+}
 bool CMapEditor::onObjectClicked(const EventArgs &args) {
   if (m_pTilesContainer->wasDragged()) {return true;}
   const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
-  
+  selectObject(getTypeFromObject(wndArgs.window));
+
   return true;
 }
 bool CMapEditor::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
@@ -445,7 +467,12 @@ void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
 void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2 &vDelta) {
   switch (m_eSelectedBrush) {
   case B_PLACE:
-    placeCurrentTile(vPos);
+    if (m_uiCurrentTile != TT_COUNT) {
+      placeCurrentTile(vPos);
+    }
+    else if (m_uiCurrentObject != CObject::OT_COUNT) {
+      placeCurrentObject(vPos);
+    }
     break;
   case B_MOVE:
     Ogre::Vector2 vMapPos(m_pMap->mouseToMapSize(vDelta));
@@ -485,6 +512,17 @@ void CMapEditor::placeCurrentTile(const Ogre::Vector2 &vPos) {
     delete m_pMap->getTile(x, y);
     m_pMap->getTile(x, y) = new CTile(m_pMap, m_pMap->get2dManager(), Ogre::Vector2(x, y), m_uiCurrentTile);
   }
+}
+void CMapEditor::placeCurrentObject(const Ogre::Vector2 &vPos) {
+Ogre::Vector2 vMapPos(m_pMap->mouseToMapPos(vPos));
+  if (!m_pMap->isVisible(m_pMap->transformPosition(vMapPos))) {return;}
+
+  int x = static_cast<int>(vMapPos.x);
+  int y = static_cast<int>(vMapPos.y);
+
+  if (m_pMap->outOfMap(x, y)) {return;}
+
+  m_pMap->addObject(new CObject(*m_pMap, vPos, static_cast<CObject::EObjectTypes>(m_uiCurrentObject))); 
 }
 bool CMapEditor::onBrushSelectionChanged(const EventArgs &args) {
   const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
