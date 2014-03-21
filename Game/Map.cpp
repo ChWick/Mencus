@@ -785,6 +785,10 @@ void CMap::playerWarped() {
   }
   m_vCameraPos = m_vCameraTargetPos;
 }
+void CMap::destroySwich(CSwitch *pSwitch) {
+  m_lSwitches.remove(pSwitch);
+  delete pSwitch;
+}
 void CMap::destroyEnemy(CEnemy *pEnemy, bool bLater) {
   for (CShot *pShot : m_lShots) {
     pShot->enemyDestroyed(pEnemy);

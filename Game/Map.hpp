@@ -211,6 +211,8 @@ public:
   CExplosion *addExplosion(CExplosion *pExplosion) {m_lExplosions.push_back(pExplosion); return pExplosion;}
   void destroyExplosion(CExplosion *pExplosion) {m_lExplosionsToDestroy.push_back(pExplosion);}
 
+  void addSwitch(CSwitch *pSwitch) {m_lSwitches.push_back(pSwitch);}
+  void destroySwich(CSwitch *pSwitch);
 
   void addEnemy(CEnemy *pEnemy) {m_lEnemies.push_back(pEnemy);}
   void destroyEnemy(CEnemy *pEnemy, bool bLater = true);
