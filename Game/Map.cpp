@@ -785,14 +785,32 @@ void CMap::playerWarped() {
   }
   m_vCameraPos = m_vCameraTargetPos;
 }
-void CMap::destroyEnemy(CEnemy *pEnemy) {
-  m_lEnemiesToDestroy.push_back(pEnemy);
-
+void CMap::destroyEnemy(CEnemy *pEnemy, bool bLater) {
   for (CShot *pShot : m_lShots) {
     pShot->enemyDestroyed(pEnemy);
   }
-}
 
+  if (bLater) {
+    m_lEnemiesToDestroy.push_back(pEnemy);
+  }
+  else {
+    m_lEnemies.remove(pEnemy);
+    delete pEnemy;
+  }
+}
+void CMap::destroyObject(CObject *pObject, bool bLater) {
+  if (bLater) {
+    if (find(m_lObjectsToDestroy.begin(),
+	     m_lObjectsToDestroy.end(),
+	     pObject) == m_lObjectsToDestroy.end()) {
+    m_lObjectsToDestroy.push_back(pObject);
+    }
+  }
+  else {
+    m_lObjects.remove(pObject);
+    delete pObject;
+  }
+}
 
 Ogre::String CMap::CExit::toString(EExitTypes et) {
   switch (et) {

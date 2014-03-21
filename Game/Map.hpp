@@ -213,10 +213,10 @@ public:
 
 
   void addEnemy(CEnemy *pEnemy) {m_lEnemies.push_back(pEnemy);}
-  void destroyEnemy(CEnemy *pEnemy);
+  void destroyEnemy(CEnemy *pEnemy, bool bLater = true);
 
   void addObject(CObject *pObject) {m_lObjects.push_back(pObject);}
-  void destroyObject(CObject *pObject) {if (find(m_lObjectsToDestroy.begin(), m_lObjectsToDestroy.end(), pObject) == m_lObjectsToDestroy.end()) m_lObjectsToDestroy.push_back(pObject);}
+  void destroyObject(CObject *pObject, bool bLater = true);
 
   void playerWarped();
 
