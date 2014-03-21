@@ -11,6 +11,7 @@
 #include "FileManager.hpp"
 #include "Settings.hpp"
 #include "GUIManager.hpp"
+#include "IDGenerator.hpp"
 
 using namespace CEGUI;
 
@@ -50,6 +51,11 @@ void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
     String objectName = CObject::getPreviewImageName(i);
     ImageManager::getSingleton().addFromImageFile(objectName, objectName, "Game");
   }
+  for (int i = 0; i < CEnemy::ET_COUNT; i++) {
+    String objectName = CEnemy::getPreviewImageName(i);
+    ImageManager::getSingleton().addFromImageFile(objectName, objectName, "Game");
+  }
+
 
   
   CInputListenerManager::getSingleton().addInputListener(this);
@@ -173,7 +179,7 @@ void CMapEditor::resize(float fButtonSize) {
   pTilesScrollBar->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pTilesScrollBar->setSize(USize(UDim(1, 0), UDim(1, 0)));
 
-
+  fCurrentHeight = 0;
   int id = 0;
   for (int y = 0; y < TT_COUNT / iTilesCountX + 1; y++) {
     for (int x = 0; x < iTilesCountX; x++){
@@ -215,6 +221,7 @@ void CMapEditor::resize(float fButtonSize) {
   pObjectsScrollBar->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pObjectsScrollBar->setSize(USize(UDim(1, 0), UDim(1, 0)));
 
+  fCurrentHeight = 0;
   id = 0;
   for (int y = 0; y < CObject::OT_COUNT / iTilesCountX + 1; y++) {
     for (int x = 0; x < iTilesCountX; x++) {
@@ -236,6 +243,29 @@ void CMapEditor::resize(float fButtonSize) {
     }
     if (id == CObject::OT_COUNT) {break;}
   }
+  fCurrentHeight += (CObject::OT_COUNT / iTilesCountX + 1) * fButtonSize;
+  int iIdOffset = CObject::OT_COUNT;
+  id = 0;
+  for (int y = 0; y < CEnemy::ET_COUNT / iTilesCountX + 1; y++) {
+    for (int x = 0; x < iTilesCountX; x++) {
+      if (id == CEnemy::ET_COUNT) {break;}
+      String objectName(CEnemy::getPreviewImageName(id));
+      Window *pObject = pObjectsScrollBar->createChild("OgreTray/StaticImage", PropertyHelper<int>::toString(id + iIdOffset));
+      pObject->setProperty("FrameEnabled", "False");
+      pObject->setProperty("Image", objectName);
+      pObject->setProperty("HorzFormatting", "CentreAligned");
+      pObject->setProperty("VertFormatting", "CentreAligned");
+      pObject->setPosition(UVector2(UDim(0, x * fButtonSize * 1.05f), UDim(0, fCurrentHeight + y * fButtonSize * 1.05f)));
+      pObject->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
+      pObject->
+	subscribeEvent(Window::EventMouseButtonUp,
+		       Event::Subscriber(&CMapEditor::onObjectClicked, this));
+      
+      id++;
+    }
+    if (id == CEnemy::ET_COUNT) {break;}
+  }
+  fCurrentHeight += (CEnemy::ET_COUNT / iTilesCountX + 1) * fButtonSize;
   
 
   // initial state
@@ -255,6 +285,11 @@ void CMapEditor::reloadTextures() {
     CGUIManager::getSingleton().getRenderer()->getTexture(objectName).
       loadFromFile(objectName, "Game");
   }
+  for (int i = 0; i < CEnemy::ET_COUNT; i++) {
+    String objectName = CEnemy::getPreviewImageName(i);
+    CGUIManager::getSingleton().getRenderer()->getTexture(objectName).
+      loadFromFile(objectName, "Game");
+  }
   
 }
 void CMapEditor::exit() {
@@ -266,6 +301,11 @@ void CMapEditor::exit() {
   }
   for (int i = 0; i < CObject::OT_COUNT; i++) {
     String objectName = CObject::getPreviewImageName(i);
+    ImageManager::getSingleton().destroy(objectName);
+    CGUIManager::getSingleton().getRenderer()->destroyTexture(objectName);
+  }
+  for (int i = 0; i < CEnemy::ET_COUNT; i++) {
+    String objectName = CEnemy::getPreviewImageName(i);
     ImageManager::getSingleton().destroy(objectName);
     CGUIManager::getSingleton().getRenderer()->destroyTexture(objectName);
   }
@@ -343,7 +383,7 @@ void CMapEditor::selectTile(unsigned int uiTile) {
   }
   if (uiTile != TT_COUNT) {
     getTileFromType(uiTile)->setProperty("FrameEnabled", "True");
-    selectObject(CObject::OT_COUNT);
+    selectObject(CObject::OT_COUNT + CEnemy::ET_COUNT);
   }
   m_uiCurrentTile = uiTile;
 }
@@ -361,10 +401,10 @@ unsigned int CMapEditor::getTypeFromObject(CEGUI::Window *pObject) {
   return PropertyHelper<int>::fromString(pObject->getName());
 }
 void CMapEditor::selectObject(unsigned int uiObject) {
-  if (m_uiCurrentObject < CObject::OT_COUNT) {
+  if (m_uiCurrentObject < CObject::OT_COUNT + CEnemy::ET_COUNT) {
     getObjectFromType(m_uiCurrentObject)->setProperty("FrameEnabled", "False");
   }
-  if (uiObject < CObject::OT_COUNT) {
+  if (uiObject < CObject::OT_COUNT + CEnemy::ET_COUNT) {
     getObjectFromType(uiObject)->setProperty("FrameEnabled", "True");
     selectTile(TT_COUNT);
   }
@@ -470,7 +510,7 @@ void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2
     if (m_uiCurrentTile != TT_COUNT) {
       placeCurrentTile(vPos);
     }
-    else if (m_uiCurrentObject != CObject::OT_COUNT) {
+    else if (m_uiCurrentObject < CObject::OT_COUNT + CEnemy::ET_COUNT) {
       placeCurrentObject(vPos);
     }
     break;
@@ -512,7 +552,7 @@ void CMapEditor::placeCurrentTile(const Ogre::Vector2 &vPos) {
   }
 }
 void CMapEditor::placeCurrentObject(const Ogre::Vector2 &vPos) {
-Ogre::Vector2 vMapPos(m_pMap->mouseToMapPos(vPos));
+  Ogre::Vector2 vMapPos(m_pMap->mouseToMapPos(vPos));
   if (!m_pMap->isVisible(m_pMap->transformPosition(vMapPos))) {return;}
 
   int x = static_cast<int>(vMapPos.x);
@@ -520,10 +560,20 @@ Ogre::Vector2 vMapPos(m_pMap->mouseToMapPos(vPos));
 
   if (m_pMap->outOfMap(x, y)) {return;}
 
-  CObject *pObject = new CObject(*m_pMap, vMapPos, static_cast<CObject::EObjectTypes>(m_uiCurrentObject));
-  // set center to curser pos
-  pObject->setCenter(snappedPos(vMapPos));
-  m_pMap->addObject(pObject); 
+  if (m_uiCurrentObject < CObject::OT_COUNT) {
+    CObject *pObject = new CObject(*m_pMap, vMapPos, static_cast<CObject::EObjectTypes>(m_uiCurrentObject));
+    // set center to curser pos
+    pObject->setCenter(snappedPos(vMapPos));
+    m_pMap->addObject(pObject); 
+    m_pSelectedSprite = pObject;
+  }
+  else {
+    int id = m_uiCurrentObject - CObject::OT_COUNT;
+    CEnemy *pEnemy = new CEnemy(*m_pMap, vMapPos, static_cast<CEnemy::EEnemyTypes>(id), 1, 1, true, Ogre::StringConverter::toString(CIDGenerator::nextID()));
+    pEnemy->setCenter(snappedPos(vMapPos));
+    m_pMap->addEnemy(pEnemy);
+    m_pSelectedSprite = pEnemy;
+  }
 }
 bool CMapEditor::onBrushSelectionChanged(const EventArgs &args) {
   const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
