@@ -95,17 +95,23 @@ std::string CFileManager::getValidPath(const std::string &sFileName,
     dataPath = nativeActivity->externalDataPath;
   }
 
+  std::string addPath(sFileName.substr(0, sFileName.rfind("/")));
+  std::string path = dataPath;
+  if (addPath.size() > 0) {
+    path += "/" + addPath;
+  }
+
   struct stat sb;
-  int32_t res = stat(dataPath.c_str(), &sb);
+  int32_t res = stat(path.c_str(), &sb);
   if (0 == res && sb.st_mode & S_IFDIR) {
     // path already exists
   }
   else {
     // create path
-    res = mkpath(dataPath.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
-if (res != 0) {
-Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Could not create directory " + dataPath);
-}
+    res = mkpath(path.c_str(), S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    if (res != 0) {
+      // error...
+    }
   }
 
   return dataPath + "/" + sFileName;
@@ -120,9 +126,11 @@ bool CFileManager::openFile(std::fstream &stream,
   std::string path(getValidPath(sFileName, eLocation));
   stream.open(path);
   if (!stream) {
-    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "Creating file at path" + path);
-    fclose(fopen(path.c_str(), "w+"));
-    stream.open(path);
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "Creating file at path: " + path);
+    if (FILE *f = fopen(path.c_str(), "w+")) {
+      fclose(f);
+      stream.open(path);
+    }
     if (!stream) {
       Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "File " + path + " not found");
       return false;
