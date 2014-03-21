@@ -30,6 +30,7 @@ private:
   CEGUI::Window *m_pRoot;
   CEGUI::TabControl *m_pTabControl;
   CEGUI::ScrollablePane *m_pTilesContainer;
+  CEGUI::ScrollablePane *m_pObjectsContainer;
   unsigned int m_uiCurrentTile;
   CMap *m_pMap;
   EBrushes m_eSelectedBrush;
@@ -67,6 +68,7 @@ public:
 
   void resize(float fButtonSize);
   void setVisible(bool bVisible);
+  void reloadTextures();
 private:
   void handleBrushPressed(const Ogre::Vector2 &vPos);
   void handleBrushReleased(const Ogre::Vector2 &vPos);
@@ -74,6 +76,7 @@ private:
   void placeCurrentTile(const Ogre::Vector2 &vPos);
   void selectTile(unsigned int uiTile);
   bool onTileClicked(const CEGUI::EventArgs &args);
+  bool onObjectClicked(const CEGUI::EventArgs &args);
   bool onBrushSelectionChanged(const CEGUI::EventArgs &args);
   bool onSnapToGridChanged(const CEGUI::EventArgs &args);
   bool onSaveMap(const CEGUI::EventArgs &args);

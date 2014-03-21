@@ -17,6 +17,8 @@ public:
 
     OT_COUNT
   };
+
+  static Ogre::String getPreviewImageName(int iObjectType);
 private:
   const EObjectTypes m_eObjectType;
   CMap &m_Map;

@@ -50,6 +50,23 @@ CObject::CObject(CMap &map,
     break;
   }
 }
+Ogre::String CObject::getPreviewImageName(int iObjectType) {
+  switch (iObjectType) {
+  case OT_BOMB:
+    return getBombTexture("bomb");
+  case OT_HEALTH_POTION:
+    return getOtherObjectsTexturePath("health_potion");
+  case OT_MANA_POTION:
+    return getOtherObjectsTexturePath("mana_potion");
+  case OT_KEY:
+    return getOtherObjectsTexturePath("key");
+  case OT_SCRATCH:
+    return getOtherObjectsTexturePath("scratch");
+  case OT_TORCH:
+    return getTorchTexturePath("torch1_1");
+  }
+  return "pink.png";
+}
 
 void CObject::update(Ogre::Real tpf) {
   if (m_bIsPickable) {

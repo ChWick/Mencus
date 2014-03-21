@@ -49,6 +49,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
   m_pMapInfo(pMapInfo) {
   CGame::getSingleton().showLoadingBar();
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
+  Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Game");
 #ifdef MAP_EDITOR_ENABLED
   CMapEditor::getSingleton().init(this, pMapInfo);
 #endif

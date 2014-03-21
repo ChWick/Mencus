@@ -44,8 +44,14 @@ CMapEditor::CMapEditor(Window *pRoot)
 void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
   for (int i = 1; i < TT_COUNT; i++) {
     String tileName = "Tile" + PropertyHelper<int>::toString(i) + ".png";
-    ImageManager::getSingleton().addFromImageFile(tileName, tileName, "General");
+    ImageManager::getSingleton().addFromImageFile(tileName, tileName, "Game");
   }
+  for (int i = 0; i < CObject::OT_COUNT; i++) {
+    String objectName = CObject::getPreviewImageName(i);
+    ImageManager::getSingleton().addFromImageFile(objectName, objectName, "Game");
+  }
+
+  
   CInputListenerManager::getSingleton().addInputListener(this);
   m_pMap = pMap;
   m_pMapInfo = std::shared_ptr<CMapInfo>(new CMapInfo(pMapInfo));
@@ -139,6 +145,7 @@ void CMapEditor::resize(float fButtonSize) {
 
   // offset
   fCurrentHeight += 10;
+
   Window *pSaveButton = pBrushScrollPane->createChild("OgreTray/Button", "SaveButton");
   pSaveButton->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
   pSaveButton->setSize(USize(UDim(1, 0), UDim(0, fButtonSize)));
@@ -146,6 +153,7 @@ void CMapEditor::resize(float fButtonSize) {
   pSaveButton->setText("Save to file");
   pSaveButton->subscribeEvent(PushButton::EventClicked, 
 			      Event::Subscriber(&CMapEditor::onSaveMap, this));
+
   
 
   // Tiles content pane
@@ -167,7 +175,7 @@ void CMapEditor::resize(float fButtonSize) {
 
 
   int id = 0;
-  for (int y = 0; y < TT_COUNT; y++) {
+  for (int y = 0; y < TT_COUNT / iTilesCountX + 1; y++) {
     for (int x = 0; x < iTilesCountX; x++){
       id++; // tiles count start at 1
 
@@ -185,20 +193,69 @@ void CMapEditor::resize(float fButtonSize) {
       pTile->
 	subscribeEvent(Window::EventMouseButtonUp,
 		       Event::Subscriber(&CMapEditor::onTileClicked, this));
-      pTile->
-	subscribeEvent(Window::EventMouseButtonDown,
-		       Event::Subscriber(&CMapEditor::dummyReturnFalse, this));
-      pTile->
-	subscribeEvent(Window::EventMouseMove,
-		       Event::Subscriber(&CMapEditor::dummyReturnFalse, this));
 
     }
     if (id == TT_COUNT) {
       break;
     }
   }
+
+  // object/enemies content pane
+  // ===========================
+  Ogre::LogManager::getSingleton().logMessage("    Objects content pane");
+  Window *pObjectsTabContentPane = pTabPane->createChild("OgreTray/TabContentPane", "ObjectsContentPane");
+  //pTabPane->addTab(pTilesTabContentPane);
+  pObjectsTabContentPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  pObjectsTabContentPane->setSize(USize(UDim(1, 0), UDim(1, 0)));
+  pObjectsTabContentPane->setText("Objects");
+
+  ScrollablePane *pObjectsScrollBar = dynamic_cast<ScrollablePane*>(pObjectsTabContentPane->createChild("OgreTray/ScrollablePane", "ScrollPane"));
+  pObjectsScrollBar->setDragIgnoreZone(fDragIgnoreZone);
+  m_pObjectsContainer = pObjectsScrollBar;
+  pObjectsScrollBar->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  pObjectsScrollBar->setSize(USize(UDim(1, 0), UDim(1, 0)));
+
+  id = 0;
+  for (int y = 0; y < CObject::OT_COUNT / iTilesCountX + 1; y++) {
+    for (int x = 0; x < iTilesCountX; x++) {
+      if (id == CObject::OT_COUNT) {break;}
+      
+      String objectName(CObject::getPreviewImageName(id));
+      Window *pObject = pObjectsScrollBar->createChild("OgreTray/StaticImage", objectName);
+      pObject->setProperty("FrameEnabled", "False");
+      pObject->setProperty("Image", objectName);
+      pObject->setProperty("HorzFormatting", "CentreAligned");
+      pObject->setProperty("VertFormatting", "CentreAligned");
+      pObject->setPosition(UVector2(UDim(0, x * fButtonSize * 1.05f), UDim(0, y * fButtonSize * 1.05f)));
+      pObject->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
+      pObject->
+	subscribeEvent(Window::EventMouseButtonUp,
+		       Event::Subscriber(&CMapEditor::onObjectClicked, this));
+      
+      id++;
+    }
+    if (id == CObject::OT_COUNT) {break;}
+  }
   
+
+  // initial state
+  // =============
   selectTile(1);
+}
+void CMapEditor::reloadTextures() {
+  if (!m_bInitialized) {return;}
+
+  for (int i = 1; i < TT_COUNT; i++) {
+    String tileName = "Tile" + PropertyHelper<int>::toString(i) + ".png";
+    CGUIManager::getSingleton().getRenderer()->getTexture(tileName).
+      loadFromFile(tileName, "Game");
+  }
+  for (int i = 0; i < CObject::OT_COUNT; i++) {
+    String objectName = CObject::getPreviewImageName(i);
+    CGUIManager::getSingleton().getRenderer()->getTexture(objectName).
+      loadFromFile(objectName, "Game");
+  }
+  
 }
 void CMapEditor::exit() {
   Ogre::LogManager::getSingleton().logMessage("MapEditor exit ...");
@@ -206,6 +263,11 @@ void CMapEditor::exit() {
     String tileName = "Tile" + PropertyHelper<int>::toString(i) + ".png";
     ImageManager::getSingleton().destroy(tileName);
     CGUIManager::getSingleton().getRenderer()->destroyTexture(tileName);
+  }
+  for (int i = 0; i < CObject::OT_COUNT; i++) {
+    String objectName = CObject::getPreviewImageName(i);
+    ImageManager::getSingleton().destroy(objectName);
+    CGUIManager::getSingleton().getRenderer()->destroyTexture(objectName);
   }
 
   cout << ImageManager::getSingleton().getImageCount() << endl;
@@ -285,8 +347,13 @@ bool CMapEditor::onTileClicked(const EventArgs &args) {
   const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
   selectTile(getTypeFromTile(wndArgs.window));
 
-  // return false for dragging
-  return false;
+  return true;
+}
+bool CMapEditor::onObjectClicked(const EventArgs &args) {
+  if (m_pTilesContainer->wasDragged()) {return true;}
+  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
+  
+  return true;
 }
 bool CMapEditor::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
   Ogre::Vector2 vMapPos(m_pMap->mouseToMapPos(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs)));

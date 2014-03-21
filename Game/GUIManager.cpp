@@ -272,6 +272,9 @@ void CGUIManager::reloadResources() {
   for (auto &sFontName : m_vFonts) {
     CEGUI::FontManager::getSingleton().get(sFontName).notifyDisplaySizeChanged(m_vNativeRes);
   }
+#ifdef MAP_EDITOR_ENABLED
+  CMapEditor::getSingleton().reloadTextures();
+#endif
 }
 void CGUIManager::resize(const CEGUI::Sizef &vSize) {
   m_vNativeRes = vSize;
