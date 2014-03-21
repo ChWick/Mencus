@@ -19,16 +19,16 @@ CMapInfo::CMapInfo(const std::string &sFileName, const std::string &sResourceGro
   m_Document.Parse(dataStream->getAsString().c_str());
   
   constructor_impl();
-  m_Document.Accept(&m_xmlprinter);
 }
 CMapInfo::CMapInfo(const CMapInfoConstPtr src) 
   : m_bValid(src->m_bValid),
     m_sName(src->m_sName),
     m_sDescription(src->m_sDescription) {
-  m_Document.Parse(src->m_xmlprinter.CStr());
+  tinyxml2::XMLPrinter xmlprinter;
+  src->m_Document.Accept(&xmlprinter);
+  m_Document.Parse(xmlprinter.CStr());
 
   constructor_impl();
-  m_Document.Accept(&m_xmlprinter);
 }
 void CMapInfo::constructor_impl() {
   if (m_Document.Error()) {

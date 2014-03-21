@@ -33,7 +33,6 @@ public:
     }
   }
 private:
-  tinyxml2::XMLPrinter m_xmlprinter;
   tinyxml2::XMLDocument m_Document;
   bool m_bValid;
   EMapDifficulty m_eDifficulty;
@@ -47,7 +46,6 @@ public:
 
   tinyxml2::XMLElement *getEmptyRootNode();
   const tinyxml2::XMLDocument &getDocument() const {return m_Document;}
-  const tinyxml2::XMLPrinter &getPrinter() const {return m_xmlprinter;}
   bool isValid() const {return m_bValid;}
   EMapDifficulty getDifficulty() const {return m_eDifficulty;}
   std::string getDifficultyAsString() const {return toString(m_eDifficulty);}
