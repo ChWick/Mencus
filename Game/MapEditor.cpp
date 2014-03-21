@@ -95,6 +95,7 @@ void CMapEditor::resize(float fButtonSize) {
   float fTabSize = 0.3;
   float fTabPixelWidth = CGame::getSingleton().getRenderWindow()->getWidth() * fTabSize;
   int iTilesCountX = static_cast<int>(fTabPixelWidth / fButtonSize - 0.999);
+  m_fButtonSize = fButtonSize;
 
   Ogre::LogManager::getSingleton().logMessage("*** Creating MapEditor");
 
@@ -292,10 +293,41 @@ void CMapEditor::resize(float fButtonSize) {
 				Event::Subscriber(&CMapEditor::onDelete, this));
   
   
+  // edit sprite
+  m_pEditSprite = pEditScrollBar->createChild("DefaultWindow", "Sprite");
+  m_pEditSprite->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
+
+  createEditButton(EB_HITPOINTS, EBT_FLOAT, fCurrentHeight);
+  createEditButton(EB_DAMAGE, EBT_FLOAT, fCurrentHeight);
 
   // initial state
   // =============
   selectTile(1);
+}
+Window* CMapEditor::createEditButton(EEditButtons id, EEditButtonTypes type, float &fCurrentHeight) {
+  Window *pButton = m_pEditSprite->createChild("OgreTray/Button", PropertyHelper<int>::toString(id));
+  pButton->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
+  pButton->setSize(USize(UDim(1, 0), UDim(0, m_fButtonSize)));
+  fCurrentHeight += m_fButtonSize + 5;
+  switch (type) {
+  case EBT_FLOAT:
+    pButton->subscribeEvent(PushButton::EventClicked,
+			    Event::Subscriber(&CMapEditor::onEditFloat, this));
+    break;
+  case EBT_STRING:
+    pButton->subscribeEvent(PushButton::EventClicked,
+			    Event::Subscriber(&CMapEditor::onDelete, this));
+    break;
+  }
+  switch (id) {
+  case EB_HITPOINTS:
+    pButton->setText("Edit Hitpoints");
+    break;
+  case EB_DAMAGE:
+    pButton->setText("Edit Damage");
+    break;
+  }
+  return pButton;
 }
 void CMapEditor::reloadTextures() {
   if (!m_bInitialized) {return;}
@@ -359,7 +391,7 @@ void CMapEditor::start() {
   m_bPressed = false;
   Sizef vSize(m_pTabControl->getPixelSize());
   m_pMap->resize(Ogre::Vector2(CGame::getSingleton().getRenderWindow()->getWidth() - vSize.d_width, vSize.d_height));
-  m_pSelectedSprite = NULL;
+  selectedSprite(NULL);
   
   //reset map, but store camera pos
   Ogre::Vector2 vCamPos(m_pMap->getCameraTargetPos());
@@ -516,6 +548,8 @@ bool CMapEditor::selectSprite(const Ogre::Vector2 &vPos) {
   if (m_lSprites.size() > 0) {
     m_pSelectedSprite = m_lSprites.front();
   }
+
+  selectedSprite(m_pSelectedSprite);
   return true;
 }
 void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
@@ -644,9 +678,13 @@ bool CMapEditor::onDelete(const CEGUI::EventArgs &args) {
     CEnemy *pEnemy = dynamic_cast<CEnemy*>(m_pSelectedSprite);
     m_pMap->destroyEnemy(pEnemy, false);
   }
+  
+  selectedSprite(NULL);
 
-  m_pSelectedSprite = NULL;
-
+  return true;
+}
+bool CMapEditor::onEditFloat(const CEGUI::EventArgs &args) {
+  m_pEditValueWindow = m_pRoot->createChild("DefaultWindow", "EditWindow");
   return true;
 }
 Ogre::Vector2 CMapEditor::snappedPos(const Ogre::Vector2 &vPos) {
@@ -659,4 +697,13 @@ Ogre::Vector2 CMapEditor::snappedPos(const Ogre::Vector2 &vPos) {
   v.y = floor(v.y + 0.5) * fGridSize;
 
   return v;
+}
+void CMapEditor::selectedSprite(CSprite *pSprite) {
+  m_pSelectedSprite = pSprite;
+
+  m_pEditSprite->setVisible(false);
+
+  if (m_pSelectedSprite) {
+    m_pEditSprite->setVisible(true);
+  }
 }
