@@ -370,3 +370,28 @@ void CEnemy::writeToXMLElement(tinyxml2::XMLElement *pElem) {
   pElem->SetAttribute("jumps", mayJump());
   CAnimatedSprite::writeToXMLElement(pElem);
 }
+Ogre::String CEnemy::getPreviewImageName(int iEnemyType) {
+  switch (iEnemyType) {
+  case ET_GREEN_MONSTER:
+    return getEnemyTexturePath<ET_GREEN_MONSTER + 1>("walk_right_1");
+    break;
+  case ET_KNIGHT:
+    return getEnemyTexturePath<ET_KNIGHT + 1>("walk_right_1");
+    break;
+  case ET_BEAR:
+    return getEnemyTexturePath<ET_BEAR + 1>("walk_right_1");
+    break;
+  case ET_GHOST:
+    return getEnemyTexturePath<ET_GHOST>("walk_right_2"); // debugging
+    break;
+  case ET_DARK_MAGICAN:
+    return getEnemyTexturePath<ET_DARK_MAGICAN + 1>("walk_right_1");
+    break;
+  case ET_SANTA:
+    return getEnemyTexturePath<ET_SANTA>("attack_right_1"); // debugging
+    break;
+  default:
+    throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Enemy type '" + Ogre::StringConverter::toString(iEnemyType) + "' is unknown", __FILE__);
+  }
+  return Ogre::StringUtil::BLANK;
+}

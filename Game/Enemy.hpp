@@ -35,6 +35,7 @@ public:
 
     AS_COUNT
   };
+  static Ogre::String getPreviewImageName(int iEnemyType);
 private:
   const EEnemyTypes m_eEnemyType;
   CMap &m_Map;
