@@ -28,6 +28,7 @@ public:
     EB_HITPOINTS,
     EB_DAMAGE,
     EB_JUMPING,
+    EB_SWITCH_AFFECTING_BLOCKS,
   };
   enum EBrushes {
     B_PLACE,

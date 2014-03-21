@@ -5,6 +5,7 @@
 #include "Map.hpp"
 #include "Enemy.hpp"
 #include "Game.hpp"
+#include "Switch.hpp"
 #include "Object.hpp"
 #include "DebugDrawer.hpp"
 #include "Player.hpp"
@@ -57,7 +58,10 @@ void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
     String objectName = CEnemy::getPreviewImageName(i);
     ImageManager::getSingleton().addFromImageFile(objectName, objectName, "Game");
   }
-
+  for (int i = 0; i < CSwitch::SWITCH_COUNT; i++) {
+    String objectName = CSwitch::getPreviewImageName(i);
+    ImageManager::getSingleton().addFromImageFile(objectName, objectName, "Game");
+  }
 
   
   CInputListenerManager::getSingleton().addInputListener(this);
@@ -277,6 +281,30 @@ void CMapEditor::resize(float fButtonSize) {
   }
   fCurrentHeight += (CEnemy::ET_COUNT / iTilesCountX + 1) * fButtonSize;
 
+  // switches
+  iIdOffset += CEnemy::ET_COUNT;
+  id = 0;
+  for (int y = 0; y < CSwitch::SWITCH_COUNT / iTilesCountX + 1; y++) {
+    for (int x = 0; x < iTilesCountX; x++) {
+      if (id == CSwitch::SWITCH_COUNT) {break;}
+      String objectName(CSwitch::getPreviewImageName(id));
+      Window *pObject = pObjectsScrollBar->createChild("OgreTray/StaticImage", PropertyHelper<int>::toString(id + iIdOffset));
+      pObject->setProperty("FrameEnabled", "False");
+      pObject->setProperty("Image", objectName);
+      pObject->setProperty("HorzFormatting", "CentreAligned");
+      pObject->setProperty("VertFormatting", "CentreAligned");
+      pObject->setPosition(UVector2(UDim(0, x * fButtonSize * 1.05f), UDim(0, fCurrentHeight + y * fButtonSize * 1.05f)));
+      pObject->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
+      pObject->
+	subscribeEvent(Window::EventMouseButtonUp,
+		       Event::Subscriber(&CMapEditor::onObjectClicked, this));
+      
+      id++;
+    }
+    if (id == CSwitch::SWITCH_COUNT) {break;}
+  }
+  fCurrentHeight += (CSwitch::SWITCH_COUNT / iTilesCountX + 1) * fButtonSize;
+
   // edit tab
   // ========
   Ogre::LogManager::getSingleton().logMessage("    Edit content pane");
@@ -305,10 +333,14 @@ void CMapEditor::resize(float fButtonSize) {
   // edit sprite
   m_pEditSprite = pEditScrollBar->createChild("DefaultWindow", "Sprite");
   m_pEditSprite->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
-
+  fCurrentHeight = 5;
   createEditButton(EB_HITPOINTS, EBT_FLOAT, fCurrentHeight);
-  createEditButton(EB_DAMAGE, EBT_FLOAT, fCurrentHeight);
+  //createEditButton(EB_DAMAGE, EBT_FLOAT, fCurrentHeight);
   createEditButton(EB_JUMPING, EBT_BOOL, fCurrentHeight);
+  
+  // switch
+  fCurrentHeight = 5;
+  createEditButton(EB_SWITCH_AFFECTING_BLOCKS, EBT_BOOL, fCurrentHeight);
 
   // initial state
   // =============
@@ -351,6 +383,9 @@ Window* CMapEditor::createEditButton(EEditButtons id, EEditButtonTypes type, flo
   case EB_JUMPING:
     pButton->setText("Jumping");
     break;
+  case EB_SWITCH_AFFECTING_BLOCKS:
+    pButton->setText("Affecting blocks");
+    break;
   }
   return pButton;
 }
@@ -372,6 +407,11 @@ void CMapEditor::reloadTextures() {
     CGUIManager::getSingleton().getRenderer()->getTexture(objectName).
       loadFromFile(objectName, "Game");
   }
+  for (int i = 0; i < CSwitch::SWITCH_COUNT; i++) {
+    String objectName = CSwitch::getPreviewImageName(i);
+    CGUIManager::getSingleton().getRenderer()->getTexture(objectName).
+      loadFromFile(objectName, "Game");
+  }
   
 }
 void CMapEditor::exit() {
@@ -388,6 +428,11 @@ void CMapEditor::exit() {
   }
   for (int i = 0; i < CEnemy::ET_COUNT; i++) {
     String objectName = CEnemy::getPreviewImageName(i);
+    ImageManager::getSingleton().destroy(objectName);
+    CGUIManager::getSingleton().getRenderer()->destroyTexture(objectName);
+  }
+  for (int i = 0; i < CSwitch::SWITCH_COUNT; i++) {
+    String objectName = CSwitch::getPreviewImageName(i);
     ImageManager::getSingleton().destroy(objectName);
     CGUIManager::getSingleton().getRenderer()->destroyTexture(objectName);
   }
@@ -470,7 +515,7 @@ void CMapEditor::selectTile(unsigned int uiTile) {
   }
   if (uiTile != TT_COUNT) {
     getTileFromType(uiTile)->setProperty("FrameEnabled", "True");
-    selectObject(CObject::OT_COUNT + CEnemy::ET_COUNT);
+    selectObject(CObject::OT_COUNT + CEnemy::ET_COUNT + CSwitch::SWITCH_COUNT);
   }
   m_uiCurrentTile = uiTile;
 }
@@ -488,10 +533,10 @@ unsigned int CMapEditor::getTypeFromObject(CEGUI::Window *pObject) {
   return PropertyHelper<int>::fromString(pObject->getName());
 }
 void CMapEditor::selectObject(unsigned int uiObject) {
-  if (m_uiCurrentObject < CObject::OT_COUNT + CEnemy::ET_COUNT) {
+  if (m_uiCurrentObject < CObject::OT_COUNT + CEnemy::ET_COUNT + CSwitch::SWITCH_COUNT) {
     getObjectFromType(m_uiCurrentObject)->setProperty("FrameEnabled", "False");
   }
-  if (uiObject < CObject::OT_COUNT + CEnemy::ET_COUNT) {
+  if (uiObject < CObject::OT_COUNT + CEnemy::ET_COUNT + CSwitch::SWITCH_COUNT) {
     getObjectFromType(uiObject)->setProperty("FrameEnabled", "True");
     selectTile(TT_COUNT);
   }
@@ -573,6 +618,11 @@ bool CMapEditor::selectSprite(const Ogre::Vector2 &vPos) {
       m_lSprites.push_back(pSprite);
     }
   }
+  for (CSwitch *pSprite : m_pMap->getSwitches()) {
+    if (pSprite->getWorldBoundingBox().contains(vMapPos)) {
+      m_lSprites.push_back(pSprite);
+    }
+  }
 
   m_pSelectedSprite = NULL;
   if (m_lSprites.size() > 0) {
@@ -585,7 +635,7 @@ bool CMapEditor::selectSprite(const Ogre::Vector2 &vPos) {
 void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
   switch (m_eSelectedBrush) {
   case B_PLACE:
-    if (m_uiCurrentObject < CObject::OT_COUNT + CEnemy::ET_COUNT) {
+    if (m_uiCurrentObject < CObject::OT_COUNT + CEnemy::ET_COUNT + CSwitch::SWITCH_COUNT) {
       placeCurrentObject(vPos);
     }
     break;
@@ -656,12 +706,24 @@ void CMapEditor::placeCurrentObject(const Ogre::Vector2 &vPos) {
     m_pMap->addObject(pObject); 
     selectedSprite(pObject);
   }
-  else {
+  else if (m_uiCurrentObject < CEnemy::ET_COUNT + CObject::OT_COUNT) {
     int id = m_uiCurrentObject - CObject::OT_COUNT;
     CEnemy *pEnemy = new CEnemy(*m_pMap, vMapPos, static_cast<CEnemy::EEnemyTypes>(id), 1, 1, true, Ogre::StringConverter::toString(CIDGenerator::nextID()));
     pEnemy->setCenter(snappedPos(vMapPos));
     m_pMap->addEnemy(pEnemy);
     selectedSprite(pEnemy);
+  }
+  else if (m_uiCurrentObject < CEnemy::ET_COUNT + CObject::OT_COUNT + CSwitch::SWITCH_COUNT) {
+    int id = m_uiCurrentObject - CObject::OT_COUNT - CEnemy::ET_COUNT;
+    CSwitch *pSwitch = new CSwitch(m_pMap,
+				   m_pMap->get2dManager(),
+				   vMapPos,
+				   static_cast<CSwitch::ESwitchTypes>(id),
+				   false,
+				   CSwitch::SS_DEACTIVATED);
+    pSwitch->setCenter(snappedPos(vMapPos));
+    m_pMap->addSwitch(pSwitch);
+    selectedSprite(pSwitch);
   }
 }
 bool CMapEditor::onBrushSelectionChanged(const EventArgs &args) {
@@ -713,6 +775,10 @@ bool CMapEditor::onDelete(const CEGUI::EventArgs &args) {
     CEnemy *pEnemy = dynamic_cast<CEnemy*>(pBuffer);
     m_pMap->destroyEnemy(pEnemy, false);
   }
+  else if (dynamic_cast<CSwitch*>(pBuffer)) {
+    CSwitch *pSwitch = dynamic_cast<CSwitch*>(pBuffer);
+    m_pMap->destroySwich(pSwitch);
+  }
   
 
   return true;
@@ -746,6 +812,9 @@ bool CMapEditor::onEditBoolChanged(const CEGUI::EventArgs &args) {
   case EB_JUMPING:
     dynamic_cast<CEnemy*>(m_pSelectedSprite)->setMayJump(pBut->isSelected());
     break;
+  case EB_SWITCH_AFFECTING_BLOCKS:
+    dynamic_cast<CSwitch*>(m_pSelectedSprite)->setChangeBlocks(pBut->isSelected());
+    break;
   }
   return true;
 }
@@ -777,16 +846,26 @@ void CMapEditor::selectedSprite(CSprite *pSprite) {
 
     m_pEditSprite->
       getChild(PropertyHelper<int>::toString(EB_HITPOINTS))->
-      setEnabled(dynamic_cast<CHitableObject*>(m_pSelectedSprite));
+      setVisible(dynamic_cast<CHitableObject*>(m_pSelectedSprite));
 
     CEnemy *pEnemy = dynamic_cast<CEnemy*>(m_pSelectedSprite);
     m_pEditSprite->
       getChild(PropertyHelper<int>::toString(EB_JUMPING))->
-      setEnabled(pEnemy);
+      setVisible(pEnemy);
     if (pEnemy) {
       dynamic_cast<ToggleButton*>(m_pEditSprite->
 				  getChild(PropertyHelper<int>::toString(EB_JUMPING)))
 	->setSelected(pEnemy->mayJump());
+    }
+
+    CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
+    m_pEditSprite->
+      getChild(PropertyHelper<int>::toString(EB_SWITCH_AFFECTING_BLOCKS))->
+      setVisible(pSwitch);
+    if (pSwitch) {
+      dynamic_cast<ToggleButton*>(m_pEditSprite->
+				  getChild(PropertyHelper<int>::toString(EB_SWITCH_AFFECTING_BLOCKS)))
+	->setSelected(pSwitch->doesChangeBlocks());
     }
   }
 }
