@@ -38,6 +38,7 @@ private:
   EMapDifficulty m_eDifficulty;
   std::string m_sName;
   std::string m_sDescription;
+  std::string m_sFileName;
 public:
   CMapInfo(const std::string &sFileName, const std::string &sResourceGroup);
   CMapInfo(const CMapInfoConstPtr src);
@@ -51,6 +52,8 @@ public:
   std::string getDifficultyAsString() const {return toString(m_eDifficulty);}
 
   std::string getXMLText();
+  const std::string &getFileName() const {return m_sFileName;}
+  void setFileName(const std::string &sFileName) {m_sFileName = sFileName;}
 
 private:
   void constructor_impl();
