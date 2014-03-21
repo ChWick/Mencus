@@ -10,6 +10,7 @@
 #include "Player.hpp"
 #include "FileManager.hpp"
 #include "Settings.hpp"
+#include "GUIManager.hpp"
 
 using namespace CEGUI;
 
@@ -200,17 +201,26 @@ void CMapEditor::resize(float fButtonSize) {
   selectTile(1);
 }
 void CMapEditor::exit() {
-  cout << ImageManager::getSingleton().getImageCount() << endl;
   Ogre::LogManager::getSingleton().logMessage("MapEditor exit ...");
   for (int i = 1; i < TT_COUNT; i++) {
     String tileName = "Tile" + PropertyHelper<int>::toString(i) + ".png";
     ImageManager::getSingleton().destroy(tileName);
+    CGUIManager::getSingleton().getRenderer()->destroyTexture(tileName);
   }
+
   cout << ImageManager::getSingleton().getImageCount() << endl;
   stop();
   m_bInitialized = false;
   CInputListenerManager::getSingleton().removeInputListener(this);
   m_pTabControl->destroy();
+
+  m_uiCurrentTile = 2;
+  m_pMap = NULL;
+  m_pTabControl = NULL;
+  m_pSelectedSprite = NULL;
+  m_bVisible = false;
+  m_bRenderPause = false;
+  m_bInitialized = false;
   Ogre::LogManager::getSingleton().logMessage("   ... done");
 }
 void CMapEditor::start() {
