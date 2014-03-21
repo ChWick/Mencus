@@ -212,6 +212,7 @@ public:
   void destroyExplosion(CExplosion *pExplosion) {m_lExplosionsToDestroy.push_back(pExplosion);}
 
 
+  void addEnemy(CEnemy *pEnemy) {m_lEnemies.push_back(pEnemy);}
   void destroyEnemy(CEnemy *pEnemy);
 
   void addObject(CObject *pObject) {m_lObjects.push_back(pObject);}
