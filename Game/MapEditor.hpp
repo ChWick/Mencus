@@ -6,15 +6,18 @@
 #include "InputListener.hpp"
 #include "PauseCaller.hpp"
 #include "PauseListener.hpp"
+#include "PauseListener.hpp"
 #include "MapInfo.hpp"
 
 class CSprite;
 class CMap;
+class CEditBoxBase;
 
 class CMapEditor 
   : public Ogre::Singleton<CMapEditor>,
     public CInputListener,
-    public CPauseCaller {
+    public CPauseCaller,
+    public CPauseListener {
 public:
   enum EEditButtonTypes {
     EBT_STRING,
@@ -51,7 +54,7 @@ private:
   CMapInfoPtr m_pMapInfo;
   bool m_bInitialized;
   
-  CEGUI::Window *m_pEditValueWindow;
+  CEditBoxBase *m_pEditValueWindow;
 public:
   static CMapEditor &getSingleton();
   static CMapEditor *getSingletonPtr();
@@ -86,6 +89,7 @@ public:
   void resize(float fButtonSize);
   void setVisible(bool bVisible);
   void reloadTextures();
+  void mapEditorUpdatePauseChanged(bool bPause);
 private:
   CEGUI::Window *createEditButton(EEditButtons id, EEditButtonTypes type, float &fCurrentHeight);
   // checks if m_bSnapping, and then snaps

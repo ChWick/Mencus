@@ -12,6 +12,7 @@
 #include "Settings.hpp"
 #include "GUIManager.hpp"
 #include "IDGenerator.hpp"
+#include "EditBoxes/EditBoxFloat.hpp"
 
 using namespace CEGUI;
 
@@ -39,7 +40,8 @@ CMapEditor::CMapEditor(Window *pRoot)
     m_pSelectedSprite(NULL),
     m_bVisible(false),
     m_bRenderPause(false),
-    m_bInitialized(false) {
+    m_bInitialized(false),
+    m_pEditValueWindow(NULL) {
   //init(0);
 }
 void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
@@ -81,6 +83,13 @@ void CMapEditor::setVisible(bool bVisible) {
       unpause(PAUSE_MAP_UPDATE);
       CHUD::getSingleton().hide();
     }
+  }
+}
+void CMapEditor::mapEditorUpdatePauseChanged(bool bPause) {
+  if (m_bInitialized && m_bVisible) {
+    setInputListenerEnabled(!bPause);
+    m_pTabControl->setEnabled(!bPause);
+    m_pEditValueWindow = NULL;
   }
 }
 void CMapEditor::resize(float fButtonSize) {
@@ -380,6 +389,10 @@ void CMapEditor::exit() {
   m_bVisible = false;
   m_bRenderPause = false;
   m_bInitialized = false;
+  if (m_pEditValueWindow) {
+    delete m_pEditValueWindow;
+    m_pEditValueWindow = NULL;
+  }
   Ogre::LogManager::getSingleton().logMessage("   ... done");
 }
 void CMapEditor::start() {
@@ -683,8 +696,10 @@ bool CMapEditor::onDelete(const CEGUI::EventArgs &args) {
 
   return true;
 }
+float tesst = 10;
 bool CMapEditor::onEditFloat(const CEGUI::EventArgs &args) {
-  m_pEditValueWindow = m_pRoot->createChild("DefaultWindow", "EditWindow");
+  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
+  m_pEditValueWindow = new CEditBoxFloat(m_pRoot, m_fButtonSize, wndArgs.window->getText(), tesst);
   return true;
 }
 Ogre::Vector2 CMapEditor::snappedPos(const Ogre::Vector2 &vPos) {
