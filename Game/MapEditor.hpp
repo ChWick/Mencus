@@ -74,6 +74,8 @@ public:
   void setVisible(bool bVisible);
   void reloadTextures();
 private:
+  // checks if m_bSnapping, and then snaps
+  Ogre::Vector2 snappedPos(const Ogre::Vector2 &vPos);
   void handleBrushPressed(const Ogre::Vector2 &vPos);
   void handleBrushReleased(const Ogre::Vector2 &vPos);
   void handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2 &vDelta);

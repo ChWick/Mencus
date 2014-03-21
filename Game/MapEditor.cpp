@@ -138,10 +138,10 @@ void CMapEditor::resize(float fButtonSize) {
   pSnapToGridButton->setSize(USize(UDim(1, 0), UDim(0, fButtonSize)));
   fCurrentHeight += fButtonSize;
   pSnapToGridButton->setText("Snap to grid");
-  pSnapToGridButton->setEnabled(false);
+  pSnapToGridButton->setSelected(false);
   pSnapToGridButton->subscribeEvent(ToggleButton::EventSelectStateChanged,
 				    Event::Subscriber(&CMapEditor::onSnapToGridChanged, this));
-  pSnapToGridButton->setEnabled(true);
+  pSnapToGridButton->setSelected(true);
 
   // offset
   fCurrentHeight += 10;
@@ -491,10 +491,8 @@ void CMapEditor::handleBrushReleased(const Ogre::Vector2 &vPos) {
   case B_PLACE:
     break;
   case B_MOVE:
-    float fGridSize = 0.5;
-    if (m_pSelectedSprite && m_bSnapToGrid) {
-      Ogre::Vector2 v(m_pSelectedSprite->getPosition() / fGridSize);
-      m_pSelectedSprite->setPosition(Ogre::Vector2(floor(v.x + 0.5), floor(v.y + 0.5)) * fGridSize);
+    if (m_pSelectedSprite) {
+      m_pSelectedSprite->setPosition(snappedPos(m_pSelectedSprite->getPosition()));
     }
     break;
   }
@@ -522,7 +520,10 @@ Ogre::Vector2 vMapPos(m_pMap->mouseToMapPos(vPos));
 
   if (m_pMap->outOfMap(x, y)) {return;}
 
-  m_pMap->addObject(new CObject(*m_pMap, vPos, static_cast<CObject::EObjectTypes>(m_uiCurrentObject))); 
+  CObject *pObject = new CObject(*m_pMap, vMapPos, static_cast<CObject::EObjectTypes>(m_uiCurrentObject));
+  // set center to curser pos
+  pObject->setCenter(snappedPos(vMapPos));
+  m_pMap->addObject(pObject); 
 }
 bool CMapEditor::onBrushSelectionChanged(const EventArgs &args) {
   const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
@@ -556,4 +557,15 @@ bool CMapEditor::onSaveMap(const EventArgs &args) {
   
 
   return true;
+}
+Ogre::Vector2 CMapEditor::snappedPos(const Ogre::Vector2 &vPos) {
+  if (!m_bSnapToGrid) {
+    return vPos;
+  }
+  float fGridSize = 0.5;
+  Ogre::Vector2 v(vPos / fGridSize);
+  v.x = floor(v.x + 0.5) * fGridSize;
+  v.y = floor(v.y + 0.5) * fGridSize;
+
+  return v;
 }
