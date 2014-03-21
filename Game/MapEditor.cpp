@@ -308,13 +308,22 @@ void CMapEditor::resize(float fButtonSize) {
 
   createEditButton(EB_HITPOINTS, EBT_FLOAT, fCurrentHeight);
   createEditButton(EB_DAMAGE, EBT_FLOAT, fCurrentHeight);
+  createEditButton(EB_JUMPING, EBT_BOOL, fCurrentHeight);
 
   // initial state
   // =============
   selectTile(1);
 }
 Window* CMapEditor::createEditButton(EEditButtons id, EEditButtonTypes type, float &fCurrentHeight) {
-  Window *pButton = m_pEditSprite->createChild("OgreTray/Button", PropertyHelper<int>::toString(id));
+  Window *pButton;
+  switch (type) {
+  case EBT_BOOL:
+    pButton = m_pEditSprite->createChild("OgreTray/Checkbox", PropertyHelper<int>::toString(id));
+    break;
+  default:
+    pButton = m_pEditSprite->createChild("OgreTray/Button", PropertyHelper<int>::toString(id));
+    break;
+  }
   pButton->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
   pButton->setSize(USize(UDim(1, 0), UDim(0, m_fButtonSize)));
   fCurrentHeight += m_fButtonSize + 5;
@@ -325,7 +334,11 @@ Window* CMapEditor::createEditButton(EEditButtons id, EEditButtonTypes type, flo
     break;
   case EBT_STRING:
     pButton->subscribeEvent(PushButton::EventClicked,
-			    Event::Subscriber(&CMapEditor::onDelete, this));
+			    Event::Subscriber(&CMapEditor::onEditFloat, this));
+    break;
+  case EBT_BOOL:
+    pButton->subscribeEvent(ToggleButton::EventSelectStateChanged,
+			    Event::Subscriber(&CMapEditor::onEditBoolChanged, this));
     break;
   }
   switch (id) {
@@ -334,6 +347,9 @@ Window* CMapEditor::createEditButton(EEditButtons id, EEditButtonTypes type, flo
     break;
   case EB_DAMAGE:
     pButton->setText("Edit Damage");
+    break;
+  case EB_JUMPING:
+    pButton->setText("Jumping");
     break;
   }
   return pButton;
@@ -722,6 +738,17 @@ bool CMapEditor::onEditFloat(const CEGUI::EventArgs &args) {
   }
   return true;
 }
+bool CMapEditor::onEditBoolChanged(const CEGUI::EventArgs &args) {
+  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
+  int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
+  ToggleButton *pBut = dynamic_cast<ToggleButton*>(wndArgs.window);
+  switch (id) {
+  case EB_JUMPING:
+    dynamic_cast<CEnemy*>(m_pSelectedSprite)->setMayJump(pBut->isSelected());
+    break;
+  }
+  return true;
+}
 Ogre::Vector2 CMapEditor::snappedPos(const Ogre::Vector2 &vPos) {
   if (!m_bSnapToGrid) {
     return vPos;
@@ -751,5 +778,15 @@ void CMapEditor::selectedSprite(CSprite *pSprite) {
     m_pEditSprite->
       getChild(PropertyHelper<int>::toString(EB_HITPOINTS))->
       setEnabled(dynamic_cast<CHitableObject*>(m_pSelectedSprite));
+
+    CEnemy *pEnemy = dynamic_cast<CEnemy*>(m_pSelectedSprite);
+    m_pEditSprite->
+      getChild(PropertyHelper<int>::toString(EB_JUMPING))->
+      setEnabled(pEnemy);
+    if (pEnemy) {
+      dynamic_cast<ToggleButton*>(m_pEditSprite->
+				  getChild(PropertyHelper<int>::toString(EB_JUMPING)))
+	->setSelected(pEnemy->mayJump());
+    }
   }
 }

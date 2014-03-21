@@ -22,10 +22,12 @@ public:
   enum EEditButtonTypes {
     EBT_STRING,
     EBT_FLOAT,
+    EBT_BOOL,
   };
   enum EEditButtons {
     EB_HITPOINTS,
     EB_DAMAGE,
+    EB_JUMPING,
   };
   enum EBrushes {
     B_PLACE,
@@ -109,6 +111,7 @@ private:
   bool onDelete(const CEGUI::EventArgs &args);
 
   bool onEditFloat(const CEGUI::EventArgs &args);
+  bool onEditBoolChanged(const CEGUI::EventArgs &args);
   bool dummyReturnFalse(const CEGUI::EventArgs &args) {return false;}
 
   bool selectSprite(const Ogre::Vector2 &vPos);
