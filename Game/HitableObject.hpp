@@ -7,7 +7,7 @@
 
 class CHitableObject {
 private:
-  const Ogre::Real m_fMaximumHitpoints;
+  Ogre::Real m_fMaximumHitpoints;
   Ogre::Real m_fHitpoints;
   bool m_bInvunerable;
 public:
@@ -41,8 +41,12 @@ public:
     }
   }
 
+  void setHitpoints(Ogre::Real fHitpoints) {m_fHitpoints = std::min<Ogre::Real>(fHitpoints, m_fMaximumHitpoints);}
+
   Ogre::Real getHitpoints() const {return m_fHitpoints;}
   Ogre::Real getMaximumHitpoints() const {return m_fMaximumHitpoints;}
+  Ogre::Real &getMaximumHitpoints() {return m_fMaximumHitpoints;}
+  
   bool isInvunerable() const {return m_bInvunerable;}
   void setInvunerable(bool bInvunerable) {m_bInvunerable = bInvunerable;}
   void addHitpoints(Ogre::Real fHitpoints) {m_fHitpoints = std::min<Ogre::Real>(m_fHitpoints + fHitpoints, m_fMaximumHitpoints);}
