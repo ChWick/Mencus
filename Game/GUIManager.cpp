@@ -77,13 +77,13 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   new CHUD(guiRoot, m_pGUIInput);
   new CGUIInstructions(guiRoot);
   new CGUIGameOver(guiRoot);
-  new CMainMenu(guiRoot);
-  new CGUIStatistics(guiRoot);
-  new CGUITutorial(guiRoot);
   Ogre::LogManager::getSingleton().logMessage("Singleton for map editor");
 #ifdef MAP_EDITOR_ENABLED
   new CMapEditor(guiRoot);
 #endif
+  new CMainMenu(guiRoot);
+  new CGUIStatistics(guiRoot);
+  new CGUITutorial(guiRoot);
   Ogre::LogManager::getSingleton().logMessage("GUIManager initialized...");
 }
 CGUIManager::~CGUIManager() {
@@ -196,22 +196,34 @@ bool CGUIManager::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID 
 
   return true;
 }
-bool CGUIManager::touchMoved(const OIS::MultiTouchEvent& evt) {
+bool CGUIManager::touchMoved(const OIS::MultiTouchEvent& arg) {
   CEGUI::System &sys = CEGUI::System::getSingleton();
   //sys.getDefaultGUIContext().injectMouseMove(evt.state.X.rel, evt.state.Y.rel);
-  CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(evt.state.X.abs, evt.state.Y.abs);
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(arg.state.X.abs, arg.state.Y.abs);
+  CEGUI::MouseEventArgs args(NULL);
+  args.position = CEGUI::Vector2f(arg.state.X.abs, arg.state.Y.abs);
+  args.moveDelta = CEGUI::Vector2f(arg.state.X.rel, arg.state.Y.rel);
+  CEGUI::GlobalEventSet::getSingleton().fireEvent(CEGUI::Window::EventMouseMove, args);
 
   return true;
 }
-bool CGUIManager::touchPressed(const OIS::MultiTouchEvent& evt) {
-  CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(evt.state.X.abs, evt.state.Y.abs);
+bool CGUIManager::touchPressed(const OIS::MultiTouchEvent& arg) {
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(arg.state.X.abs, arg.state.Y.abs);
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::LeftButton);
+  CEGUI::MouseEventArgs args(NULL);
+  args.position = CEGUI::Vector2f(arg.state.X.abs, arg.state.Y.abs);
+  args.moveDelta = CEGUI::Vector2f(arg.state.X.rel, arg.state.Y.rel);
+  CEGUI::GlobalEventSet::getSingleton().fireEvent(CEGUI::Window::EventMouseButtonDown, args);
 
   return true;
 }
-bool CGUIManager::touchReleased(const OIS::MultiTouchEvent& evt) {
-  CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(evt.state.X.abs, evt.state.Y.abs);
+bool CGUIManager::touchReleased(const OIS::MultiTouchEvent& arg) {
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(arg.state.X.abs, arg.state.Y.abs);
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::LeftButton);
+  CEGUI::MouseEventArgs args(NULL);
+  args.position = CEGUI::Vector2f(arg.state.X.abs, arg.state.Y.abs);
+  args.moveDelta = CEGUI::Vector2f(arg.state.X.rel, arg.state.Y.rel);
+  CEGUI::GlobalEventSet::getSingleton().fireEvent(CEGUI::Window::EventMouseButtonUp, args);
 
   return true;
 }
