@@ -11,8 +11,8 @@ public:
   CEditBoxBase(CEGUI::Window *pParent, float fButtonSize, const CEGUI::String &sTitle) {
     using namespace CEGUI;
     m_pWindow = pParent->createChild("OgreTray/Group");
-    m_pWindow->setPosition(UVector2(UDim(0.5, -3 * fButtonSize), UDim(0.5, -2 * fButtonSize)));
-    m_pWindow->setSize(USize(UDim(0, 6 * fButtonSize), UDim(0, 4 * fButtonSize)));
+    m_pWindow->setPosition(UVector2(UDim(0.5, -3 * fButtonSize), UDim(0.5, -2.5 * fButtonSize)));
+    m_pWindow->setSize(USize(UDim(0, 6 * fButtonSize), UDim(0, 5 * fButtonSize)));
     m_pWindow->setAlwaysOnTop(true);
     m_pWindow->setText(sTitle);
 
@@ -38,18 +38,19 @@ public:
   }
 
   bool onAccect(const CEGUI::EventArgs &args) {
-    if (accepted())
-      return onCancel(args);
-
+    accepted();
+    delete this;
     return true;
   }
   bool onCancel(const CEGUI::EventArgs &args) {
+    canceled();
     delete this;
     return true;
   }
 
 protected:
   virtual bool accepted() = 0;
+  virtual bool canceled() = 0;
 };
 
 

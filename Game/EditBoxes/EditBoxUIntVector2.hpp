@@ -6,6 +6,8 @@
 
 class CEditBoxUIntVector2 : public CEditBoxBase {
 private:
+  const unsigned int m_uiBackupX;
+  const unsigned int m_uiBackupY;
   unsigned int &m_uiX;
   unsigned int &m_uiY;
   CEGUI::Spinner *m_pSpinnerX;
@@ -18,7 +20,9 @@ public:
 		unsigned int &uiY) 
     : CEditBoxBase(pParent, fButtonSize, sTitle),
       m_uiX(uiX),
-      m_uiY(uiY) {
+      m_uiY(uiY),
+      m_uiBackupX(uiX),
+      m_uiBackupY(uiY) {
 
     using namespace CEGUI;
 
@@ -39,6 +43,8 @@ public:
     pSpinner->setSize(USize(UDim(1, -fButtonSize), UDim(0, fButtonSize)));
     pSpinner->setText(PropertyHelper<unsigned int>::toString(uiX));
     pSpinner->setMinimumValue(0);
+    pSpinner->subscribeEvent(Spinner::EventValueChanged,
+			     Event::Subscriber(&CEditBoxUIntVector2::onXValueChanged, this));
     m_pSpinnerX = pSpinner;
 
     pSpinner = dynamic_cast<Spinner*>(m_pWindow->
@@ -49,6 +55,8 @@ public:
     pSpinner->setText(PropertyHelper<unsigned int>::toString(uiY));
     pSpinner->setMinimumValue(0);
     m_pSpinnerY = pSpinner;
+    pSpinner->subscribeEvent(Spinner::EventValueChanged,
+			     Event::Subscriber(&CEditBoxUIntVector2::onYValueChanged, this));
   }
 protected:
   bool accepted() {
@@ -57,6 +65,20 @@ protected:
 
     return true;
   }
+  bool canceled() {
+    m_uiX = m_uiBackupX;
+    m_uiY = m_uiBackupY;
+    return true;
+  }
+  bool onXValueChanged(const CEGUI::EventArgs &args) {
+    m_uiX = floor(m_pSpinnerX->getCurrentValue() + 0.5);
+    return true;
+  }
+  bool onYValueChanged(const CEGUI::EventArgs &args) {
+    m_uiY = floor(m_pSpinnerY->getCurrentValue() + 0.5);
+    return true;
+  }
+
 };
 
 #endif

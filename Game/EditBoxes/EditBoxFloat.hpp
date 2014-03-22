@@ -33,6 +33,9 @@ protected:
 
     return true;
   }
+  bool canceled() {
+    return true;
+  }
 };
 
 #endif
