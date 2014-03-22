@@ -24,12 +24,16 @@ public:
     EBT_STRING,
     EBT_FLOAT,
     EBT_BOOL,
+    EBT_UINT_VECTOR2,
+    EBT_TILE_TYPE,
   };
   enum EEditButtons {
     EB_HITPOINTS,
     EB_DAMAGE,
     EB_JUMPING,
     EB_SWITCH_AFFECTING_BLOCKS,
+    EB_SWITCH_ENTRY_POSITION,
+    EB_SWITCH_ENTRY_TILE_TYPE,
   };
   enum EBrushes {
     B_PLACE,
@@ -120,7 +124,9 @@ private:
   bool onAddSwitchEntry(const CEGUI::EventArgs &args);
 
   bool onEditFloat(const CEGUI::EventArgs &args);
+  bool onEditUIntVector2(const CEGUI::EventArgs &args);
   bool onEditBoolChanged(const CEGUI::EventArgs &args);
+  bool onEditTileType(const CEGUI::EventArgs &args);
   bool dummyReturnFalse(const CEGUI::EventArgs &args) {return false;}
 
   bool selectSprite(const Ogre::Vector2 &vPos);

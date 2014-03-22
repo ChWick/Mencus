@@ -14,6 +14,8 @@
 #include "GUIManager.hpp"
 #include "IDGenerator.hpp"
 #include "EditBoxes/EditBoxFloat.hpp"
+#include "EditBoxes/EditBoxUIntVector2.hpp"
+#include "EditBoxes/EditBoxTileType.hpp"
 
 using namespace CEGUI;
 
@@ -363,6 +365,9 @@ void CMapEditor::resize(float fButtonSize) {
 			    Event::Subscriber(&CMapEditor::onDeleteSwitchEntry, this));
   fCurrentHeight += 2 * fButtonSize;
 
+  createEditButton(pEditSwitchPane, EB_SWITCH_ENTRY_POSITION, EBT_UINT_VECTOR2, fCurrentHeight);
+  createEditButton(pEditSwitchPane, EB_SWITCH_ENTRY_TILE_TYPE, EBT_TILE_TYPE, fCurrentHeight);
+
   // initial state
   // =============
   selectTile(1);
@@ -396,6 +401,14 @@ Window* CMapEditor::createEditButton(Window *pParent,
     pButton->subscribeEvent(ToggleButton::EventSelectStateChanged,
 			    Event::Subscriber(&CMapEditor::onEditBoolChanged, this));
     break;
+  case EBT_UINT_VECTOR2:
+    pButton->subscribeEvent(PushButton::EventClicked,
+			    Event::Subscriber(&CMapEditor::onEditUIntVector2, this));
+    break;
+  case EBT_TILE_TYPE:
+    pButton->subscribeEvent(PushButton::EventClicked,
+			    Event::Subscriber(&CMapEditor::onEditTileType, this));
+    break;
   }
   switch (id) {
   case EB_HITPOINTS:
@@ -409,6 +422,12 @@ Window* CMapEditor::createEditButton(Window *pParent,
     break;
   case EB_SWITCH_AFFECTING_BLOCKS:
     pButton->setText("Affecting blocks");
+    break;
+  case EB_SWITCH_ENTRY_POSITION:
+    pButton->setText("Edit position");
+    break;
+  case EB_SWITCH_ENTRY_TILE_TYPE:
+    pButton->setText("Edit tile type");
     break;
   }
   return pButton;
@@ -834,6 +853,27 @@ bool CMapEditor::onEditFloat(const CEGUI::EventArgs &args) {
   }
   return true;
 }
+bool CMapEditor::onEditUIntVector2(const CEGUI::EventArgs &args) {
+  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
+  int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
+  switch (id) {
+  case EB_SWITCH_ENTRY_POSITION:
+    {
+      Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
+      CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
+      if (pSwitch && pLB->getFirstSelectedItem()) {
+	SSwitchEntry &entry(pSwitch->getEntries()[pLB->getItemIndex(pLB->getFirstSelectedItem())]);
+	m_pEditValueWindow = new CEditBoxUIntVector2(m_pRoot,
+						     m_fButtonSize,
+						     wndArgs.window->getText(),
+						     entry.uiTilePosX,
+						     entry.uiTilePosY);
+      }
+    }
+    break;
+  }
+  return true;
+}
 bool CMapEditor::onEditBoolChanged(const CEGUI::EventArgs &args) {
   const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
   int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
@@ -844,6 +884,26 @@ bool CMapEditor::onEditBoolChanged(const CEGUI::EventArgs &args) {
     break;
   case EB_SWITCH_AFFECTING_BLOCKS:
     dynamic_cast<CSwitch*>(m_pSelectedSprite)->setChangeBlocks(pBut->isSelected());
+    break;
+  }
+  return true;
+}
+bool CMapEditor::onEditTileType(const CEGUI::EventArgs &args) {
+  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
+  int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
+  switch (id) {
+  case EB_SWITCH_ENTRY_TILE_TYPE:
+    {
+      Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
+      CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
+      if (pSwitch && pLB->getFirstSelectedItem()) {
+	SSwitchEntry &entry(pSwitch->getEntries()[pLB->getItemIndex(pLB->getFirstSelectedItem())]);
+	m_pEditValueWindow = new CEditBoxTileType(m_pRoot,
+						  m_fButtonSize,
+						  wndArgs.window->getText(),
+						  entry.uiTileType);
+      }
+    }
     break;
   }
   return true;

@@ -67,6 +67,7 @@ public:
 
   bool doesChangeBlocks() const {return m_bChangeBlocks;}
   const vector<SSwitchEntry> &getEntries() const {return m_vEntries;}
+  vector<SSwitchEntry> &getEntries() {return m_vEntries;}
   const vector<STogglesLinkEntry> &getLinkEntries() const {return m_vLinkEntries;}
   ESwitchStates getState() const {return m_eSwitchState;}
   SwitchType getType() const {return m_stSwitchType;}
