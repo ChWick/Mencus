@@ -23,12 +23,16 @@ class CMapEditor
 public:
   enum EEditButtonTypes {
     EBT_STRING,
+    EBT_TEXT,
     EBT_FLOAT,
     EBT_BOOL,
     EBT_UINT_VECTOR2,
     EBT_TILE_TYPE,
   };
   enum EEditButtons {
+    EB_MAP_NAME,
+    EB_MAP_FILENAME,
+    EB_MAP_DESCRIPTION,
     EB_HITPOINTS,
     EB_DAMAGE,
     EB_JUMPING,
@@ -129,6 +133,8 @@ private:
   bool onDeleteLink(const CEGUI::EventArgs &args);
   bool onAddLink(const CEGUI::EventArgs &args);
 
+  bool onEditText(const CEGUI::EventArgs &args);
+  bool onEditString(const CEGUI::EventArgs &args);
   bool onEditFloat(const CEGUI::EventArgs &args);
   bool onEditUIntVector2(const CEGUI::EventArgs &args);
   bool onEditBoolChanged(const CEGUI::EventArgs &args);

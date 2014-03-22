@@ -17,6 +17,8 @@
 #include "EditBoxes/EditBoxFloat.hpp"
 #include "EditBoxes/EditBoxUIntVector2.hpp"
 #include "EditBoxes/EditBoxTileType.hpp"
+#include "EditBoxes/EditBoxString.hpp"
+#include "EditBoxes/EditBoxText.hpp"
 
 using namespace CEGUI;
 
@@ -166,8 +168,14 @@ void CMapEditor::resize(float fButtonSize) {
 				    Event::Subscriber(&CMapEditor::onSnapToGridChanged, this));
   pSnapToGridButton->setSelected(true);
 
-  // offset
-  fCurrentHeight += 10;
+  fCurrentHeight += 10; // offset
+
+  createEditButton(pBrushScrollPane, EB_MAP_NAME, EBT_STRING, fCurrentHeight);
+  createEditButton(pBrushScrollPane, EB_MAP_DESCRIPTION, EBT_TEXT, fCurrentHeight);
+
+  fCurrentHeight += 10; // offset
+
+  createEditButton(pBrushScrollPane, EB_MAP_FILENAME, EBT_STRING, fCurrentHeight);
 
   Window *pSaveButton = pBrushScrollPane->createChild("OgreTray/Button", "SaveButton");
   pSaveButton->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
@@ -430,9 +438,13 @@ Window* CMapEditor::createEditButton(Window *pParent,
     pButton->subscribeEvent(PushButton::EventClicked,
 			    Event::Subscriber(&CMapEditor::onEditFloat, this));
     break;
+  case EBT_TEXT:
+    pButton->subscribeEvent(PushButton::EventClicked,
+			    Event::Subscriber(&CMapEditor::onEditText, this));
+    break;    
   case EBT_STRING:
     pButton->subscribeEvent(PushButton::EventClicked,
-			    Event::Subscriber(&CMapEditor::onEditFloat, this));
+			    Event::Subscriber(&CMapEditor::onEditString, this));
     break;
   case EBT_BOOL:
     pButton->subscribeEvent(ToggleButton::EventSelectStateChanged,
@@ -448,6 +460,15 @@ Window* CMapEditor::createEditButton(Window *pParent,
     break;
   }
   switch (id) {
+  case EB_MAP_FILENAME:
+    pButton->setText("Map file name");
+    break;
+  case EB_MAP_DESCRIPTION:
+    pButton->setText("Map description");
+    break;
+  case EB_MAP_NAME:
+    pButton->setText("Map name");
+    break;
   case EB_HITPOINTS:
     pButton->setText("Edit Hitpoints");
     break;
@@ -893,6 +914,38 @@ bool CMapEditor::onDelete(const CEGUI::EventArgs &args) {
   }
   
 
+  return true;
+}
+bool CMapEditor::onEditText(const CEGUI::EventArgs &args) {
+  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
+  int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
+  switch(id) {
+  case EB_MAP_DESCRIPTION:
+    m_pEditValueWindow = new CEditBoxText(m_pRoot,
+					  m_fButtonSize,
+					  wndArgs.window->getText(),
+					  m_pMapInfo->getDescription());
+    break;
+  }
+  return true;  
+}
+bool CMapEditor::onEditString(const CEGUI::EventArgs &args) {
+  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
+  int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
+  switch(id) {
+  case EB_MAP_NAME:
+    m_pEditValueWindow = new CEditBoxString(m_pRoot,
+					    m_fButtonSize,
+					    wndArgs.window->getText(),
+					    m_pMapInfo->getName());
+    break;
+  case EB_MAP_FILENAME:
+    m_pEditValueWindow = new CEditBoxString(m_pRoot,
+					    m_fButtonSize,
+					    wndArgs.window->getText(),
+					    m_pMapInfo->getFileName());
+    break;
+  }
   return true;
 }
 float tesst = 10;

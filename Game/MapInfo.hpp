@@ -54,6 +54,9 @@ public:
   std::string getXMLText();
   const std::string &getFileName() const {return m_sFileName;}
   void setFileName(const std::string &sFileName) {m_sFileName = sFileName;}
+  std::string &getName() {return m_sName;}
+  std::string &getFileName() {return m_sFileName;}
+  std::string &getDescription() {return m_sDescription;}
 
 private:
   void constructor_impl();
