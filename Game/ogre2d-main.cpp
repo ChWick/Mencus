@@ -227,7 +227,7 @@ void Ogre2dManager::renderBuffer()
 #else
       tp = Ogre::TextureManager::getSingleton().getByHandle(currChunk->texHandle);
 #endif
-      rs->_setTexture(0, true, tp->getName());
+      rs->_setTexture(0, true, tp);
       alphaBlendMode.factor = currChunk->colour.a;
       rs->_setTextureBlendMode(0, alphaBlendMode);
 

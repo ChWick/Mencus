@@ -49,11 +49,11 @@ void CDebugDrawer::draw(const CLink &link) const {
   m_pDebugSprite->setPosition(Ogre::Vector2(link.getSecondX(), link.getSecondY()));
   m_pDebugSprite->render(0);
 }
-void CDebugDrawer::draw(const SSwitchEntry &switchEntry) const {
+void CDebugDrawer::draw(const SSwitchEntry &switchEntry, float fAlpha) const {
   m_pDebugSprite->setTexture(getTileTexturePath(switchEntry.uiTileType));
   m_pDebugSprite->setSize(CTile::DEFAULT_TILE_SIZE);
   m_pDebugSprite->setPosition(Ogre::Vector2(switchEntry.uiTilePosX, switchEntry.uiTilePosY));
-  m_pDebugSprite->setAlpha(0.7);
+  m_pDebugSprite->setAlpha(fAlpha);
   m_pDebugSprite->render(0);
   m_pDebugSprite->setAlpha(1);
 }

@@ -7,6 +7,7 @@
 #include "Game.hpp"
 #include "Switch.hpp"
 #include "Object.hpp"
+#include "Link.hpp"
 #include "DebugDrawer.hpp"
 #include "Player.hpp"
 #include "FileManager.hpp"
@@ -368,6 +369,42 @@ void CMapEditor::resize(float fButtonSize) {
   createEditButton(pEditSwitchPane, EB_SWITCH_ENTRY_POSITION, EBT_UINT_VECTOR2, fCurrentHeight);
   createEditButton(pEditSwitchPane, EB_SWITCH_ENTRY_TILE_TYPE, EBT_TILE_TYPE, fCurrentHeight);
 
+
+  // links tab
+  // ========
+  fCurrentHeight = 0;
+  Ogre::LogManager::getSingleton().logMessage("    Link content pane");
+  Window *pLinkTabContentPane = pTabPane->createChild("OgreTray/TabContentPane", "LinkContentPane");
+  pLinkTabContentPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  pLinkTabContentPane->setSize(USize(UDim(1, 0), UDim(1, 0)));
+  pLinkTabContentPane->setText("Link");
+
+
+  ScrollablePane *pLinkScrollBar = dynamic_cast<ScrollablePane*>(pLinkTabContentPane->createChild("OgreTray/ScrollablePane", "ScrollPane"));
+  pLinkScrollBar->setDragIgnoreZone(fDragIgnoreZone);
+  pLinkScrollBar->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  pLinkScrollBar->setSize(USize(UDim(1, 0), UDim(1, 0)));
+
+  Listbox *pLinksList = dynamic_cast<Listbox*>(pLinkScrollBar->createChild("OgreTray/Listbox", "List"));
+  pLinksList->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
+  pLinksList->setSize(USize(UDim(1, -fButtonSize), UDim(0, 2 * fButtonSize)));
+  pAddAB = pLinkScrollBar->createChild("OgreTray/Button", "Add");
+  pAddAB->setPosition(UVector2(UDim(1, -fButtonSize), UDim(0, fCurrentHeight)));
+  pAddAB->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
+  pAddAB->setText("+");
+  pAddAB->subscribeEvent(PushButton::EventClicked,
+			 Event::Subscriber(&CMapEditor::onAddLink, this));
+  pRemoveAB = pLinkScrollBar->createChild("OgreTray/Button", "Remove");
+  pRemoveAB->setPosition(UVector2(UDim(1, -fButtonSize), UDim(0, fButtonSize + fCurrentHeight)));
+  pRemoveAB->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
+  pRemoveAB->setText("-");
+  pRemoveAB->subscribeEvent(PushButton::EventClicked,
+			    Event::Subscriber(&CMapEditor::onDeleteLink, this));
+  fCurrentHeight += 2 * fButtonSize;
+
+  createEditButton(pLinkScrollBar, EB_LINK_FROM, EBT_UINT_VECTOR2, fCurrentHeight);
+  createEditButton(pLinkScrollBar, EB_LINK_TO, EBT_UINT_VECTOR2, fCurrentHeight);
+
   // initial state
   // =============
   selectTile(1);
@@ -428,6 +465,12 @@ Window* CMapEditor::createEditButton(Window *pParent,
     break;
   case EB_SWITCH_ENTRY_TILE_TYPE:
     pButton->setText("Edit tile type");
+    break;
+  case EB_LINK_FROM:
+    pButton->setText("First");
+    break;
+  case EB_LINK_TO:
+    pButton->setText("Second");
     break;
   }
   return pButton;
@@ -514,6 +557,14 @@ void CMapEditor::start() {
   Ogre::Vector2 vCamPos(m_pMap->getCameraTargetPos());
   m_pMap->loadMap(m_pMapInfo);
   m_pMap->setCameraPos(vCamPos);
+  // init links
+  Listbox *pLinksList = dynamic_cast<Listbox*>(m_pTabControl->getChild("LinkContentPane")->getChild("ScrollPane")->getChild("List"));
+  while (pLinksList->getItemCount() > 0) {
+    pLinksList->removeItem(pLinksList->getListboxItemFromIndex(0));
+  }
+  for (const CLink &link : m_pMap->getLinks()) {
+    pLinksList->addItem(createLinkEntry(link));
+  }
 }
 void CMapEditor::stop() {
   selectedSprite(NULL);
@@ -535,10 +586,22 @@ void CMapEditor::render() {
     CDebugDrawer::getSingleton().draw(m_pSelectedSprite->getWorldBoundingBox());
     CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
     if (pSwitch) {
+      int iCounter = 0;
+      int iSelected = -1;
+      Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
+      if (pLB->getFirstSelectedItem()) {
+	iSelected = pLB->getItemIndex(pLB->getFirstSelectedItem());
+      }
+      
       for (const SSwitchEntry &entry : pSwitch->getEntries()) {
-	CDebugDrawer::getSingleton().draw(entry);
+	CDebugDrawer::getSingleton().draw(entry, (iCounter == iSelected) ? 0.9 : 0.5);
+	iCounter++;
       }
     }
+  }
+  Listbox *pLinksList = dynamic_cast<Listbox*>(m_pTabControl->getChild("LinkContentPane")->getChild("ScrollPane")->getChild("List"));
+  if (pLinksList->getFirstSelectedItem()) {
+    CDebugDrawer::getSingleton().draw(*static_cast<CLink*>(pLinksList->getFirstSelectedItem()->getUserData()));
   }
 }
 void CMapEditor::toggle() {
@@ -871,6 +934,32 @@ bool CMapEditor::onEditUIntVector2(const CEGUI::EventArgs &args) {
       }
     }
     break;
+  case EB_LINK_TO:
+    {
+      Listbox *pLinksList = dynamic_cast<Listbox*>(m_pTabControl->getChild("LinkContentPane")->getChild("ScrollPane")->getChild("List"));
+      if (pLinksList->getFirstSelectedItem()) {
+	CLink *pLink = static_cast<CLink*>(pLinksList->getFirstSelectedItem()->getUserData());
+	m_pEditValueWindow = new CEditBoxUIntVector2(m_pRoot,
+						     m_fButtonSize,
+						     wndArgs.window->getText(),
+						     pLink->getFirstX(),
+						     pLink->getFirstY());
+      }
+    }
+    break;
+  case EB_LINK_FROM:
+    {
+      Listbox *pLinksList = dynamic_cast<Listbox*>(m_pTabControl->getChild("LinkContentPane")->getChild("ScrollPane")->getChild("List"));
+      if (pLinksList->getFirstSelectedItem()) {
+	CLink *pLink = static_cast<CLink*>(pLinksList->getFirstSelectedItem()->getUserData());
+	m_pEditValueWindow = new CEditBoxUIntVector2(m_pRoot,
+						     m_fButtonSize,
+						     wndArgs.window->getText(),
+						     pLink->getSecondX(),
+						     pLink->getSecondY());
+      }
+    }
+    break;
   }
   return true;
 }
@@ -925,6 +1014,12 @@ bool CMapEditor::onAddSwitchEntry(const CEGUI::EventArgs &args) {
   SSwitchEntry entry;
   pSwitch->addEntry(entry);
   pLB->addItem(createSwitchEntry(entry));
+  return true;
+}
+bool CMapEditor::onDeleteLink(const CEGUI::EventArgs &args) {
+  return true;
+}
+bool CMapEditor::onAddLink(const CEGUI::EventArgs &args) {
   return true;
 }
 Ogre::Vector2 CMapEditor::snappedPos(const Ogre::Vector2 &vPos) {
@@ -985,6 +1080,14 @@ void CMapEditor::selectedSprite(CSprite *pSprite) {
       
     }
   }
+}
+CEGUI::ListboxTextItem *CMapEditor::createLinkEntry(const CLink &link) {
+  ListboxTextItem *pItem =
+    new ListboxTextItem("link");
+  pItem->setSelectionColours(Colour(0.0,0.0,0.5,1));
+  pItem->setSelectionBrushImage("OgreTrayImages/GenericBrush");
+  pItem->setUserData(const_cast<CLink*>(&link));
+  return pItem;
 }
 CEGUI::ListboxTextItem *CMapEditor::createSwitchEntry(const SSwitchEntry &entry) {
   ListboxTextItem *pItem =

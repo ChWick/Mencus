@@ -10,6 +10,7 @@
 #include "MapInfo.hpp"
 
 class CSprite;
+class CLink;
 class CMap;
 class CEditBoxBase;
 class SSwitchEntry;
@@ -34,6 +35,8 @@ public:
     EB_SWITCH_AFFECTING_BLOCKS,
     EB_SWITCH_ENTRY_POSITION,
     EB_SWITCH_ENTRY_TILE_TYPE,
+    EB_LINK_FROM,
+    EB_LINK_TO,
   };
   enum EBrushes {
     B_PLACE,
@@ -100,6 +103,7 @@ public:
   void reloadTextures();
   void mapEditorUpdatePauseChanged(bool bPause);
 private:
+  CEGUI::ListboxTextItem *createLinkEntry(const CLink &link);
   CEGUI::ListboxTextItem *createSwitchEntry(const SSwitchEntry &entry);
   CEGUI::Window *createEditButton(CEGUI::Window *pParent,
 				  EEditButtons id,
@@ -122,6 +126,8 @@ private:
   bool onDelete(const CEGUI::EventArgs &args);
   bool onDeleteSwitchEntry(const CEGUI::EventArgs &args);
   bool onAddSwitchEntry(const CEGUI::EventArgs &args);
+  bool onDeleteLink(const CEGUI::EventArgs &args);
+  bool onAddLink(const CEGUI::EventArgs &args);
 
   bool onEditFloat(const CEGUI::EventArgs &args);
   bool onEditUIntVector2(const CEGUI::EventArgs &args);

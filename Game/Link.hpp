@@ -62,10 +62,18 @@ public:
   unsigned int getSecondX() const {return m_uiSecondX;}
   unsigned int getSecondY() const {return m_uiSecondY;}
 
+
+  unsigned int &getFirstX() {return m_uiFirstX;}
+  unsigned int &getFirstY() {return m_uiFirstY;}
+
+  unsigned int &getSecondX() {return m_uiSecondX;}
+  unsigned int &getSecondY() {return m_uiSecondY;}
+
   const Ogre::String &getID() const {return m_sID;}
 
   bool isActivated() const {return m_bActivated;}
   void setActivated(bool b) {m_bActivated = b;}
+  bool &getActivated() {return m_bActivated;}
 
   ELinkDirection getLinkDirection() const {return m_eLinkDirection;}
 

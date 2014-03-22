@@ -36,7 +36,7 @@ public:
   void draw(const CTile *pTile, EDebugTextures dt = DT_PINK) const;
   void draw(const CBoundingBox2d &bb) const;
   void draw(const CLink &link) const;
-  void draw(const SSwitchEntry &switchEntry) const;
+  void draw(const SSwitchEntry &switchEntry, float alpha = 1) const;
 };
 
 #endif
