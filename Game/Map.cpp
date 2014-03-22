@@ -569,9 +569,20 @@ void CMap::render(Ogre::Real tpf) {
   if (m_bRenderPause) {return;}
   // order of updates exquates drawing order, last one will be on top
   renderBackground(tpf);
-  for (auto pTile : m_gridTiles) {
-    pTile->render(tpf);
+  //for (auto pTile : m_gridTiles) {
+  //  pTile->render(tpf);
+  //}
+  unsigned int xmin = static_cast<unsigned int>(m_vCameraPos.x);
+  unsigned int ymin = static_cast<unsigned int>(m_vCameraPos.y);
+  unsigned int xmax = std::min<unsigned int>(static_cast<unsigned int>(m_vCameraPos.x + TILES_PER_SCREEN.x + 1), m_gridTiles.getSizeX() - 1);
+  unsigned int ymax = std::min<unsigned int>(static_cast<unsigned int>(m_vCameraPos.y + TILES_PER_SCREEN.y + 1), m_gridTiles.getSizeY() - 1);
+
+  for (int x = xmin; x < xmax; x++) {
+    for (int y = ymin; y < ymax; y++) {
+      m_gridTiles(x, y)->render(tpf);
+    }
   }
+
   for (auto pObject : m_lObjects) {
     pObject->render(tpf);
   }

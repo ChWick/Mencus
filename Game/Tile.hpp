@@ -43,6 +43,7 @@ public:
   unsigned int getTileFlags() const {return m_uiTileFlags;}
 
   TileType getEndangeredTileType() const {return m_ttEndangeredTileType;}
+  TileType &getEndangeredTileType() {return m_ttEndangeredTileType;}
   void setEndangeredTileType(TileType tt);
 
   unsigned int getMapPosX() const {return m_uiMapPosX;}

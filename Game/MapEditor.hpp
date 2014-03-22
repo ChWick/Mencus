@@ -144,6 +144,7 @@ private:
   bool onEditTileType(const CEGUI::EventArgs &args);
   bool dummyReturnFalse(const CEGUI::EventArgs &args) {return false;}
 
+  void editTile(const Ogre::Vector2 &vPos);
   bool selectSprite(const Ogre::Vector2 &vPos);
   void selectedSprite(CSprite *pSprite);
 };

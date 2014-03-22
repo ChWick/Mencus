@@ -773,6 +773,20 @@ bool CMapEditor::selectSprite(const Ogre::Vector2 &vPos) {
   selectedSprite(m_pSelectedSprite);
   return true;
 }
+void CMapEditor::editTile(const Ogre::Vector2 &vPos) {
+  Ogre::Vector2 vMapPos(m_pMap->mouseToMapPos(vPos));
+  if (!m_pMap->isVisible(m_pMap->transformPosition(vMapPos))) {return;}
+
+  int x = static_cast<int>(vMapPos.x);
+  int y = static_cast<int>(vMapPos.y);
+
+  if (m_pMap->outOfMap(x, y)) {return;}
+
+  m_pEditValueWindow = new CEditBoxTileType(m_pRoot,
+					    m_fButtonSize,
+					    "Select endangered tile",
+					    m_pMap->getTile(x, y)->getEndangeredTileType());
+}
 void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
   switch (m_eSelectedBrush) {
   case B_PLACE:
@@ -780,9 +794,14 @@ void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
       placeCurrentObject(vPos);
     }
     break;
-  case B_EDIT:
   case B_MOVE:
     selectSprite(vPos);
+    break;
+  case B_EDIT:
+    selectSprite(vPos);
+    if (!m_pSelectedSprite) {
+      editTile(vPos);
+    }
     break;
   }
   handleBrushMoved(vPos, Ogre::Vector2::ZERO);
