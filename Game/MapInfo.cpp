@@ -7,7 +7,9 @@
 using namespace tinyxml2;
 using namespace XMLHelper;
 
-CMapInfo::CMapInfo(const std::string &sFileName, const std::string &sResourceGroup) : m_sFileName(sFileName) {
+CMapInfo::CMapInfo(const std::string &sFileName, const std::string &sResourceGroup)
+  : m_sFileName(sFileName),
+    m_eDifficulty(D_EASY) {
 
   Ogre::DataStreamPtr dataStream = Ogre::ResourceGroupManager::getSingleton().
     openResource(sFileName, sResourceGroup);
@@ -24,7 +26,8 @@ CMapInfo::CMapInfo(const CMapInfoConstPtr src)
   : m_bValid(src->m_bValid),
     m_sName(src->m_sName),
     m_sDescription(src->m_sDescription),
-    m_sFileName(src->m_sFileName) {
+    m_sFileName(src->m_sFileName),
+    m_eDifficulty(src->m_eDifficulty) {
   tinyxml2::XMLPrinter xmlprinter;
   src->m_Document.Accept(&xmlprinter);
   m_Document.Parse(xmlprinter.CStr());

@@ -28,10 +28,12 @@ public:
     EBT_BOOL,
     EBT_UINT_VECTOR2,
     EBT_TILE_TYPE,
+    EBT_ENUM_SWEEP,
   };
   enum EEditButtons {
     EB_MAP_NAME,
     EB_MAP_FILENAME,
+    EB_MAP_DIFFICULTY,
     EB_MAP_DESCRIPTION,
     EB_HITPOINTS,
     EB_DAMAGE,
@@ -133,6 +135,7 @@ private:
   bool onDeleteLink(const CEGUI::EventArgs &args);
   bool onAddLink(const CEGUI::EventArgs &args);
 
+  bool onEditEnumSweep(const CEGUI::EventArgs&args);
   bool onEditText(const CEGUI::EventArgs &args);
   bool onEditString(const CEGUI::EventArgs &args);
   bool onEditFloat(const CEGUI::EventArgs &args);

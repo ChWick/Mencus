@@ -172,6 +172,7 @@ void CMapEditor::resize(float fButtonSize) {
 
   createEditButton(pBrushScrollPane, EB_MAP_NAME, EBT_STRING, fCurrentHeight);
   createEditButton(pBrushScrollPane, EB_MAP_DESCRIPTION, EBT_TEXT, fCurrentHeight);
+  createEditButton(pBrushScrollPane, EB_MAP_DIFFICULTY, EBT_ENUM_SWEEP, fCurrentHeight);
 
   fCurrentHeight += 10; // offset
 
@@ -434,6 +435,10 @@ Window* CMapEditor::createEditButton(Window *pParent,
   pButton->setSize(USize(UDim(1, 0), UDim(0, m_fButtonSize)));
   fCurrentHeight += m_fButtonSize + 5;
   switch (type) {
+  case EBT_ENUM_SWEEP:
+    pButton->subscribeEvent(PushButton::EventClicked,
+			    Event::Subscriber(&CMapEditor::onEditEnumSweep, this));
+    break;
   case EBT_FLOAT:
     pButton->subscribeEvent(PushButton::EventClicked,
 			    Event::Subscriber(&CMapEditor::onEditFloat, this));
@@ -465,6 +470,9 @@ Window* CMapEditor::createEditButton(Window *pParent,
     break;
   case EB_MAP_DESCRIPTION:
     pButton->setText("Map description");
+    break;
+  case EB_MAP_DIFFICULTY:
+    pButton->setText(m_pMapInfo->getDifficultyAsString().c_str());
     break;
   case EB_MAP_NAME:
     pButton->setText("Map name");
@@ -915,6 +923,23 @@ bool CMapEditor::onDelete(const CEGUI::EventArgs &args) {
   
 
   return true;
+}
+bool CMapEditor::onEditEnumSweep(const CEGUI::EventArgs&args) {
+  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
+  int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
+  switch(id) {
+  case EB_MAP_DIFFICULTY:
+    {
+      int diff = m_pMapInfo->getDifficulty() + 1;
+      if (diff >= D_COUNT || diff < 0) {
+	diff = 0;
+      }
+      m_pMapInfo->setDifficulty(static_cast<EMapDifficulty>(diff));
+      wndArgs.window->setText(m_pMapInfo->getDifficultyAsString().c_str());
+    }
+    break;
+  }
+  return true; 
 }
 bool CMapEditor::onEditText(const CEGUI::EventArgs &args) {
   const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);

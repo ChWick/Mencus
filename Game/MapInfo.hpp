@@ -48,6 +48,7 @@ public:
   tinyxml2::XMLElement *getEmptyRootNode();
   const tinyxml2::XMLDocument &getDocument() const {return m_Document;}
   bool isValid() const {return m_bValid;}
+  void setDifficulty(EMapDifficulty eDiff) {m_eDifficulty = eDiff;}
   EMapDifficulty getDifficulty() const {return m_eDifficulty;}
   std::string getDifficultyAsString() const {return toString(m_eDifficulty);}
 
