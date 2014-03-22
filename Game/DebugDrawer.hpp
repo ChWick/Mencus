@@ -33,6 +33,7 @@ public:
     Ogre2dManager *pSpriteManager);
   ~CDebugDrawer();
 
+  void draw(const CTile *pTile, unsigned int uiTT, float fAlpha = 0.5);
   void draw(const CTile *pTile, EDebugTextures dt = DT_PINK) const;
   void draw(const CBoundingBox2d &bb) const;
   void draw(const CLink &link) const;

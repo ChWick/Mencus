@@ -582,6 +582,17 @@ void CMap::render(Ogre::Real tpf) {
       m_gridTiles(x, y)->render(tpf);
     }
   }
+#ifdef MAP_EDITOR_ENABLED
+  if (CMapEditor::getSingleton().isVisible()) {
+    for (int x = xmin; x < xmax; x++) {
+      for (int y = ymin; y < ymax; y++) {
+	if (m_gridTiles(x, y)->getEndangeredTileType() != TT_COUNT) {
+	  CDebugDrawer::getSingleton().draw(m_gridTiles(x, y), m_gridTiles(x, y)->getEndangeredTileType(), 0.5);
+	}
+      }
+    }
+  }
+#endif
 
   for (auto pObject : m_lObjects) {
     pObject->render(tpf);

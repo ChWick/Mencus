@@ -87,6 +87,8 @@ public:
   void exit();
   void render();
 
+  bool isVisible() const {return m_bVisible;}
+
   CEGUI::Window *getTileFromType(unsigned int uiTile);
   unsigned int getTypeFromTile(CEGUI::Window *pTile);
   

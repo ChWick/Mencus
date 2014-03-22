@@ -29,6 +29,14 @@ CDebugDrawer::~CDebugDrawer() {
   delete m_pDebugSprite;
   m_pDebugSprite = NULL;
 }
+void CDebugDrawer::draw(const CTile *pTile, unsigned int uiTT, float fAlpha) {
+  m_pDebugSprite->setTexture(getTileTexturePath(uiTT));
+  m_pDebugSprite->setPosition(pTile->getPosition());
+  m_pDebugSprite->setSize(pTile->getSize());
+  m_pDebugSprite->setAlpha(fAlpha);
+  m_pDebugSprite->render(0);
+  m_pDebugSprite->setAlpha(1);
+}
 void CDebugDrawer::draw(const CTile *pTile, EDebugTextures dt) const {
   m_pDebugSprite->setTexture(m_DebugTextures[dt]);
   m_pDebugSprite->setPosition(pTile->getPosition());
