@@ -13,6 +13,18 @@ struct SSwitchEntry {
   unsigned int uiOldTileType;
   unsigned int uiTilePosX;
   unsigned int uiTilePosY;
+
+  SSwitchEntry() 
+    : uiTileType(1),
+      uiOldTileType(1),
+      uiTilePosX(0),
+      uiTilePosY(0) {
+  }
+  Ogre::String toString() const {
+    return "at (" + Ogre::StringConverter::toString(uiTilePosX) + ", "
+      + Ogre::StringConverter::toString(uiTilePosY) + ") tile " 
+      + Ogre::StringConverter::toString(uiTileType);
+  }
 };
 struct STogglesLinkEntry {
   Ogre::String sLinkID;
@@ -49,6 +61,8 @@ public:
 
   void addEntry(const SSwitchEntry &entry) {m_vEntries.push_back(entry);}
   void addEntry(const STogglesLinkEntry &entry) {m_vLinkEntries.push_back(entry);}
+  void eraseEntry(int iAt) {m_vEntries.erase(m_vEntries.begin() + iAt);}
+  void eraseLinkEntry(int iAt) {m_vLinkEntries.erase(m_vLinkEntries.begin() + iAt);}
   void setChangeBlocks(bool b) {m_bChangeBlocks = b;}
 
   bool doesChangeBlocks() const {return m_bChangeBlocks;}

@@ -12,6 +12,7 @@
 class CSprite;
 class CMap;
 class CEditBoxBase;
+class SSwitchEntry;
 
 class CMapEditor 
   : public Ogre::Singleton<CMapEditor>,
@@ -47,7 +48,9 @@ private:
   CEGUI::ScrollablePane *m_pTilesContainer;
   CEGUI::ScrollablePane *m_pObjectsContainer;
   CEGUI::ScrollablePane *m_pEditContainer;
+  CEditBoxBase *m_pEditValueWindow;
   CEGUI::Window *m_pEditSprite;
+  CEGUI::Window *m_pEditSwitchPane;
   unsigned int m_uiCurrentTile;
   unsigned int m_uiCurrentObject;
   CMap *m_pMap;
@@ -57,7 +60,6 @@ private:
   CMapInfoPtr m_pMapInfo;
   bool m_bInitialized;
   
-  CEditBoxBase *m_pEditValueWindow;
 public:
   static CMapEditor &getSingleton();
   static CMapEditor *getSingletonPtr();
@@ -94,7 +96,11 @@ public:
   void reloadTextures();
   void mapEditorUpdatePauseChanged(bool bPause);
 private:
-  CEGUI::Window *createEditButton(EEditButtons id, EEditButtonTypes type, float &fCurrentHeight);
+  CEGUI::ListboxTextItem *createSwitchEntry(const SSwitchEntry &entry);
+  CEGUI::Window *createEditButton(CEGUI::Window *pParent,
+				  EEditButtons id,
+				  EEditButtonTypes type,
+				  float &fCurrentHeight);
   // checks if m_bSnapping, and then snaps
   Ogre::Vector2 snappedPos(const Ogre::Vector2 &vPos);
   void handleBrushPressed(const Ogre::Vector2 &vPos);
@@ -110,6 +116,8 @@ private:
   bool onSnapToGridChanged(const CEGUI::EventArgs &args);
   bool onSaveMap(const CEGUI::EventArgs &args);
   bool onDelete(const CEGUI::EventArgs &args);
+  bool onDeleteSwitchEntry(const CEGUI::EventArgs &args);
+  bool onAddSwitchEntry(const CEGUI::EventArgs &args);
 
   bool onEditFloat(const CEGUI::EventArgs &args);
   bool onEditBoolChanged(const CEGUI::EventArgs &args);

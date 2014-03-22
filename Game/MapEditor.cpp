@@ -314,6 +314,7 @@ void CMapEditor::resize(float fButtonSize) {
   pEditTabContentPane->setSize(USize(UDim(1, 0), UDim(1, 0)));
   pEditTabContentPane->setText("Edit");
 
+
   ScrollablePane *pEditScrollBar = dynamic_cast<ScrollablePane*>(pEditTabContentPane->createChild("OgreTray/ScrollablePane", "ScrollPane"));
   pEditScrollBar->setDragIgnoreZone(fDragIgnoreZone);
   m_pEditContainer = pEditScrollBar;
@@ -334,26 +335,49 @@ void CMapEditor::resize(float fButtonSize) {
   m_pEditSprite = pEditScrollBar->createChild("DefaultWindow", "Sprite");
   m_pEditSprite->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
   fCurrentHeight = 5;
-  createEditButton(EB_HITPOINTS, EBT_FLOAT, fCurrentHeight);
-  //createEditButton(EB_DAMAGE, EBT_FLOAT, fCurrentHeight);
-  createEditButton(EB_JUMPING, EBT_BOOL, fCurrentHeight);
+  createEditButton(m_pEditSprite, EB_HITPOINTS, EBT_FLOAT, fCurrentHeight);
+  //createEditButton(m_pEditSprite, EB_DAMAGE, EBT_FLOAT, fCurrentHeight);
+  createEditButton(m_pEditSprite, EB_JUMPING, EBT_BOOL, fCurrentHeight);
   
   // switch
+  Window *pEditSwitchPane = pEditScrollBar->createChild("DefaultWindow", "Switch");
+  m_pEditSwitchPane = pEditSwitchPane;
+  fCurrentHeight = fButtonSize + 5;
+  pEditSwitchPane->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
   fCurrentHeight = 5;
-  createEditButton(EB_SWITCH_AFFECTING_BLOCKS, EBT_BOOL, fCurrentHeight);
+  createEditButton(pEditSwitchPane, EB_SWITCH_AFFECTING_BLOCKS, EBT_BOOL, fCurrentHeight);
+  Window *pAffectingBlocksList = pEditSwitchPane->createChild("OgreTray/Listbox", "List");
+  pAffectingBlocksList->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
+  pAffectingBlocksList->setSize(USize(UDim(1, -fButtonSize), UDim(0, 2 * fButtonSize)));
+  Window *pAddAB = pEditSwitchPane->createChild("OgreTray/Button", "Add");
+  pAddAB->setPosition(UVector2(UDim(1, -fButtonSize), UDim(0, fCurrentHeight)));
+  pAddAB->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
+  pAddAB->setText("+");
+  pAddAB->subscribeEvent(PushButton::EventClicked,
+			 Event::Subscriber(&CMapEditor::onAddSwitchEntry, this));
+  Window *pRemoveAB = pEditSwitchPane->createChild("OgreTray/Button", "Remove");
+  pRemoveAB->setPosition(UVector2(UDim(1, -fButtonSize), UDim(0, fButtonSize + fCurrentHeight)));
+  pRemoveAB->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
+  pRemoveAB->setText("-");
+  pRemoveAB->subscribeEvent(PushButton::EventClicked,
+			    Event::Subscriber(&CMapEditor::onDeleteSwitchEntry, this));
+  fCurrentHeight += 2 * fButtonSize;
 
   // initial state
   // =============
   selectTile(1);
 }
-Window* CMapEditor::createEditButton(EEditButtons id, EEditButtonTypes type, float &fCurrentHeight) {
+Window* CMapEditor::createEditButton(Window *pParent,
+				     EEditButtons id,
+				     EEditButtonTypes type,
+				     float &fCurrentHeight) {
   Window *pButton;
   switch (type) {
   case EBT_BOOL:
-    pButton = m_pEditSprite->createChild("OgreTray/Checkbox", PropertyHelper<int>::toString(id));
+    pButton = pParent->createChild("OgreTray/Checkbox", PropertyHelper<int>::toString(id));
     break;
   default:
-    pButton = m_pEditSprite->createChild("OgreTray/Button", PropertyHelper<int>::toString(id));
+    pButton = pParent->createChild("OgreTray/Button", PropertyHelper<int>::toString(id));
     break;
   }
   pButton->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
@@ -824,6 +848,25 @@ bool CMapEditor::onEditBoolChanged(const CEGUI::EventArgs &args) {
   }
   return true;
 }
+bool CMapEditor::onDeleteSwitchEntry(const CEGUI::EventArgs &args) {
+  Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
+  ListboxItem *pLBI = pLB->getFirstSelectedItem();
+  if (pLBI) {
+    int index = pLB->getItemIndex(pLBI);
+    pLB->removeItem(pLBI);
+    CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
+    pSwitch->eraseEntry(index);
+  }
+  return true;
+}
+bool CMapEditor::onAddSwitchEntry(const CEGUI::EventArgs &args) {
+  Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
+  CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
+  SSwitchEntry entry;
+  pSwitch->addEntry(entry);
+  pLB->addItem(createSwitchEntry(entry));
+  return true;
+}
 Ogre::Vector2 CMapEditor::snappedPos(const Ogre::Vector2 &vPos) {
   if (!m_bSnapToGrid) {
     return vPos;
@@ -846,10 +889,11 @@ void CMapEditor::selectedSprite(CSprite *pSprite) {
   m_pSelectedSprite = pSprite;
 
   m_pEditSprite->setVisible(false);
+  m_pEditSwitchPane->setVisible(false);
 
   if (m_pSelectedSprite) {
     m_pEditSprite->setVisible(true);
-
+    
     m_pEditSprite->
       getChild(PropertyHelper<int>::toString(EB_HITPOINTS))->
       setVisible(dynamic_cast<CHitableObject*>(m_pSelectedSprite));
@@ -865,13 +909,27 @@ void CMapEditor::selectedSprite(CSprite *pSprite) {
     }
 
     CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
-    m_pEditSprite->
-      getChild(PropertyHelper<int>::toString(EB_SWITCH_AFFECTING_BLOCKS))->
-      setVisible(pSwitch);
+    m_pEditSwitchPane->setVisible(pSwitch);
     if (pSwitch) {
-      dynamic_cast<ToggleButton*>(m_pEditSprite->
+      dynamic_cast<ToggleButton*>(m_pEditSwitchPane->
 				  getChild(PropertyHelper<int>::toString(EB_SWITCH_AFFECTING_BLOCKS)))
 	->setSelected(pSwitch->doesChangeBlocks());
+
+      Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
+      while (pLB->getItemCount() > 0) {
+	pLB->removeItem(pLB->getListboxItemFromIndex(0));
+      }
+      for (const SSwitchEntry &entry : pSwitch->getEntries()) {
+        pLB->addItem(createSwitchEntry(entry));
+      }
+      
     }
   }
+}
+CEGUI::ListboxTextItem *CMapEditor::createSwitchEntry(const SSwitchEntry &entry) {
+  ListboxTextItem *pItem =
+    new ListboxTextItem(entry.toString().c_str());
+  pItem->setSelectionColours(Colour(0.0,0.0,0.5,1));
+  pItem->setSelectionBrushImage("OgreTrayImages/GenericBrush");
+  return pItem;
 }
