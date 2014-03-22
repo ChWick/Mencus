@@ -1114,9 +1114,17 @@ bool CMapEditor::onAddSwitchEntry(const CEGUI::EventArgs &args) {
   return true;
 }
 bool CMapEditor::onDeleteLink(const CEGUI::EventArgs &args) {
+  Listbox *pLinksList = dynamic_cast<Listbox*>(m_pTabControl->getChild("LinkContentPane")->getChild("ScrollPane")->getChild("List"));
+  if (pLinksList->getFirstSelectedItem()) {
+    m_pMap->destroyLink(*static_cast<CLink*>(pLinksList->getFirstSelectedItem()->getUserData()));
+    pLinksList->removeItem(pLinksList->getFirstSelectedItem());
+  }
   return true;
 }
 bool CMapEditor::onAddLink(const CEGUI::EventArgs &args) {
+  CLink link(0, 0, 0, 0);
+  Listbox *pLinksList = dynamic_cast<Listbox*>(m_pTabControl->getChild("LinkContentPane")->getChild("ScrollPane")->getChild("List"));
+  pLinksList->addItem(createLinkEntry(m_pMap->addLink(link)));
   return true;
 }
 Ogre::Vector2 CMapEditor::snappedPos(const Ogre::Vector2 &vPos) {

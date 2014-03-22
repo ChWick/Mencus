@@ -56,6 +56,13 @@ public:
       m_eLinkDirection(link.m_eLinkDirection) {
   }
 
+  bool operator==(const CLink &link) const {
+    return m_uiFirstX == link.m_uiFirstX && m_uiFirstY == link.m_uiFirstY &&
+      m_uiSecondX == link.m_uiSecondX && m_uiSecondY == link.m_uiSecondY &&
+      m_sID == link.m_sID && m_bActivated == link.m_bActivated &&
+      m_eLinkDirection == link.m_eLinkDirection;
+  }
+
   unsigned int getFirstX() const {return m_uiFirstX;}
   unsigned int getFirstY() const {return m_uiFirstY;}
 

@@ -220,6 +220,9 @@ public:
   void addObject(CObject *pObject) {m_lObjects.push_back(pObject);}
   void destroyObject(CObject *pObject, bool bLater = true);
 
+  CLink &addLink(const CLink &link) {m_lLinks.push_back(link); return m_lLinks.back();}
+  void destroyLink(const CLink &link) {m_lLinks.remove(link);}
+
   void playerWarped();
 
   Ogre::Vector2 mouseToMapPos(const Ogre::Vector2 &vMousePos) const;
