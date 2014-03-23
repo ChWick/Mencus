@@ -137,7 +137,7 @@ public:
    *  \returns Whether the bb is out of the map
    */
   bool outOfMap(const CBoundingBox2d &bb, ECollisionCheckDirections eCollisionCheckDirection = CCD_ALL) const;
-  bool outOfMap(int x, int y) const {return x < 0 || y < 0 || x >= m_gridTiles.getSizeX() && y >= m_gridTiles.getSizeY();}
+  bool outOfMap(int x, int y) const {return x < 0 || y < 0 || x >= m_gridTiles.getSizeX() || y >= m_gridTiles.getSizeY();}
   //! Function to check whether a bounding box collides with the map margin
   /**
    *  \param[in] bb The bounding box
@@ -197,6 +197,7 @@ public:
 
   CTile* &getTile(unsigned int x, unsigned int y) {return m_gridTiles(x, y);}
   CTile *getTile(unsigned int x, unsigned int y) const {return m_gridTiles(x, y);}
+  const grid2d<CTile*> &getTilesGrid() const {return m_gridTiles;}
   CLink *getLinkById(const Ogre::String &id);
   CEnemy *getEnemyById(const Ogre::String &id);
   const std::list<CSwitch*> &getSwitches() const {return m_lSwitches;}

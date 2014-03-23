@@ -73,6 +73,9 @@ private:
   bool m_bSnapToGrid;
   CMapInfoPtr m_pMapInfo;
   bool m_bInitialized;
+
+  unsigned int m_uiMapSizeX;
+  unsigned int m_uiMapSizeY;
   
 public:
   static CMapEditor &getSingleton();

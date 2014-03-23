@@ -47,11 +47,13 @@ CMapEditor::CMapEditor(Window *pRoot)
     m_bVisible(false),
     m_bRenderPause(false),
     m_bInitialized(false),
-    m_pEditValueWindow(NULL) {
+    m_pEditValueWindow(NULL),
+    m_uiMapSizeX(0),
+    m_uiMapSizeY(0) {
   //init(0);
 }
 void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
-  for (int i = 1; i < TT_COUNT; i++) {
+  for (int i = 0; i < TT_COUNT; i++) {
     String tileName = "Tile" + PropertyHelper<int>::toString(i) + ".png";
     ImageManager::getSingleton().addFromImageFile(tileName, tileName, "Game");
   }
@@ -73,6 +75,10 @@ void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
   m_pMap = pMap;
   m_pMapInfo = std::shared_ptr<CMapInfo>(new CMapInfo(pMapInfo));
   
+
+  m_uiMapSizeX = m_pMap->getTilesGrid().getSizeX();
+  m_uiMapSizeY = m_pMap->getTilesGrid().getSizeY();
+
   m_bVisible = false;
   m_bInitialized = true;
   
@@ -173,6 +179,7 @@ void CMapEditor::resize(float fButtonSize) {
   createEditButton(pBrushScrollPane, EB_MAP_NAME, EBT_STRING, fCurrentHeight);
   createEditButton(pBrushScrollPane, EB_MAP_DESCRIPTION, EBT_TEXT, fCurrentHeight);
   createEditButton(pBrushScrollPane, EB_MAP_DIFFICULTY, EBT_ENUM_SWEEP, fCurrentHeight);
+  createEditButton(pBrushScrollPane, EB_MAP_SIZE, EBT_UINT_VECTOR2, fCurrentHeight);
 
   fCurrentHeight += 10; // offset
 
@@ -477,6 +484,9 @@ Window* CMapEditor::createEditButton(Window *pParent,
   case EB_MAP_NAME:
     pButton->setText("Map name");
     break;
+  case EB_MAP_SIZE:
+    pButton->setText("Map size");
+    break;
   case EB_HITPOINTS:
     pButton->setText("Edit Hitpoints");
     break;
@@ -507,7 +517,7 @@ Window* CMapEditor::createEditButton(Window *pParent,
 void CMapEditor::reloadTextures() {
   if (!m_bInitialized) {return;}
 
-  for (int i = 1; i < TT_COUNT; i++) {
+  for (int i = 0; i < TT_COUNT; i++) {
     String tileName = "Tile" + PropertyHelper<int>::toString(i) + ".png";
     CGUIManager::getSingleton().getRenderer()->getTexture(tileName).
       loadFromFile(tileName, "Game");
@@ -531,7 +541,7 @@ void CMapEditor::reloadTextures() {
 }
 void CMapEditor::exit() {
   Ogre::LogManager::getSingleton().logMessage("MapEditor exit ...");
-  for (int i = 1; i < TT_COUNT; i++) {
+  for (int i = 0; i < TT_COUNT; i++) {
     String tileName = "Tile" + PropertyHelper<int>::toString(i) + ".png";
     ImageManager::getSingleton().destroy(tileName);
     CGUIManager::getSingleton().getRenderer()->destroyTexture(tileName);
@@ -586,6 +596,7 @@ void CMapEditor::start() {
   Ogre::Vector2 vCamPos(m_pMap->getCameraTargetPos());
   m_pMap->loadMap(m_pMapInfo);
   m_pMap->setCameraPos(vCamPos);
+
   // init links
   Listbox *pLinksList = dynamic_cast<Listbox*>(m_pTabControl->getChild("LinkContentPane")->getChild("ScrollPane")->getChild("List"));
   while (pLinksList->getItemCount() > 0) {
@@ -594,6 +605,9 @@ void CMapEditor::start() {
   for (const CLink &link : m_pMap->getLinks()) {
     pLinksList->addItem(createLinkEntry(link));
   }
+  // init map size
+  m_uiMapSizeX = m_pMap->getTilesGrid().getSizeX();
+  m_uiMapSizeY = m_pMap->getTilesGrid().getSizeY();
 }
 void CMapEditor::stop() {
   selectedSprite(NULL);
@@ -1018,6 +1032,13 @@ bool CMapEditor::onEditUIntVector2(const CEGUI::EventArgs &args) {
   const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
   int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
   switch (id) {
+  case EB_MAP_SIZE:
+    m_pEditValueWindow = new CEditBoxUIntVector2(m_pRoot,
+						 m_fButtonSize,
+						 wndArgs.window->getText(),
+						 m_uiMapSizeX,
+						 m_uiMapSizeY);
+    break;
   case EB_SWITCH_ENTRY_POSITION:
     {
       Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
