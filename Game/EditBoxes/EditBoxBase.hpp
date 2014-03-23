@@ -3,12 +3,18 @@
 
 #include <CEGUI/CEGUI.h>
 #include "../PauseCaller.hpp"
+#include "EditBoxListener.hpp"
 
 class CEditBoxBase : CPauseCaller {
 protected:
   CEGUI::Window *m_pWindow;
+  CEditBoxListener *m_pListener;
+  const int m_iID;
 public:
-  CEditBoxBase(CEGUI::Window *pParent, float fButtonSize, const CEGUI::String &sTitle) {
+  CEditBoxBase(int id, CEGUI::Window *pParent, float fButtonSize, const CEGUI::String &sTitle)
+    : m_iID(id),
+      m_pListener(NULL),
+      m_pWindow(NULL) {
     using namespace CEGUI;
     m_pWindow = pParent->createChild("OgreTray/Group");
     m_pWindow->setPosition(UVector2(UDim(0.5, -3 * fButtonSize), UDim(0.5, -2.5 * fButtonSize)));
@@ -36,13 +42,16 @@ public:
     unpause(PAUSE_MAP_EDITOR);
     m_pWindow->destroy();
   }
-
+  int getID() const {return m_iID;}
+  void setListener(CEditBoxListener *pListener) {m_pListener = pListener;}
   bool onAccect(const CEGUI::EventArgs &args) {
+    if (m_pListener) {m_pListener->onEditBoxAccept(this);}
     accepted();
     delete this;
     return true;
   }
   bool onCancel(const CEGUI::EventArgs &args) {
+    if (m_pListener) {m_pListener->onEditBoxCancel(this);}
     canceled();
     delete this;
     return true;

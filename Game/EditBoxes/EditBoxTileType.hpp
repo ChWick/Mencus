@@ -11,12 +11,13 @@ private:
   TileType m_uiCurrentTile;
   CEGUI::ScrollablePane *m_pTilesContainer;
 public:
-  CEditBoxTileType(CEGUI::Window *pParent,
-		float fButtonSize,
-		const CEGUI::String &sTitle,
+  CEditBoxTileType(int iID,
+		   CEGUI::Window *pParent,
+		   float fButtonSize,
+		   const CEGUI::String &sTitle,
 		   TileType &tt,
 		   bool bEnableNoTile = true) 
-    : CEditBoxBase(pParent, fButtonSize, sTitle),
+    : CEditBoxBase(iID, pParent, fButtonSize, sTitle),
       m_tt(tt), m_uiCurrentTile(tt), m_ttBackup(tt) {
 
     using namespace CEGUI;

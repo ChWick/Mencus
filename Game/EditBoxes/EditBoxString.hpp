@@ -9,11 +9,12 @@ private:
   std::string &m_sString;
   CEGUI::Editbox *m_pEditbox;
 public:
-  CEditBoxString(CEGUI::Window *pParent,
-		float fButtonSize,
-		const CEGUI::String &sTitle,
-		std::string &sstring) 
-    : CEditBoxBase(pParent, fButtonSize, sTitle),
+  CEditBoxString(int id,
+		 CEGUI::Window *pParent,
+		 float fButtonSize,
+		 const CEGUI::String &sTitle,
+		 std::string &sstring) 
+    : CEditBoxBase(id, pParent, fButtonSize, sTitle),
       m_sString(sstring) {
 
     using namespace CEGUI;

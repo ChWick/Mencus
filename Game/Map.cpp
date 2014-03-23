@@ -168,6 +168,52 @@ void CMap::resize(const Ogre::Vector2 &vSize, const Ogre::Vector2 &vOrigin) {
   m_vTransformedStartPos = vOrigin / vScreenSize - Ogre::Vector2(1, 1);
   m_vTransformedEndPos = m_vTransformedStartPos + 2 * vScale;
 }
+void CMap::resizeTiles(unsigned int uiSizeX, unsigned int uiSizeY) {
+  grid2d<CTile*> newGrid(uiSizeX, uiSizeY, NULL);
+
+  unsigned int uiCopySizeX = std::min<unsigned int>(uiSizeX, m_gridTiles.getSizeX());
+  unsigned int uiCopySizeY = std::min<unsigned int>(uiSizeY, m_gridTiles.getSizeY());
+  // copy
+  for (unsigned int x = 0; x < uiCopySizeX; x++) {
+    for (unsigned int y = 0; y < uiCopySizeY; y++) {
+      newGrid(x, y) = m_gridTiles(x, y);
+    }
+  }
+  // create new
+  for (unsigned int x = uiCopySizeX; x < uiSizeX; x++) {
+    for (unsigned int y = uiCopySizeY; y < uiSizeY; y++) {
+      newGrid(x, y) = new CTile(this, this->get2dManager(), Ogre::Vector2(x, y), TT_WALL_FRONT);
+    }
+  }
+  for (unsigned int x = uiCopySizeX; x < uiSizeX; x++) {
+    for (unsigned int y = 0; y < m_gridTiles.getSizeY(); y++) {
+      newGrid(x, y) = new CTile(this, this->get2dManager(), Ogre::Vector2(x, y), TT_WALL_FRONT);
+    }
+  }
+  for (unsigned int x = 0; x < m_gridTiles.getSizeX(); x++) {
+    for (unsigned int y = uiCopySizeY; y < uiSizeY; y++) {
+      newGrid(x, y) = new CTile(this, this->get2dManager(), Ogre::Vector2(x, y), TT_WALL_FRONT);
+    }
+  }
+  // delete old
+  for (unsigned int x = uiCopySizeX; x < m_gridTiles.getSizeX(); x++) {
+    for (unsigned int y = uiCopySizeY; y < m_gridTiles.getSizeY(); y++) {
+      delete m_gridTiles(x, y);
+    }
+  }
+  for (unsigned int x = uiCopySizeX; x < m_gridTiles.getSizeX(); x++) {
+    for (unsigned int y = 0; y < uiSizeY; y++) {
+      delete m_gridTiles(x, y);
+    }
+  }
+  for (unsigned int x = 0; x < uiSizeX; x++) {
+    for (unsigned int y = uiCopySizeY; y < m_gridTiles.getSizeY(); y++) {
+      delete m_gridTiles(x, y);
+    }
+  }
+
+  m_gridTiles = newGrid;
+}
 void CMap::loadMap(const CMapInfoConstPtr pMapInfo) {
   clearMap();
 

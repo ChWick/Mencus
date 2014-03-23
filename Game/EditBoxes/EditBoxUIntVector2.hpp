@@ -13,12 +13,13 @@ private:
   CEGUI::Spinner *m_pSpinnerX;
   CEGUI::Spinner *m_pSpinnerY;
 public:
-  CEditBoxUIntVector2(CEGUI::Window *pParent,
-		float fButtonSize,
-		const CEGUI::String &sTitle,
-		unsigned int &uiX,
-		unsigned int &uiY) 
-    : CEditBoxBase(pParent, fButtonSize, sTitle),
+  CEditBoxUIntVector2(int id, 
+		      CEGUI::Window *pParent,
+		      float fButtonSize,
+		      const CEGUI::String &sTitle,
+		      unsigned int &uiX,
+		      unsigned int &uiY) 
+    : CEditBoxBase(id, pParent, fButtonSize, sTitle),
       m_uiX(uiX),
       m_uiY(uiY),
       m_uiBackupX(uiX),

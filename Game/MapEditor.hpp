@@ -8,6 +8,7 @@
 #include "PauseListener.hpp"
 #include "PauseListener.hpp"
 #include "MapInfo.hpp"
+#include "EditBoxes/EditBoxListener.hpp"
 
 class CSprite;
 class CLink;
@@ -19,7 +20,8 @@ class CMapEditor
   : public Ogre::Singleton<CMapEditor>,
     public CInputListener,
     public CPauseCaller,
-    public CPauseListener {
+    public CPauseListener,
+    public CEditBoxListener {
 public:
   enum EEditButtonTypes {
     EBT_STRING,
@@ -153,6 +155,9 @@ private:
   void editTile(const Ogre::Vector2 &vPos);
   bool selectSprite(const Ogre::Vector2 &vPos);
   void selectedSprite(CSprite *pSprite);
+
+  void onEditBoxAccept(CEditBoxBase *);
+  void onEditBoxCancel(CEditBoxBase *);
 };
 
 #endif

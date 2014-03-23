@@ -797,7 +797,8 @@ void CMapEditor::editTile(const Ogre::Vector2 &vPos) {
 
   if (m_pMap->outOfMap(x, y)) {return;}
 
-  m_pEditValueWindow = new CEditBoxTileType(m_pRoot,
+  m_pEditValueWindow = new CEditBoxTileType(0,
+					    m_pRoot,
 					    m_fButtonSize,
 					    "Select endangered tile",
 					    m_pMap->getTile(x, y)->getEndangeredTileType());
@@ -980,7 +981,8 @@ bool CMapEditor::onEditText(const CEGUI::EventArgs &args) {
   int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
   switch(id) {
   case EB_MAP_DESCRIPTION:
-    m_pEditValueWindow = new CEditBoxText(m_pRoot,
+    m_pEditValueWindow = new CEditBoxText(id,
+					  m_pRoot,
 					  m_fButtonSize,
 					  wndArgs.window->getText(),
 					  m_pMapInfo->getDescription());
@@ -993,13 +995,15 @@ bool CMapEditor::onEditString(const CEGUI::EventArgs &args) {
   int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
   switch(id) {
   case EB_MAP_NAME:
-    m_pEditValueWindow = new CEditBoxString(m_pRoot,
+    m_pEditValueWindow = new CEditBoxString(id,
+					    m_pRoot,
 					    m_fButtonSize,
 					    wndArgs.window->getText(),
 					    m_pMapInfo->getName());
     break;
   case EB_MAP_FILENAME:
-    m_pEditValueWindow = new CEditBoxString(m_pRoot,
+    m_pEditValueWindow = new CEditBoxString(id,
+					    m_pRoot,
 					    m_fButtonSize,
 					    wndArgs.window->getText(),
 					    m_pMapInfo->getFileName());
@@ -1013,14 +1017,16 @@ bool CMapEditor::onEditFloat(const CEGUI::EventArgs &args) {
   int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
   switch (id) {
   case EB_HITPOINTS:
-    m_pEditValueWindow = new CEditBoxFloat(m_pRoot,
+    m_pEditValueWindow = new CEditBoxFloat(id,
+					   m_pRoot,
 					   m_fButtonSize,
 					   wndArgs.window->getText(),
 					   dynamic_cast<CHitableObject*>(m_pSelectedSprite)
 					   ->getMaximumHitpoints());
     break;
   case EB_DAMAGE:
-    m_pEditValueWindow = new CEditBoxFloat(m_pRoot,
+    m_pEditValueWindow = new CEditBoxFloat(id,
+					   m_pRoot,
 					   m_fButtonSize,
 					   wndArgs.window->getText(),
 					   tesst);
@@ -1033,11 +1039,13 @@ bool CMapEditor::onEditUIntVector2(const CEGUI::EventArgs &args) {
   int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
   switch (id) {
   case EB_MAP_SIZE:
-    m_pEditValueWindow = new CEditBoxUIntVector2(m_pRoot,
+    m_pEditValueWindow = new CEditBoxUIntVector2(id,
+						 m_pRoot,
 						 m_fButtonSize,
 						 wndArgs.window->getText(),
 						 m_uiMapSizeX,
 						 m_uiMapSizeY);
+    m_pEditValueWindow->setListener(this);
     break;
   case EB_SWITCH_ENTRY_POSITION:
     {
@@ -1045,7 +1053,8 @@ bool CMapEditor::onEditUIntVector2(const CEGUI::EventArgs &args) {
       CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
       if (pSwitch && pLB->getFirstSelectedItem()) {
 	SSwitchEntry &entry(pSwitch->getEntries()[pLB->getItemIndex(pLB->getFirstSelectedItem())]);
-	m_pEditValueWindow = new CEditBoxUIntVector2(m_pRoot,
+	m_pEditValueWindow = new CEditBoxUIntVector2(id,
+						     m_pRoot,
 						     m_fButtonSize,
 						     wndArgs.window->getText(),
 						     entry.uiTilePosX,
@@ -1058,7 +1067,8 @@ bool CMapEditor::onEditUIntVector2(const CEGUI::EventArgs &args) {
       Listbox *pLinksList = dynamic_cast<Listbox*>(m_pTabControl->getChild("LinkContentPane")->getChild("ScrollPane")->getChild("List"));
       if (pLinksList->getFirstSelectedItem()) {
 	CLink *pLink = static_cast<CLink*>(pLinksList->getFirstSelectedItem()->getUserData());
-	m_pEditValueWindow = new CEditBoxUIntVector2(m_pRoot,
+	m_pEditValueWindow = new CEditBoxUIntVector2(id,
+						     m_pRoot,
 						     m_fButtonSize,
 						     wndArgs.window->getText(),
 						     pLink->getFirstX(),
@@ -1071,7 +1081,8 @@ bool CMapEditor::onEditUIntVector2(const CEGUI::EventArgs &args) {
       Listbox *pLinksList = dynamic_cast<Listbox*>(m_pTabControl->getChild("LinkContentPane")->getChild("ScrollPane")->getChild("List"));
       if (pLinksList->getFirstSelectedItem()) {
 	CLink *pLink = static_cast<CLink*>(pLinksList->getFirstSelectedItem()->getUserData());
-	m_pEditValueWindow = new CEditBoxUIntVector2(m_pRoot,
+	m_pEditValueWindow = new CEditBoxUIntVector2(id,
+						     m_pRoot,
 						     m_fButtonSize,
 						     wndArgs.window->getText(),
 						     pLink->getSecondX(),
@@ -1106,7 +1117,8 @@ bool CMapEditor::onEditTileType(const CEGUI::EventArgs &args) {
       CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
       if (pSwitch && pLB->getFirstSelectedItem()) {
 	SSwitchEntry &entry(pSwitch->getEntries()[pLB->getItemIndex(pLB->getFirstSelectedItem())]);
-	m_pEditValueWindow = new CEditBoxTileType(m_pRoot,
+	m_pEditValueWindow = new CEditBoxTileType(id,
+						  m_pRoot,
 						  m_fButtonSize,
 						  wndArgs.window->getText(),
 						  entry.uiTileType);
@@ -1222,4 +1234,13 @@ CEGUI::ListboxTextItem *CMapEditor::createSwitchEntry(const SSwitchEntry &entry)
   pItem->setSelectionColours(Colour(0.0,0.0,0.5,1));
   pItem->setSelectionBrushImage("OgreTrayImages/GenericBrush");
   return pItem;
+}
+void CMapEditor::onEditBoxAccept(CEditBoxBase *pBase) {
+  switch (pBase->getID()) {
+  case EB_MAP_SIZE:
+    m_pMap->resizeTiles(m_uiMapSizeX, m_uiMapSizeY);
+    break;
+  }
+}
+void CMapEditor::onEditBoxCancel(CEditBoxBase *pBase) {
 }

@@ -10,11 +10,12 @@ private:
   float &m_fValue;
   CEGUI::Spinner *m_pSpinner;
 public:
-  CEditBoxFloat(CEGUI::Window *pParent,
+  CEditBoxFloat(int id,
+		CEGUI::Window *pParent,
 		float fButtonSize,
 		const CEGUI::String &sTitle,
 		float &fValue) 
-    : CEditBoxBase(pParent, fButtonSize, sTitle),
+    : CEditBoxBase(id, pParent, fButtonSize, sTitle),
       m_fValue(fValue) {
 
     using namespace CEGUI;
