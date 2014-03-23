@@ -7,6 +7,41 @@
 using namespace tinyxml2;
 using namespace XMLHelper;
 
+
+CMapInfo::CMapInfo() 
+  : m_sFileName("Newmap.xml"),
+    m_eDifficulty(D_EASY), 
+    m_sName("New map"),
+    m_sDescription("A newly created map."),
+    m_bValid(true) {
+  m_Document.Parse(
+"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+"<map background=\"forest\" sizex=\"20\" sizey=\"20\">"
+"<player x=\"0\" y=\"0\" direction=\"1\" hp=\"10\"/>"
+"<tiles>"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
+"</tiles>"
+"</map>");
+}
 CMapInfo::CMapInfo(const std::string &sFileName, const std::string &sResourceGroup)
   : m_sFileName(sFileName),
     m_eDifficulty(D_EASY) {

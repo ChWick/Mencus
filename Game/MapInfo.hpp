@@ -40,6 +40,7 @@ private:
   std::string m_sDescription;
   std::string m_sFileName;
 public:
+  CMapInfo();
   CMapInfo(const std::string &sFileName, const std::string &sResourceGroup);
   CMapInfo(const CMapInfoConstPtr src);
 

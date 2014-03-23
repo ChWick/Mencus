@@ -40,6 +40,7 @@ public:
     MMS_RESULT_EXIT,
     MMS_RESULT_NEW_GAME,
     MMS_RESULT_LOAD_GAME,
+    MMS_RESULT_NEW_MAP,
   };
   enum EStartSlots {
     START_START_GAME  = 0,
@@ -49,6 +50,9 @@ public:
   enum EGameSlots {
 #ifdef DISABLE_CAMPAIGN
     GAME_USER_GAME    = 0,
+#ifdef MAP_EDITOR_ENABLED
+    GAME_NEW_MAP      = 1,
+#endif
 #else
     GAME_NEW_GAME     = 0,
     GAME_USER_GAME    = 1,
