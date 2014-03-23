@@ -4,6 +4,7 @@
 typedef unsigned int TileType;
 
 enum ETileTypes {
+  TT_NONE  = 0,
   TT_COUNT = 71,
 };
 

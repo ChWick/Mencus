@@ -170,9 +170,19 @@ void CMap::loadMap(const string &sFilename, const string &sResourceGroup) {
   XMLElement *pRoot = doc.FirstChildElement("map");
   readFromXMLElement(pRoot);
 
+  prepareMap();
+}
+void CMap::prepareMap() {
   // Initialise everything
   for (auto pSwitch : m_lSwitches) {
     pSwitch->initialize(this);
+  }
+
+  for (CTile *pTile : m_gridTiles) {
+    if (pTile->getEndangeredTileType() != TT_NONE) {
+      // to set the endangered flag
+      pTile->setEndangeredTileType(pTile->getEndangeredTileType());
+    }
   }
 }
 Ogre::Real CMap::hitsTile(ECollisionCheckDirections eCollisionCheckDirection, unsigned uiTileMask, const CBoundingBox2d &bb, CTile **ppTile) const {
@@ -586,7 +596,7 @@ void CMap::render(Ogre::Real tpf) {
   if (CMapEditor::getSingleton().isVisible()) {
     for (int x = xmin; x < xmax; x++) {
       for (int y = ymin; y < ymax; y++) {
-	if (m_gridTiles(x, y)->getEndangeredTileType() != TT_COUNT) {
+	if (m_gridTiles(x, y)->getEndangeredTileType() != TT_NONE) {
 	  CDebugDrawer::getSingleton().draw(m_gridTiles(x, y), m_gridTiles(x, y)->getEndangeredTileType(), 0.5);
 	}
       }

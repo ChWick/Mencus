@@ -8,7 +8,7 @@ CTile::CTile(CSpriteTransformPipeline *pTransformPipeline, Ogre2dManager* p2dMan
     m_uiMapPosY(static_cast<unsigned int>(vPosition.y + 0.5)),
     m_uiTileFlags(getTileFlags(ttTileType)),
     m_ttTileType(ttTileType),
-    m_ttEndangeredTileType(TT_COUNT) {
+    m_ttEndangeredTileType(TT_NONE) {
   setTexture(DEFAULT_TILE_TEXTURE_NAME + Ogre::StringConverter::toString(ttTileType) + ".png");
 }
 

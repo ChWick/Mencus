@@ -608,6 +608,7 @@ void CMapEditor::stop() {
     m_pMap->writeToXMLElement(m_pMapInfo->getEmptyRootNode());
     m_bVisible = false;
   }
+  m_pMap->prepareMap();
 }
 void CMapEditor::render() {
   if (!m_bVisible || m_bRenderPause) {return;}

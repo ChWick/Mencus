@@ -101,6 +101,7 @@ public:
 
   void loadMap(const string &sFilename, const string &sResourceGroup);
   void loadMap(const CMapInfoConstPtr pMapInfo);
+  void prepareMap();
   void writeToXMLElement(tinyxml2::XMLElement *pMapElem) const;
   void readFromXMLElement(const tinyxml2::XMLElement *pRoot);
   void resize(const Ogre::Vector2 &vSize, const Ogre::Vector2 &vOrigin = Ogre::Vector2::ZERO);

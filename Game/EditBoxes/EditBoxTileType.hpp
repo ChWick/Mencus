@@ -14,7 +14,8 @@ public:
   CEditBoxTileType(CEGUI::Window *pParent,
 		float fButtonSize,
 		const CEGUI::String &sTitle,
-		TileType &tt) 
+		   TileType &tt,
+		   bool bEnableNoTile = true) 
     : CEditBoxBase(pParent, fButtonSize, sTitle),
       m_tt(tt), m_uiCurrentTile(tt), m_ttBackup(tt) {
 
@@ -27,9 +28,9 @@ public:
 
     int iTilesCountX = m_pWindow->getPixelSize().d_width / fButtonSize;
     int id = 0;
+    if (!bEnableNoTile) {id = 1;}
     for (int y = 0; y < TT_COUNT / iTilesCountX + 1; y++) {
       for (int x = 0; x < iTilesCountX; x++){
-	id++; // tiles count start at 1
 
 	if (id == TT_COUNT) {
 	  break;
@@ -46,6 +47,8 @@ public:
 	subscribeEvent(Window::EventMouseButtonUp,
 		       Event::Subscriber(&CEditBoxTileType::onTileClicked, this));
 
+
+      id++;
     }
     if (id == TT_COUNT) {
       break;
