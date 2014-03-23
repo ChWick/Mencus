@@ -27,6 +27,7 @@ class CEnemy;
 class CObject;
 class CBackground;
 class CTutorialManager;
+class CDebugText;
 struct SStatistics;
 
 class CMap : public CSpriteTransformPipeline, public CInputListener, public CPauseListener {
@@ -66,6 +67,8 @@ private:
   Ogre2dManager* m_p2dManagerMap;
   Ogre2dManager* m_pDebugSpriteManager;
   grid2d<CTile*> m_gridTiles;
+  std::vector<CDebugText*> m_vLineNumberX;
+  std::vector<CDebugText*> m_vLineNumberY;
   std::list<CEnemy*> m_lEnemies;
   std::list<CSwitch*> m_lSwitches;
   std::list<CShot*> m_lShots;
@@ -242,6 +245,7 @@ private:
   void updateCameraPos(Ogre::Real tpf);
 
   void clearMap();
+  void clearLineNumbers();
 
   void readRow(const tinyxml2::XMLElement *pRow, unsigned int uiRow);
   void readSwitch(const tinyxml2::XMLElement *pSwitch);

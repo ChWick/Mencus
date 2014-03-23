@@ -5,6 +5,7 @@
 #include "Player.hpp"
 #include "Tile.hpp"
 #include "DebugDrawer.hpp"
+#include "DebugText.hpp"
 #include "Switch.hpp"
 #include "Shot.hpp"
 #include "Explosion.hpp"
@@ -70,8 +71,21 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
 
   resize(Ogre::Vector2(CGame::getSingleton().getRenderWindow()->getWidth(),
 		       CGame::getSingleton().getRenderWindow()->getHeight()));
+
+
+  m_vLineNumberX.resize(static_cast<int>(TILES_PER_SCREEN.x + 1), NULL);
+  m_vLineNumberY.resize(static_cast<int>(TILES_PER_SCREEN.y + 1), NULL);
+  for (auto &t : m_vLineNumberX) {
+    t = new CDebugText();
+    t->setText("blabla");
+  }
+  for (auto &t : m_vLineNumberY) {
+    t = new CDebugText();
+    t->setText("blubb");
+  }
 }
 CMap::~CMap() {
+  clearLineNumbers();
 #ifdef MAP_EDITOR_ENABLED
   CMapEditor::getSingleton().exit();
 #endif
@@ -89,6 +103,16 @@ CMap::~CMap() {
   delete m_pDebugSpriteManager;
 
   Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup("Game");
+}
+void CMap::clearLineNumbers() {
+  for (auto &t : m_vLineNumberX) {
+    delete t;
+  }
+  for (auto &t : m_vLineNumberY) {
+    delete t;
+  }
+  m_vLineNumberX.clear();
+  m_vLineNumberY.clear();
 }
 void CMap::clearMap() {
   if (m_pExit) {delete m_pExit; m_pExit = NULL;}
@@ -584,9 +608,19 @@ void CMap::render(Ogre::Real tpf) {
   //}
   unsigned int xmin = std::max<int>(0, static_cast<int>(m_vCameraPos.x));
   unsigned int ymin = std::max<int>(0, static_cast<int>(m_vCameraPos.y));
-  unsigned int xmax = std::min<unsigned int>(static_cast<unsigned int>(m_vCameraPos.x + TILES_PER_SCREEN.x + 1), m_gridTiles.getSizeX() - 1);
-  unsigned int ymax = std::min<unsigned int>(static_cast<unsigned int>(m_vCameraPos.y + TILES_PER_SCREEN.y + 1), m_gridTiles.getSizeY() - 1);
+  unsigned int xmax = std::min<unsigned int>(floor(m_vCameraPos.x + TILES_PER_SCREEN.x + 1), m_gridTiles.getSizeX() - 1);
+  unsigned int ymax = std::min<unsigned int>(floor(m_vCameraPos.y + TILES_PER_SCREEN.y + 1), m_gridTiles.getSizeY() - 1);
 
+
+  for (int x = 0; x < m_vLineNumberX.size(); x++) {
+    m_vLineNumberX[x]->setText(Ogre::StringConverter::toString(x + static_cast<int>(m_vCameraPos.x)));
+    m_vLineNumberX[x]->setPos((static_cast<int>(m_vCameraPos.x) - m_vCameraPos.x + x) / TILES_PER_SCREEN.x, 0);
+  }
+  for (int y = 0; y < m_vLineNumberY.size(); y++) {
+    m_vLineNumberY[y]->setText(Ogre::StringConverter::toString(static_cast<int>(floor(m_vCameraPos.y + TILES_PER_SCREEN.y)) - y));
+    m_vLineNumberY[y]->setPos(0, (m_vCameraPos.y - static_cast<int>(floor(m_vCameraPos.y
+									  )) + y) / TILES_PER_SCREEN.y - 0.05);
+  }
   for (int x = xmin; x < xmax; x++) {
     for (int y = ymin; y < ymax; y++) {
       m_gridTiles(x, y)->render(tpf);
