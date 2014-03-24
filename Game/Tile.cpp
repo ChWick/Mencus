@@ -74,6 +74,15 @@ unsigned int CTile::getTileFlags(TileType tt) {
   case 47:
   case 48:
   case 53:
+  case 71:
+  case 72:
+  case 73:
+  case 74:
+  case 75:
+  case 76:
+  case 77:
+  case 78:
+  case 79:
   case 26: uiFlags += TF_UNPASSABLE; break;
   case 49:
   case 50: uiFlags += TF_LOCK; uiFlags += TF_UNPASSABLE; break;
@@ -104,6 +113,7 @@ unsigned int CTile::getTileFlags(TileType tt) {
   case 62:
   case 69:
   case 70:
+  case 80:
   case 2: uiFlags += TF_PASSABLE; break;
   }
   return uiFlags;
