@@ -31,12 +31,14 @@ public:
     EBT_UINT_VECTOR2,
     EBT_TILE_TYPE,
     EBT_ENUM_SWEEP,
+    EBT_CUSTOM,
   };
   enum EEditButtons {
     EB_MAP_NAME,
     EB_MAP_FILENAME,
     EB_MAP_DIFFICULTY,
     EB_MAP_DESCRIPTION,
+    EB_MAP_EXIT,
     EB_MAP_SIZE,
     EB_HITPOINTS,
     EB_DAMAGE,
@@ -154,6 +156,7 @@ private:
   bool onEditUIntVector2(const CEGUI::EventArgs &args);
   bool onEditBoolChanged(const CEGUI::EventArgs &args);
   bool onEditTileType(const CEGUI::EventArgs &args);
+  bool onEditCustom(const CEGUI::EventArgs &args);
   bool dummyReturnFalse(const CEGUI::EventArgs &args) {return false;}
 
   void editTile(const Ogre::Vector2 &vPos);

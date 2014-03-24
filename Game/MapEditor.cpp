@@ -19,6 +19,7 @@
 #include "EditBoxes/EditBoxTileType.hpp"
 #include "EditBoxes/EditBoxString.hpp"
 #include "EditBoxes/EditBoxText.hpp"
+#include "EditBoxes/EditBoxExit.hpp"
 
 using namespace CEGUI;
 
@@ -180,6 +181,7 @@ void CMapEditor::resize(float fButtonSize) {
   createEditButton(pBrushScrollPane, EB_MAP_DESCRIPTION, EBT_TEXT, fCurrentHeight);
   createEditButton(pBrushScrollPane, EB_MAP_DIFFICULTY, EBT_ENUM_SWEEP, fCurrentHeight);
   createEditButton(pBrushScrollPane, EB_MAP_SIZE, EBT_UINT_VECTOR2, fCurrentHeight);
+  createEditButton(pBrushScrollPane, EB_MAP_EXIT, EBT_CUSTOM, fCurrentHeight);
 
   fCurrentHeight += 10; // offset
 
@@ -470,6 +472,10 @@ Window* CMapEditor::createEditButton(Window *pParent,
     pButton->subscribeEvent(PushButton::EventClicked,
 			    Event::Subscriber(&CMapEditor::onEditTileType, this));
     break;
+  case EBT_CUSTOM:
+    pButton->subscribeEvent(PushButton::EventClicked,
+			    Event::Subscriber(&CMapEditor::onEditCustom, this));
+    break;
   }
   switch (id) {
   case EB_MAP_FILENAME:
@@ -486,6 +492,9 @@ Window* CMapEditor::createEditButton(Window *pParent,
     break;
   case EB_MAP_SIZE:
     pButton->setText("Map size");
+    break;
+  case EB_MAP_EXIT:
+    pButton->setText("Victory condition");
     break;
   case EB_HITPOINTS:
     pButton->setText("Edit Hitpoints");
@@ -1140,6 +1149,21 @@ bool CMapEditor::onEditTileType(const CEGUI::EventArgs &args) {
 						  entry.uiTileType);
       }
     }
+    break;
+  }
+  return true;
+}
+bool CMapEditor::onEditCustom(const CEGUI::EventArgs &args) {
+  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
+  int id = PropertyHelper<int>::fromString(wndArgs.window->getName());
+  switch (id) {
+  case EB_MAP_EXIT:
+    m_pEditValueWindow = new CEditBoxExit(id,
+					  m_pRoot,
+					  m_fButtonSize,
+					  wndArgs.window->getText(),
+					  m_pMap->getExit());
+    m_pEditValueWindow->setListener(this);
     break;
   }
   return true;

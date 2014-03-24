@@ -17,6 +17,7 @@
 #include "PauseListener.hpp"
 #include "CameraRestriction.hpp"
 #include "MapInfo.hpp"
+#include "Exit.hpp"
 
 class CTile;
 class CPlayer;
@@ -31,33 +32,6 @@ class CDebugText;
 struct SStatistics;
 
 class CMap : public CSpriteTransformPipeline, public CInputListener, public CPauseListener {
-private:
-  enum EExitTypes {
-    EXIT_REGION,
-    EXIT_ENEMY_DEATH,
-  };
-  class CExit {
-  public:
-    static Ogre::String toString(EExitTypes et);
-  private:
-    EExitTypes m_eExitType;
-    CBoundingBox2d m_BoundingBox;
-    const Ogre::String m_sID;
-  public:
-    static CExit *newRegion(const CBoundingBox2d &bb) {return new CExit(EXIT_REGION, bb, Ogre::StringUtil::BLANK);}
-    static CExit *newEnemyDeath(const Ogre::String &sID) {return new CExit(EXIT_ENEMY_DEATH, CBoundingBox2d(), sID);}
-  private:
-    CExit(EExitTypes eExitType, const CBoundingBox2d &bb, const Ogre::String &sID)
-    : m_eExitType(eExitType), m_BoundingBox(bb), m_sID(sID) {
-    }
-  public:
-    bool isInExit(CPlayer *pPlayer, CMap *pMap);
-#ifdef DEBUG_EXIT
-    void debugDraw();
-#endif
-    virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
-  };
-public:
 private:
   CTutorialManager *m_pTutorialManager;
   std::list<CEnemy*> m_lEnemiesToDestroy;
@@ -87,7 +61,7 @@ private:
   Ogre::Vector2 m_vCameraDebugOffset;
 
   CPlayer *m_pPlayer;
-  CExit *m_pExit;
+  CExit m_Exit;
 
   CScreenplayListener *m_pScreenplayListener;
   bool m_bUpdatePause;
@@ -205,6 +179,8 @@ public:
   const std::list<CEnemy*> &getEnemies() const {return m_lEnemies;}
   const std::list<CLink> &getLinks() const {return m_lLinks;}
   const std::list<CObject*> &getObjects() const {return m_lObjects;}
+
+  CExit &getExit() {return m_Exit;}
 
   bool isInMap(unsigned int x, unsigned int y);
 

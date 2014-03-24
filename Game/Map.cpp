@@ -18,6 +18,7 @@
 #include "Statistics.hpp"
 #include "TutorialManager.hpp"
 #include "MapEditor.hpp"
+#include "Exit.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -41,7 +42,6 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_vCameraTargetPos(Ogre::Vector2::ZERO),
     m_vCameraDebugOffset(Ogre::Vector2::ZERO),
     m_pPlayer(NULL),
-    m_pExit(NULL),
     m_pScreenplayListener(pScreenplayListener),
     m_bUpdatePause(false),
     m_bRenderPause(false),
@@ -115,7 +115,6 @@ void CMap::clearLineNumbers() {
   m_vLineNumberY.clear();
 }
 void CMap::clearMap() {
-  if (m_pExit) {delete m_pExit; m_pExit = NULL;}
   m_vCameraRestrictions.clear();
   m_lLinks.clear();
   m_lShotsToDestroy.clear();
@@ -593,11 +592,9 @@ void CMap::update(Ogre::Real tpf) {
     for (auto pExplosion : m_lExplosions) {
       pExplosion->update(tpf);
     }
-
-    if (m_pExit) {
-      if (m_pExit->isInExit(m_pPlayer, this)) {
-        m_pScreenplayListener->playerExitsMap();
-      }
+    
+    if (m_Exit.isInExit(m_pPlayer, this)) {
+      m_pScreenplayListener->playerExitsMap();
     }
 
 #ifdef DEBUG_SHOW_OGRE_TRAY
@@ -636,11 +633,9 @@ void CMap::update(Ogre::Real tpf) {
       CDebugDrawer::getSingleton().draw(link);
     }
 #endif
-    if (m_pExit) {
 #ifdef DEBUG_EXIT
-      m_pExit->debugDraw();
+    m_Exit->debugDraw();
 #endif // DEBUG_EXIT
-    }
   }
 
   m_Statistics.fTime = m_fPlayingTime;
@@ -857,10 +852,10 @@ void CMap::readExit(const XMLElement *pExitElem) {
                                     pExitElem->FloatAttribute("posy")),
                       Ogre::Vector2(pExitElem->FloatAttribute("sizex"),
                                     pExitElem->FloatAttribute("sizey")));
-    m_pExit = CExit::newRegion(bb);
+    m_Exit = CExit::newRegion(bb);
   }
   else if (sType == "enemyDeath") {
-    m_pExit = CExit::newEnemyDeath(pExitElem->Attribute("id"));
+    m_Exit = CExit::newEnemyDeath(pExitElem->Attribute("id"));
   }
   else {
     throw Ogre::Exception(0, sType + " is not a valid exit type", __FILE__);
@@ -929,48 +924,6 @@ void CMap::destroyObject(CObject *pObject, bool bLater) {
     m_lObjects.remove(pObject);
     delete pObject;
   }
-}
-
-Ogre::String CMap::CExit::toString(EExitTypes et) {
-  switch (et) {
-  case CMap::EXIT_REGION:
-    return "region";
-  case CMap::EXIT_ENEMY_DEATH:
-    return "enemyDeath";
-  }
-  throw Ogre::Exception(0, "Unknown exit type", __FILE__);
-}
-bool CMap::CExit::isInExit(CPlayer *pPlayer, CMap *pMap) {
-  switch (m_eExitType) {
-  case CMap::EXIT_REGION:
-    if (m_BoundingBox.collidesWith(pPlayer->getWorldBoundingBox()) != CCD_NONE) {
-      return true;
-    }
-    break;
-  case CMap::EXIT_ENEMY_DEATH:
-    if (pMap->getEnemyById(m_sID) == NULL) {
-      return true;
-    }
-    break;
-  }
-  return false;
-}
-#ifdef DEBUG_EXIT
-void CMap::CExit::debugDraw() {
-  switch (m_eExitType) {
-  case CMap::EXIT_REGION:
-    CDebugDrawer::getSingleton().draw(m_BoundingBox);
-    break;
-  default:
-    break;
-  }
-}
-#endif // DEBUG_EXIT
-void CMap::CExit::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
-  pElem->SetAttribute("type", toString(m_eExitType).c_str());
-  SetAttribute(pElem, "pos", m_BoundingBox.getPosition());
-  SetAttribute(pElem, "size", m_BoundingBox.getSize());
-  pElem->SetAttribute("id", m_sID.c_str());
 }
 
 void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
@@ -1068,11 +1021,9 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
     pObject->writeToXMLElement(pElem);
   }
 
-  if (m_pExit) {
-    XMLElement *pExit = doc.NewElement("exit");
-    pMapElem->InsertEndChild(pExit);
-    m_pExit->writeToXMLElement(pExit);
-  }
+  XMLElement *pExit = doc.NewElement("exit");
+  pMapElem->InsertEndChild(pExit);
+  m_Exit.writeToXMLElement(pExit);
 
   XMLElement *pPlayer = doc.NewElement("player");
   pMapElem->InsertEndChild(pPlayer);

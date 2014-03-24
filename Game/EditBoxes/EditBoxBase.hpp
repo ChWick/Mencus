@@ -17,8 +17,8 @@ public:
       m_pWindow(NULL) {
     using namespace CEGUI;
     m_pWindow = pParent->createChild("OgreTray/Group");
-    m_pWindow->setPosition(UVector2(UDim(0.5, -3 * fButtonSize), UDim(0.5, -2.5 * fButtonSize)));
-    m_pWindow->setSize(USize(UDim(0, 6 * fButtonSize), UDim(0, 5 * fButtonSize)));
+    m_pWindow->setPosition(UVector2(UDim(0.5, -4 * fButtonSize), UDim(0.5, -2.5 * fButtonSize)));
+    m_pWindow->setSize(USize(UDim(0, 8 * fButtonSize), UDim(0, 5 * fButtonSize)));
     m_pWindow->setAlwaysOnTop(true);
     m_pWindow->setText(sTitle);
 
