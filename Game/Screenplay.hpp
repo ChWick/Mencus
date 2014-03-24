@@ -141,6 +141,11 @@ public:
   virtual void stop();
 };
 
+enum EScreenplayTypes {
+  SCREENPLAY_CAMPAIN = 0,
+  SCREENPLAY_SINGLE_MAP,
+  SCREENPLAY_NONE,
+};
 class CScreenplay :
   public CScreenplayListener,
   public CFaderCallback,
@@ -148,6 +153,7 @@ class CScreenplay :
   public CInputListener,
   public CPauseListener {
 private:
+  EScreenplayTypes m_eScreenplayType;
   const Ogre::String m_sResourceGroup;
 
   std::map<unsigned int, CAct*> m_mapActs;
@@ -161,11 +167,15 @@ private:
   CScene *m_pCurrentScene;
   CScene *m_pOldScene;
 
+  std::shared_ptr<const CMapInfo> m_pMapInfo;
+
   CFader m_Fader;
   bool m_bPaused;
 public:
   CScreenplay();
   virtual ~CScreenplay();
+
+  void loadSingleMap(std::shared_ptr<const CMapInfo> pMapInfo);
 
   void clear();
 

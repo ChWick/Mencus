@@ -634,7 +634,7 @@ void CMap::update(Ogre::Real tpf) {
     }
 #endif
 #ifdef DEBUG_EXIT
-    m_Exit->debugDraw();
+    m_Exit.debugDraw();
 #endif // DEBUG_EXIT
   }
 

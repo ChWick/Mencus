@@ -210,7 +210,7 @@ void CGame::locateResources() {
 }
 void CGame::loadResources() {
   //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-  showLoadingBar();
+  showLoadingBar(7, 7);
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("General");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Imagesets");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Fonts");
@@ -495,7 +495,8 @@ void CGame::createScene() {
 
   Ogre::LogManager::getSingletonPtr()->logMessage("    changing GameState to main menu ");
   m_pGameState->changeGameState(CGameState::GS_MAIN_MENU, true);
-  if (CSnapshotManager::getSingleton().loadFromSnapshot()) {
+  if (CSnapshotManager::getSingleton().loadFromSnapshot()
+      || CSnapshotManager::getSingleton().loadBackupSnapshot()) {
     Ogre::LogManager::getSingletonPtr()->logMessage("    snapshot loaded.");
   }
   else {
@@ -507,10 +508,13 @@ void CGame::createScene() {
 }
 
 bool CGame::frameRenderingQueued(const Ogre::FrameEvent& evt) {
-  if(mWindow->isClosed())
+  if(mWindow->isClosed()) {
+    CSnapshotManager::getSingleton().makeBackupSnapshot();
     return false;
+  }
 
   if(mShutDown) {
+    CSnapshotManager::getSingleton().makeBackupSnapshot();
     return false;
   }
   if (!mWindow->isActive()) {
@@ -873,9 +877,9 @@ void CGame::destroyResources() {
     //new CGUIManager(mSceneMgr, *mWindow);
   }
 }
-void CGame::showLoadingBar() {
+void CGame::showLoadingBar(unsigned int numGroupsInit, unsigned int numGroupsLoad) {
   assert(mTrayMgr);
-  mTrayMgr->showLoadingBar(6, 0);
+  mTrayMgr->showLoadingBar(numGroupsInit, numGroupsLoad);
 }
 void CGame::hideLoadingBar() {
   assert(mTrayMgr);

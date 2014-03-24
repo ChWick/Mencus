@@ -29,10 +29,15 @@ public:
   }
 
   const CSnapshot &makeSnapshot(CSnapshot *pSnapshot = NULL);
+  const CSnapshot &makeBackupSnapshot();
   // this is only for testing
   void createFromFile(const Ogre::String &name);
 
   void loadFromSnapshot(const CSnapshot &snapshot);
+  bool loadBackupSnapshot();
+
+private:
+  const CSnapshot &makeSnapshot(const Ogre::String &name, CSnapshot *pOrigin);
 };
 
 #endif

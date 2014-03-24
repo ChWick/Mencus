@@ -88,19 +88,17 @@ CScreenplay::CScreenplay()
     m_pCurrentScene(NULL),
     m_pOldScene(NULL),
     m_Fader(this),
-    m_bPaused(false) {
+    m_bPaused(false),
+    m_eScreenplayType(SCREENPLAY_NONE) {
   CInputListenerManager::getSingleton().addInputListener(this);
   CGUIInstructions::getSingleton().setScreenplayListener(this);
   
   m_uiNextAct = 1;
   m_uiNextScene = 1;
 
-  std::shared_ptr<const CMapInfo> pMapInfo = CGameState::getSingleton().getMapInfo();
+  /*std::shared_ptr<const CMapInfo> pMapInfo = CGameState::getSingleton().getMapInfo();
   if (pMapInfo) {
-    CAct *pAct = new CAct(*this, 1, "");
-    CScene *pScene = new CLevel(*pAct, 1, pMapInfo, this);
-    pAct->addScene(pScene);
-    m_mapActs[1] = pAct;
+    
   }
   else {
     parse("screenplay.xml", m_sResourceGroup);
@@ -112,12 +110,27 @@ CScreenplay::CScreenplay()
       m_uiNextAct = pSaveState->getActID();
       m_uiNextScene = pSaveState->getSceneID();
     }
-  }
-  m_Fader.startFadeOut(0);
+  }*/
 }
 CScreenplay::~CScreenplay() {
   clear();
   CInputListenerManager::getSingleton().removeInputListener(this);
+}
+void CScreenplay::loadSingleMap(std::shared_ptr<const CMapInfo> pMapInfo) {
+  assert(pMapInfo);
+  m_eScreenplayType = SCREENPLAY_SINGLE_MAP;
+  m_pMapInfo = pMapInfo;
+
+  clear();
+  // create dummy act and dummy scene
+  CAct *pAct = new CAct(*this, 1, "");
+  CScene *pScene = new CLevel(*pAct, 1, pMapInfo, this);
+  pAct->addScene(pScene);
+  m_mapActs[1] = pAct;
+
+  m_Fader.startFadeOut(0);
+  m_uiNextAct = 1;
+  m_uiNextScene = 1;
 }
 void CScreenplay::clear() {
   for (auto &p : m_mapActs) {
@@ -176,7 +189,6 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
 }
 void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sResourceGroup) {
   clear();
-
   CGame::getSingleton().showLoadingBar();
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(m_sResourceGroup);
   CGame::getSingleton().hideLoadingBar();
@@ -351,33 +363,48 @@ void CScreenplay::fadeInCallback() {
 }
 void CScreenplay::fadeOutCallback() {
   if (m_uiCurrentAct != m_uiNextAct || m_uiCurrentScene != m_uiNextScene) {
+    m_Fader.setVisible(false);
     loadAct(m_uiNextAct, m_uiNextScene);
+    m_Fader.setVisible(true);
   }
   pause(PAUSE_ALL ^ PAUSE_SCREENPLAY ^ PAUSE_MAP_RENDER ^ PAUSE_MAP_UPDATE);
   m_Fader.startFadeIn(SCREENPLAY_FADE_DURATION);
 }
 void CScreenplay::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
   //pElem->SetAttribute("resourceGroup", m_sResourceGroup.c_str());
+  pElem->SetAttribute("type", m_eScreenplayType);
   pElem->SetAttribute("currentAct", m_uiCurrentAct);
   pElem->SetAttribute("currentScene", m_uiCurrentScene);
   pElem->SetAttribute("nextAct", m_uiNextAct);
   pElem->SetAttribute("nextScene", m_uiNextScene);
-
-  tinyxml2::XMLElement *pSceneElem = pElem->GetDocument()->NewElement("scene");
-  pElem->InsertEndChild(pSceneElem);
-  m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->writeToXMLElement(pSceneElem);
+ 
+  if (m_eScreenplayType == SCREENPLAY_SINGLE_MAP) {
+    pElem->SetAttribute("map_filename", m_pMapInfo->getFileName().c_str());
+    tinyxml2::XMLElement *pMapElem = pElem->GetDocument()->NewElement("map");
+    pElem->InsertEndChild(pMapElem);
+    m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->writeToXMLElement(pMapElem);
+  }
+  else {
+    tinyxml2::XMLElement *pSceneElem = pElem->GetDocument()->NewElement("scene");
+    pElem->InsertEndChild(pSceneElem);
+    m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->writeToXMLElement(pSceneElem);
+  }
 }
 void CScreenplay::readFromXMLElement(const tinyxml2::XMLElement *pElem) {
+  clear(); 
+
+  m_eScreenplayType = EnumAttribute(pElem, "type", SCREENPLAY_SINGLE_MAP);
   m_uiCurrentAct = pElem->IntAttribute("currentAct");
   m_uiCurrentScene = pElem->IntAttribute("currentScene");
   m_uiNextAct = pElem->IntAttribute("nextAct");
   m_uiNextScene = pElem->IntAttribute("nextScene");
 
-  m_mapActs.at(m_uiCurrentAct)->stop();
-  m_pCurrentScene = m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene);
-  m_pCurrentScene->stop();
-  m_pCurrentScene->init();
-  // loadAct(m_uiCurrentAct, m_uiCurrentScene);
-  m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->readFromXMLElement(pElem->FirstChildElement("scene"));
-  m_Fader.startFadeIn(SCREENPLAY_FADE_DURATION);
+  if (m_eScreenplayType == SCREENPLAY_SINGLE_MAP) {
+    loadSingleMap(std::shared_ptr<CMapInfo>(new CMapInfo(Attribute(pElem, "map_filename"), "level_user")));
+    CGameState::getSingleton().setMapInfo(m_pMapInfo);
+    m_Fader.setVisible(false);
+    loadAct(m_uiNextAct, m_uiNextScene);
+    m_Fader.setVisible(true);
+    m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->readFromXMLElement(pElem->FirstChildElement("map"));
+  }
 }

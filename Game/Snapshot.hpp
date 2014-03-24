@@ -5,6 +5,7 @@
 #include <tinyxml2.h>
 #include <OgreException.h>
 #include <OgreStringConverter.h>
+#include "XMLHelper.hpp"
 
 //! Saves a snapshot of the game
 /**
@@ -16,6 +17,25 @@ private:
   tinyxml2::XMLDocument m_XMLDoc;
 public:
   CSnapshot() {}
+  CSnapshot(const Ogre::String &sValidPath) {
+    m_XMLDoc.LoadFile(sValidPath.c_str());
+    if (m_XMLDoc.Error()) {
+      throw Ogre::Exception(Ogre::Exception::ERR_FILE_NOT_FOUND,
+			    "XMLdoc parsing error with file: " + sValidPath,
+			    __FILE__);
+    }
+    if (!m_XMLDoc.FirstChildElement("snapshot")) { 
+      throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS,
+			    "XMLdoc has no snapshot node: " + sValidPath,
+			    __FILE__);
+    }
+    m_eCurrentGameState
+      = XMLHelper::EnumAttribute<CGameState::EGameStates>(
+					      m_XMLDoc.FirstChildElement("snapshot"),
+					      "game_state",
+					      CGameState::GS_MAIN_MENU);
+  }
+
   CSnapshot(const void *pointer, const size_t size) {
     memcpy(&m_eCurrentGameState, pointer, sizeof(CGameState::EGameStates));
     char *pChar = new char[size];

@@ -47,8 +47,10 @@ public:
   void changeGameState(EGameStates eNewGameState, std::shared_ptr<const CMapInfo> pInfo);
   const CSaveState *getSaveState() const {return m_pSaveState;}
   std::shared_ptr<const CMapInfo> getMapInfo() const {return m_pMapInfo;}
+  void setMapInfo(std::shared_ptr<const CMapInfo> ptr) {m_pMapInfo = ptr;}
   EGameStates getCurrentGameState() {return m_eCurrentGameState;}
   CScreenplay *getScreenplay() {return m_pScreenplay;}
+  void setAdShown(bool bShown) {m_bAdShown = bShown;}
 
 private:
   void changeGameStateImpl();

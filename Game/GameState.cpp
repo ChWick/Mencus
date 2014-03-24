@@ -7,6 +7,8 @@
 #include "GUIStatistics.hpp"
 #include <unistd.h>
 
+using namespace std;
+
 template<> CGameState *Ogre::Singleton<CGameState>::msSingleton = 0;
 
 CGameState &CGameState::getSingleton() {
@@ -64,11 +66,13 @@ void CGameState::changeGameStateImpl() {
   }
   switch (m_eCurrentGameState) {
   case GS_GAME:
+    m_bAdShown = false;
     delete m_pScreenplay;
     m_pScreenplay = NULL;
     break;
   case GS_AD:
     m_bAdShown = false;
+    break;
   case GS_MAIN_MENU:
     m_pMainMenu->hide();
     break;
@@ -86,6 +90,9 @@ void CGameState::changeGameStateImpl() {
     switch (m_eCurrentGameState) {
     case GS_GAME:
       m_pScreenplay = new CScreenplay();
+      if (m_pMapInfo) {
+	m_pScreenplay->loadSingleMap(m_pMapInfo);
+      }
       break;
     case GS_MAIN_MENU:
       m_pMainMenu->show();
