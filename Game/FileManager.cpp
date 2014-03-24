@@ -121,15 +121,16 @@ std::string CFileManager::getValidPath(const std::string &sFileName,
 }
 bool CFileManager::openFile(std::fstream &stream,
 			    const std::string &sFileName,
+			    std::ios_base::openmode mode,
 			    EStorageLocation eLocation) {
   assert(m_bInitialized);
   std::string path(getValidPath(sFileName, eLocation));
-  stream.open(path);
+  stream.open(path, mode);
   if (!stream) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_NORMAL, "Creating file at path: " + path);
     if (FILE *f = fopen(path.c_str(), "w+")) {
       fclose(f);
-      stream.open(path);
+      stream.open(path, mode);
     }
     if (!stream) {
       Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "File " + path + " not found");

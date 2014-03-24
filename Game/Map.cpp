@@ -219,10 +219,7 @@ void CMap::loadMap(const CMapInfoConstPtr pMapInfo) {
   const XMLElement *pRoot = pMapInfo->getDocument().FirstChildElement("map");
   readFromXMLElement(pRoot);
 
-  // Initialise everything
-  for (auto pSwitch : m_lSwitches) {
-    pSwitch->initialize(this);
-  }
+  prepareMap();
 }
 void CMap::loadMap(const string &sFilename, const string &sResourceGroup) {
   clearMap();
@@ -252,6 +249,19 @@ void CMap::prepareMap() {
       // to set the endangered flag
       pTile->setEndangeredTileType(pTile->getEndangeredTileType());
     }
+  }
+  if (m_pPlayer) {
+    updateCameraPos(0);
+    m_vCameraPos = m_vCameraTargetPos;
+  }
+  setLineNumbersVisible(false);
+}
+void CMap::setLineNumbersVisible(bool bVisible) {
+  for (auto &t : m_vLineNumberX) {
+    t->setVisible(bVisible);
+  }
+  for (auto &t : m_vLineNumberY) {
+    t->setVisible(bVisible);
   }
 }
 Ogre::Real CMap::hitsTile(ECollisionCheckDirections eCollisionCheckDirection, unsigned uiTileMask, const CBoundingBox2d &bb, CTile **ppTile) const {
@@ -541,6 +551,7 @@ bool CMap::keyPressed( const OIS::KeyEvent &arg ) {
 #ifdef MAP_EDITOR_ENABLED
     else if (arg.key == OIS::KC_TAB || arg.key == OIS::KC_RWIN) {
       CMapEditor::getSingleton().start();
+      setLineNumbersVisible(true);
     }
 #endif
   }

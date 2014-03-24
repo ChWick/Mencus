@@ -35,6 +35,7 @@ public:
   }
   static bool openFile(std::fstream &stream,
 		       const std::string &sFileName,
+		       std::ios_base::openmode mode,
 		       EStorageLocation eLocation = SL_INTERNAL);
   static std::string getValidPath(const std::string &sFileName,
 				  EStorageLocation eLocation = SL_INTERNAL);

@@ -136,7 +136,7 @@ void CSaveStateManager::writeXMLFile() {
   Ogre::String text(xmlprinter.CStr());
 
   fstream stream;
-  if (!CFileManager::openFile(stream, SAVE_STATE_FILE)) {
+  if (!CFileManager::openFile(stream, SAVE_STATE_FILE, std::ofstream::out | std::ofstream::trunc)) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Save state file could not be opened");
   }
   else {

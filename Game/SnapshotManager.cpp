@@ -2,9 +2,12 @@
 #include "GameState.hpp"
 #include "Screenplay.hpp"
 #include "FileManager.hpp"
+#include "MapInfo.hpp"
+#include "XMLHelper.hpp"
 #include <fstream>
 
 using namespace std;
+using namespace XMLHelper;
  
 template<> CSnapshotManager* Ogre::Singleton<CSnapshotManager>::msSingleton = 0;
 
@@ -23,6 +26,7 @@ CSnapshotManager::~CSnapshotManager() {
   }
 }
 const CSnapshot &CSnapshotManager::makeBackupSnapshot() {
+  Ogre::LogManager::getSingleton().logMessage("Making backup snapshot");
   m_vSnapshots.push_back(new CSnapshot());
   return makeSnapshot("backup.xml", m_vSnapshots.back());
 }
@@ -39,19 +43,27 @@ const CSnapshot &CSnapshotManager::makeSnapshot(const Ogre::String &name, CSnaps
   CSnapshot &snapshot(*pOrigin);
 
   snapshot.setGameState(CGameState::getSingleton().getCurrentGameState());
+
+  tinyxml2::XMLDocument &doc(snapshot.getXMLDocument());
+  tinyxml2::XMLElement *pElem = doc.NewElement("snapshot");
+  pElem->SetAttribute("game_state", snapshot.getGameState());
+  doc.InsertEndChild(pElem);
+
   switch (snapshot.getGameState()) {
   case CGameState::GS_GAME:
     {
       CScreenplay *pScreenplay = CGameState::getSingleton().getScreenplay();
-      tinyxml2::XMLDocument &doc(snapshot.getXMLDocument());
-      tinyxml2::XMLElement *pElem = doc.NewElement("snapshot");
-      pElem->SetAttribute("game_state", snapshot.getGameState());
-      doc.InsertEndChild(pElem);
       tinyxml2::XMLElement *pScreenplayElem = doc.NewElement("screenplay");
       pElem->InsertEndChild(pScreenplayElem);
       pScreenplay->writeToXMLElement(pScreenplayElem);
     }
     break;
+  case CGameState::GS_STATISTICS:
+    {
+      pElem->SetAttribute("map_name", CGameState::getSingleton().getMapInfo()->getFileName().c_str());
+      tinyxml2::XMLElement *pStatElem = doc.NewElement("statistics");
+      pElem->InsertEndChild(pStatElem);
+    }
   default:
     // not supported yet... state is not saved
     break;
@@ -61,12 +73,14 @@ const CSnapshot &CSnapshotManager::makeSnapshot(const Ogre::String &name, CSnaps
   // output
   // ============================================================
   std::fstream outputfile;
-  if (CFileManager::openFile(outputfile, name, CFileManager::SL_INTERNAL)) {
+  if (CFileManager::openFile(outputfile, name, std::ofstream::out | std::ofstream::trunc, CFileManager::SL_INTERNAL)) {
+    cout << name << " " << snapshot.getGameState() << endl;
     tinyxml2::XMLPrinter xmlprinter;
     snapshot.getXMLDocument().Accept(&xmlprinter);
     
     outputfile << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
     outputfile << xmlprinter.CStr();
+    cout << xmlprinter.CStr() << endl;
     outputfile.close();
   }
 
@@ -93,12 +107,19 @@ void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
   //Ogre::LogManager::getSingleton().logMessage("Loading snapshot");
   CGameState::getSingleton().setAdShown(true); // no ad when loading from savesate
   CGameState::getSingleton().changeGameState(snapshot.getGameState(), true, false);
+  const tinyxml2::XMLElement *pSnapshotElem = snapshot.getXMLDocument().FirstChildElement("snapshot");
   switch (CGameState::getSingleton().getCurrentGameState()) {
   case CGameState::GS_GAME:
     {
       CScreenplay *pScreenplay = CGameState::getSingleton().getScreenplay();
       assert(pScreenplay);
-      pScreenplay->readFromXMLElement(snapshot.getXMLDocument().FirstChildElement("snapshot")->FirstChildElement("screenplay"));
+      pScreenplay->readFromXMLElement(pSnapshotElem->FirstChildElement("screenplay"));
+    }
+    break;
+  case CGameState::GS_STATISTICS:
+    {
+      std::shared_ptr<CMapInfo> pMapInfo(new CMapInfo(Attribute(pSnapshotElem, "map_name").c_str(), "level_user"));
+      CGameState::getSingleton().setMapInfo(pMapInfo);
     }
     break;
   default:

@@ -951,7 +951,7 @@ bool CMapEditor::onSaveMap(const EventArgs &args) {
   m_pMapInfo->getDocument().Accept(&printer);
 
   fstream stream;
-  if (!CFileManager::openFile(stream, CFileManager::DIRECTORY_LEVEL + m_pMapInfo->getFileName(), CFileManager::SL_EXTERNAL)) {
+  if (!CFileManager::openFile(stream, CFileManager::DIRECTORY_LEVEL + m_pMapInfo->getFileName(), std::ofstream::out | std::ofstream::trunc, CFileManager::SL_EXTERNAL)) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Could not open stream for saving the map!");
     return true;
   }

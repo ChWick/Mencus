@@ -170,6 +170,8 @@ public:
   bool isVisible(const Ogre::Vector2 &vPosition) const ;
   bool isVisible(const Ogre::Vector2 &vStart, const Ogre::Vector2 &vEnd) const;
 
+  void setLineNumbersVisible(bool bVisible);
+
   CTile* &getTile(unsigned int x, unsigned int y) {return m_gridTiles(x, y);}
   CTile *getTile(unsigned int x, unsigned int y) const {return m_gridTiles(x, y);}
   const grid2d<CTile*> &getTilesGrid() const {return m_gridTiles;}

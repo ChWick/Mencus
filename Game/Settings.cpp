@@ -101,7 +101,7 @@ void CSettings::writeToFile() {
   std::string text(xmlprinter.CStr());
 
   std::fstream stream;
-  if (CFileManager::openFile(stream, SETTINGS_FILE_PATH)) {
+  if (CFileManager::openFile(stream, SETTINGS_FILE_PATH, std::ofstream::out | std::ofstream::trunc)) {
     stream << header;
     stream << text;
     stream.close();

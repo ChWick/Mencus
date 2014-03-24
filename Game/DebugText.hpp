@@ -69,6 +69,12 @@ szElement="element_"+Ogre::StringConverter::toString(init);
     {
         textArea->setColour(Ogre::ColourValue(R,G,B,I));
     }
+  void setVisible(bool bVisible) {
+    if (bVisible)
+      textArea->show();
+    else
+      textArea->hide();
+  }
 private:
 Ogre::OverlayManager *olm;
 Ogre::OverlayContainer *panel ;
