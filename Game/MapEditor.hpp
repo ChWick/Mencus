@@ -75,9 +75,13 @@ private:
   bool m_bSnapToGrid;
   CMapInfoPtr m_pMapInfo;
   bool m_bInitialized;
+  
+  bool m_bGrabbedSprite;
 
   unsigned int m_uiMapSizeX;
   unsigned int m_uiMapSizeY;
+
+  Ogre::Vector2 m_vClickPos;
   
 public:
   static CMapEditor &getSingleton();
@@ -153,6 +157,7 @@ private:
   bool dummyReturnFalse(const CEGUI::EventArgs &args) {return false;}
 
   void editTile(const Ogre::Vector2 &vPos);
+  CSprite *getSpriteAtMousePos(const Ogre::Vector2 &vPos);
   bool selectSprite(const Ogre::Vector2 &vPos);
   void selectedSprite(CSprite *pSprite);
 

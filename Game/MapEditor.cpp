@@ -755,9 +755,9 @@ if (m_bPressed) {
 bool CMapEditor::touchCancelled(const OIS::MultiTouchEvent& arg) {
   return touchReleased(arg);
 }
-bool CMapEditor::selectSprite(const Ogre::Vector2 &vPos) {
+CSprite *CMapEditor::getSpriteAtMousePos(const Ogre::Vector2 &vPos) {
   Ogre::Vector2 vMapPos(m_pMap->mouseToMapPos(vPos));
-  if (!m_pMap->isVisible(m_pMap->transformPosition(vMapPos))) {return false;}
+  if (!m_pMap->isVisible(m_pMap->transformPosition(vMapPos))) {return NULL;}
 
   list<CSprite*> m_lSprites;
 
@@ -780,12 +780,14 @@ bool CMapEditor::selectSprite(const Ogre::Vector2 &vPos) {
     }
   }
 
-  m_pSelectedSprite = NULL;
+  CSprite *pSelectedSprite = NULL;
   if (m_lSprites.size() > 0) {
-    m_pSelectedSprite = m_lSprites.front();
+    pSelectedSprite = m_lSprites.front();
   }
-
-  selectedSprite(m_pSelectedSprite);
+  return pSelectedSprite;
+}
+bool CMapEditor::selectSprite(const Ogre::Vector2 &vPos) {
+  selectedSprite(getSpriteAtMousePos(vPos));
   return true;
 }
 void CMapEditor::editTile(const Ogre::Vector2 &vPos) {
@@ -804,6 +806,8 @@ void CMapEditor::editTile(const Ogre::Vector2 &vPos) {
 					    m_pMap->getTile(x, y)->getEndangeredTileType());
 }
 void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
+  m_vClickPos = vPos;
+  CSprite *pSprite;
   switch (m_eSelectedBrush) {
   case B_PLACE:
     if (m_uiCurrentObject < CObject::OT_COUNT + CEnemy::ET_COUNT + CSwitch::SWITCH_COUNT) {
@@ -811,13 +815,13 @@ void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
     }
     break;
   case B_MOVE:
-    selectSprite(vPos);
+    if (m_pSelectedSprite &&
+	m_pSelectedSprite->getWorldBoundingBox().contains(m_pMap->mouseToMapPos(vPos))) {
+      m_bGrabbedSprite = true;
+    }
+    else m_bGrabbedSprite = false;
     break;
   case B_EDIT:
-    selectSprite(vPos);
-    if (!m_pSelectedSprite) {
-      editTile(vPos);
-    }
     break;
   }
   handleBrushMoved(vPos, Ogre::Vector2::ZERO);
@@ -831,7 +835,7 @@ void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2
     break;
   case B_MOVE:
     Ogre::Vector2 vMapPos(m_pMap->mouseToMapSize(vDelta));
-    if (m_pSelectedSprite) {
+    if (m_pSelectedSprite && m_bGrabbedSprite) {
       m_pSelectedSprite->translate(vMapPos);
     }
     else {
@@ -842,12 +846,24 @@ void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2
   }
 }
 void CMapEditor::handleBrushReleased(const Ogre::Vector2 &vPos) {
+  bool bClick = m_vClickPos.squaredDistance(vPos) < m_fButtonSize * m_fButtonSize * 0.25;
   switch (m_eSelectedBrush) {
   case B_PLACE:
     break;
   case B_MOVE:
-    if (m_pSelectedSprite) {
+    if (m_pSelectedSprite && m_bGrabbedSprite) {
       m_pSelectedSprite->setPosition(snappedPos(m_pSelectedSprite->getPosition()));
+    }
+    else if (bClick) {
+      selectSprite(vPos);
+    }
+    break;
+  case B_EDIT:
+    if (bClick) {
+      selectSprite(vPos);
+      if (!m_pSelectedSprite) {
+	editTile(vPos);
+      }
     }
     break;
   }
