@@ -495,7 +495,10 @@ void CGame::createScene() {
 
   Ogre::LogManager::getSingletonPtr()->logMessage("    changing GameState to main menu ");
   m_pGameState->changeGameState(CGameState::GS_MAIN_MENU, true);
-  if (CSnapshotManager::getSingleton().loadBackupSnapshot()) {
+  if (CSnapshotManager::getSingleton().loadFromSnapshot()) {
+    Ogre::LogManager::getSingletonPtr()->logMessage("    snapshot loaded.");
+  }
+  else if (CSnapshotManager::getSingleton().loadBackupSnapshot()) {
     Ogre::LogManager::getSingletonPtr()->logMessage("    backup snapshot loaded.");
   }
   else {

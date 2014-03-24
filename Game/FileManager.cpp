@@ -97,7 +97,8 @@ std::string CFileManager::getValidPath(const std::string &sFileName,
 
   std::string addPath(sFileName.substr(0, sFileName.rfind("/")));
   std::string path = dataPath;
-  if (addPath.size() > 0) {
+  if (addPath.size() > 0 && addPath.size() != sFileName.size()) {
+    // there is a additional directory(s) in from
     path += "/" + addPath;
   }
 

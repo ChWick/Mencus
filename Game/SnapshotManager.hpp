@@ -4,12 +4,14 @@
 #include <OgreSingleton.h>
 #include "Snapshot.hpp"
 #include <vector>
+#include <memory>
 
 class CSnapshotManager :
   public Ogre::Singleton<CSnapshotManager> {
 
 private:
   std::vector<CSnapshot*> m_vSnapshots;
+  std::shared_ptr<CSnapshot> m_pSnapshotToLoad;
 public:
   static CSnapshotManager& getSingleton(void);
   static CSnapshotManager* getSingletonPtr(void);
@@ -17,15 +19,15 @@ public:
   ~CSnapshotManager();
 
   bool loadFromSnapshot() {
-    if (m_vSnapshots.size() == 0) {
-      return false;
-    }
-    loadFromSnapshot(*m_vSnapshots.back());
+    if (!m_pSnapshotToLoad) {return false;}
+    
+    loadFromSnapshot(*m_pSnapshotToLoad.get());
+
     return true;
   }
 
-  void setSnapshot(CSnapshot *pSnapshot) {
-    m_vSnapshots.push_back(pSnapshot);
+  void setSnapshot(std::shared_ptr<CSnapshot> pSnapshot) {
+    m_pSnapshotToLoad = pSnapshot;
   }
 
   const CSnapshot &makeSnapshot(CSnapshot *pSnapshot = NULL);

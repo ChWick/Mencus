@@ -192,12 +192,13 @@ public:
   {
     if (app->savedState) {
       LOGI("loading snapshot ...");
-      CSnapshotManager::getSingleton().setSnapshot(new CSnapshot(app->savedState, app->savedStateSize));
+      CSnapshotManager::getSingleton().setSnapshot(std::shared_ptr<CSnapshot>(new CSnapshot(app->savedState, app->savedStateSize)));
     }
     switch (cmd) 
       {
       case APP_CMD_SAVE_STATE:
 	LOGI("Saving state");
+	CSnapshotManager::getSingleton().makeBackupSnapshot();
 	CSnapshotManager::getSingleton().makeSnapshot().saveToMemory(app->savedState, app->savedStateSize);
 	if (CSaveStateManager::getSingletonPtr()) {CSaveStateManager::getSingleton().writeXMLFile();}
 	break;
@@ -310,7 +311,7 @@ public:
   {
     if (state->savedState) {
       LOGI("loading snapshot ...");
-      CSnapshotManager::getSingleton().setSnapshot(new CSnapshot(state->savedState, state->savedStateSize));
+      CSnapshotManager::getSingleton().setSnapshot(std::shared_ptr<CSnapshot>(new CSnapshot(state->savedState, state->savedStateSize)));
     }
     else {
       LOGI("no snapshot found, not loading");

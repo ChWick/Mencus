@@ -73,7 +73,7 @@ const CSnapshot &CSnapshotManager::makeSnapshot(const Ogre::String &name, CSnaps
   // output
   // ============================================================
   std::fstream outputfile;
-  if (CFileManager::openFile(outputfile, name, std::ofstream::out | std::ofstream::trunc, CFileManager::SL_INTERNAL)) {
+  if (CFileManager::openFile(outputfile, name, std::fstream::in | std::fstream::out | std::fstream::trunc, CFileManager::SL_INTERNAL)) {
     cout << name << " " << snapshot.getGameState() << endl;
     tinyxml2::XMLPrinter xmlprinter;
     snapshot.getXMLDocument().Accept(&xmlprinter);
