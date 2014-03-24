@@ -7,7 +7,7 @@ enum ETileTypes {
   TT_NONE          = 0,
   TT_WALL_FRONT    = 1,
   TT_WALL_BACK     = 2,
-  TT_COUNT         = 81,
+  TT_COUNT         = 103,
 };
 
 #endif
