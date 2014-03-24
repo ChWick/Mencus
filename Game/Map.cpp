@@ -862,6 +862,7 @@ void CMap::readExit(const XMLElement *pExitElem) {
   }
 }
 void CMap::readCamera(const tinyxml2::XMLElement *pCamera) {
+  m_vCameraPos = Vector2Attribute(pCamera, "pos");
   for (const XMLElement *pElement = pCamera->FirstChildElement(); pElement; pElement = pElement->NextSiblingElement()) {
     if (std::string(pElement->Value()) == "restriction") {
       if (strcmp(pElement->Attribute("type"), "horizontal") == 0){
@@ -1030,6 +1031,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
   m_pPlayer->writeToXMLElement(pPlayer);
 
   XMLElement *pCamera = doc.NewElement("camera");
+  SetAttribute(pCamera, "pos", m_vCameraPos);
   pMapElem->InsertEndChild(pCamera);
   for (const CCameraRestriction &res : m_vCameraRestrictions) {
     XMLElement *pElem = doc.NewElement("restriction")            ;
