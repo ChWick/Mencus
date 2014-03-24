@@ -30,7 +30,6 @@ bool CExit::isInExit(CPlayer *pPlayer, CMap *pMap) {
   }
   return false;
 }
-#ifdef DEBUG_EXIT
 void CExit::debugDraw() {
   switch (m_eExitType) {
   case EXIT_REGION:
@@ -40,7 +39,6 @@ void CExit::debugDraw() {
     break;
   }
 }
-#endif // DEBUG_EXIT
 void CExit::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
   pElem->SetAttribute("type", toString(m_eExitType).c_str());
   SetAttribute(pElem, "pos", m_BoundingBox.getPosition());

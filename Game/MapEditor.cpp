@@ -656,6 +656,7 @@ void CMapEditor::render() {
   if (pLinksList->getFirstSelectedItem()) {
     CDebugDrawer::getSingleton().draw(*static_cast<CLink*>(pLinksList->getFirstSelectedItem()->getUserData()));
   }
+  m_pMap->getExit().debugDraw();
 }
 void CMapEditor::toggle() {
   if (m_bVisible) {stop();}

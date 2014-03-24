@@ -43,9 +43,7 @@ private:
   }
 public:
   bool isInExit(CPlayer *pPlayer, CMap *pMap);
-#ifdef DEBUG_EXIT
   void debugDraw();
-#endif
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
 
 

@@ -96,8 +96,8 @@ protected:
     using namespace CEGUI;
     m_Exit.setBoundingBox(CBoundingBox2d(Ogre::Vector2(dynamic_cast<Spinner*>(m_pContentRegion->getChild("posx"))->getCurrentValue(),
 					dynamic_cast<Spinner*>(m_pContentRegion->getChild("posy"))->getCurrentValue()),
-			  Ogre::Vector2(dynamic_cast<Spinner*>(m_pContentRegion->getChild("posx"))->getCurrentValue(),
-					dynamic_cast<Spinner*>(m_pContentRegion->getChild("posy"))->getCurrentValue())));
+			  Ogre::Vector2(dynamic_cast<Spinner*>(m_pContentRegion->getChild("sizex"))->getCurrentValue(),
+					dynamic_cast<Spinner*>(m_pContentRegion->getChild("sizey"))->getCurrentValue())));
     return true;
   }
   bool onListSelectionChanged(const CEGUI::EventArgs &args) {
