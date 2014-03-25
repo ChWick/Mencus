@@ -104,7 +104,9 @@ unsigned int CTile::getTileFlags(TileType tt) {
   case 49:
   case 50: uiFlags += TF_LOCK; uiFlags += TF_UNPASSABLE; break;
   case 52: uiFlags += TF_DAMAGES; uiFlags += TF_UNPASSABLE; break;
+  case TT_DOOR_WOOD_TOP:
   case 21: uiFlags += TF_DOOR1; uiFlags += TF_PASSABLE; break;
+  case TT_DOOR_WOOD_BOT:
   case 22: uiFlags += TF_DOOR2; uiFlags += TF_PASSABLE; break;
   case 63: uiFlags += TF_DOOR2; uiFlags += TF_PASSABLE; break;
   case 64: uiFlags += TF_DOOR3; uiFlags += TF_UNPASSABLE; break;
