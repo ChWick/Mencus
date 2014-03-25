@@ -4,12 +4,12 @@
 #include "Player.hpp"
 
 const Ogre::Vector2 OBJECT_SIZES[CObject::OT_COUNT] = {
-  Ogre::Vector2(0.5, 0.5),
-  Ogre::Vector2(0.5, 0.5),
-  Ogre::Vector2(0.5, 0.5),
-  Ogre::Vector2(0.5, 0.25),
-  Ogre::Vector2(1, 1),
-  Ogre::Vector2(0.5, 1)
+  Ogre::Vector2(0.5, 0.5),     // Bomb
+  Ogre::Vector2(0.5, 0.5),     // Health potion
+  Ogre::Vector2(0.5, 0.5),     // Mana potion
+  Ogre::Vector2(0.7, 0.35),    // Key
+  Ogre::Vector2(1, 1),	       // Scratch
+  Ogre::Vector2(0.5, 1)	       // Torch 
 };
 
 CObject::CObject(CMap &map,
