@@ -105,12 +105,16 @@ bool CSnapshotManager::loadBackupSnapshot() {
 void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
   cout << " load" << endl;
   //Ogre::LogManager::getSingleton().logMessage("Loading snapshot");
-  CGameState::getSingleton().setAdShown(true); // no ad when loading from savesate
+  if (snapshot.getGameState() == CGameState::GS_GAME) {
+    // no ad when loading from savesate
+    CGameState::getSingleton().setAdShown(true);
+  }
+
   CGameState::getSingleton().changeGameState(snapshot.getGameState(), true, false);
   const tinyxml2::XMLElement *pSnapshotElem = snapshot.getXMLDocument().FirstChildElement("snapshot");
   switch (CGameState::getSingleton().getCurrentGameState()) {
   case CGameState::GS_GAME:
-    {
+    { 
       CScreenplay *pScreenplay = CGameState::getSingleton().getScreenplay();
       assert(pScreenplay);
       pScreenplay->readFromXMLElement(pSnapshotElem->FirstChildElement("screenplay"));

@@ -16,7 +16,9 @@ public class MencusAdListener extends AdListener {
     @Override
     public void onAdLoaded() {
         //Toast.makeText(mContext, "onAdLoaded()", Toast.LENGTH_SHORT).show();
-        mContext.getInterstitialAd().show();
+    	if (mContext.showAdWhenLoaded()) {
+    		mContext.getInterstitialAd().show();
+    	}
     }
 
     @Override

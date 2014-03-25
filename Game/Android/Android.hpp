@@ -326,21 +326,10 @@ public:
   }
 
   static void showAdPopup() {
-    // Get the android application's activity.
-    ANativeActivity* activity = mActivity;
-    JavaVM* jvm = mActivity->vm;
-    JNIEnv* env = NULL;
-    (jvm)->GetEnv((void **)&env, JNI_VERSION_1_6);
-    jint res = (jvm)->AttachCurrentThread(&env, NULL);
-    if (res == JNI_ERR) {
-      LOGI("Failed to retrieve JVM environment");
-      // Failed to retrieve JVM environment
-      return; 
-    }
-    jclass clazz = (env)->GetObjectClass(activity->clazz);
-    jmethodID methodID = (env)->GetMethodID(clazz, "showAdPopup", "()V");
-    (env)->CallVoidMethod(activity->clazz, methodID);
-    (jvm)->DetachCurrentThread();
+    callJavaVoid("showAdPopup");
+  }
+  static void closeAd() {
+    callJavaVoid("closeAd");
   }
   static bool adPopupClosed() {
     // Get the android application's activity.
@@ -366,6 +355,23 @@ public:
     (jvm)->DetachCurrentThread();
 
     return r == JNI_TRUE;
+  }
+  static void callJavaVoid(const char *func) {
+    // Get the android application's activity.
+    ANativeActivity* activity = mActivity;
+    JavaVM* jvm = mActivity->vm;
+    JNIEnv* env = NULL;
+    (jvm)->GetEnv((void **)&env, JNI_VERSION_1_6);
+    jint res = (jvm)->AttachCurrentThread(&env, NULL);
+    if (res == JNI_ERR) {
+      LOGI("Failed to retrieve JVM environment");
+      // Failed to retrieve JVM environment
+      return; 
+    }
+    jclass clazz = (env)->GetObjectClass(activity->clazz);
+    jmethodID methodID = (env)->GetMethodID(clazz, func, "()V");
+    (env)->CallVoidMethod(activity->clazz, methodID);
+    (jvm)->DetachCurrentThread();
   }
             
 private:

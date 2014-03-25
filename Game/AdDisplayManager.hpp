@@ -12,7 +12,11 @@
 #endif
 
 class CAdDisplayManager {
+private:
+  static int m_iWaitingLoops;
+  static int m_iWaitedLoops;
 public:
+  static void setWaitingLoops(int iLoops) {m_iWaitingLoops = iLoops;}
   static void showAdPopup();
   static bool adPopupClosed();
 };
