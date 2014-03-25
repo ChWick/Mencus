@@ -266,6 +266,7 @@ void CPlayer::update(Ogre::Real tpf) {
           }
           if (fLockPenetration != 0) {
             m_uiKeyCount--;
+	    CHUD::getSingleton().setKeysCount(m_uiKeyCount);
 	    m_Statistics.uiUsedItems[Weapon::I_KEY]++;
             m_pMap->unlock(pTile->getMapPosX(), pTile->getMapPosY());
           }
