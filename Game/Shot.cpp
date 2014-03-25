@@ -55,7 +55,7 @@ CShot::CShot(CMap *pMap,
   m_bAffectedByGravity(SHOT_AFFECTED_BY_GRAVITY[eShotType]),
   m_vSpeed(Ogre::Vector2::ZERO),
   m_eShotDirection(eShotDirection),
-  m_bLaunched(false),
+  m_eState(SS_NONE),
   m_uiDamages(uiDmg),
   m_pCatchedEnemy(NULL) {
   constructor_impl();
@@ -73,7 +73,7 @@ CShot::CShot(CMap *pMap,
 				       SHOT_AFFECTED_BY_GRAVITY[EnumAttribute<EShotTypes>(pElement, "type", ST_COUNT, true)])),
     m_vSpeed(Vector2Attribute(pElement, "speed", Ogre::Vector2::ZERO)),
   m_eShotDirection(EnumAttribute<EShotDirections>(pElement, "direction", SD_RIGHT, true)),
-  m_bLaunched(BoolAttribute(pElement, "launched", false)),
+  m_eState(EnumAttribute<EShotStates>(pElement, "state", SS_NONE)),
   m_uiDamages(IntAttribute(pElement, "damages", DMG_ALL, true)),
   m_pCatchedEnemy(pMap->getEnemyById(Attribute(pElement, "catched_enemy"))),
   m_fTimer(RealAttribute(pElement, "timer", 0)) {
@@ -110,7 +110,7 @@ void CShot::constructor_impl() {
 }
 void CShot::launch(const Ogre::Vector2 &vInitialSpeed, unsigned int uiNewAnimationSequence) {
   m_fTimer = 0;
-  m_bLaunched = true;
+  m_eState = SS_LAUNCHED;
   m_vSpeed = vInitialSpeed * SHOT_SPEED[m_eShotType];
   if (uiNewAnimationSequence == SA_COUNT) {
     switch (m_eShotType) {
@@ -129,7 +129,7 @@ void CShot::launch(const Ogre::Vector2 &vInitialSpeed, unsigned int uiNewAnimati
   changeCurrentAnimationSequence(uiNewAnimationSequence);
 }
 void CShot::update(Ogre::Real tpf) {
-  if (m_bLaunched) {
+  if (m_eState == SS_LAUNCHED) {
     // change the position and speed
     if (m_bAffectedByGravity) {
       m_vSpeed.y += c_fGravity * tpf;
@@ -192,14 +192,18 @@ void CShot::update(Ogre::Real tpf) {
       }
     }
   }
-  else if (m_pCatchedEnemy) {
-    m_pCatchedEnemy->setStunned(true);
-    m_pCatchedEnemy->addExternalForce((getCenter() - m_pCatchedEnemy->getCenter()) * 50);
+  else if (m_eState == SS_ENEMY_CAUGHT) {
+    if (m_pCatchedEnemy) {
+      m_pCatchedEnemy->setStunned(true);
+      m_pCatchedEnemy->addExternalForce((getCenter() - m_pCatchedEnemy->getCenter()) * 50);
+    }
     m_fTimer -= tpf;
     setAlpha(m_fTimer / COLUMN_CATCH_DURATION);
     if (m_fTimer <= 0) {
-      m_pCatchedEnemy->setStunned(false);
-      m_pCatchedEnemy = NULL;
+      if (m_pCatchedEnemy) {
+	m_pCatchedEnemy->setStunned(false);
+	m_pCatchedEnemy = NULL;
+      }
       m_pMap->destroyShot(this);
     }
   }
@@ -213,7 +217,7 @@ void CShot::hit() {
         if (m_eShotType == ST_COLUMN) {
           m_pCatchedEnemy = pEnemy;
           m_pCatchedEnemy->setStunned(true);
-          m_bLaunched = false;
+          m_eState = SS_ENEMY_CAUGHT;
           m_fTimer = COLUMN_CATCH_DURATION;
         }
         else {
@@ -241,7 +245,7 @@ void CShot::writeToXMLElement(tinyxml2::XMLElement *pElement) const {
   SetAttribute(pElement, "speed", m_vSpeed);
   pElement->SetAttribute("direction", m_eShotDirection);
   pElement->SetAttribute("timer", m_fTimer);
-  pElement->SetAttribute("launched", m_bLaunched);
+  pElement->SetAttribute("state", m_eState);
   pElement->SetAttribute("damages", m_uiDamages);
   if (m_pCatchedEnemy) {
     pElement->SetAttribute("catched_enemy", m_pCatchedEnemy->getID().c_str());

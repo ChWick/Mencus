@@ -8,6 +8,11 @@ class CEnemy;
 
 class CShot : public CAnimatedSprite {
 public:
+  enum EShotStates {
+    SS_NONE,
+    SS_LAUNCHED,
+    SS_ENEMY_CAUGHT,
+  };
   enum EShotAnimations {
     SA_DEFAULT = 0,
     SA_LAUNCHED,
@@ -40,7 +45,7 @@ private:
   Ogre::Vector2 m_vSpeed;
   const EShotDirections m_eShotDirection;
   Ogre::Real m_fTimer;
-  bool m_bLaunched;
+  EShotStates m_eState;
   unsigned int m_uiDamages;
   CEnemy *m_pCatchedEnemy;
 public:
