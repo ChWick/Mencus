@@ -29,22 +29,28 @@ CBackground::ETypes CBackground::fromString(const Ogre::String &sName) {
     throw Ogre::Exception(0, "Unknown background type: " + sName, __FILE__);
   }
 }
-CBackground::CBackground(Ogre2dManager *pSpriteManager, const Ogre::Vector2 &vCameraPosition, const Ogre::String &sName)
-  : CSprite(&CDefaultSpriteTransformPipeline::INSTANCE, pSpriteManager, Ogre::Vector2(-1, -1), Ogre::Vector2(BACKGROUND_SIZE * SCREEN_RATIO, BACKGROUND_SIZE)),
+CBackground::CBackground(Ogre2dManager *pSpriteManager,
+			 const Ogre::Vector2 &vCameraPosition,
+			 const Ogre::String &sName,
+			 const Ogre::Vector2 &vTilesPerScreen,
+			 const float &fScreenRatio)
+  : CSprite(&CDefaultSpriteTransformPipeline::INSTANCE, pSpriteManager, Ogre::Vector2(-1, -1), Ogre::Vector2(BACKGROUND_SIZE * fScreenRatio, BACKGROUND_SIZE)),
     m_vCameraPosition(vCameraPosition),
     m_sName(sName),
-    m_eBackgroundType(fromString(sName)) {
+    m_eBackgroundType(fromString(sName)),
+    m_vTilesPerScreen(vTilesPerScreen),
+    m_fScreenRatio(fScreenRatio){
 
   setTexture(getBackgroundTexturePath(sName));
   
 }
 void CBackground::render(Ogre::Real tpf) {
-  //setTextureCoords(Ogre::Vector2(0, 0), Ogre::Vector2(1.5 / SCREEN_RATIO, 1.5));
-  int iTimesX = static_cast<int>(m_vCameraPosition.x * BACKGROUND_CAMERA_OFFSET_SCALING_FACTOR[m_eBackgroundType] * 0.125f);
-  int iTimesY = static_cast<int>(m_vCameraPosition.y * BACKGROUND_CAMERA_OFFSET_SCALING_FACTOR[m_eBackgroundType] * 0.125f);
+  //setTextureCoords(Ogre::Vector2(0, 0), Ogre::Vector2(1.5 / m_vScreenRatio, 1.5));
+  int iTimesX = static_cast<int>(floor(m_vCameraPosition.x * BACKGROUND_CAMERA_OFFSET_SCALING_FACTOR[m_eBackgroundType] * 0.125f));
+  int iTimesY = static_cast<int>(floor(m_vCameraPosition.y * BACKGROUND_CAMERA_OFFSET_SCALING_FACTOR[m_eBackgroundType] * 0.125f));
 
   Ogre::Vector2 vPos = (Ogre::Vector2(iTimesX, iTimesY) - BACKGROUND_CAMERA_OFFSET_SCALING_FACTOR[m_eBackgroundType] * 0.125f * m_vCameraPosition);
-  vPos.y /= SCREEN_RATIO;
+  vPos.y /= m_fScreenRatio;
   vPos -= Ogre::Vector2(1, 1 + BACKGROUND_BOTTOM_OFFSET);
 
   Ogre::Real fYInit = vPos.y;

@@ -26,9 +26,6 @@ using namespace XMLHelper;
 const Ogre::Vector2 CTile::DEFAULT_TILE_SIZE(1, 1);
 const string CTile::DEFAULT_TILE_TEXTURE_NAME = "tiles/Tile";
 
-const Ogre::Vector2 TILES_PER_SCREEN(16, 12);
-const Ogre::Real SCREEN_RATIO = TILES_PER_SCREEN.y / TILES_PER_SCREEN.x;
-
 const Ogre::Real CAMERA_MAX_MOVE_SPEED(10);
 
 CMap::CMap(Ogre::SceneManager *pSceneManager,
@@ -48,6 +45,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_fPlayingTime(0),
   m_Statistics(statistics),
   m_pMapInfo(pMapInfo) {
+  resizeTilesPerScreen(Ogre::Vector2(16, 12));
   CGame::getSingleton().showLoadingBar(0, 1);
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
   Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Game");
@@ -71,18 +69,6 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
 
   resize(Ogre::Vector2(CGame::getSingleton().getRenderWindow()->getWidth(),
 		       CGame::getSingleton().getRenderWindow()->getHeight()));
-
-
-  m_vLineNumberX.resize(static_cast<int>(TILES_PER_SCREEN.x + 1), NULL);
-  m_vLineNumberY.resize(static_cast<int>(TILES_PER_SCREEN.y + 1), NULL);
-  for (auto &t : m_vLineNumberX) {
-    t = new CDebugText();
-    t->setText("blabla");
-  }
-  for (auto &t : m_vLineNumberY) {
-    t = new CDebugText();
-    t->setText("blubb");
-  }
 }
 CMap::~CMap() {
   clearLineNumbers();
@@ -212,6 +198,28 @@ void CMap::resizeTiles(unsigned int uiSizeX, unsigned int uiSizeY) {
   }
 
   m_gridTiles = newGrid;
+}
+void CMap::resizeTilesPerScreen(const Ogre::Vector2 &tps) {
+  m_vTilesPerScreen = tps;
+  m_fScreenRatio = m_vTilesPerScreen.y / m_vTilesPerScreen.x;
+  
+  for (auto &t : m_vLineNumberX) {
+    delete t;
+  }
+  for (auto &t : m_vLineNumberY) {
+    delete t;
+  }
+
+  m_vLineNumberX.resize(static_cast<int>(m_vTilesPerScreen.x + 1), NULL);
+  m_vLineNumberY.resize(static_cast<int>(m_vTilesPerScreen.y + 1), NULL);
+  for (auto &t : m_vLineNumberX) {
+    t = new CDebugText();
+    t->setText("blabla");
+  }
+  for (auto &t : m_vLineNumberY) {
+    t = new CDebugText();
+    t->setText("blubb");
+  }
 }
 void CMap::loadMap(const CMapInfoConstPtr pMapInfo) {
   clearMap();
@@ -562,6 +570,12 @@ bool CMap::keyPressed( const OIS::KeyEvent &arg ) {
     else if (arg.key == OIS::KC_J) {
       m_vCameraDebugOffset.y -=1;
     }
+    else if (arg.key == OIS::KC_ADD) {
+      resizeTilesPerScreen(m_vTilesPerScreen + Ogre::Vector2(m_fScreenRatio, 1));
+    }
+    else if (arg.key == OIS::KC_SUBTRACT) {
+      resizeTilesPerScreen(m_vTilesPerScreen - Ogre::Vector2(m_fScreenRatio, 1));
+    }
 #ifdef MAP_EDITOR_ENABLED
     else if (arg.key == OIS::KC_TAB || arg.key == OIS::KC_RWIN) {
       CMapEditor::getSingleton().start();
@@ -676,8 +690,8 @@ void CMap::render(Ogre::Real tpf) {
   //}
   unsigned int xmin = std::max<int>(0, static_cast<int>(m_vCameraPos.x));
   unsigned int ymin = std::max<int>(0, static_cast<int>(m_vCameraPos.y));
-  unsigned int xmax = std::min<unsigned int>(floor(m_vCameraPos.x + TILES_PER_SCREEN.x + 1), m_gridTiles.getSizeX());
-  unsigned int ymax = std::min<unsigned int>(floor(m_vCameraPos.y + TILES_PER_SCREEN.y + 1), m_gridTiles.getSizeY());
+  unsigned int xmax = std::min<unsigned int>(floor(m_vCameraPos.x + m_vTilesPerScreen.x + 1), m_gridTiles.getSizeX());
+  unsigned int ymax = std::min<unsigned int>(floor(m_vCameraPos.y + m_vTilesPerScreen.y + 1), m_gridTiles.getSizeY());
 
 
   
@@ -691,12 +705,12 @@ void CMap::render(Ogre::Real tpf) {
     // line numbers
     for (int x = 0; x < m_vLineNumberX.size(); x++) {
       m_vLineNumberX[x]->setText(Ogre::StringConverter::toString(x + static_cast<int>(m_vCameraPos.x)));
-      m_vLineNumberX[x]->setPos((static_cast<int>(m_vCameraPos.x) - m_vCameraPos.x + x) / TILES_PER_SCREEN.x, 0);
+      m_vLineNumberX[x]->setPos((static_cast<int>(m_vCameraPos.x) - m_vCameraPos.x + x) / m_vTilesPerScreen.x, 0);
     }
     for (int y = 0; y < m_vLineNumberY.size(); y++) {
-      m_vLineNumberY[y]->setText(Ogre::StringConverter::toString(static_cast<int>(floor(m_vCameraPos.y + TILES_PER_SCREEN.y)) - y));
+      m_vLineNumberY[y]->setText(Ogre::StringConverter::toString(static_cast<int>(floor(m_vCameraPos.y + m_vTilesPerScreen.y)) - y));
       m_vLineNumberY[y]->setPos(0, (m_vCameraPos.y - static_cast<int>(floor(m_vCameraPos.y
-									    )) + y) / TILES_PER_SCREEN.y - 0.05);
+									    )) + y) / m_vTilesPerScreen.y - 0.05);
     }
     // endangered tiles
     for (int x = xmin; x < xmax; x++) {
@@ -740,12 +754,12 @@ void CMap::renderBackground(Ogre::Real tpf) {
 }
 void CMap::updateCameraPos(Ogre::Real tpf) {
   Ogre::Vector2 vCenter = m_pPlayer->getPosition() + m_pPlayer->getSize() / 2;
-  m_vCameraTargetPos = vCenter - TILES_PER_SCREEN/ 2;
+  m_vCameraTargetPos = vCenter - m_vTilesPerScreen/ 2;
   m_vCameraTargetPos.x = max(m_vCameraTargetPos.x, static_cast<Ogre::Real>(0));
   m_vCameraTargetPos.y = max(m_vCameraTargetPos.y, static_cast<Ogre::Real>(0));
 
-  m_vCameraTargetPos.x = min(m_vCameraTargetPos.x, m_gridTiles.getSizeX() - TILES_PER_SCREEN.x);
-  m_vCameraTargetPos.y = min(m_vCameraTargetPos.y, m_gridTiles.getSizeY() - TILES_PER_SCREEN.y);
+  m_vCameraTargetPos.x = min(m_vCameraTargetPos.x, m_gridTiles.getSizeX() - m_vTilesPerScreen.x);
+  m_vCameraTargetPos.y = min(m_vCameraTargetPos.y, m_gridTiles.getSizeY() - m_vTilesPerScreen.y);
 
   for (auto &camRestr : m_vCameraRestrictions) {
     camRestr.update(m_vCameraTargetPos, m_pPlayer->getCenter());
@@ -756,23 +770,23 @@ void CMap::updateCameraPos(Ogre::Real tpf) {
   // bounds
   m_vCameraPos.x = max(m_vCameraPos.x, static_cast<Ogre::Real>(0));
   m_vCameraPos.y = max(m_vCameraPos.y, static_cast<Ogre::Real>(0));
-  m_vCameraPos.x = min(m_vCameraPos.x, m_gridTiles.getSizeX() - TILES_PER_SCREEN.x);
-  m_vCameraPos.y = min(m_vCameraPos.y, m_gridTiles.getSizeY() - TILES_PER_SCREEN.y);
+  m_vCameraPos.x = min(m_vCameraPos.x, m_gridTiles.getSizeX() - m_vTilesPerScreen.x);
+  m_vCameraPos.y = min(m_vCameraPos.y, m_gridTiles.getSizeY() - m_vTilesPerScreen.y);
 }
 Ogre::Vector2 CMap::mouseToMapPos(const Ogre::Vector2 &vMousePos) const {
   Ogre::RenderWindow *pWnd = CGame::getSingleton().getRenderWindow();
 
-  return m_vCameraPos + TILES_PER_SCREEN * (Ogre::Vector2(0, 1) + vMousePos / Ogre::Vector2(pWnd->getWidth(), -static_cast<Ogre::Real>(pWnd->getHeight())));
+  return m_vCameraPos + m_vTilesPerScreen * (Ogre::Vector2(0, 1) + vMousePos / Ogre::Vector2(pWnd->getWidth(), -static_cast<Ogre::Real>(pWnd->getHeight())));
 }
 Ogre::Vector2 CMap::mouseToMapSize(const Ogre::Vector2 &vMousePos) const {
   Ogre::RenderWindow *pWnd = CGame::getSingleton().getRenderWindow();
 
-  return TILES_PER_SCREEN * vMousePos / Ogre::Vector2(pWnd->getWidth(), -static_cast<Ogre::Real>(pWnd->getHeight()));
+  return m_vTilesPerScreen * vMousePos / Ogre::Vector2(pWnd->getWidth(), -static_cast<Ogre::Real>(pWnd->getHeight()));
 }
 // SpriteTransformPipeline
 Ogre::Vector2 CMap::transformPosition(const Ogre::Vector2 &vPosition) const {
   Ogre::Vector2 vOffset(m_vCameraPos + m_vCameraDebugOffset);
-  return ((vPosition - vOffset) / TILES_PER_SCREEN * 2 - Ogre::Vector2(1, 1));
+  return ((vPosition - vOffset) / m_vTilesPerScreen * 2 - Ogre::Vector2(1, 1));
 }
 bool CMap::isVisible(const Ogre::Vector2 &vPosition) const {
   return m_vTransformedStartPos.y <= vPosition.y
@@ -893,9 +907,9 @@ void CMap::readCamera(const tinyxml2::XMLElement *pCamera) {
   for (const XMLElement *pElement = pCamera->FirstChildElement(); pElement; pElement = pElement->NextSiblingElement()) {
     if (std::string(pElement->Value()) == "restriction") {
       if (strcmp(pElement->Attribute("type"), "horizontal") == 0){
-        m_vCameraRestrictions.push_back(CCameraRestriction(CCameraRestriction::HORIZONTAL_RESTRICTION, TILES_PER_SCREEN, pElement->FloatAttribute("y")));
+        m_vCameraRestrictions.push_back(CCameraRestriction(CCameraRestriction::HORIZONTAL_RESTRICTION, m_vTilesPerScreen, pElement->FloatAttribute("y")));
       } else if (strcmp(pElement->Attribute("type"), "vertical") == 0){
-        m_vCameraRestrictions.push_back(CCameraRestriction(CCameraRestriction::VERTICAL_RESTRICTION, TILES_PER_SCREEN, pElement->FloatAttribute("x")));
+        m_vCameraRestrictions.push_back(CCameraRestriction(CCameraRestriction::VERTICAL_RESTRICTION, m_vTilesPerScreen, pElement->FloatAttribute("x")));
       }
     }
   }
@@ -917,7 +931,7 @@ CEnemy *CMap::getEnemyById(const Ogre::String &id) {
   return NULL;
 }
 void CMap::playerWarped() {
-  m_vCameraTargetPos = m_pPlayer->getCenter() - TILES_PER_SCREEN * 0.5;
+  m_vCameraTargetPos = m_pPlayer->getCenter() - m_vTilesPerScreen * 0.5;
   for (auto &camRestr : m_vCameraRestrictions) {
     camRestr.update(m_vCameraTargetPos, m_pPlayer->getCenter());
   }
@@ -1081,7 +1095,7 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
 
   Ogre::String sBackground = pRoot->Attribute("background");
   if (sBackground.size() > 0) {
-    m_pBackground = new CBackground(m_p2dManagerMap, m_vCameraPos, sBackground);
+    m_pBackground = new CBackground(m_p2dManagerMap, m_vCameraPos, sBackground, m_vTilesPerScreen, m_fScreenRatio);
   }
 
   int sizeX = pRoot->IntAttribute("sizex");

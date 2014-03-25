@@ -53,6 +53,8 @@ private:
 
   CBackground *m_pBackground;
 
+  Ogre::Vector2 m_vTilesPerScreen;
+  float m_fScreenRatio;
   Ogre::Vector2 m_vMapSize;
   Ogre::Vector2 m_vTransformedStartPos;
   Ogre::Vector2 m_vTransformedEndPos;
@@ -83,6 +85,7 @@ public:
   void readFromXMLElement(const tinyxml2::XMLElement *pRoot);
   void resize(const Ogre::Vector2 &vSize, const Ogre::Vector2 &vOrigin = Ogre::Vector2::ZERO);
   void resizeTiles(unsigned int uiSizeX, unsigned int uiSizeY);
+  void resizeTilesPerScreen(const Ogre::Vector2 &tps);
 
   //! Function to check if a line penetrates into a tile a lower position
   /**

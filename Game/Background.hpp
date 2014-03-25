@@ -3,8 +3,6 @@
 
 #include "Sprite.hpp"
 
-extern const Ogre::Vector2 TILES_PER_SCREEN;
-extern const Ogre::Real SCREEN_RATIO;
 
 class CBackground : public CSprite {
 public:
@@ -22,8 +20,14 @@ private:
   const ETypes m_eBackgroundType;
   const Ogre::Vector2 &m_vCameraPosition;
   const Ogre::String m_sName;
+  const Ogre::Vector2 &m_vTilesPerScreen;
+  const float &m_fScreenRatio;
 public:
-  CBackground(Ogre2dManager *pSpriteManager, const Ogre::Vector2 &vCameraPosition, const Ogre::String &sName);
+  CBackground(Ogre2dManager *pSpriteManager,
+	      const Ogre::Vector2 &vCameraPosition,
+	      const Ogre::String &sName,
+	      const Ogre::Vector2 &vTilesPerScreen,
+	      const float &m_fScreenRatio);
 
   const Ogre::String &getName() const {return m_sName;}
 
