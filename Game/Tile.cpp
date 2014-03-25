@@ -101,12 +101,12 @@ unsigned int CTile::getTileFlags(TileType tt) {
   case 121:
   case 122:
   case 26: uiFlags += TF_UNPASSABLE; break;
+  case TT_DOOR_WOOD_TOP_CLOSED:
+  case TT_DOOR_WOOD_BOT_CLOSED:
   case 49:
   case 50: uiFlags += TF_LOCK; uiFlags += TF_UNPASSABLE; break;
   case 52: uiFlags += TF_DAMAGES; uiFlags += TF_UNPASSABLE; break;
-  case TT_DOOR_WOOD_TOP:
   case 21: uiFlags += TF_DOOR1; uiFlags += TF_PASSABLE; break;
-  case TT_DOOR_WOOD_BOT:
   case 22: uiFlags += TF_DOOR2; uiFlags += TF_PASSABLE; break;
   case 63: uiFlags += TF_DOOR2; uiFlags += TF_PASSABLE; break;
   case 64: uiFlags += TF_DOOR3; uiFlags += TF_UNPASSABLE; break;
@@ -158,6 +158,8 @@ unsigned int CTile::getTileFlags(TileType tt) {
   case 113:
   case 114:
   case 115:
+  case TT_DOOR_WOOD_TOP_OPEN:
+  case TT_DOOR_WOOD_BOT_OPEN:
   case 2: uiFlags += TF_PASSABLE; break;
   }
   return uiFlags;

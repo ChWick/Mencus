@@ -515,6 +515,20 @@ void CMap::unlock(unsigned int x, unsigned int y) {
     m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), 51);
     m_gridTiles(x, y - 1) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y - 1), 2);
   }
+  else if (id == TT_DOOR_WOOD_BOT_CLOSED) {
+    delete m_gridTiles(x, y);
+    delete m_gridTiles(x, y + 1);
+
+    m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), TT_DOOR_WOOD_BOT_OPEN);
+    m_gridTiles(x, y + 1) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y + 1), TT_DOOR_WOOD_TOP_OPEN);
+  }
+  else if (id == TT_DOOR_WOOD_TOP_CLOSED) {
+    delete m_gridTiles(x, y);
+    delete m_gridTiles(x, y - 1);
+
+    m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), TT_DOOR_WOOD_TOP_OPEN);
+    m_gridTiles(x, y - 1) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y - 1), TT_DOOR_WOOD_BOT_OPEN);
+  }
 }
 void CMap::swapBoxes() {
   for (int x = m_gridTiles.getSizeX() - 1; x >= 0; --x) {
