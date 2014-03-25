@@ -9,7 +9,9 @@
 using namespace CEGUI;
 
 CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
-  : m_uiCurrentWeapon(1), m_fTimeSinceLastTouchMoveEvent(0) {
+  : m_uiCurrentWeapon(1),
+    m_fTimeSinceLastTouchMoveEvent(0),
+    m_eDragState(DS_SLEEPING) {
   CInputListenerManager::getSingleton().addInputListener(this);
 
   m_pDirectionButtonContainer = pGUIRoot->createChild("DefaultWindow", "ButtonContainer");

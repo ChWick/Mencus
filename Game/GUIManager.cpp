@@ -84,6 +84,8 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   new CMainMenu(guiRoot);
   new CGUIStatistics(guiRoot);
   new CGUITutorial(guiRoot);
+
+;
   Ogre::LogManager::getSingleton().logMessage("GUIManager initialized...");
 }
 CGUIManager::~CGUIManager() {

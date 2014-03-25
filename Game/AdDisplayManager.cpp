@@ -22,6 +22,13 @@ void CAdDisplayManager::showAdPopup() {
 #endif
 }
 bool CAdDisplayManager::adPopupClosed() {
+  if (isAdPopupClosed()) {
+    CGame::getSingleton().hideLoadingBar();
+    return true;
+  }
+  return false;
+}
+bool CAdDisplayManager::isAdPopupClosed() {
   // to increase loading bar
   CGame::getSingleton().getTrayMgr()->resourceLoadEnded();
   m_iWaitedLoops += 1;

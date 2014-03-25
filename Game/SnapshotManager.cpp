@@ -5,6 +5,7 @@
 #include "MapInfo.hpp"
 #include "XMLHelper.hpp"
 #include <fstream>
+#include <CEGUI/CEGUI.h>
 
 using namespace std;
 using namespace XMLHelper;
@@ -118,6 +119,11 @@ void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
       CScreenplay *pScreenplay = CGameState::getSingleton().getScreenplay();
       assert(pScreenplay);
       pScreenplay->readFromXMLElement(pSnapshotElem->FirstChildElement("screenplay"));
+
+      // this is a very dirty hack, that prevent on android jittering!
+      CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(200, 200);
+      CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::LeftButton);
+      CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::LeftButton);
     }
     break;
   case CGameState::GS_STATISTICS:

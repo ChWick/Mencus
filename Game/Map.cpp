@@ -48,7 +48,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_fPlayingTime(0),
   m_Statistics(statistics),
   m_pMapInfo(pMapInfo) {
-  CGame::getSingleton().showLoadingBar();
+  CGame::getSingleton().showLoadingBar(0, 1);
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
   Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Game");
 #ifdef MAP_EDITOR_ENABLED
@@ -652,7 +652,9 @@ void CMap::update(Ogre::Real tpf) {
   m_Statistics.fTime = m_fPlayingTime;
 }
 void CMap::render(Ogre::Real tpf) {
-  if (m_bRenderPause) {return;}
+  if (m_bRenderPause) {
+    return;
+  }
   // order of updates exquates drawing order, last one will be on top
   renderBackground(tpf);
   //for (auto pTile : m_gridTiles) {

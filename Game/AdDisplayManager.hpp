@@ -19,6 +19,9 @@ public:
   static void setWaitingLoops(int iLoops) {m_iWaitingLoops = iLoops;}
   static void showAdPopup();
   static bool adPopupClosed();
+
+private:
+  static bool isAdPopupClosed();
 };
 
 #endif
