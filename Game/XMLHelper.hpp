@@ -38,6 +38,19 @@ namespace XMLHelper {
   template <class T>
   T EnumAttribute(const tinyxml2::XMLElement *pElem,
 		  const char *pLabel,
+		  int iOffset = 0) {
+    assert(pElem);
+    assert(pLabel);
+    if (!pElem->Attribute(pLabel)) {
+      throw Ogre::Exception(0,
+			    "Required attribute '" + Ogre::String(pLabel) + "' not found",
+			    __FILE__);
+    }
+    return static_cast<T>(pElem->IntAttribute(pLabel) + iOffset);
+  }
+  template <class T>
+  T EnumAttribute(const tinyxml2::XMLElement *pElem,
+		  const char *pLabel,
 		  T eDefault,
 		  int iOffset = 0,
 		  bool bRequired = false) {

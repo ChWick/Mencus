@@ -38,44 +38,67 @@ public:
     SWITCH_2,
     SWITCH_COUNT
   };
+  enum ESwitchFlags {
+    SF_SIMPLE            = 0,  //!< simple switch that can only be used once, and that will keep its state
+    SF_DEACTIVATABLE     = 1,  //!< can an activated switch be deactivated
+    SF_TIMED             = 2,  //!< will this switch go back to the deactivated state after m_fActiveTime
+    SF_CHANGE_BLOCKS     = 4,  //!< will this switch change blocks
+  };
   enum ESwitchStates {
-    SS_ACTIVATED,
-    SS_DEACTIVATED,
+    SS_ACTIVATED,		//!< Switch is activated 
+    SS_DEACTIVATED,		//!< Switch is deactivated
+    SS_DEACTIVATING		//!< Switch is going to be deactivated when m_fTimer reaches 0
   };
   static Ogre::String getPreviewImageName(int iType);
+private:
+  CMap *m_pMap;
+  Ogre::Real m_fTimer;
+  Ogre::Real m_fActiveTime;
   const SwitchType m_stSwitchType;
   ESwitchStates m_eSwitchState;
   vector<SSwitchEntry> m_vEntries;
   vector<STogglesLinkEntry> m_vLinkEntries;
-  bool m_bChangeBlocks;
+  unsigned int m_uiSwitchFlags;
 public:
-  CSwitch(const CSpriteTransformPipeline *pTransformPipeline,
-	  Ogre2dManager *pSpriteManager,
+  CSwitch(CMap *pMap,
 	  const Ogre::Vector2 &vPosition,
 	  SwitchType stSwitchType,
 	  bool bChangeBlocks,
 	  ESwitchStates eSwitchState);
+  CSwitch(CMap *pMap,
+	  const tinyxml2::XMLElement *pElem);
   ~CSwitch();
 
-  void initialize(CMap *pMap);
+  void initialize();
+
+  void update(Ogre::Real tpf);
 
   void addEntry(const SSwitchEntry &entry) {m_vEntries.push_back(entry);}
   void addEntry(const STogglesLinkEntry &entry) {m_vLinkEntries.push_back(entry);}
   void eraseEntry(int iAt) {m_vEntries.erase(m_vEntries.begin() + iAt);}
   void eraseLinkEntry(int iAt) {m_vLinkEntries.erase(m_vLinkEntries.begin() + iAt);}
-  void setChangeBlocks(bool b) {m_bChangeBlocks = b;}
 
-  bool doesChangeBlocks() const {return m_bChangeBlocks;}
   const vector<SSwitchEntry> &getEntries() const {return m_vEntries;}
   vector<SSwitchEntry> &getEntries() {return m_vEntries;}
   const vector<STogglesLinkEntry> &getLinkEntries() const {return m_vLinkEntries;}
   ESwitchStates getState() const {return m_eSwitchState;}
   SwitchType getType() const {return m_stSwitchType;}
 
-  void activate(CMap *pMap);
+  Ogre::Real &getActivationTime() {return m_fActiveTime;}
+  Ogre::Real getActivationTime() const {return m_fActiveTime;}
 
+  void setFlag(unsigned int uiFlag, bool bAdd = true) {if (bAdd) {addFlag(uiFlag);} else {removeFlag(uiFlag);}}
+  void addFlag(unsigned int uiFlag) {m_uiSwitchFlags |= uiFlag;}
+  void removeFlag(unsigned int uiFlag) {m_uiSwitchFlags -= m_uiSwitchFlags & uiFlag;}
+  bool isFlagSet(unsigned int uiFlag) const {return m_uiSwitchFlags & uiFlag;}
+
+  void activate();
+  void deactivate();
+
+  void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
 private:
-  void place(CMap *pMap, const SSwitchEntry &entry);
+  void updateState(ESwitchStates eNewState);
+  void place(const SSwitchEntry &entry);
 };
 
 #endif

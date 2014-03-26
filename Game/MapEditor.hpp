@@ -46,6 +46,9 @@ public:
     EB_SWITCH_AFFECTING_BLOCKS,
     EB_SWITCH_ENTRY_POSITION,
     EB_SWITCH_ENTRY_TILE_TYPE,
+    EB_SWITCH_DEACTIVABLE,
+    EB_SWITCH_TIMED,
+    EB_SWITCH_ACTIVATION_TIME,
     EB_LINK_FROM,
     EB_LINK_TO,
   };
@@ -57,6 +60,9 @@ public:
     B_COUNT,
   };
 private:
+  // buffer variables for edit boxes
+  bool m_bBoolBuffer;
+
   bool m_bMiddleMouseButtonPressed;
   float m_fButtonSize;
   bool m_bRenderPause;

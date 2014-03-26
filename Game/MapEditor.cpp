@@ -387,6 +387,9 @@ void CMapEditor::resize(float fButtonSize) {
 
   createEditButton(pEditSwitchPane, EB_SWITCH_ENTRY_POSITION, EBT_UINT_VECTOR2, fCurrentHeight);
   createEditButton(pEditSwitchPane, EB_SWITCH_ENTRY_TILE_TYPE, EBT_TILE_TYPE, fCurrentHeight);
+  createEditButton(pEditSwitchPane, EB_SWITCH_DEACTIVABLE, EBT_BOOL, fCurrentHeight);
+  createEditButton(pEditSwitchPane, EB_SWITCH_TIMED, EBT_BOOL, fCurrentHeight);
+  createEditButton(pEditSwitchPane, EB_SWITCH_ACTIVATION_TIME, EBT_FLOAT, fCurrentHeight);
 
 
   // links tab
@@ -514,6 +517,15 @@ Window* CMapEditor::createEditButton(Window *pParent,
     break;
   case EB_SWITCH_ENTRY_TILE_TYPE:
     pButton->setText("Edit tile type");
+    break;
+  case EB_SWITCH_DEACTIVABLE:
+    pButton->setText("Deactivable");
+    break;
+  case EB_SWITCH_TIMED:
+    pButton->setText("Timed");
+    break;
+  case EB_SWITCH_ACTIVATION_TIME:
+    pButton->setText("Edit activation duration");
     break;
   case EB_LINK_FROM:
     pButton->setText("First");
@@ -934,7 +946,6 @@ void CMapEditor::placeCurrentObject(const Ogre::Vector2 &vPos) {
   else if (m_uiCurrentObject < CEnemy::ET_COUNT + CObject::OT_COUNT + CSwitch::SWITCH_COUNT) {
     int id = m_uiCurrentObject - CObject::OT_COUNT - CEnemy::ET_COUNT;
     CSwitch *pSwitch = new CSwitch(m_pMap,
-				   m_pMap->get2dManager(),
 				   vMapPos,
 				   static_cast<CSwitch::ESwitchTypes>(id),
 				   false,
@@ -1075,6 +1086,14 @@ bool CMapEditor::onEditFloat(const CEGUI::EventArgs &args) {
 					   wndArgs.window->getText(),
 					   tesst);
     break;
+  case EB_SWITCH_ACTIVATION_TIME:
+    m_pEditValueWindow = new CEditBoxFloat(id,
+					   m_pRoot,
+					   m_fButtonSize,
+					   wndArgs.window->getText(),
+					   dynamic_cast<CSwitch*>(m_pSelectedSprite)
+					   ->getActivationTime());
+    break;
   }
   return true;
 }
@@ -1146,7 +1165,13 @@ bool CMapEditor::onEditBoolChanged(const CEGUI::EventArgs &args) {
     dynamic_cast<CEnemy*>(m_pSelectedSprite)->setMayJump(pBut->isSelected());
     break;
   case EB_SWITCH_AFFECTING_BLOCKS:
-    dynamic_cast<CSwitch*>(m_pSelectedSprite)->setChangeBlocks(pBut->isSelected());
+    dynamic_cast<CSwitch*>(m_pSelectedSprite)->setFlag(CSwitch::SF_CHANGE_BLOCKS, pBut->isSelected());
+    break;
+  case EB_SWITCH_DEACTIVABLE:
+    dynamic_cast<CSwitch*>(m_pSelectedSprite)->setFlag(CSwitch::SF_DEACTIVATABLE, pBut->isSelected());
+    break;
+  case EB_SWITCH_TIMED:
+    dynamic_cast<CSwitch*>(m_pSelectedSprite)->setFlag(CSwitch::SF_TIMED, pBut->isSelected());
     break;
   }
   return true;
@@ -1266,7 +1291,15 @@ void CMapEditor::selectedSprite(CSprite *pSprite) {
     if (pSwitch) {
       dynamic_cast<ToggleButton*>(m_pEditSwitchPane->
 				  getChild(PropertyHelper<int>::toString(EB_SWITCH_AFFECTING_BLOCKS)))
-	->setSelected(pSwitch->doesChangeBlocks());
+	->setSelected(pSwitch->isFlagSet(CSwitch::SF_CHANGE_BLOCKS));
+
+      dynamic_cast<ToggleButton*>(m_pEditSwitchPane->
+				  getChild(PropertyHelper<int>::toString(EB_SWITCH_DEACTIVABLE)))
+	->setSelected(pSwitch->isFlagSet(CSwitch::SF_DEACTIVATABLE));
+
+      dynamic_cast<ToggleButton*>(m_pEditSwitchPane->
+				  getChild(PropertyHelper<int>::toString(EB_SWITCH_TIMED)))
+	->setSelected(pSwitch->isFlagSet(CSwitch::SF_TIMED));
 
       Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
       while (pLB->getItemCount() > 0) {

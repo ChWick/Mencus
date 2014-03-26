@@ -251,7 +251,7 @@ void CMap::loadMap(const string &sFilename, const string &sResourceGroup) {
 void CMap::prepareMap() {
   // Initialise everything
   for (auto pSwitch : m_lSwitches) {
-    pSwitch->initialize(this);
+    pSwitch->initialize();
   }
 
   for (CTile *pTile : m_gridTiles) {
@@ -382,10 +382,7 @@ bool CMap::collidesWithMapMargin(const CBoundingBox2d &bb) const {
 void CMap::activateSwitchOnHit(const CBoundingBox2d &bb) {
   for (auto pSwitch : m_lSwitches) {
     if (pSwitch->getWorldBoundingBox().collidesWith(bb)) {
-      pSwitch->activate(this);
-      if (pSwitch->doesChangeBlocks()) {
-	// TODO: Change blocks
-      }
+      pSwitch->activate();
     }
   }
 }
@@ -826,37 +823,7 @@ void CMap::readRow(const XMLElement *pRow, unsigned int uiRow) {
   }
 }
 void CMap::readSwitch(const XMLElement *pSwitch) {
-  CSwitch *pNewSwitch =
-    new CSwitch(this,
-		m_p2dManagerMap,
-		Ogre::Vector2(pSwitch->FloatAttribute("x"),
-			      pSwitch->FloatAttribute("y")),
-		pSwitch->IntAttribute("type"),
-		BoolAttribute(pSwitch, "affectsBlocks", true),
-		EnumAttribute<CSwitch::ESwitchStates>(pSwitch,
-						      "state",
-						      CSwitch::SS_DEACTIVATED));
-  for (const XMLElement *pChange = pSwitch->FirstChildElement(); pChange; pChange = pChange->NextSiblingElement()) {
-    if (strcmp(pChange->Value(), "changes") == 0) {
-      SSwitchEntry entry;
-      entry.uiTileType = pChange->IntAttribute("id");
-      entry.uiTilePosX = pChange->IntAttribute("x");
-      entry.uiTilePosY = pChange->IntAttribute("y");
-      if (pChange->Attribute("oldid")) {
-	entry.uiOldTileType = pChange->IntAttribute("oldid");
-      }
-
-      pNewSwitch->addEntry(entry);
-    }
-    else if (strcmp(pChange->Value(), "togglesLink") == 0) {
-      STogglesLinkEntry entry;
-      entry.sLinkID = pChange->Attribute("id");
-      entry.bInitialState = BoolAttribute(pChange, "initial", true);
-
-      pNewSwitch->addEntry(entry);
-    }
-  }
-
+  CSwitch *pNewSwitch = new CSwitch(this, pSwitch);
   m_lSwitches.push_back(pNewSwitch);
 }
 void CMap::readEndangeredTiles(const XMLElement *pTile) {
@@ -1002,27 +969,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
   for (CSwitch *pSwitch : m_lSwitches) {
     XMLElement *pSwitchElem = doc.NewElement("switch");
     pSwitches->InsertEndChild(pSwitchElem);
-    pSwitchElem->SetAttribute("x", pSwitch->getPosition().x);
-    pSwitchElem->SetAttribute("y", pSwitch->getPosition().y);
-    pSwitchElem->SetAttribute("type", pSwitch->getType());
-    pSwitchElem->SetAttribute("affectsBlocks", pSwitch->doesChangeBlocks());
-    if (eStyle == OS_FULL) {
-      pSwitchElem->SetAttribute("state", pSwitch->getState());
-    }
-    for (const SSwitchEntry &entry : pSwitch->getEntries()) {
-      XMLElement *pChange = doc.NewElement("changes");
-      pSwitchElem->InsertEndChild(pChange);
-      pChange->SetAttribute("id", entry.uiTileType);
-      pChange->SetAttribute("oldid", entry.uiOldTileType);
-      pChange->SetAttribute("x", entry.uiTilePosX);
-      pChange->SetAttribute("y", entry.uiTilePosY);
-    }
-    for (const STogglesLinkEntry &entry : pSwitch->getLinkEntries()) {
-      XMLElement *pChange = doc.NewElement("togglesLink");
-      pSwitchElem->InsertEndChild(pChange);
-      pChange->SetAttribute("id", entry.sLinkID.c_str());
-      pChange->SetAttribute("initial", entry.bInitialState);
-    }
+    pSwitch->writeToXMLElement(pSwitchElem, eStyle);
   }
 
   XMLElement *pEndangeredTiles = doc.NewElement("endangeredTiles");
