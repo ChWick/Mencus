@@ -113,11 +113,13 @@ void CAnimatedSprite::render(Ogre::Real tpf) {
   setTextureToDraw(&m_AnimationSequences[m_uiCurrentAnimationSequence][m_uiCurrentAnimationTexture]);
   CSprite::render(tpf);
 }
-void CAnimatedSprite::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
-  pElem->SetAttribute("as_animation_paused", m_bAnimationPaused);
-  pElem->SetAttribute("as_current_as", m_uiCurrentAnimationSequence);
-  pElem->SetAttribute("as_current_at", m_uiCurrentAnimationTexture);
-  pElem->SetAttribute("as_timer", m_fAnimationTimer);
+void CAnimatedSprite::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
+  if (eStyle == OS_FULL) {
+    pElem->SetAttribute("as_animation_paused", m_bAnimationPaused);
+    pElem->SetAttribute("as_current_as", m_uiCurrentAnimationSequence);
+    pElem->SetAttribute("as_current_at", m_uiCurrentAnimationTexture);
+    pElem->SetAttribute("as_timer", m_fAnimationTimer);
+  }
 
-  CSprite::writeToXMLElement(pElem);
+  CSprite::writeToXMLElement(pElem, eStyle);
 }

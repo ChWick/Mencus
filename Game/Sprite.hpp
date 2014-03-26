@@ -8,6 +8,7 @@
 #include "BoundingBox2d.hpp"
 #include "SpriteTexture.hpp"
 #include <tinyxml2.h>
+#include "OutputStyle.hpp"
 
 using namespace std;
 
@@ -72,7 +73,7 @@ public:
 
   void setAlpha(Ogre::Real fAlpha) {m_Colour.a = fAlpha;}
 
-  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
 };
 
 #endif

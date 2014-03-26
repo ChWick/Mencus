@@ -361,14 +361,18 @@ bool CEnemy::readyForWalking() {
   return true;
 }
 
-void CEnemy::writeToXMLElement(tinyxml2::XMLElement *pElem) {
+void CEnemy::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) {
   pElem->SetAttribute("id", getID().c_str());
   pElem->SetAttribute("type", getType() + 1); // offset here of +1
   pElem->SetAttribute("direction", getDirection());
-  SetAttribute(pElem, "speed", getSpeed());
-  CHitableObject::writeToXMLElement(pElem);
   pElem->SetAttribute("jumps", mayJump());
-  CAnimatedSprite::writeToXMLElement(pElem);
+
+  if (eStyle == OS_FULL) {
+    SetAttribute(pElem, "speed", getSpeed());
+  }
+
+  CHitableObject::writeToXMLElement(pElem, eStyle);
+  CAnimatedSprite::writeToXMLElement(pElem, eStyle);
 }
 Ogre::String CEnemy::getPreviewImageName(int iEnemyType) {
   switch (iEnemyType) {

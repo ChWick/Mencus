@@ -61,7 +61,7 @@ public:
 
   void setPauseAnimation(bool b) {m_bAnimationPaused = b;}
 
-  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
 protected:
   virtual void animationTextureChangedCallback(unsigned int uiOldText, unsigned int uiNewText) {}
 

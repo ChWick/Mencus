@@ -10,6 +10,7 @@
 #include "PauseCaller.hpp"
 #include "DebugDefines.hpp"
 #include "Weapon.hpp"
+#include "OutputStyle.hpp"
 
 class CMap;
 class CShot;
@@ -121,7 +122,7 @@ public:
   void setManapoints(Ogre::Real fManapoints) {m_fManaPoints = fManapoints;}
 
   
-  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
 
 private:
   void constructor_impl();

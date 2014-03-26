@@ -88,6 +88,12 @@ void CMapInfo::constructor_impl() {
 
   m_bValid = true;
 }
+void CMapInfo::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStype) const {
+  assert(pElem);
+  pElem->SetAttribute("difficulty", toString(m_eDifficulty).c_str());
+  pElem->SetAttribute("name", m_sName.c_str());
+  pElem->SetAttribute("description", m_sDescription.c_str());
+}
 std::string CMapInfo::generateInfoText() const {
   return "Name: " + m_sName + "\nDifficulty: " + toString(m_eDifficulty) + "\nDescription: " + m_sDescription;
 }

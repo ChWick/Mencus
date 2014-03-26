@@ -628,7 +628,7 @@ void CMapEditor::stop() {
 			       CGame::getSingleton().getRenderWindow()->getHeight()));
 
   if (m_bVisible) {
-    m_pMap->writeToXMLElement(m_pMapInfo->getEmptyRootNode());
+    m_pMap->writeToXMLElement(m_pMapInfo->getEmptyRootNode(), OS_FULL);
     m_bVisible = false;
   }
   m_pMap->prepareMap();
@@ -946,7 +946,9 @@ bool CMapEditor::onSaveMap(const EventArgs &args) {
   selectedSprite(NULL);
 
   // write file to map info
-  m_pMap->writeToXMLElement(m_pMapInfo->getEmptyRootNode());
+  tinyxml2::XMLElement *pElem = m_pMapInfo->getEmptyRootNode();
+  m_pMap->writeToXMLElement(pElem, OS_MINIMAL);
+  m_pMapInfo->writeToXMLElement(pElem, OS_MINIMAL);
   tinyxml2::XMLPrinter printer;
   m_pMapInfo->getDocument().Accept(&printer);
 

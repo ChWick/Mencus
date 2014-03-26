@@ -30,7 +30,7 @@ public:
 
   void update(Ogre::Real tpf);
 
-  void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
+  void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
 
 };
 

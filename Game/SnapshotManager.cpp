@@ -56,7 +56,7 @@ const CSnapshot &CSnapshotManager::makeSnapshot(const Ogre::String &name, CSnaps
       CScreenplay *pScreenplay = CGameState::getSingleton().getScreenplay();
       tinyxml2::XMLElement *pScreenplayElem = doc.NewElement("screenplay");
       pElem->InsertEndChild(pScreenplayElem);
-      pScreenplay->writeToXMLElement(pScreenplayElem);
+      pScreenplay->writeToXMLElement(pScreenplayElem, OS_FULL);
     }
     break;
   case CGameState::GS_STATISTICS:

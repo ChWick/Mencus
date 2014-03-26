@@ -4,6 +4,7 @@
 #include <string>
 #include <tinyxml2.h>
 #include <memory>
+#include "OutputStyle.hpp"
 
 enum EMapDifficulty {
   D_EASY,
@@ -43,6 +44,8 @@ public:
   CMapInfo();
   CMapInfo(const std::string &sFileName, const std::string &sResourceGroup);
   CMapInfo(const CMapInfoConstPtr src);
+
+  void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
 
   std::string generateInfoText() const;
 

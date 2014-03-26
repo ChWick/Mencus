@@ -11,6 +11,7 @@
 #include "InputListener.hpp"
 #include <memory>
 #include "Statistics.hpp"
+#include "OutputStyle.hpp"
 
 class CMap;
 class CScreenplay;
@@ -55,7 +56,7 @@ public:
   unsigned int getID() const {return m_uiID;}
   ESceneTypes getType() const {return m_eSceneType;}
 
-  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const {}
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {}
   virtual void readFromXMLElement(const tinyxml2::XMLElement *pElem) {}
 };
 
@@ -103,7 +104,7 @@ public:
   SStatistics &getStatistics() {return m_Statistics;}
   CMap *getMap() {return m_pMap;}
 
-  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
   virtual void readFromXMLElement(const tinyxml2::XMLElement *pElem);
 };
 
@@ -199,7 +200,7 @@ public:
   // CPauseListener
   virtual void screenplayPauseChanged(bool bPause) {m_bPaused = bPause; setInputListenerEnabled(!bPause);}
 
-  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const;
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
   virtual void readFromXMLElement(const tinyxml2::XMLElement *pElem);
 private:
 

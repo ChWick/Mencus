@@ -238,16 +238,19 @@ void CShot::hit() {
     }
   }
 }
-void CShot::writeToXMLElement(tinyxml2::XMLElement *pElement) const {
-  CAnimatedSprite::writeToXMLElement(pElement);
+void CShot::writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eStyle) const {
+  CAnimatedSprite::writeToXMLElement(pElement, eStyle);
   pElement->SetAttribute("type", m_eShotType);
-  pElement->SetAttribute("affected_by_gravity", m_bAffectedByGravity);
-  SetAttribute(pElement, "speed", m_vSpeed);
   pElement->SetAttribute("direction", m_eShotDirection);
-  pElement->SetAttribute("timer", m_fTimer);
-  pElement->SetAttribute("state", m_eState);
   pElement->SetAttribute("damages", m_uiDamages);
-  if (m_pCatchedEnemy) {
-    pElement->SetAttribute("catched_enemy", m_pCatchedEnemy->getID().c_str());
+  
+  if (eStyle == OS_FULL) {
+    pElement->SetAttribute("affected_by_gravity", m_bAffectedByGravity);
+    SetAttribute(pElement, "speed", m_vSpeed);
+    pElement->SetAttribute("timer", m_fTimer);
+    pElement->SetAttribute("state", m_eState);
+    if (m_pCatchedEnemy) {
+      pElement->SetAttribute("catched_enemy", m_pCatchedEnemy->getID().c_str());
+    }
   }
 }

@@ -970,10 +970,12 @@ void CMap::destroyObject(CObject *pObject, bool bLater) {
   }
 }
 
-void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
+void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle) const {
   using namespace tinyxml2;
 
   XMLDocument &doc = *pMapElem->GetDocument();
+
+  m_pMapInfo->writeToXMLElement(pMapElem, eStyle);
   
   if (m_pBackground) {
     pMapElem->SetAttribute("background", m_pBackground->getName().c_str());
@@ -1004,7 +1006,9 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
     pSwitchElem->SetAttribute("y", pSwitch->getPosition().y);
     pSwitchElem->SetAttribute("type", pSwitch->getType());
     pSwitchElem->SetAttribute("affectsBlocks", pSwitch->doesChangeBlocks());
-    pSwitchElem->SetAttribute("state", pSwitch->getState());
+    if (eStyle == OS_FULL) {
+      pSwitchElem->SetAttribute("state", pSwitch->getState());
+    }
     for (const SSwitchEntry &entry : pSwitch->getEntries()) {
       XMLElement *pChange = doc.NewElement("changes");
       pSwitchElem->InsertEndChild(pChange);
@@ -1054,7 +1058,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
   for (CEnemy *pEnemy : m_lEnemies) {
     XMLElement *pElem = doc.NewElement("enemy");
     pEnemies->InsertEndChild(pElem);
-    pEnemy->writeToXMLElement(pElem);
+    pEnemy->writeToXMLElement(pElem, eStyle);
   }
 
   XMLElement *pObjects = doc.NewElement("objects");
@@ -1062,7 +1066,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
   for (CObject *pObject : m_lObjects) {
     XMLElement *pElem = doc.NewElement("object");
     pObjects->InsertEndChild(pElem);
-    pObject->writeToXMLElement(pElem);
+    pObject->writeToXMLElement(pElem, eStyle);
   }
 
   XMLElement *pExit = doc.NewElement("exit");
@@ -1071,7 +1075,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
 
   XMLElement *pPlayer = doc.NewElement("player");
   pMapElem->InsertEndChild(pPlayer);
-  m_pPlayer->writeToXMLElement(pPlayer);
+  m_pPlayer->writeToXMLElement(pPlayer, eStyle);
 
   XMLElement *pCamera = doc.NewElement("camera");
   SetAttribute(pCamera, "pos", m_vCameraPos);
@@ -1082,12 +1086,14 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem) const {
     res.writeToXMLElement(pElem);
   }
 
-  XMLElement *pShots = doc.NewElement("shots");
-  pMapElem->InsertEndChild(pShots);
-  for (const CShot *pShot : m_lShots) {
-    XMLElement *pElem = doc.NewElement("shot");
-    pShots->InsertEndChild(pElem);
-    pShot->writeToXMLElement(pElem);
+  if (eStyle == OS_FULL) {
+    XMLElement *pShots = doc.NewElement("shots");
+    pMapElem->InsertEndChild(pShots);
+    for (const CShot *pShot : m_lShots) {
+      XMLElement *pElem = doc.NewElement("shot");
+      pShots->InsertEndChild(pElem);
+      pShot->writeToXMLElement(pElem, eStyle);
+    }
   }
 }
 void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {

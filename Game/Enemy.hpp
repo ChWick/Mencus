@@ -75,7 +75,7 @@ public:
   Ogre::Real getDirection() const {return m_vSpeed.x > 0 ? 1 : -1;}
   const Ogre::Vector2 &getSpeed() const {return m_vSpeed;}
 
-  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem);
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle);
 
 protected:
   void damageTakenCallback(Ogre::Real fHitpoints);

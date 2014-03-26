@@ -78,12 +78,14 @@ void CSprite::setTexture(const string &sName) {
     //throw Ogre::Exception(Ogre::Exception::ERR_FILE_NOT_FOUND, sName + " is not found as a texture!", __FILE__);
   }
 }
-void CSprite::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+void CSprite::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
   using namespace XMLHelper;
 
   SetAttribute(pElem, "", m_vPosition); // pos without label
-  SetAttribute(pElem, "sp_size", m_vSize);
-  SetAttribute(pElem, "sp_scale", m_vScale);
-  SetAttribute(pElem, "sp_radRotation", m_radRotation.valueRadians());
-  SetAttribute<Ogre::ColourValue>(pElem, "sp_colour", m_Colour);
+  if (eStyle == OS_FULL) {
+    SetAttribute(pElem, "sp_size", m_vSize);
+    SetAttribute(pElem, "sp_scale", m_vScale);
+    SetAttribute(pElem, "sp_radRotation", m_radRotation.valueRadians());
+    SetAttribute<Ogre::ColourValue>(pElem, "sp_colour", m_Colour);
+  }
 }

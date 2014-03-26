@@ -642,25 +642,27 @@ void CPlayer::playerInputPauseChanged(bool bPause) {
   setInputListenerEnabled(!bPause);
 }
 
-void CPlayer::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+void CPlayer::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
   using namespace XMLHelper;
 
-  CAnimatedSprite::writeToXMLElement(pElem);
-  CHitableObject::writeToXMLElement(pElem);
+  CAnimatedSprite::writeToXMLElement(pElem, eStyle);
+  CHitableObject::writeToXMLElement(pElem, eStyle);
 
   pElem->SetAttribute("direction", m_eLastDirection == LD_RIGHT ? 1.0 : -1.0);
-  SetAttribute(pElem, "speed", m_vCurrentSpeed);
-  pElem->SetAttribute("pl_cur_weapon", m_uiCurrentWeapon);
-  pElem->SetAttribute("pl_bomb_throw_str", m_fBombThrowStrength);
-  pElem->SetAttribute("pl_shield_active", m_bShieldActive);
-  
-  pElem->SetAttribute("pl_gtl_status", m_eGoToLinkStatus);
-  SetAttribute<Ogre::Vector2>(pElem, "pl_gtl_from", m_vLinkFromPos);
-  SetAttribute<Ogre::Vector2>(pElem, "pl_gtl_to", m_vLinkToPos);
-
-  pElem->SetAttribute("pl_hud_mp", m_fManaPoints);
-  pElem->SetAttribute("pl_hud_key", m_uiKeyCount);
-  pElem->SetAttribute("pl_hud_hp_cnt", m_uiHealthPotionsCount);
-  pElem->SetAttribute("pl_hud_mp_cnt", m_uiManaPotionsCount);
-  pElem->SetAttribute("pl_hud_bomb_cnt", m_uiBombCount);
+  if (eStyle == OS_FULL) {
+    SetAttribute(pElem, "speed", m_vCurrentSpeed);
+    pElem->SetAttribute("pl_cur_weapon", m_uiCurrentWeapon);
+    pElem->SetAttribute("pl_bomb_throw_str", m_fBombThrowStrength);
+    pElem->SetAttribute("pl_shield_active", m_bShieldActive);
+    
+    pElem->SetAttribute("pl_gtl_status", m_eGoToLinkStatus);
+    SetAttribute<Ogre::Vector2>(pElem, "pl_gtl_from", m_vLinkFromPos);
+    SetAttribute<Ogre::Vector2>(pElem, "pl_gtl_to", m_vLinkToPos);
+    
+    pElem->SetAttribute("pl_hud_mp", m_fManaPoints);
+    pElem->SetAttribute("pl_hud_key", m_uiKeyCount);
+    pElem->SetAttribute("pl_hud_hp_cnt", m_uiHealthPotionsCount);
+    pElem->SetAttribute("pl_hud_mp_cnt", m_uiManaPotionsCount);
+    pElem->SetAttribute("pl_hud_bomb_cnt", m_uiBombCount);
+  }
 }

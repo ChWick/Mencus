@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <tinyxml2.h>
 #include "XMLHelper.hpp"
+#include "OutputStyle.hpp"
 
 class CHitableObject {
 private:
@@ -52,10 +53,12 @@ public:
   void addHitpoints(Ogre::Real fHitpoints) {m_fHitpoints = std::min<Ogre::Real>(m_fHitpoints + fHitpoints, m_fMaximumHitpoints);}
 
 
-  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+  virtual void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
     pElem->SetAttribute("hp", getMaximumHitpoints());
-    pElem->SetAttribute("curhp", getHitpoints());
-    pElem->SetAttribute("invunerable", isInvunerable());
+    if (eStyle == OS_FULL) {
+      pElem->SetAttribute("curhp", getHitpoints());
+      pElem->SetAttribute("invunerable", isInvunerable());
+    }
   }
 protected:
   virtual void damageTakenCallback(Ogre::Real fHitpoints) {}

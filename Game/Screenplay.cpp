@@ -59,8 +59,8 @@ void CLevel::update(Ogre::Real tpf) {
 void CLevel::render(Ogre::Real tpf) {
   m_pMap->render(tpf);
 }
-void CLevel::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
-  m_pMap->writeToXMLElement(pElem);
+void CLevel::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
+  m_pMap->writeToXMLElement(pElem, eStyle);
 }
 void CLevel::readFromXMLElement(const tinyxml2::XMLElement *pElem) {
   m_pMap->readFromXMLElement(pElem);
@@ -370,7 +370,7 @@ void CScreenplay::fadeOutCallback() {
   pause(PAUSE_ALL ^ PAUSE_SCREENPLAY ^ PAUSE_MAP_RENDER ^ PAUSE_MAP_UPDATE);
   m_Fader.startFadeIn(SCREENPLAY_FADE_DURATION);
 }
-void CScreenplay::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+void CScreenplay::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
   //pElem->SetAttribute("resourceGroup", m_sResourceGroup.c_str());
   pElem->SetAttribute("type", m_eScreenplayType);
   pElem->SetAttribute("currentAct", m_uiCurrentAct);
@@ -382,12 +382,12 @@ void CScreenplay::writeToXMLElement(tinyxml2::XMLElement *pElem) const {
     pElem->SetAttribute("map_filename", m_pMapInfo->getFileName().c_str());
     tinyxml2::XMLElement *pMapElem = pElem->GetDocument()->NewElement("map");
     pElem->InsertEndChild(pMapElem);
-    m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->writeToXMLElement(pMapElem);
+    m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->writeToXMLElement(pMapElem, eStyle);
   }
   else {
     tinyxml2::XMLElement *pSceneElem = pElem->GetDocument()->NewElement("scene");
     pElem->InsertEndChild(pSceneElem);
-    m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->writeToXMLElement(pSceneElem);
+    m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->writeToXMLElement(pSceneElem, eStyle);
   }
 }
 void CScreenplay::readFromXMLElement(const tinyxml2::XMLElement *pElem) {
