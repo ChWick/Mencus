@@ -63,7 +63,10 @@ private:
   // buffer variables for edit boxes
   bool m_bBoolBuffer;
 
+  // buttons
   bool m_bMiddleMouseButtonPressed;
+  bool m_bShiftPressed;
+
   float m_fButtonSize;
   bool m_bRenderPause;
   bool m_bPressed;
@@ -124,6 +127,7 @@ public:
   virtual bool touchCancelled(const OIS::MultiTouchEvent& evt);
 
   virtual bool keyPressed( const OIS::KeyEvent &arg );
+  virtual bool keyReleased( const OIS::KeyEvent &arg );
 
   void resize(float fButtonSize);
   void setVisible(bool bVisible);
@@ -142,6 +146,7 @@ private:
   void handleBrushReleased(const Ogre::Vector2 &vPos);
   void handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2 &vDelta);
   void placeCurrentTile(const Ogre::Vector2 &vPos);
+  void placeCurrentTile(int x, int y);
   void placeCurrentObject(const Ogre::Vector2 &vPos);
   void selectTile(unsigned int uiTile);
   bool onTileClicked(const CEGUI::EventArgs &args);

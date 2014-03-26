@@ -604,6 +604,10 @@ void CMapEditor::exit() {
   Ogre::LogManager::getSingleton().logMessage("   ... done");
 }
 void CMapEditor::start() {
+  // reset buttons
+  m_bShiftPressed = false;
+  m_bMiddleMouseButtonPressed = false;
+
   setInputListenerEnabled(true);
   pause(PAUSE_MAP_UPDATE);
   CHUD::getSingleton().hide();
@@ -678,6 +682,15 @@ void CMapEditor::toggle() {
 bool CMapEditor::keyPressed( const OIS::KeyEvent &arg ) {
   if (arg.key == OIS::KC_TAB || arg.key == OIS::KC_RWIN) {
     stop();
+  }
+  else if (arg.key == OIS::KC_LSHIFT) {
+    m_bShiftPressed = true;
+  }
+  return true;
+}
+bool CMapEditor::keyReleased( const OIS::KeyEvent &arg ) {
+  if (arg.key == OIS::KC_LSHIFT) {
+    m_bShiftPressed = false;
   }
   return true;
 }
@@ -867,7 +880,7 @@ void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2
     switch (m_eSelectedBrush) {
     case B_PLACE:
       if (m_uiCurrentTile != TT_COUNT) {
-	placeCurrentTile(vPos);
+        placeCurrentTile(vPos);
       }
       break;
     case B_MOVE:
@@ -910,9 +923,21 @@ void CMapEditor::placeCurrentTile(const Ogre::Vector2 &vPos) {
   Ogre::Vector2 vMapPos(m_pMap->mouseToMapPos(vPos));
   if (!m_pMap->isVisible(m_pMap->transformPosition(vMapPos))) {return;}
 
-  int x = static_cast<int>(vMapPos.x);
-  int y = static_cast<int>(vMapPos.y);
+  int origx = static_cast<int>(vMapPos.x);
+  int origy = static_cast<int>(vMapPos.y);
 
+  if (m_bShiftPressed) {
+    for (int x = -1; x <= 1; x++) {
+      for (int y = -1; y <= 1; y++) {
+	placeCurrentTile(origx + x, origy + y);
+      }
+    }
+  }
+  else {
+    placeCurrentTile(origx, origy);
+  }
+}
+void CMapEditor::placeCurrentTile(int x, int y) {
   if (m_pMap->outOfMap(x, y)) {return;}
 
   if (m_uiCurrentTile < TT_COUNT) {
