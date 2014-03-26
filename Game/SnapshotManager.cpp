@@ -104,39 +104,48 @@ bool CSnapshotManager::loadBackupSnapshot() {
   return true;
 }
 void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
-  cout << " load" << endl;
-  //Ogre::LogManager::getSingleton().logMessage("Loading snapshot");
-  if (snapshot.getGameState() == CGameState::GS_GAME) {
-    // no ad when loading from savesate
-    CGameState::getSingleton().setAdShown(true);
-  }
-
-  CGameState::getSingleton().changeGameState(snapshot.getGameState(), true, false);
-  const tinyxml2::XMLElement *pSnapshotElem = snapshot.getXMLDocument().FirstChildElement("snapshot");
-  switch (CGameState::getSingleton().getCurrentGameState()) {
-  case CGameState::GS_GAME:
-    { 
-      CScreenplay *pScreenplay = CGameState::getSingleton().getScreenplay();
-      assert(pScreenplay);
-      pScreenplay->readFromXMLElement(pSnapshotElem->FirstChildElement("screenplay"));
-
-      // this is a very dirty hack, that prevent on android jittering!
-      CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(200, 200);
-      CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::LeftButton);
-      CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::LeftButton);
+  try {
+    //Ogre::LogManager::getSingleton().logMessage("Loading snapshot");
+    if (snapshot.getGameState() == CGameState::GS_GAME) {
+      // no ad when loading from savesate
+      CGameState::getSingleton().setAdShown(true);
     }
-    break;
-  case CGameState::GS_STATISTICS:
-    {
-      std::shared_ptr<CMapInfo> pMapInfo(new CMapInfo(Attribute(pSnapshotElem, "map_name").c_str(), "level_user"));
-      CGameState::getSingleton().setMapInfo(pMapInfo);
+
+    CGameState::getSingleton().changeGameState(snapshot.getGameState(), true, false);
+    const tinyxml2::XMLElement *pSnapshotElem = snapshot.getXMLDocument().FirstChildElement("snapshot");
+    switch (CGameState::getSingleton().getCurrentGameState()) {
+    case CGameState::GS_GAME:
+      { 
+	CScreenplay *pScreenplay = CGameState::getSingleton().getScreenplay();
+	assert(pScreenplay);
+	pScreenplay->readFromXMLElement(pSnapshotElem->FirstChildElement("screenplay"));
+
+	// this is a very dirty hack, that prevent on android jittering!
+	CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(200, 200);
+	CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::LeftButton);
+	CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::LeftButton);
+      }
+      break;
+    case CGameState::GS_STATISTICS:
+      {
+	std::shared_ptr<CMapInfo> pMapInfo(new CMapInfo(Attribute(pSnapshotElem, "map_name").c_str(), "level_user"));
+	CGameState::getSingleton().setMapInfo(pMapInfo);
+      }
+      break;
+    default:
+      // not supported yet... state is not saved
+      break;
     }
-    break;
-  default:
-    // not supported yet... state is not saved
-    break;
+    cout << CGameState::getSingleton().getCurrentGameState() << endl;
   }
-  cout << CGameState::getSingleton().getCurrentGameState() << endl;
+  catch (const Ogre::Exception &e) {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, e.getFullDescription());
+    CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU, true, false);
+  }
+  catch (...) {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Unknown error on loading a snapshot.");
+    CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU, true, false);
+  }
 }
 void CSnapshotManager::createFromFile(const Ogre::String &name) {
   CSnapshot *pSnapshot = new CSnapshot();
