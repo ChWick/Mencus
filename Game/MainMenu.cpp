@@ -52,11 +52,11 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 
   m_iTargetState[MMS_GAME][GAME_USER_GAME] = MMS_USER_GAME;
   m_iTargetState[MMS_GAME][GAME_BACK] = MMS_START;
-#ifdef MAP_EDITOR_ENABLED
+#if ENABLE_MAP_EDITOR
   m_iTargetState[MMS_GAME][GAME_NEW_MAP] = MMS_RESULT_NEW_MAP;
   m_sButtonLabels[MMS_GAME][GAME_NEW_MAP] = "New map";
 #endif
-#ifndef DISABLE_CAMPAIGN
+#if ENABLE_CAMPAIGN
   m_iTargetState[MMS_GAME][GAME_NEW_GAME] = MMS_RESULT_NEW_GAME;
   m_sButtonLabels[MMS_GAME][GAME_NEW_GAME] = "New game";
   m_iTargetState[MMS_GAME][GAME_LOAD_GAME] = MMS_LOAD_GAME;
@@ -169,7 +169,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   
   // input
   float fHeight = 0;
-#ifdef MAP_EDITOR_ENABLED
+#if ENABLE_MAP_EDITOR
   m_pOptionPages[OPTIONS_INPUT] = pButtonContainer->createChild("OgreTray/Group", "InputOptionsContainer");
   m_pOptionPages[OPTIONS_INPUT]->setText("Input");
   m_pOptionPages[OPTIONS_INPUT]->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
@@ -335,7 +335,7 @@ void CMainMenu::changeState(EMainMenuState eState) {
   case MMS_RESULT_BACK_TO_GAME:
     hide();
     break;
-#ifdef MAP_EDITOR_ENABLED
+#if ENABLE_MAP_EDITOR
   case MMS_RESULT_NEW_MAP:
     CGameState::getSingleton().changeGameState(CGameState::GS_GAME, std::shared_ptr<CMapInfo>(new CMapInfo()));
     break;

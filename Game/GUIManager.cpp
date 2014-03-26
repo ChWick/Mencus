@@ -78,7 +78,7 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   new CGUIInstructions(guiRoot);
   new CGUIGameOver(guiRoot);
   Ogre::LogManager::getSingleton().logMessage("Singleton for map editor");
-#ifdef MAP_EDITOR_ENABLED
+#if ENABLE_MAP_EDITOR
   new CMapEditor(guiRoot);
 #endif
   new CMainMenu(guiRoot);
@@ -100,7 +100,7 @@ CGUIManager::~CGUIManager() {
 #ifdef INPUT_TOUCH
   delete m_pGUIInput;
 #endif
-#ifdef MAP_EDITOR_ENABLED
+#if ENABLE_MAP_EDITOR
   delete CMapEditor::getSingletonPtr();
 #endif
   
@@ -114,7 +114,7 @@ void CGUIManager::update(Ogre::Real tpf) {
 #ifdef INPUT_TOUCH
   m_pGUIInput->update(tpf);
 #endif
-#ifdef MAP_EDITOR_ENABLED
+#if ENABLE_MAP_EDITOR
   CMapEditor::getSingleton().render();
 #endif
 }
@@ -274,7 +274,7 @@ void CGUIManager::reloadResources() {
   for (auto &sFontName : m_vFonts) {
     CEGUI::FontManager::getSingleton().get(sFontName).notifyDisplaySizeChanged(m_vNativeRes);
   }
-#ifdef MAP_EDITOR_ENABLED
+#if ENABLE_MAP_EDITOR
   CMapEditor::getSingleton().reloadTextures();
 #endif
 }

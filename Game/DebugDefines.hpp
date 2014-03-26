@@ -3,7 +3,7 @@
 
 #include "GlobalBuildDefines.hpp"
 
-#ifdef USE_DEBUG_DEFINES
+#if ENABLE_DEBUG_DEFINES
 
 #ifdef ANDROID
 

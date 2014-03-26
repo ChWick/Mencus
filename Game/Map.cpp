@@ -49,7 +49,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
   CGame::getSingleton().showLoadingBar(0, 1);
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
   Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Game");
-#ifdef MAP_EDITOR_ENABLED
+#if ENABLE_MAP_EDITOR
   CMapEditor::getSingleton().init(this, pMapInfo);
 #endif
   CGame::getSingleton().hideLoadingBar();
@@ -72,7 +72,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
 }
 CMap::~CMap() {
   clearLineNumbers();
-#ifdef MAP_EDITOR_ENABLED
+#if ENABLE_MAP_EDITOR
   CMapEditor::getSingleton().exit();
 #endif
   delete m_pTutorialManager;
@@ -575,7 +575,7 @@ bool CMap::keyPressed( const OIS::KeyEvent &arg ) {
     else if (arg.key == OIS::KC_SUBTRACT) {
       resizeTilesPerScreen(m_vTilesPerScreen - Ogre::Vector2(m_fScreenRatio, 1));
     }
-#ifdef MAP_EDITOR_ENABLED
+#if ENABLE_MAP_EDITOR
     else if (arg.key == OIS::KC_TAB || arg.key == OIS::KC_RWIN) {
       CMapEditor::getSingleton().start();
       setLineNumbersVisible(true);
@@ -590,7 +590,7 @@ bool CMap::keyReleased( const OIS::KeyEvent &arg ) {
 }
 void CMap::mapRenderPauseChanged(bool bPause) {
   m_bRenderPause = bPause;
-#ifdef MAP_EDITOR_ENABLED
+#if ENABLE_MAP_EDITOR
   CMapEditor::getSingleton().setVisible(!bPause);
 #endif
 }
@@ -699,7 +699,7 @@ void CMap::render(Ogre::Real tpf) {
       m_gridTiles(x, y)->render(tpf);
     }
   }
-#ifdef MAP_EDITOR_ENABLED
+#if ENABLE_MAP_EDITOR
   if (CMapEditor::getSingleton().isVisible()) {
     // line numbers
     for (int x = 0; x < m_vLineNumberX.size(); x++) {
