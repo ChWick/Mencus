@@ -215,10 +215,12 @@ void CMap::resizeTilesPerScreen(const Ogre::Vector2 &tps) {
   for (auto &t : m_vLineNumberX) {
     t = new CDebugText();
     t->setText("blabla");
+    t->setVisible(false);
   }
   for (auto &t : m_vLineNumberY) {
     t = new CDebugText();
     t->setText("blubb");
+    t->setVisible(false);
   }
 }
 void CMap::loadMap(const CMapInfoConstPtr pMapInfo) {

@@ -11,7 +11,10 @@ enum ETileTypes {
   TT_DOOR_WOOD_BOT_CLOSED = 124,
   TT_DOOR_WOOD_TOP_OPEN   = 125,
   TT_DOOR_WOOD_BOT_OPEN   = 126,
-  TT_COUNT                = 127,
+  TT_LINK_WOOD_TOP        = 127,
+  TT_LINK_WOOD_BOT        = 128,
+  
+  TT_COUNT                = 129,
 };
 
 #endif
