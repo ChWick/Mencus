@@ -48,9 +48,9 @@ public:
     START_EXIT        = NUM_SLOTS - 1,
   };
   enum EGameSlots {
-#ifdef DISABLE_CAMPAIGN
+#if ENABLE_CAMPAIGN == 0
     GAME_USER_GAME    = 0,
-#ifdef MAP_EDITOR_ENABLED
+#if ENABLE_MAP_EDITOR
     GAME_NEW_MAP      = 1,
 #endif
 #else

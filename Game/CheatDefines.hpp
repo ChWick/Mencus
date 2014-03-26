@@ -3,7 +3,7 @@
 
 #include "GlobalBuildDefines.hpp"
 
-#ifdef ENABLE_CHEATS
+#if ENABLE_CHEATS
 
 #define CHEAT_ADD_KEYS
 #define CHEAT_MEGA_JUMP

@@ -1,0 +1,23 @@
+
+set(MENCUS_ENABLE_MAP_EDITOR 1)
+set(MENCUS_ENABLE_CAMPAIGN 0)
+set(MENCUS_ENABLE_CHEATS 0)
+set(MENCUS_ENABLE_INPUT_ALL 0)
+set(MENCUS_ENABLE_DEBUG_DEFINES 0)
+
+mark_as_advanced(
+  MENCUS_ENABLE_MAP_EDITOR
+  MENCUS_ENABLE_CAMPAIGN
+  MENCUS_ENABLE_CHEATS
+  MENCUS_ENABLE_INPUT_ALL
+  MENCUS_ENABLE_DEBUG_DEFINES)
+
+if (NOT MENCUS_CONFIG_OUT) 
+  Message("Please set the MENCUS_CONFIG_OUT variable to an apropriate path and add it to the include path")
+else()
+  file(MAKE_DIRECTORY ${MENCUS_CONFIG_OUT})
+
+  configure_file("${MENCUS_TEMPLATES_DIR}/GlobalBuildDefines.hpp.in" "${MENCUS_CONFIG_OUT}/GlobalBuildDefines.hpp" @ONLY)
+
+
+endif()

@@ -1,4 +1,8 @@
-if (ANDROID)
+if (ANDROID)  
+  # create the GlobalBuildDefines file
+  set (MENCUS_CONFIG_OUT "@CMAKE_BINARY_DIR@/include")
+  include(toolchain/CreateGlobalDefines)
+
   if(APPLE OR WIN32)
     SET(ANDROID_EXECUTABLE "android")
     SET(NDK_BUILD_EXECUTABLE "ndk-build")
@@ -64,7 +68,7 @@ if (ANDROID)
 
   # copy the java src code files
   file(COPY "${CMAKE_SOURCE_DIR}/android/src" DESTINATION "${NDKOUT}")
-  
+
   add_custom_command(
     TARGET Game
     POST_BUILD
