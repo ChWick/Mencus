@@ -50,7 +50,8 @@ CMapEditor::CMapEditor(Window *pRoot)
     m_bInitialized(false),
     m_pEditValueWindow(NULL),
     m_uiMapSizeX(0),
-    m_uiMapSizeY(0) {
+    m_uiMapSizeY(0),
+    m_bMiddleMouseButtonPressed(false) {
   //init(0);
 }
 void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
@@ -716,6 +717,11 @@ bool CMapEditor::onObjectClicked(const EventArgs &args) {
   return true;
 }
 bool CMapEditor::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
+  if (id == OIS::MB_Middle) {
+    // always move map when middle mouse button pressed
+    m_bMiddleMouseButtonPressed = true;
+    return true;
+  }
   Ogre::Vector2 vMapPos(m_pMap->mouseToMapPos(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs)));
   if (!m_pMap->isVisible(m_pMap->transformPosition(vMapPos))) {return true;}
 
@@ -725,6 +731,10 @@ bool CMapEditor::mousePressed( const OIS::MouseEvent &arg, OIS::MouseButtonID id
   return true;
 }
 bool CMapEditor::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID id ) {
+  if (id == OIS::MB_Middle) {
+    m_bMiddleMouseButtonPressed = false;
+    return true;
+  }
   if (m_bPressed) {
     handleBrushReleased(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs));
   }
@@ -732,7 +742,7 @@ bool CMapEditor::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID i
   return true;
 }
 bool CMapEditor::mouseMoved( const OIS::MouseEvent &arg ) {
-  if (!m_bPressed) {return true;}
+  if (!m_bPressed && !m_bMiddleMouseButtonPressed) {return true;}
 
   handleBrushMoved(Ogre::Vector2(arg.state.X.abs, arg.state.Y.abs),
 		   Ogre::Vector2(arg.state.X.rel, arg.state.Y.rel));
@@ -837,22 +847,28 @@ void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
   handleBrushMoved(vPos, Ogre::Vector2::ZERO);
 }
 void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2 &vDelta) {
-  switch (m_eSelectedBrush) {
-  case B_PLACE:
-    if (m_uiCurrentTile != TT_COUNT) {
-      placeCurrentTile(vPos);
-    }
-    break;
-  case B_MOVE:
+  if (m_bMiddleMouseButtonPressed) {
     Ogre::Vector2 vMapPos(m_pMap->mouseToMapSize(vDelta));
-    if (m_pSelectedSprite && m_bGrabbedSprite) {
-      m_pSelectedSprite->translate(vMapPos);
+    m_pMap->translateCamera(-vMapPos);
+  }
+  else {
+    switch (m_eSelectedBrush) {
+    case B_PLACE:
+      if (m_uiCurrentTile != TT_COUNT) {
+	placeCurrentTile(vPos);
+      }
+      break;
+    case B_MOVE:
+      Ogre::Vector2 vMapPos(m_pMap->mouseToMapSize(vDelta));
+      if (m_pSelectedSprite && m_bGrabbedSprite) {
+	m_pSelectedSprite->translate(vMapPos);
+      }
+      else {
+	// move map
+	m_pMap->translateCamera(-vMapPos);
+      }
+      break;
     }
-    else {
-      // move map
-      m_pMap->translateCamera(-vMapPos);
-    }
-    break;
   }
 }
 void CMapEditor::handleBrushReleased(const Ogre::Vector2 &vPos) {

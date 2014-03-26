@@ -57,6 +57,7 @@ public:
     B_COUNT,
   };
 private:
+  bool m_bMiddleMouseButtonPressed;
   float m_fButtonSize;
   bool m_bRenderPause;
   bool m_bPressed;
