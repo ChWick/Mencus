@@ -575,6 +575,9 @@ bool CMap::keyPressed( const OIS::KeyEvent &arg ) {
     else if (arg.key == OIS::KC_SUBTRACT) {
       resizeTilesPerScreen(m_vTilesPerScreen - Ogre::Vector2(m_fScreenRatio, 1));
     }
+    else if (arg.key == OIS::KC_MULTIPLY) {
+      resizeTilesPerScreen(m_vTilesPerScreen + Ogre::Vector2(1, 0));
+    }
 #if ENABLE_MAP_EDITOR
     else if (arg.key == OIS::KC_TAB || arg.key == OIS::KC_RWIN) {
       CMapEditor::getSingleton().start();
