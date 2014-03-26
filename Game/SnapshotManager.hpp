@@ -39,7 +39,14 @@ public:
   bool loadBackupSnapshot();
 
 private:
-  const CSnapshot &makeSnapshot(const Ogre::String &name, CSnapshot *pOrigin);
+  //! Create a snapshot
+  /**
+   * \brief this function writes the current game state to snapshot and writes the content to name
+   * \param name The name of the file for the snapshot
+   * \param snapshot The snapshot where the data will be assigned to
+   * \returns the snapshot
+   */
+  const CSnapshot &makeSnapshot(const Ogre::String &name, CSnapshot &snapshot);
 };
 
 #endif
