@@ -1,11 +1,17 @@
 project(Game)
 
+
 file(GLOB Game_source_files *.cpp)
 file(GLOB Game_include_files *.hpp)
 
-ADD_DEFINITIONS(-std=c++11)
+ADD_DEFINITIONS(-std=c++11 -Wall)
+
+
+set (MENCUS_CONFIG_OUT "@CMAKE_BINARY_DIR@/include")
+include(toolchain/CreateGlobalDefines)
 
 set(Game_include_directories
+    ${MENCUS_CONFIG_OUT}
     ..
     .
     ${OIS_INCLUDE_DIR}
@@ -57,6 +63,7 @@ else()
 endif()
 
 configure_file("${MENCUS_TEMPLATES_DIR}/plugins.cfg.in" "${EXECUTABLE_OUTPUT_PATH}/plugins.cfg" @ONLY)
+
 
 # create resources file
 set(RESOURCES_PREFIX "..")
