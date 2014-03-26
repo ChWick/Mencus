@@ -34,13 +34,20 @@ CSwitch::CSwitch(CMap *pMap,
 }
 CSwitch::CSwitch(CMap *pMap,
 	const tinyxml2::XMLElement *pElem) 
-  : CSprite(pMap, pMap->get2dManager(), pElem),
+  : CSprite(pMap, pMap->get2dManager(), pElem, SWITCH_SIZES[EnumAttribute<ESwitchTypes>(pElem, "type")]),
     m_pMap(pMap),
     m_stSwitchType(EnumAttribute<ESwitchTypes>(pElem, "type")),
     m_eSwitchState(EnumAttribute<ESwitchStates>(pElem, "state", SS_DEACTIVATED)),
-    m_uiSwitchFlags(IntAttribute(pElem, "flags")),
+    m_uiSwitchFlags(IntAttribute(pElem, "flags", SWITCH_FLAGS[EnumAttribute<ESwitchTypes>(pElem, "type")])),
     m_fTimer(RealAttribute(pElem, "timer", 0)),
     m_fActiveTime(RealAttribute(pElem, "activeTime")) {
+
+  // ===========================================================
+  // for old map format
+  if (BoolAttribute(pElem, "affectsBlocks", false)) {
+    m_uiSwitchFlags |= SF_CHANGE_BLOCKS;
+  }
+  // ===========================================================
 
   using namespace tinyxml2;
 
