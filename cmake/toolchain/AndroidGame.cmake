@@ -60,6 +60,7 @@ if (ANDROID)
   file(COPY "${CMAKE_SOURCE_DIR}/level/user" DESTINATION "${NDKOUT}/assets/level")
   file(COPY "${CMAKE_SOURCE_DIR}/materials" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/overlays" DESTINATION "${NDKOUT}/assets")
+  file(COPY "${CMAKE_SOURCE_DIR}/credits" DESTINATION "${NDKOUT}/credits")
   file(COPY "${CMAKE_SOURCE_DIR}/packs" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/RTShaderLib" DESTINATION "${NDKOUT}/assets")
 
