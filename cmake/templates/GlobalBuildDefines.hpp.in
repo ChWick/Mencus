@@ -1,0 +1,23 @@
+#ifndef _GLOBAL_BUILD_DEFINES_HPP_
+#define _GLOBAL_BUILD_DEFINES_HPP_
+
+// define version
+#define MENCUS_VERSION_CODE   @MENCUS_VERSION_CODE@
+#define MENCUS_VERSION_NAME   "@MENCUS_VERSION_NAME@"
+
+// Flag to define whether to include the map editor
+#define ENABLE_MAP_EDITOR     @MENCUS_ENABLE_MAP_EDITOR@
+
+// Flag to define whether to enable the campaign
+#define ENABLE_CAMPAIGN       @MENCUS_ENABLE_CAMPAIGN@
+
+// Flag to define whether to enable cheats
+#define ENABLE_CHEATS         @MENCUS_ENABLE_CHEATS@
+
+// Flag to define wheter to enable all input sources
+#define ENABLE_INPUT_ALL      @MENCUS_ENABLE_INPUT_ALL@
+
+// Flag to enable debug output
+#define ENABLE_DEBUG_DEFINES  @MENCUS_ENABLE_DEBUG_DEFINES@
+
+#endif

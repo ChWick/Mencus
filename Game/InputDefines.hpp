@@ -3,7 +3,7 @@
 
 #include "GlobalBuildDefines.hpp"
 
-#ifdef INPUT_ENABLE_ALL
+#if ENABLE_INPUT_ALL
 
 #  define INPUT_TOUCH
 #  define INPUT_MOUSE
@@ -16,7 +16,7 @@
 
 #else
 
-#  ifdef MAP_EDITOR_ENABLED
+#  if ENABLE_MAP_EDITOR
 #    define INPUT_MOUSE
 #    define INPUT_KEYBOARD
 #  else

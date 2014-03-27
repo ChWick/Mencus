@@ -8,6 +8,7 @@ class CMainMenu;
 class CScreenplay;
 class CSaveState;
 class CMapInfo;
+class CGUICredits;
 
 class CGameState : public Ogre::Singleton<CGameState> {
 public:
@@ -31,6 +32,7 @@ private:
   bool m_bForce;
   bool m_bAdShown;
 
+  CGUICredits *m_pCredits;	//!< Holds the credits, if they are shown
 public:
   static CGameState &getSingleton();
   static CGameState *getSingletonPtr();

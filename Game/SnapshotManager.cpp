@@ -29,7 +29,7 @@ CSnapshotManager::~CSnapshotManager() {
 const CSnapshot &CSnapshotManager::makeBackupSnapshot() {
   Ogre::LogManager::getSingleton().logMessage("Making backup snapshot");
   m_vSnapshots.push_back(new CSnapshot());
-  return makeSnapshot("backup.xml", m_vSnapshots.back());
+  return makeSnapshot("backup.xml", *m_vSnapshots.back());
 }
 const CSnapshot &CSnapshotManager::makeSnapshot(CSnapshot *pSnapshotOrig) {
   CSnapshot *pSnapshot = pSnapshotOrig;
@@ -38,15 +38,14 @@ const CSnapshot &CSnapshotManager::makeSnapshot(CSnapshot *pSnapshotOrig) {
     m_vSnapshots.push_back(pSnapshot);
   }
   
-  return makeSnapshot("snapshot.xml", pSnapshot);
+  return makeSnapshot("snapshot.xml", *pSnapshot);
 }
-const CSnapshot &CSnapshotManager::makeSnapshot(const Ogre::String &name, CSnapshot *pOrigin) {
-  CSnapshot &snapshot(*pOrigin);
-
+const CSnapshot &CSnapshotManager::makeSnapshot(const Ogre::String &name, CSnapshot &snapshot) {
   snapshot.setGameState(CGameState::getSingleton().getCurrentGameState());
 
   tinyxml2::XMLDocument &doc(snapshot.getXMLDocument());
   tinyxml2::XMLElement *pElem = doc.NewElement("snapshot");
+  pElem->SetAttribute("version", SNAPSHOT_VERSION);
   pElem->SetAttribute("game_state", snapshot.getGameState());
   doc.InsertEndChild(pElem);
 
@@ -136,7 +135,6 @@ void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
       // not supported yet... state is not saved
       break;
     }
-    cout << CGameState::getSingleton().getCurrentGameState() << endl;
   }
   catch (const Ogre::Exception &e) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, e.getFullDescription());

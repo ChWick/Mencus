@@ -1,4 +1,8 @@
-if (ANDROID)
+if (ANDROID)  
+  # create the GlobalBuildDefines file
+  set (MENCUS_CONFIG_OUT "@CMAKE_BINARY_DIR@/include")
+  include(toolchain/CreateGlobalDefines)
+
   if(APPLE OR WIN32)
     SET(ANDROID_EXECUTABLE "android")
     SET(NDK_BUILD_EXECUTABLE "ndk-build")
@@ -53,9 +57,10 @@ if (ANDROID)
   file(COPY ${gfxPacks} DESTINATION "${NDKOUT}/assets/gfx")
   file(GLOB levelFiles "${CMAKE_SOURCE_DIR}/level/*.zip")
   file(COPY ${levelFiles} DESTINATION "${NDKOUT}/assets/level")
-  file(COPY "${CMAKE_SOURCE_DIR}/level/user" DESTINATION "${NDKOUT}/assets/level")
+  file(COPY "${CMAKE_SOURCE_DIR}/level/user" DESTINATION "${NDKOUT}/assets/level" PATTERN *Test* EXCLUDE)
   file(COPY "${CMAKE_SOURCE_DIR}/materials" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/overlays" DESTINATION "${NDKOUT}/assets")
+  file(COPY "${CMAKE_SOURCE_DIR}/credits" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/packs" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/RTShaderLib" DESTINATION "${NDKOUT}/assets")
 
@@ -64,7 +69,7 @@ if (ANDROID)
 
   # copy the java src code files
   file(COPY "${CMAKE_SOURCE_DIR}/android/src" DESTINATION "${NDKOUT}")
-  
+
   add_custom_command(
     TARGET Game
     POST_BUILD

@@ -665,11 +665,6 @@ bool CGame::keyPressed( const OIS::KeyEvent &arg )
     CSnapshotManager::getSingleton().loadFromSnapshot();
   }
 #endif
-#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-  if (arg.key == OIS::KC_RMENU) {
-    OgreAndroidBridge::showAdPopup();
-  }
-#endif
 
   //CEGUI::System &sys = CEGUI::System::getSingleton();
   //sys.getDefaultGUIContext().injectKeyDown(static_cast<CEGUI::Key::Scan>(arg.key));
