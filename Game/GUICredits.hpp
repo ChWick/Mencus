@@ -4,9 +4,11 @@
 #include <CEGUI/CEGUI.h>
 #include "Settings.hpp"
 #include "GameState.hpp"
+#include "PauseCaller.hpp"
 #include <OgreResourceGroupManager.h>
 
-class CGUICredits {
+class CGUICredits
+  : public CPauseCaller {
 private:
   CEGUI::Window *m_pRoot;
 
@@ -35,8 +37,11 @@ public:
     pButton->setText("Close");
     pButton->subscribeEvent(PushButton::EventClicked,
 			    Event::Subscriber(&CGUICredits::onClose, this));
+
+    pause(PAUSE_ALL);
   }
   ~CGUICredits() {
+    unpause(PAUSE_ALL);
     m_pRoot->destroy();
   }
 

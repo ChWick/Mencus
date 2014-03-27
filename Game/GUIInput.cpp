@@ -85,6 +85,8 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
 
   // initial size will be set by options input, the following line would have no effect
   // this->buttonSizeChanged(85);
+
+  hide();
 }
 CGUIInput::~CGUIInput() {
   CInputListenerManager::getSingleton().removeInputListener(this);
