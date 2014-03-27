@@ -88,6 +88,7 @@ void CGameState::changeGameStateImpl() {
   case GS_CREDITS:
     delete m_pCredits;
     m_pCredits = NULL;
+    break;
   default:
     break;
   }
@@ -115,6 +116,7 @@ void CGameState::changeGameStateImpl() {
       break;
     case GS_CREDITS:
       m_pCredits = new CGUICredits();
+      break;
     default:
       break;
     }
@@ -152,6 +154,8 @@ void CGameState::update(Ogre::Real tpf) {
       Ogre::LogManager::getSingleton().logMessage("Waiting for add finished");
       usleep(1000 * 500); // 0.5 secs  default:
     }
+    break;
+  default:
     break;
   }
 }

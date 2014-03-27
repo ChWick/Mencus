@@ -11,9 +11,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
+
+
 The source code can be viewed at https://github.com/ChWick/Mencus
 
-Used projects/libraries
+
+
+Used projects/libraries:
 
 - Ogre
 - CEGUI

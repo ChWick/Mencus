@@ -27,6 +27,7 @@ public:
     pText->setSize(USize(UDim(1, 0), UDim(1 - fButtonSize, 0)));
     pText->setReadOnly(true);
     pText->setText(Ogre::ResourceGroupManager::getSingleton().openResource("credits", "General")->getAsString().c_str());
+    pText->setTextParsingEnabled(true);
 
     Window *pButton = m_pRoot->createChild("OgreTray/Button", "CloseButton");
     pButton->setPosition(UVector2(UDim(0.25f, 0), UDim(1 - fButtonSize, 0)));
