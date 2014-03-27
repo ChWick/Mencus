@@ -46,6 +46,8 @@ private:
 
   float m_fButtonSize;
   float m_fTimeSinceLastTouchMoveEvent;
+
+  bool m_bPressed;		// !< is the button pressed (mouse or touch)
 public:
   CGUIInput(CEGUI::Window *pGUIRoot);
   ~CGUIInput();
@@ -82,6 +84,7 @@ private:
   bool onDragPressed(const CEGUI::EventArgs&);
   bool onDragReleased(const CEGUI::EventArgs&);
   bool onDragMoved(const CEGUI::EventArgs&);
+  bool onDragEnter(const CEGUI::EventArgs&);
 
   bool onWeaponClick(const CEGUI::EventArgs&);
 

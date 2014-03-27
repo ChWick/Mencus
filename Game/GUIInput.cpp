@@ -11,7 +11,8 @@ using namespace CEGUI;
 CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
   : m_uiCurrentWeapon(1),
     m_fTimeSinceLastTouchMoveEvent(0),
-    m_eDragState(DS_SLEEPING) {
+    m_eDragState(DS_SLEEPING),
+    m_bPressed(false) {
   CInputListenerManager::getSingleton().addInputListener(this);
 
   m_pDirectionButtonContainer = pGUIRoot->createChild("DefaultWindow", "ButtonContainer");
@@ -34,6 +35,10 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
     subscribeEvent(
 		   CEGUI::Window::EventMouseButtonDown,
 		   Event::Subscriber(&CGUIInput::onDragPressed, this));
+  pDragButton->
+    subscribeEvent(
+		   CEGUI::Window::EventMouseEntersArea,
+		   Event::Subscriber(&CGUIInput::onDragEnter, this));
   pDragButton->
     subscribeEvent(
 		   CEGUI::Window::EventMouseButtonUp,
@@ -315,12 +320,14 @@ void CGUIInput::updateDragBar(float fPosY) {
   }
 }
 bool CGUIInput::onDragPressed(const CEGUI::EventArgs&) {
+  m_bPressed = true;
   pause(PAUSE_MAP_UPDATE);
   m_eDragState = DS_DRAGGING;
   m_fLastDragPos = m_pDragButton->getPosition().d_y.d_offset;
   return true;
 }
 bool CGUIInput::onDragReleased(const CEGUI::EventArgs&) {
+  m_bPressed = false;
   pressReleased();
   return true;
 }
@@ -329,6 +336,12 @@ bool CGUIInput::onDragMoved(const CEGUI::EventArgs& args) {
   m_fDragVelocity = (m_pDragButton->getPosition().d_y.d_offset - m_fLastDragPos) / m_fTimeSinceLastTouchMoveEvent;
   m_fLastDragPos = m_pDragButton->getPosition().d_y.d_offset;
   m_fTimeSinceLastTouchMoveEvent = 0;
+  return true;
+}
+bool CGUIInput::onDragEnter(const CEGUI::EventArgs& args) {
+  if (m_bPressed) {
+    onDragPressed(args);
+  }
   return true;
 }
 bool CGUIInput::onWeaponClick(const CEGUI::EventArgs& args) {
