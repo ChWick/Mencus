@@ -1,4 +1,4 @@
-<map difficulty="easy" name="Caslte Entry" description="An easy map if you make out why there are bombs at the beginning.
+<map difficulty="medium" name="Castle entrance" description="An easy map if you make out why there are bombs at the beginning.
 " background="fog" sizex="17" sizey="24">
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
@@ -73,7 +73,7 @@
     </objects>
     <exit type="region" posx="16" posy="14" sizex="1" sizey="2" id=""/>
     <player x="1" y="14" hp="10" direction="1"/>
-    <camera posx="0.55999935" posy="8.46">
+    <camera posx="0" posy="12">
         <restriction type="horizontal" y="12"/>
     </camera>
 </map>
