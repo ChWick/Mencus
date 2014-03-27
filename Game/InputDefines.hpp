@@ -3,7 +3,7 @@
 
 #include "GlobalBuildDefines.hpp"
 
-#if ENABLE_INPUTALL
+#if ENABLE_INPUT_ALL
 
 #  define INPUT_TOUCH
 #  define INPUT_MOUSE
