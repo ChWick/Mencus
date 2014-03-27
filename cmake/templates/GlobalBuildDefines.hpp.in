@@ -1,6 +1,9 @@
 #ifndef _GLOBAL_BUILD_DEFINES_HPP_
 #define _GLOBAL_BUILD_DEFINES_HPP_
 
+// define version
+#define MENCUS_VERSION_CODE   @MENCUS_VERSION_CODE@
+#define MENCUS_VERSION_NAME   "@MENCUS_VERSION_NAME@"
 
 // Flag to define whether to include the map editor
 #define ENABLE_MAP_EDITOR     @MENCUS_ENABLE_MAP_EDITOR@

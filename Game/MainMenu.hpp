@@ -36,6 +36,7 @@ public:
 
     MMS_COUNT,
 
+    MMS_RESULT_CREDITS,
     MMS_RESULT_BACK_TO_GAME,
     MMS_RESULT_EXIT,
     MMS_RESULT_NEW_GAME,
@@ -45,6 +46,7 @@ public:
   enum EStartSlots {
     START_START_GAME  = 0,
     START_OPTIONS     = 1,
+    START_CREDITS     = 2,
     START_EXIT        = NUM_SLOTS - 1,
   };
   enum EGameSlots {
@@ -94,6 +96,7 @@ private:
   int m_iSelectedSlot;
   CEGUI::Listbox *m_pSaveStatesWindow;
   CEGUI::Window *m_pSaveStatePreviewWindow;
+  CEGUI::Window *m_pMapInfoContainer;
   CEGUI::Window *m_pMapInfoWindow;
   bool m_bSaveListSelected;
   int m_iSelectedLoadState;

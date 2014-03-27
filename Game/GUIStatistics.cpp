@@ -114,6 +114,7 @@ bool CGUIStatistics::keyPressed(const OIS::KeyEvent &arg) {
   default:
     break;
   }
+  return true;
 }
 void CGUIStatistics::activateButton(int iBtn) {
   switch (iBtn) {
