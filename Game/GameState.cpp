@@ -5,6 +5,7 @@
 #include "AdDisplayManager.hpp"
 #include "MapInfo.hpp"
 #include "GUIStatistics.hpp"
+#include "GUICredits.hpp"
 #include <unistd.h>
 
 using namespace std;
@@ -26,13 +27,15 @@ CGameState::CGameState()
   m_pScreenplay(NULL),
   m_pSaveState(NULL),
   m_bForce(true),
-  m_bAdShown(false) {
+  m_bAdShown(false),
+  m_pCredits(NULL) {
 }
 CGameState::~CGameState() {
   if (m_pScreenplay) {
     delete m_pScreenplay;
     m_pScreenplay = NULL;
   }
+  if (m_pCredits) {delete m_pCredits; m_pCredits = NULL;}
 }
 void CGameState::init() {
   m_pMainMenu = CMainMenu::getSingletonPtr();
@@ -82,6 +85,9 @@ void CGameState::changeGameStateImpl() {
   case GS_STATISTICS:
     CGUIStatistics::getSingleton().hide();
     break;
+  case GS_CREDITS:
+    delete m_pCredits;
+    m_pCredits = NULL;
   default:
     break;
   }
@@ -107,6 +113,8 @@ void CGameState::changeGameStateImpl() {
     case GS_AD:
       CAdDisplayManager::showAdPopup();
       break;
+    case GS_CREDITS:
+      m_pCredits = new CGUICredits();
     default:
       break;
     }

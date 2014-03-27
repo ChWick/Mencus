@@ -45,9 +45,11 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   // setup slots for the pages
   m_iTargetState[MMS_START][START_START_GAME] = MMS_GAME;
   m_iTargetState[MMS_START][START_OPTIONS] = MMS_OPTIONS;
+  m_iTargetState[MMS_START][START_CREDITS] = MMS_RESULT_CREDITS;
   m_iTargetState[MMS_START][START_EXIT] = MMS_RESULT_EXIT;
   m_sButtonLabels[MMS_START][START_START_GAME] = "Start game";
   m_sButtonLabels[MMS_START][START_OPTIONS] = "Options";
+  m_sButtonLabels[MMS_START][START_CREDITS] = "Credits";
   m_sButtonLabels[MMS_START][START_EXIT] = "Exit";
 
   m_iTargetState[MMS_GAME][GAME_USER_GAME] = MMS_USER_GAME;
@@ -158,10 +160,17 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pSaveStatePreviewWindow->setSize(USize(UDim(0.35f, 0), UDim(0.4f, 0)));
   m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/none");
 
-  m_pMapInfoWindow = pButtonContainer->createChild("OgreTray/StaticText", "MapInfo");
-  m_pMapInfoWindow->setPosition(UVector2(UDim(0.6f, 0), UDim(0, 0)));
-  m_pMapInfoWindow->setSize(USize(UDim(0.4f, 0), UDim(0.6f, 0)));
+  ScrollablePane *pMapInfoContainer = dynamic_cast<ScrollablePane*>(pButtonContainer->createChild("OgreTray/ScrollablePane", "MapInfoContainer"));
+  pMapInfoContainer->setShowHorzScrollbar(false);
+  pMapInfoContainer->setPosition(UVector2(UDim(0.6f, 0), UDim(0, 0)));
+  pMapInfoContainer->setSize(USize(UDim(0.4f, 0), UDim(0.6f, 0)));
+  m_pMapInfoContainer = pMapInfoContainer;
+
+  m_pMapInfoWindow = pMapInfoContainer->createChild("OgreTray/StaticText", "MapInfo");
+  m_pMapInfoWindow->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  m_pMapInfoWindow->setSize(USize(UDim(1, 0), UDim(2, 0)));
   m_pMapInfoWindow->setText("Difficulty: easy");
+  m_pMapInfoWindow->setProperty("VertFormatting", "TopAligned");
 
 
   // option pages
@@ -329,6 +338,9 @@ void CMainMenu::changeState(EMainMenuState eState) {
       CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
     }
     break;
+  case MMS_RESULT_CREDITS:
+    CGameState::getSingleton().changeGameState(CGameState::GS_CREDITS);
+    break;
   case MMS_RESULT_EXIT:
     CGame::getSingleton().shutDown();
     break;
@@ -362,10 +374,10 @@ void CMainMenu::changeState(EMainMenuState eState) {
     break;
   }
 
+  m_pMapInfoContainer->setVisible(false);
   if (eState == MMS_LOAD_GAME) {
     m_pSaveStatesWindow->setVisible(true);
     m_pSaveStatePreviewWindow->setVisible(true);
-    m_pMapInfoWindow->setVisible(false);
 #ifndef INPUT_KEYBOARD_ONLY
     m_pSelectButton->setVisible(true);
 #endif
@@ -394,7 +406,7 @@ void CMainMenu::changeState(EMainMenuState eState) {
   else if (eState == MMS_USER_GAME) {
     m_pSaveStatesWindow->setVisible(true);
     m_pSaveStatePreviewWindow->setVisible(false);
-    m_pMapInfoWindow->setVisible(true);
+    m_pMapInfoContainer->setVisible(true);
 #ifndef INPUT_KEYBOARD_ONLY
     m_pSelectButton->setVisible(true);
 #endif
@@ -404,7 +416,7 @@ void CMainMenu::changeState(EMainMenuState eState) {
     }
     m_vUserFiles.clear();
     int i = 0;
-    // reload resources
+    // reload resourcesresize height to content
     Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup("level_user");
     Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("level_user");
     Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("level_user");
@@ -422,7 +434,6 @@ void CMainMenu::changeState(EMainMenuState eState) {
   else {
     m_pSaveStatesWindow->setVisible(false);
     m_pSaveStatePreviewWindow->setVisible(false);
-    m_pMapInfoWindow->setVisible(false);
 #ifndef INPUT_KEYBOARD_ONLY
     m_pSelectButton->setVisible(false);
 #endif
@@ -637,6 +648,8 @@ bool CMainMenu::mapEditorButtonSizeSliderValueChanged(const CEGUI::EventArgs& ar
 
   CMapEditor::getSingleton().resize(pSlider->getCurrentValue());
   CSettings::getSingleton().getInputSettings().m_fMapEditorButtonSize = pSlider->getCurrentValue();
+
+  return true;
 } 
 bool CMainMenu::buttonSizeSliderValueChanged(const EventArgs &args) {
 #ifdef INPUT_TOUCH
