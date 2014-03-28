@@ -644,11 +644,11 @@ void CMapEditor::stop() {
   m_pMap->resize(Ogre::Vector2(CGame::getSingleton().getRenderWindow()->getWidth(),
 			       CGame::getSingleton().getRenderWindow()->getHeight()));
 
+  m_pMap->prepareMap();
   if (m_bVisible) {
     m_pMap->writeToXMLElement(m_pMapInfo->getEmptyRootNode(), OS_FULL);
     m_bVisible = false;
   }
-  m_pMap->prepareMap();
 }
 void CMapEditor::render() {
   if (!m_bVisible || m_bRenderPause) {return;}
@@ -844,11 +844,14 @@ void CMapEditor::editTile(const Ogre::Vector2 &vPos) {
 
   if (m_pMap->outOfMap(x, y)) {return;}
 
-  m_pEditValueWindow = new CEditBoxTileType(0,
+  m_pEditValueWindow = new CEditBoxTileType(EB_TILE_ENDANGERED,
 					    m_pRoot,
 					    m_fButtonSize,
 					    "Select endangered tile",
-					    m_pMap->getTile(x, y)->getEndangeredTileType());
+					    m_pMap->getTile(x, y)->getEndangeredTileType(),
+					    true,
+					    m_pMap->getTile(x, y));
+  m_pEditValueWindow->setListener(this);
 }
 void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
   m_vClickPos = vPos;
@@ -911,8 +914,13 @@ void CMapEditor::handleBrushReleased(const Ogre::Vector2 &vPos) {
     break;
   case B_EDIT:
     if (bClick) {
-      selectSprite(vPos);
       if (!m_pSelectedSprite) {
+	selectSprite(vPos);
+	if (!m_pSelectedSprite) {
+	  editTile(vPos);
+	}
+      }
+      else {
 	editTile(vPos);
       }
     }
@@ -1354,6 +1362,12 @@ CEGUI::ListboxTextItem *CMapEditor::createSwitchEntry(const SSwitchEntry &entry)
 }
 void CMapEditor::onEditBoxAccept(CEditBoxBase *pBase) {
   switch (pBase->getID()) {
+  case EB_TILE_ENDANGERED:
+    {
+      CEditBoxTileType *pTT = dynamic_cast<CEditBoxTileType*>(pBase);
+      pTT->getTile()->setEndangeredTileType(pTT->getTile()->getTileType());
+    }
+    break;
   case EB_MAP_SIZE:
     m_pMap->resizeTiles(m_uiMapSizeX, m_uiMapSizeY);
     break;
