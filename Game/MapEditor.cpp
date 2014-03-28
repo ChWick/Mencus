@@ -921,6 +921,7 @@ void CMapEditor::handleBrushReleased(const Ogre::Vector2 &vPos) {
 	}
       }
       else {
+	m_pSelectedSprite = NULL;
 	editTile(vPos);
       }
     }
