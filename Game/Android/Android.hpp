@@ -72,6 +72,7 @@
 
 #include "AndroidInput.hpp"
 #include "SnapshotManager.hpp"
+#include "FileManager.hpp"
 
 class OgreAndroidBridge;
     
@@ -93,7 +94,10 @@ public:
       return;
     
     LOGI("Initialising Root");
-    mRoot = new Ogre::Root();    
+    mRoot = new Ogre::Root("plugins"OGRE_BUILD_SUFFIX".cfg",
+			   "ogre.cfg",
+			   CFileManager::getValidPath("ogre.log",
+						      CFileManager::SL_EXTERNAL));    
 #ifdef OGRE_STATIC_LIB
     LOGI("Loading plugins");
     mStaticPluginLoader = new Ogre::StaticPluginLoader();
