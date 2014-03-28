@@ -170,11 +170,8 @@
         </switch>
     </switches>
     <endangeredTiles>
-        <tile targetTile="0" x="6" y="19"/>
-        <tile targetTile="0" x="22" y="72"/>
         <tile targetTile="2" x="22" y="73"/>
         <tile targetTile="2" x="21" y="74"/>
-        <tile targetTile="0" x="22" y="74"/>
         <tile targetTile="2" x="21" y="75"/>
         <tile targetTile="15" x="21" y="76"/>
     </endangeredTiles>
@@ -190,7 +187,7 @@
         <enemy id="-1865008399" type="2" direction="1" jumps="0" hp="4" x="19.5" y="63"/>
         <enemy id="470211270" type="2" direction="1" jumps="0" hp="4" x="16.5" y="63"/>
         <enemy id="-1009961145" type="2" direction="1" jumps="0" hp="4" x="18" y="66"/>
-        <enemy id="-1557810091" type="2" direction="1" jumps="0" hp="1" x="22.5" y="78"/>
+        <enemy id="-1557810091" type="2" direction="1" jumps="0" hp="4" x="22.5" y="78"/>
         <enemy id="-1257795640" type="2" direction="1" jumps="0" hp="4" x="19" y="78"/>
     </enemies>
     <objects>
@@ -224,6 +221,6 @@
         <object x="18.5" y="71" type="0"/>
     </objects>
     <exit type="region" posx="17" posy="123" sizex="1" sizey="8" id=""/>
-    <player x="1" y="25" hp="10" direction="1"/>
-    <camera posx="20.819998" posy="88.340004"/>
+    <player x="0.5" y="25" hp="10" direction="1"/>
+    <camera posx="17.58799" posy="68.999992"/>
 </map>
