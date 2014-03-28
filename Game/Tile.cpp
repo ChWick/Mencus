@@ -31,7 +31,12 @@ void CTile::update(Ogre::Real tpf) {
 }
 void CTile::setEndangeredTileType(TileType tt) {
   m_ttEndangeredTileType = tt;
-  m_uiTileFlags |= TF_ENDANGERED;
+  if (tt != TT_NONE) {
+    m_uiTileFlags |= TF_ENDANGERED;
+  }
+  else {
+    m_uiTileFlags -= m_uiTileFlags & TF_ENDANGERED;
+  }
 }
 unsigned int CTile::getTileFlags(TileType tt) {
   unsigned int uiFlags = 0;
