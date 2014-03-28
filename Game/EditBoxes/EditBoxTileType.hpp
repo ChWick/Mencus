@@ -4,21 +4,26 @@
 #include "EditBoxBase.hpp"
 #include "../TileTypes.hpp"
 
+class CTile;;
+
 class CEditBoxTileType : public CEditBoxBase {
 private:
   const TileType m_ttBackup;
   TileType &m_tt;
   TileType m_uiCurrentTile;
   CEGUI::ScrollablePane *m_pTilesContainer;
+  CTile *m_pTile;
 public:
   CEditBoxTileType(int iID,
 		   CEGUI::Window *pParent,
 		   float fButtonSize,
 		   const CEGUI::String &sTitle,
 		   TileType &tt,
-		   bool bEnableNoTile = true) 
+		   bool bEnableNoTile = true,
+		   CTile *pTile = NULL) 
     : CEditBoxBase(iID, pParent, fButtonSize, sTitle),
-      m_tt(tt), m_uiCurrentTile(tt), m_ttBackup(tt) {
+      m_tt(tt), m_uiCurrentTile(tt), m_ttBackup(tt),
+      m_pTile(pTile) {
 
     using namespace CEGUI;
     ScrollablePane *pTilesScrollBar = dynamic_cast<ScrollablePane*>(m_pWindow->createChild("OgreTray/ScrollablePane", "ScrollPane"));
@@ -85,6 +90,7 @@ public:
     
     return true;
   }
+  CTile *getTile() const {return m_pTile;}
 protected:
   bool accepted() {
     m_tt = m_uiCurrentTile;

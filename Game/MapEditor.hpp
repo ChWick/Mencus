@@ -51,6 +51,7 @@ public:
     EB_SWITCH_ACTIVATION_TIME,
     EB_LINK_FROM,
     EB_LINK_TO,
+    EB_TILE_ENDANGERED,
   };
   enum EBrushes {
     B_PLACE,
