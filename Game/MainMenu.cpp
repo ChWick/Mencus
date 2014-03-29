@@ -178,10 +178,12 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   
   // input
   float fHeight = 0;
-#if ENABLE_MAP_EDITOR
   m_pOptionPages[OPTIONS_INPUT] = pButtonContainer->createChild("OgreTray/Group", "InputOptionsContainer");
   m_pOptionPages[OPTIONS_INPUT]->setText("Input");
   m_pOptionPages[OPTIONS_INPUT]->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
+
+
+#if ENABLE_MAP_EDITOR
   Window *pMapEditorButtonSizeText = m_pOptionPages[OPTIONS_INPUT]->createChild("OgreTray/StaticText", "MapEditorButtonSliderText");
   pMapEditorButtonSizeText->setPosition(UVector2(UDim(0, 0), UDim(0.00, 0)));
   pMapEditorButtonSizeText->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
@@ -632,7 +634,9 @@ void CMainMenu::resizeGUI(Ogre::Real fScaling) {
 #ifdef INPUT_TOUCH
   m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSliderText")->setFont(smallfont);
 #endif
+#if ENABLE_MAP_EDITOR
   m_pOptionPages[OPTIONS_INPUT]->getChild("MapEditorButtonSliderText")->setFont(smallfont);
+#endif
   m_pOptionPages[OPTIONS_VIDEO]->setFont(bigfont);
   m_pOptionPages[OPTIONS_VIDEO]->getChild("MenuSizeText")->setFont(smallfont);
 
@@ -676,8 +680,11 @@ bool CMainMenu::menuSizeSliderValueChanged(const EventArgs &args) {
   return true;
 }
 void CMainMenu::windowSizeChanged(const CEGUI::Sizef &vSize) {
-  Slider *pSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->getChild("MapEditorButtonSizeSlider"));
+  Slider *pSlider = NULL;
+#if ENABLE_MAP_EDITOR
+  pSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->getChild("MapEditorButtonSizeSlider"));
   pSlider->setMaxValue(min(vSize.d_height / 4.0, vSize.d_width / 8.0));
+#endif
 #ifdef INPUT_TOUCH
   pSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSizeSlider"));
   pSlider->setMaxValue(min(vSize.d_height / 4.0, vSize.d_width / 8.0));
