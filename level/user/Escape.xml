@@ -1,5 +1,5 @@
 <map difficulty="easy" name="Escape" description="Escape from the castle
-" background="forest" sizex="20" sizey="60">
+" background="forest" sizex="20" sizey="75">
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
         <row tiles="5 5 5 5 5 8 52 52 52 9 52 52 52 9 52 52 52 3 1 1 "/>
@@ -46,21 +46,36 @@
         <row tiles="23 23 23 23 23 83 81 93 103 7 8 2 16 2 43 2 16 2 3 1 "/>
         <row tiles="23 23 23 23 111 83 98 84 23 49 2 2 2 2 43 2 2 2 3 1 "/>
         <row tiles="23 23 113 107 107 83 85 101 110 50 2 2 2 18 5 19 2 2 3 1 "/>
-        <row tiles="23 23 107 107 107 83 89 82 107 3 14 2 2 2 43 2 2 2 3 1 "/>
-        <row tiles="23 23 106 92 92 94 89 82 107 3 4 2 2 2 43 2 2 2 3 1 "/>
-        <row tiles="23 23 107 107 107 84 86 82 107 3 12 6 6 6 1 6 6 6 11 1 "/>
+        <row tiles="23 111 107 107 107 83 89 82 107 3 14 2 2 2 43 2 2 2 3 1 "/>
+        <row tiles="104 92 92 92 92 94 89 82 107 3 4 2 2 2 43 2 2 2 3 1 "/>
+        <row tiles="23 108 107 107 107 84 86 82 107 3 12 6 6 6 1 6 6 6 11 1 "/>
         <row tiles="23 113 107 107 107 102 96 82 107 3 1 1 1 1 1 1 1 1 1 1 "/>
-        <row tiles="23 107 107 107 107 83 81 82 107 3 1 1 1 1 1 1 1 1 1 1 "/>
-        <row tiles="23 107 107 107 107 107 107 107 107 3 1 1 1 1 1 1 1 1 1 1 "/>
-        <row tiles="23 108 107 107 107 107 107 107 107 3 1 1 1 1 1 1 1 1 1 1 "/>
-        <row tiles="23 23 107 107 107 107 107 107 107 3 1 1 1 1 1 1 1 1 1 1 "/>
-        <row tiles="23 23 107 107 107 107 107 107 107 3 1 1 1 1 1 1 1 1 1 1 "/>
-        <row tiles="23 23 114 107 107 107 107 107 107 3 1 1 1 1 1 1 1 1 1 1 "/>
-        <row tiles="23 23 23 23 108 107 107 107 107 3 23 23 23 23 23 23 1 1 1 1 "/>
-        <row tiles="23 23 23 23 23 114 107 107 115 23 23 23 23 23 23 23 23 1 1 1 "/>
-        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 1 1 1 "/>
-        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 1 1 1 "/>
-        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 1 1 1 1 "/>
+        <row tiles="23 107 107 119 107 83 81 82 107 3 1 5 5 5 5 5 5 5 1 1 "/>
+        <row tiles="23 107 107 107 107 83 81 82 107 3 4 2 2 2 43 2 2 2 3 1 "/>
+        <row tiles="23 108 107 107 107 83 81 82 107 3 4 2 2 2 43 2 2 2 3 1 "/>
+        <row tiles="23 23 107 107 107 107 107 107 107 3 12 19 2 2 43 2 2 18 11 1 "/>
+        <row tiles="23 23 107 107 107 107 107 107 107 3 4 2 2 18 5 19 2 2 3 1 "/>
+        <row tiles="23 23 114 107 107 107 107 119 107 3 4 2 2 44 44 44 2 2 3 1 "/>
+        <row tiles="23 23 23 23 108 107 107 107 107 3 4 2 2 69 23 70 2 2 3 1 "/>
+        <row tiles="23 23 23 23 23 114 107 107 115 3 4 2 18 17 17 17 19 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 43 22 2 49 49 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 18 5 8 2 43 21 2 50 50 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 2 2 2 43 2 2 43 43 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 2 2 2 43 2 2 43 43 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 13 6 6 1 6 6 1 1 6 11 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 1 5 5 5 5 5 5 5 1 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 22 43 22 2 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 21 43 21 2 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 2 43 2 2 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 4 44 44 2 43 2 44 44 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 4 23 23 2 43 2 23 23 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 4 69 70 2 43 2 69 70 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 2 43 2 2 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 13 1 14 2 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 47 46 44 44 47 48 46 44 44 7 5 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 2 22 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 2 21 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 44 44 "/>
     </tiles>
     <switches>
         <switch x="16" y="13" type="0" flags="0" activeTime="0">
@@ -71,23 +86,41 @@
             <changes id="2" x="14" y="45"/>
             <changes id="51" x="14" y="46"/>
         </switch>
+        <switch x="11.5" y="63" type="0" flags="0" activeTime="0">
+            <changes id="2" x="14" y="63"/>
+            <changes id="51" x="14" y="64"/>
+        </switch>
     </switches>
     <endangeredTiles/>
     <links>
         <link id="" fromx="18" fromy="13" tox="18" toy="8" direction="both" activated="1"/>
+        <link id="" fromx="11" fromy="39" tox="11" toy="32" direction="both" activated="1"/>
+        <link id="" fromx="13" fromy="63" tox="13" toy="57" direction="both" activated="1"/>
+        <link id="" fromx="19" fromy="72" tox="15" toy="63" direction="both" activated="1"/>
     </links>
     <enemies>
         <enemy id="-1210297291" type="2" direction="1" jumps="0" hp="2" x="17.5" y="3"/>
         <enemy id="685118022" type="2" direction="1" jumps="0" hp="2" x="16" y="24"/>
         <enemy id="-1952636240" type="2" direction="1" jumps="1" hp="4" x="3" y="22"/>
+        <enemy id="824938979" type="2" direction="1" jumps="0" hp="2" x="16" y="50"/>
+        <enemy id="-185075635" type="2" direction="1" jumps="0" hp="2" x="12.5" y="50"/>
+        <enemy id="997389812" type="2" direction="1" jumps="0" hp="8" x="17" y="63"/>
     </enemies>
     <objects>
         <object x="18" y="3" type="3"/>
         <object x="1" y="22" type="3"/>
         <object x="13" y="28" type="3"/>
-        <object x="17.15" y="38.825001" type="3"/>
+        <object x="17" y="39" type="3"/>
+        <object x="8.5" y="49.5" type="0"/>
+        <object x="8" y="47.5" type="0"/>
+        <object x="8.25" y="51.25" type="0"/>
+        <object x="17.15" y="50.325001" type="3"/>
+        <object x="11.15" y="50.325001" type="3"/>
+        <object x="8.25" y="45.75" type="0"/>
+        <object x="6" y="52" type="1"/>
+        <object x="6.5" y="52" type="2"/>
     </objects>
-    <exit type="region" posx="0" posy="0" sizex="0" sizey="0" id=""/>
-    <player x="11" y="39.5" hp="10" direction="1"/>
-    <camera posx="-3.6113725" posy="32.705463"/>
+    <exit type="region" posx="18" posy="72" sizex="2" sizey="2" id=""/>
+    <player x="0.5" y="2" hp="10" direction="1"/>
+    <camera posx="9.0400219" posy="66.320457"/>
 </map>
