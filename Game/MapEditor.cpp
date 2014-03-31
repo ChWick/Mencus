@@ -141,11 +141,13 @@ void CMapEditor::resize(float fButtonSize) {
   pBrushPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pBrushPane->setSize(USize(UDim(1, 0), UDim(1, 0)));
   pBrushPane->setText("Brush");
+  pBrushPane->setRiseOnClickEnabled(false);
 
   ScrollablePane *pBrushScrollPane = dynamic_cast<ScrollablePane*>(pBrushPane->createChild("OgreTray/ScrollablePane", "ScrollPane"));
   pBrushScrollPane->setDragIgnoreZone(fDragIgnoreZone);
   pBrushScrollPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pBrushScrollPane->setSize(USize(UDim(1, 0), UDim(1, 0)));
+  pBrushScrollPane->setRiseOnClickEnabled(false);
 
   float fCurrentHeight = 0;
   for (int i = 0; i < B_COUNT; i++) {
@@ -203,6 +205,7 @@ void CMapEditor::resize(float fButtonSize) {
   Ogre::LogManager::getSingleton().logMessage("    Tiles content pane");
   Window *pTilesTabContentPane = pTabPane->createChild("OgreTray/TabContentPane", "TilesContentPane");
   //pTabPane->addTab(pTilesTabContentPane);
+  pTilesTabContentPane->setRiseOnClickEnabled(false);
   pTilesTabContentPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pTilesTabContentPane->setSize(USize(UDim(1, 0), UDim(1, 0)));
   pTilesTabContentPane->setText("Tiles");
@@ -210,6 +213,7 @@ void CMapEditor::resize(float fButtonSize) {
   
   
   ScrollablePane *pTilesScrollBar = dynamic_cast<ScrollablePane*>(pTilesTabContentPane->createChild("OgreTray/ScrollablePane", "ScrollPane"));
+  pTilesScrollBar->setRiseOnClickEnabled(false);
   pTilesScrollBar->setDragIgnoreZone(fDragIgnoreZone);
   m_pTilesContainer = pTilesScrollBar;
   pTilesScrollBar->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
@@ -246,12 +250,14 @@ void CMapEditor::resize(float fButtonSize) {
   // ===========================
   Ogre::LogManager::getSingleton().logMessage("    Objects content pane");
   Window *pObjectsTabContentPane = pTabPane->createChild("OgreTray/TabContentPane", "ObjectsContentPane");
+  pObjectsTabContentPane->setRiseOnClickEnabled(false);
   //pTabPane->addTab(pTilesTabContentPane);
   pObjectsTabContentPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pObjectsTabContentPane->setSize(USize(UDim(1, 0), UDim(1, 0)));
   pObjectsTabContentPane->setText("Objects");
 
   ScrollablePane *pObjectsScrollBar = dynamic_cast<ScrollablePane*>(pObjectsTabContentPane->createChild("OgreTray/ScrollablePane", "ScrollPane"));
+  pObjectsScrollBar->setRiseOnClickEnabled(false);
   pObjectsScrollBar->setDragIgnoreZone(fDragIgnoreZone);
   m_pObjectsContainer = pObjectsScrollBar;
   pObjectsScrollBar->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
@@ -332,12 +338,14 @@ void CMapEditor::resize(float fButtonSize) {
   Ogre::LogManager::getSingleton().logMessage("    Edit content pane");
   Window *pEditTabContentPane = pTabPane->createChild("OgreTray/TabContentPane", "EditContentPane");
   //pTabPane->addTab(pTilesTabContentPane);
+  pEditTabContentPane->setRiseOnClickEnabled(false);
   pEditTabContentPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pEditTabContentPane->setSize(USize(UDim(1, 0), UDim(1, 0)));
   pEditTabContentPane->setText("Edit");
 
 
   ScrollablePane *pEditScrollBar = dynamic_cast<ScrollablePane*>(pEditTabContentPane->createChild("OgreTray/ScrollablePane", "ScrollPane"));
+  pEditScrollBar->setRiseOnClickEnabled(false);
   pEditScrollBar->setDragIgnoreZone(fDragIgnoreZone);
   m_pEditContainer = pEditScrollBar;
   pEditScrollBar->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
@@ -355,6 +363,7 @@ void CMapEditor::resize(float fButtonSize) {
   
   // edit sprite
   m_pEditSprite = pEditScrollBar->createChild("DefaultWindow", "Sprite");
+  m_pEditSprite->setRiseOnClickEnabled(false);
   m_pEditSprite->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
   fCurrentHeight = 5;
   createEditButton(m_pEditSprite, EB_HITPOINTS, EBT_FLOAT, fCurrentHeight);
@@ -363,6 +372,7 @@ void CMapEditor::resize(float fButtonSize) {
   
   // switch
   Window *pEditSwitchPane = pEditScrollBar->createChild("DefaultWindow", "Switch");
+  pEditSwitchPane->setRiseOnClickEnabled(false);
   m_pEditSwitchPane = pEditSwitchPane;
   fCurrentHeight = fButtonSize + 5;
   pEditSwitchPane->setPosition(UVector2(UDim(0, 0), UDim(0, fCurrentHeight)));
@@ -397,12 +407,14 @@ void CMapEditor::resize(float fButtonSize) {
   fCurrentHeight = 0;
   Ogre::LogManager::getSingleton().logMessage("    Link content pane");
   Window *pLinkTabContentPane = pTabPane->createChild("OgreTray/TabContentPane", "LinkContentPane");
+  pLinkTabContentPane->setRiseOnClickEnabled(false);
   pLinkTabContentPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pLinkTabContentPane->setSize(USize(UDim(1, 0), UDim(1, 0)));
   pLinkTabContentPane->setText("Link");
 
 
   ScrollablePane *pLinkScrollBar = dynamic_cast<ScrollablePane*>(pLinkTabContentPane->createChild("OgreTray/ScrollablePane", "ScrollPane"));
+  pLinkScrollBar->setRiseOnClickEnabled(false);
   pLinkScrollBar->setDragIgnoreZone(fDragIgnoreZone);
   pLinkScrollBar->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pLinkScrollBar->setSize(USize(UDim(1, 0), UDim(1, 0)));
