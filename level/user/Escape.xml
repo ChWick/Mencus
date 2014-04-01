@@ -72,10 +72,10 @@
         <row tiles="23 23 23 23 23 23 23 23 23 3 4 69 70 2 43 2 69 70 3 1 "/>
         <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 2 43 2 2 2 3 1 "/>
         <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 13 1 14 2 2 3 1 "/>
-        <row tiles="23 23 23 23 23 23 23 23 23 47 46 44 44 47 48 46 44 44 7 5 "/>
-        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 2 22 "/>
-        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 2 21 "/>
-        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 44 44 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 47 46 44 44 47 48 46 2 2 7 5 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 2 2 22 2 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 2 2 21 2 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 44 44 44 44 "/>
     </tiles>
     <switches>
         <switch x="16" y="13" type="0" flags="0" activeTime="0">
@@ -96,7 +96,7 @@
         <link id="" fromx="18" fromy="13" tox="18" toy="8" direction="both" activated="1"/>
         <link id="" fromx="11" fromy="39" tox="11" toy="32" direction="both" activated="1"/>
         <link id="" fromx="13" fromy="63" tox="13" toy="57" direction="both" activated="1"/>
-        <link id="" fromx="19" fromy="72" tox="15" toy="63" direction="both" activated="1"/>
+        <link id="" fromx="18" fromy="72" tox="15" toy="63" direction="both" activated="1"/>
     </links>
     <enemies>
         <enemy id="-1210297291" type="2" direction="1" jumps="0" hp="2" x="17.5" y="3"/>
@@ -120,7 +120,7 @@
         <object x="6" y="52" type="1"/>
         <object x="6.5" y="52" type="2"/>
     </objects>
-    <exit type="region" posx="18" posy="72" sizex="2" sizey="2" id=""/>
+    <exit type="region" posx="19" posy="72" sizex="1" sizey="2" id=""/>
     <player x="0.5" y="2" hp="10" direction="1"/>
-    <camera posx="9.0400219" posy="66.320457"/>
+    <camera posx="-1.7012544" posy="49.779995"/>
 </map>
