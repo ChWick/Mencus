@@ -211,7 +211,7 @@ void CGame::locateResources() {
 void CGame::loadResources() {
   //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
   showLoadingBar(7, 0);
-  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Main");
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("PreloadGame");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Imagesets");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Fonts");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Schemes");
