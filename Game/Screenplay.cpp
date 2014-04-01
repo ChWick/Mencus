@@ -136,7 +136,7 @@ void CScreenplay::clear() {
   for (auto &p : m_mapActs) {
     delete p.second;
   }
-  Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup(m_sResourceGroup);
+  //Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup(m_sResourceGroup);
 }
 void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   Ogre::LogManager::getSingleton().logMessage("Switching to act " + Ogre::StringConverter::toString(uiActId) + " at scene " + Ogre::StringConverter::toString(uiSceneId));
