@@ -64,7 +64,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_iTargetState[MMS_GAME][GAME_LOAD_GAME] = MMS_LOAD_GAME;
   m_sButtonLabels[MMS_GAME][GAME_LOAD_GAME] = "Load game";
 #endif
-  m_sButtonLabels[MMS_GAME][GAME_USER_GAME] = "User game";
+  m_sButtonLabels[MMS_GAME][GAME_USER_GAME] = "Select map";
   m_sButtonLabels[MMS_GAME][GAME_BACK] = "Back";
 
   m_iTargetState[MMS_LOAD_GAME][LOAD_GAME_BACK] = MMS_GAME;
