@@ -2,6 +2,7 @@
 #include "OgreLogManager.h"
 #include "OgreResourceGroupManager.h"
 #include "MapInfo.hpp"
+#include "OgreStringConverter.h"
 
 using namespace tinyxml2;
 
@@ -34,7 +35,7 @@ void CLevelList::load() {
   }
   Ogre::LogManager::getSingleton().logMessage("Parsing level files");
 
-  for (XMLElement *pLevel = doc.FirstChildElement(); pLevel; pLevel = pLevel->NextSiblingElement()) {
+  for (XMLElement *pLevel = pLevels->FirstChildElement(); pLevel; pLevel = pLevel->NextSiblingElement()) {
     // parse the single maps
     if (!pLevel->Attribute("file")) {
       Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Level has not file attribute");
@@ -59,5 +60,5 @@ void CLevelList::load() {
     m_lLevelInfoList.push_back(info);
   }
   
-  Ogre::LogManager::getSingleton().logMessage("Loading level list finished");
+  Ogre::LogManager::getSingleton().logMessage("Loading level list finished and read " + Ogre::StringConverter::toString(m_lLevelInfoList.size()) + " levels.");
 }

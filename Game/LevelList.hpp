@@ -21,6 +21,8 @@ public:
   
   void load();
   void clear();
+
+  const std::list<SLevelInfo> &getLevelInfoList() const {return m_lLevelInfoList;}
 };
 
 #endif

@@ -244,6 +244,31 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   pMenuSizeSlider->setCurrentValue(CSettings::getSingleton().getVideoSettings().m_fHUDSize);
   
   m_pOptionPages[OPTIONS_VIDEO]->setVisible(false);
+
+
+  // level selection
+  // ===============
+  m_pLevelSelection = m_pButtonContainer->createChild("OgreTray/Group",
+						      "LevelSelection");
+  m_pLevelSelection->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
+  m_pLevelSelection->setText("Select level");
+
+  ScrollablePane *pLevelPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->createChild("OgreTray/ScrollablePane", "Pane"));
+  pLevelPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  pLevelPane->setSize(USize(UDim(0.7, 0), UDim(1, 0)));
+ 
+  Window *pLevelInfoWindow = m_pLevelSelection->createChild("OgreTray/ScrollablePane", "Info");
+  pLevelInfoWindow->setPosition(UVector2(UDim(0.7, 0), UDim(0, 0)));
+  pLevelInfoWindow->setSize(USize(UDim(0.3, 0), UDim(1, 0)));
+
+  Window *pLevelInfoText = pLevelInfoWindow->createChild("OgreTray/StaticText", "Text");
+  pLevelInfoText->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  pLevelInfoText->setSize(USize(UDim(1, 0), UDim(3, 0)));
+  pLevelInfoText->setProperty("VertFormatting", "TopAligned");
+  pLevelInfoText->setProperty("BackgroundEnabled", "False");
+  pLevelInfoText->setProperty("FrameEnabled", "False");
+
+  updateLevelsSelection();
 }
 CMainMenu::~CMainMenu() {
   CInputListenerManager::getSingleton().removeInputListener(this);
@@ -703,4 +728,44 @@ void CMainMenu::hide() {
   m_pMMRoot->setVisible(false);
   setInputListenerEnabled(false);
   unpause(PAUSE_ALL);
+}
+void CMainMenu::updateLevelsSelection() {
+  ScrollablePane *pPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->getChild("Pane"));
+  pPane->getHorzScrollbar()->setVisible(false);
+  pPane->setShowHorzScrollbar(false);
+  const Window *pContent = pPane->getContentPane();
+  for (int i = pContent->getChildCount() - 1; i >= 0; i++) {
+    pContent->getChildAtIdx(i)->destroy();
+  }
+
+  m_LevelList.load();
+  const std::list<SLevelInfo> &lList(m_LevelList.getLevelInfoList());
+
+  unsigned int uiLevelsPerRow = 5;
+  float fButtonSize = pContent->getPixelSize().d_width / uiLevelsPerRow;
+  std::list<SLevelInfo>::const_iterator it = lList.cbegin();
+  for (unsigned int i = 0; i < lList.size(); i++) {
+    Window *pBut = pPane->createChild("OgreTray/StaticText", PropertyHelper<unsigned int>::toString(i + 1));
+    pBut->setText(pBut->getName());
+    pBut->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
+    pBut->setPosition(UVector2(UDim(0, fButtonSize * (i % uiLevelsPerRow)), UDim(0, fButtonSize * (i / uiLevelsPerRow)))); 
+    pBut->setUserData(const_cast<SLevelInfo*>(&(*it)));
+    pBut->setProperty("HorzFormatting", "CenterAligned");
+    it++;
+  }
+
+  selectLevel(0);
+}
+void CMainMenu::selectLevel(unsigned int id) {
+  ScrollablePane *pPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->getChild("Pane"));
+  ScrollablePane *pInfoPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->getChild("Info"));
+  pPane->setShowHorzScrollbar(false);
+  Window *pText = pInfoPane->getChild("Text");
+  Window *pBut = pPane->getChild(PropertyHelper<unsigned int>::toString(id + 1));
+
+  SLevelInfo *pLevelInfo = static_cast<SLevelInfo*>(pBut->getUserData());
+  pText->setText(pLevelInfo->sFullInfoText.c_str());
+
+  pInfoPane->getVertScrollbar()->setScrollPosition(0);
+  pInfoPane->getHorzScrollbar()->setVisible(false);
 }
