@@ -9,6 +9,7 @@
 #include "PauseCaller.hpp"
 #include <memory>
 #include "GlobalBuildDefines.hpp"
+#include "LevelList.hpp"
 
 class CMapInfo;
 class CSaveState;
@@ -85,6 +86,12 @@ public:
     USER_GAME_BACK    = NUM_SLOTS - 1,
   };
 private:
+  // level selection windows
+  CLevelList m_LevelList;
+  CEGUI::Window *m_pLevelSelection;
+  unsigned int m_uiSelectedLevelID;
+  SLevelInfo *m_pLevelInfo;
+
   CEGUI::Window *m_pMMRoot;
   CEGUI::Window *m_pButtonContainer;
   CEGUI::Window *m_pOptionPages[OPTIONS_BACK];
@@ -123,6 +130,11 @@ public:
 
   void windowSizeChanged(const CEGUI::Sizef &vSize);
 private:
+  // level selection
+  void updateLevelsSelection();
+  void selectLevel(unsigned int id);
+  bool onLevelButtonClicked(const CEGUI::EventArgs &);
+
   void selectedSaveStateChanged();
   void activateLoadState();
 

@@ -1,6 +1,7 @@
 if (ANDROID)  
   # create the GlobalBuildDefines file
   set (MENCUS_CONFIG_OUT "@CMAKE_BINARY_DIR@/include")
+  set(MENCUS_ENABLE_MAP_EDITOR 0)
   include(toolchain/CreateGlobalDefines)
 
   if(APPLE OR WIN32)
@@ -52,11 +53,12 @@ if (ANDROID)
 
   # copy assets files
   file(COPY "${CMAKE_SOURCE_DIR}/cegui" DESTINATION "${NDKOUT}/assets")
-  file(COPY "${CMAKE_SOURCE_DIR}/gfx/black.png" DESTINATION "${NDKOUT}/assets/gfx")
+  file(COPY "${CMAKE_SOURCE_DIR}/gfx/overlay" DESTINATION "${NDKOUT}/assets/gfx")
   file(GLOB gfxPacks "${CMAKE_SOURCE_DIR}/gfx/*.zip")
   file(COPY ${gfxPacks} DESTINATION "${NDKOUT}/assets/gfx")
-  file(GLOB levelFiles "${CMAKE_SOURCE_DIR}/level/*.zip")
-  file(COPY ${levelFiles} DESTINATION "${NDKOUT}/assets/level")
+  # file(GLOB levelFiles "${CMAKE_SOURCE_DIR}/level/*.zip")
+  # file(COPY ${levelFiles} DESTINATION "${NDKOUT}/assets/level")
+  file(COPY "${CMAKE_SOURCE_DIR}/level/level_list.xml" DESTINATION "${NDKOUT}/assets/level")
   file(COPY "${CMAKE_SOURCE_DIR}/level/user" DESTINATION "${NDKOUT}/assets/level" PATTERN *Test* EXCLUDE)
   file(COPY "${CMAKE_SOURCE_DIR}/materials" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/overlays" DESTINATION "${NDKOUT}/assets")

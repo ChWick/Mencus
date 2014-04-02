@@ -210,8 +210,8 @@ void CGame::locateResources() {
 }
 void CGame::loadResources() {
   //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-  showLoadingBar(7, 7);
-  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("General");
+  showLoadingBar(7, 0);
+  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("PreloadGame");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Imagesets");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Fonts");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Schemes");
@@ -511,11 +511,14 @@ void CGame::createScene() {
 
 bool CGame::frameRenderingQueued(const Ogre::FrameEvent& evt) {
   if(mWindow->isClosed()) {
+    Ogre::LogManager::getSingleton().logMessage("Shutting down: window closed");
     CSnapshotManager::getSingleton().makeBackupSnapshot();
     return false;
   }
 
   if(mShutDown) {
+    Ogre::LogManager::getSingleton().logMessage("Shutting down: user request");
+    mShutDown = false; // if it is restarted in mobile devices
     CSnapshotManager::getSingleton().makeBackupSnapshot();
     return false;
   }

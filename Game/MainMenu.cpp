@@ -29,9 +29,10 @@ CMainMenu &CMainMenu::getSingleton() {
 
 CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   : m_vSlots(NUM_SLOTS),
-  m_bSaveListSelected(false),
-  m_iSelectedLoadState(0),
-  m_pStateToLoad(NULL) {
+    m_bSaveListSelected(false),
+    m_iSelectedLoadState(0),
+    m_pStateToLoad(NULL),
+    m_pLevelInfo(NULL) {
   CInputListenerManager::getSingleton().addInputListener(this);
   ImageManager::getSingleton().loadImageset("main_menu_background.imageset");
   //ImageManager::getSingleton().loadImageset("save_pictures.imageset");
@@ -64,7 +65,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_iTargetState[MMS_GAME][GAME_LOAD_GAME] = MMS_LOAD_GAME;
   m_sButtonLabels[MMS_GAME][GAME_LOAD_GAME] = "Load game";
 #endif
-  m_sButtonLabels[MMS_GAME][GAME_USER_GAME] = "User game";
+  m_sButtonLabels[MMS_GAME][GAME_USER_GAME] = "Select map";
   m_sButtonLabels[MMS_GAME][GAME_BACK] = "Back";
 
   m_iTargetState[MMS_LOAD_GAME][LOAD_GAME_BACK] = MMS_GAME;
@@ -178,10 +179,12 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   
   // input
   float fHeight = 0;
-#if ENABLE_MAP_EDITOR
   m_pOptionPages[OPTIONS_INPUT] = pButtonContainer->createChild("OgreTray/Group", "InputOptionsContainer");
   m_pOptionPages[OPTIONS_INPUT]->setText("Input");
   m_pOptionPages[OPTIONS_INPUT]->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
+
+
+#if ENABLE_MAP_EDITOR
   Window *pMapEditorButtonSizeText = m_pOptionPages[OPTIONS_INPUT]->createChild("OgreTray/StaticText", "MapEditorButtonSliderText");
   pMapEditorButtonSizeText->setPosition(UVector2(UDim(0, 0), UDim(0.00, 0)));
   pMapEditorButtonSizeText->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
@@ -242,6 +245,33 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   pMenuSizeSlider->setCurrentValue(CSettings::getSingleton().getVideoSettings().m_fHUDSize);
   
   m_pOptionPages[OPTIONS_VIDEO]->setVisible(false);
+
+
+  // level selection
+  // ===============
+  m_pLevelSelection = m_pButtonContainer->createChild("OgreTray/Group",
+						      "LevelSelection");
+  m_pLevelSelection->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
+  m_pLevelSelection->setText("Select level");
+
+  ScrollablePane *pLevelPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->createChild("OgreTray/ScrollablePane", "Pane"));
+  pLevelPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  pLevelPane->setSize(USize(UDim(0.7, 0), UDim(1, 0)));
+ 
+  Window *pLevelInfoWindow = m_pLevelSelection->createChild("OgreTray/ScrollablePane", "Info");
+  pLevelInfoWindow->setPosition(UVector2(UDim(0.7, 0), UDim(0, 0)));
+  pLevelInfoWindow->setSize(USize(UDim(0.3, 0), UDim(1, 0)));
+
+  Window *pLevelInfoText = pLevelInfoWindow->createChild("OgreTray/StaticText", "Text");
+  pLevelInfoText->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  pLevelInfoText->setSize(USize(UDim(1, 0), UDim(3, 0)));
+  pLevelInfoText->setProperty("VertFormatting", "TopAligned");
+  pLevelInfoText->setProperty("BackgroundEnabled", "False");
+  pLevelInfoText->setProperty("FrameEnabled", "False");
+
+  m_pLevelSelection->setVisible(false);
+
+  updateLevelsSelection();
 }
 CMainMenu::~CMainMenu() {
   CInputListenerManager::getSingleton().removeInputListener(this);
@@ -291,17 +321,27 @@ void CMainMenu::changeState(EMainMenuState eState) {
     m_iTargetState[MMS_OPTIONS][OPTIONS_BACK] = m_eCurrentState;
   }
 
+  // old state
+
   switch (m_eCurrentState) {
   case MMS_RESULT_NEW_GAME:
     break;
- case MMS_OPTIONS_VIDEO:
-   m_pOptionPages[OPTIONS_VIDEO]->setVisible(false);
-   CSettings::getSingleton().writeToFile();
-   break;
- case MMS_OPTIONS_INPUT:
-   m_pOptionPages[OPTIONS_INPUT]->setVisible(false);
-   CSettings::getSingleton().writeToFile();
-   break;
+  case MMS_OPTIONS_VIDEO:
+    m_pOptionPages[OPTIONS_VIDEO]->setVisible(false);
+    CSettings::getSingleton().writeToFile();
+    break;
+  case MMS_OPTIONS_INPUT:
+    m_pOptionPages[OPTIONS_INPUT]->setVisible(false);
+    CSettings::getSingleton().writeToFile();
+    break;
+  case MMS_USER_GAME:
+    if (eState == MMS_RESULT_LOAD_GAME ||
+	eState == MMS_RESULT_NEW_GAME)  {
+      assert(m_pLevelInfo);
+      m_pMapInfo = shared_ptr<CMapInfo>(new CMapInfo(m_pLevelInfo->sLevelFileName,
+						     "level_user"));
+    }
+    break;
   default:
     break;
   }
@@ -375,6 +415,7 @@ void CMainMenu::changeState(EMainMenuState eState) {
   }
 
   m_pMapInfoContainer->setVisible(false);
+  m_pLevelSelection->setVisible(false);
   if (eState == MMS_LOAD_GAME) {
     m_pSaveStatesWindow->setVisible(true);
     m_pSaveStatePreviewWindow->setVisible(true);
@@ -404,9 +445,10 @@ void CMainMenu::changeState(EMainMenuState eState) {
     selectedSaveStateChanged();
   }
   else if (eState == MMS_USER_GAME) {
-    m_pSaveStatesWindow->setVisible(true);
+    m_pSaveStatesWindow->setVisible(false);
     m_pSaveStatePreviewWindow->setVisible(false);
-    m_pMapInfoContainer->setVisible(true);
+    //m_pMapInfoContainer->setVisible(true);
+    m_pLevelSelection->setVisible(true);
 #ifndef INPUT_KEYBOARD_ONLY
     m_pSelectButton->setVisible(true);
 #endif
@@ -632,7 +674,9 @@ void CMainMenu::resizeGUI(Ogre::Real fScaling) {
 #ifdef INPUT_TOUCH
   m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSliderText")->setFont(smallfont);
 #endif
+#if ENABLE_MAP_EDITOR
   m_pOptionPages[OPTIONS_INPUT]->getChild("MapEditorButtonSliderText")->setFont(smallfont);
+#endif
   m_pOptionPages[OPTIONS_VIDEO]->setFont(bigfont);
   m_pOptionPages[OPTIONS_VIDEO]->getChild("MenuSizeText")->setFont(smallfont);
 
@@ -676,8 +720,11 @@ bool CMainMenu::menuSizeSliderValueChanged(const EventArgs &args) {
   return true;
 }
 void CMainMenu::windowSizeChanged(const CEGUI::Sizef &vSize) {
-  Slider *pSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->getChild("MapEditorButtonSizeSlider"));
+  Slider *pSlider = NULL;
+#if ENABLE_MAP_EDITOR
+  pSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->getChild("MapEditorButtonSizeSlider"));
   pSlider->setMaxValue(min(vSize.d_height / 4.0, vSize.d_width / 8.0));
+#endif
 #ifdef INPUT_TOUCH
   pSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSizeSlider"));
   pSlider->setMaxValue(min(vSize.d_height / 4.0, vSize.d_width / 8.0));
@@ -696,4 +743,57 @@ void CMainMenu::hide() {
   m_pMMRoot->setVisible(false);
   setInputListenerEnabled(false);
   unpause(PAUSE_ALL);
+}
+void CMainMenu::updateLevelsSelection() {
+  ScrollablePane *pPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->getChild("Pane"));
+  pPane->getHorzScrollbar()->setVisible(false);
+  pPane->setShowHorzScrollbar(false);
+  const Window *pContent = pPane->getContentPane();
+  for (int i = pContent->getChildCount() - 1; i >= 0; i++) {
+    pContent->getChildAtIdx(i)->destroy();
+  }
+
+  m_LevelList.load();
+  const std::list<SLevelInfo> &lList(m_LevelList.getLevelInfoList());
+
+  unsigned int uiLevelsPerRow = 5;
+  float fButtonSize = pContent->getPixelSize().d_width / uiLevelsPerRow;
+  std::list<SLevelInfo>::const_iterator it = lList.cbegin();
+  for (unsigned int i = 0; i < lList.size(); i++) {
+    RadioButton *pBut = dynamic_cast<RadioButton*>(pPane->createChild("OgreTray/ToggleRadioButton", PropertyHelper<unsigned int>::toString(i + 1)));
+    pBut->setText(pBut->getName());
+    pBut->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
+    pBut->setPosition(UVector2(UDim(0, fButtonSize * (i % uiLevelsPerRow)), UDim(0, fButtonSize * (i / uiLevelsPerRow)))); 
+    pBut->setUserData(const_cast<SLevelInfo*>(&(*it)));
+    //pBut->setProperty("HorzFormatting", "CenterAligned");
+    pBut->subscribeEvent(RadioButton::EventSelectStateChanged,
+			 Event::Subscriber(&CMainMenu::onLevelButtonClicked,
+					   this));
+    pBut->setGroupID(1249845902);
+    it++;
+  }
+  
+  dynamic_cast<RadioButton*>(pPane->getChild("1"))->setSelected(true);
+  //selectLevel(1);
+}
+void CMainMenu::selectLevel(unsigned int id) {
+  m_uiSelectedLevelID = id;
+  ScrollablePane *pPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->getChild("Pane"));
+  ScrollablePane *pInfoPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->getChild("Info"));
+  pPane->setShowHorzScrollbar(false);
+  Window *pText = pInfoPane->getChild("Text");
+  Window *pBut = pPane->getChild(PropertyHelper<unsigned int>::toString(id));
+
+  SLevelInfo *pLevelInfo = static_cast<SLevelInfo*>(pBut->getUserData());
+  pText->setText(pLevelInfo->sFullInfoText.c_str());
+
+  pInfoPane->getVertScrollbar()->setScrollPosition(0);
+  pInfoPane->getHorzScrollbar()->setVisible(false);
+  m_pLevelInfo = pLevelInfo;
+}
+bool CMainMenu::onLevelButtonClicked(const CEGUI::EventArgs &args) {
+  const WindowEventArgs &wndArgs(dynamic_cast<const WindowEventArgs &>(args));
+
+  selectLevel(PropertyHelper<unsigned int>::fromString(wndArgs.window->getName()));
+  return true;
 }
