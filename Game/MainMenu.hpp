@@ -89,6 +89,8 @@ private:
   // level selection windows
   CLevelList m_LevelList;
   CEGUI::Window *m_pLevelSelection;
+  unsigned int m_uiSelectedLevelID;
+  SLevelInfo *m_pLevelInfo;
 
   CEGUI::Window *m_pMMRoot;
   CEGUI::Window *m_pButtonContainer;
@@ -131,6 +133,7 @@ private:
   // level selection
   void updateLevelsSelection();
   void selectLevel(unsigned int id);
+  bool onLevelButtonClicked(const CEGUI::EventArgs &);
 
   void selectedSaveStateChanged();
   void activateLoadState();
