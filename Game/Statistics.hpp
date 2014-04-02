@@ -2,14 +2,36 @@
 #define _STATISTICS_HPP_
 
 #include "Weapon.hpp"
+#include <string>
+#include <OgreException.h>
+#include <tinyxml2.h>
+#include <XMLHelper.hpp>
 
 enum EMissionState {
   MS_ACCOMPLISHED,
   MS_FAILED
 };
 struct SStatistics {
+  static EMissionState parseMissionState(const std::string &s) {
+    if (s == "accomplished") {
+      return MS_ACCOMPLISHED;
+    }
+    return MS_FAILED;
+  }
+  static std::string toString(const EMissionState ms) {
+    switch (ms) {
+    case MS_ACCOMPLISHED:
+      return "accomplished";
+    case MS_FAILED:
+      return "failed";
+    }
+
+    throw Ogre::Exception(0, "Mission state could not be converted to string", __FILE__);
+  }
+
   SStatistics() 
-    : eMissionState(MS_FAILED),
+    : sLevelFileName("unknown level file name"), 
+      eMissionState(MS_FAILED),
       fTime(0),
       fHitpoints(0),
       fLostHitpoints(0),
@@ -18,7 +40,34 @@ struct SStatistics {
       ic = 0;
     }
   }
+  SStatistics(const tinyxml2::XMLElement *pElem) 
+    : sLevelFileName(XMLHelper::Attribute(pElem, "level", "unknown level file name")),
+      eMissionState(parseMissionState(XMLHelper::Attribute(pElem, "mission_state", "failed"))),
+      fTime(XMLHelper::RealAttribute(pElem, "time", 0)),
+      fHitpoints(XMLHelper::RealAttribute(pElem, "hitpoints", 0)),
+      fManapoints(XMLHelper::RealAttribute(pElem, "manapoints", 0)),
+      fLostHitpoints(XMLHelper::RealAttribute(pElem, "lost_hitpoints", 0)),
+      fUsedManapoints(XMLHelper::RealAttribute(pElem, "used_manapoints", 0)) {
+
+    for (unsigned int i = 0; i < Weapon::I_COUNT; i++) {
+      uiUsedItems[i] = XMLHelper::IntAttribute(pElem, ("used_" + Weapon::toString(i)).c_str(), 0);
+    }
+  }
+
+  void writeToXML(tinyxml2::XMLElement *pElem) {
+    pElem->SetAttribute("level", sLevelFileName.c_str());
+    pElem->SetAttribute("mission_state", toString(eMissionState).c_str());
+    pElem->SetAttribute("time", fTime);
+    pElem->SetAttribute("hitpoints", fHitpoints);
+    pElem->SetAttribute("manapoints", fManapoints);
+    pElem->SetAttribute("lost_hitpoints", fLostHitpoints);
+    pElem->SetAttribute("used_manapoints", fUsedManapoints);
+    for (unsigned int i = 0; i < Weapon::I_COUNT; i++) {
+      pElem->SetAttribute(("used_" + Weapon::toString(i)).c_str(), uiUsedItems[i]);
+    }
+  }
   
+  std::string sLevelFileName;
   EMissionState eMissionState;
 
   float fTime;

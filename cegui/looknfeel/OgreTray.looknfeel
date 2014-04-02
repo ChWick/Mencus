@@ -2755,7 +2755,7 @@
                 <Image component="TopEdge" name="OgreTrayImages/MiniTextBoxOverT"/>
                 <Image component="RightEdge" name="OgreTrayImages/MiniTextBoxOverR"/>
                 <Image component="BottomEdge" name="OgreTrayImages/MiniTextBoxOverB"/>
-                <Image component="Background" name="OgreTrayImages/MiniTextBoxM"/>
+                <Image component="Background" name="OgreTrayImages/MiniTextBoxOverM"/>
             </FrameComponent>
         </ImagerySection>
         <StateImagery name="Normal">

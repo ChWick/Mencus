@@ -2,6 +2,7 @@
 #define _WEAPON_HPP_
 
 #include <CEGUI/String.h>
+#include <string>
 
 namespace Weapon {
   enum EWeapons {
@@ -23,6 +24,8 @@ namespace Weapon {
   };
 
   CEGUI::String getPicture(unsigned int uiWeapon);
+
+  std::string toString(unsigned int uiWeapon);
 };
 
 #endif

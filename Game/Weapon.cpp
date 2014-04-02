@@ -25,4 +25,24 @@ namespace Weapon {
     }
     return "hud_weapons/UNDEFINED_WEAPON";
   }
+  std::string toString(unsigned int uiWeapon) {
+    switch (uiWeapon) {
+    case I_BOLT:
+      return "bolt";
+    case I_BOMB:
+      return "bomb";
+    case I_SHIELD:
+      return "shield";
+    case I_COLUMN:
+      return "column";
+    case I_HEALTH_POTION:
+      return "health_potion";
+    case I_MANA_POTION:
+      return "mana_potion";
+    case I_KEY:
+      return "keys";
+    default:
+      return "unknwon";
+    }
+  }
 };
