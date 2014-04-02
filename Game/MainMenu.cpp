@@ -760,19 +760,21 @@ void CMainMenu::updateLevelsSelection() {
   float fButtonSize = pContent->getPixelSize().d_width / uiLevelsPerRow;
   std::list<SLevelInfo>::const_iterator it = lList.cbegin();
   for (unsigned int i = 0; i < lList.size(); i++) {
-    Window *pBut = pPane->createChild("OgreTray/Button", PropertyHelper<unsigned int>::toString(i + 1));
+    RadioButton *pBut = dynamic_cast<RadioButton*>(pPane->createChild("OgreTray/ToggleRadioButton", PropertyHelper<unsigned int>::toString(i + 1)));
     pBut->setText(pBut->getName());
     pBut->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
     pBut->setPosition(UVector2(UDim(0, fButtonSize * (i % uiLevelsPerRow)), UDim(0, fButtonSize * (i / uiLevelsPerRow)))); 
     pBut->setUserData(const_cast<SLevelInfo*>(&(*it)));
     //pBut->setProperty("HorzFormatting", "CenterAligned");
-    pBut->subscribeEvent(PushButton::EventClicked,
+    pBut->subscribeEvent(RadioButton::EventSelectStateChanged,
 			 Event::Subscriber(&CMainMenu::onLevelButtonClicked,
 					   this));
+    pBut->setGroupID(1249845902);
     it++;
   }
-
-  selectLevel(1);
+  
+  dynamic_cast<RadioButton*>(pPane->getChild("1"))->setSelected(true);
+  //selectLevel(1);
 }
 void CMainMenu::selectLevel(unsigned int id) {
   m_uiSelectedLevelID = id;
