@@ -18,6 +18,7 @@
 
 [level_user]
 @RESOURCES_USING_APK@FileSystem=@RESOURCES_PREFIX@/level/user
+@RESOURCES_USING_APK@FileSystem=@RESOURCES_PREFIX@/level
 
 [Imagesets]
 @RESOURCES_USING_APK@FileSystem=@RESOURCES_PREFIX@/cegui/imagesets
