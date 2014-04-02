@@ -2649,7 +2649,7 @@
         <PropertyDefinition redrawOnWrite="true" initialValue="FF000000" type="ColourRect" name="NormalTextColour"/>
         <PropertyDefinition redrawOnWrite="true" initialValue="FF000000" type="ColourRect" name="HoverTextColour"/>
         <PropertyDefinition redrawOnWrite="true" initialValue="FF000000" type="ColourRect" name="PushedTextColour"/>
-        <PropertyDefinition redrawOnWrite="true" initialValue="FF000000" type="ColourRect" name="DisabledTextColour"/>
+        <PropertyDefinition redrawOnWrite="true" initialValue="FF666666" type="ColourRect" name="DisabledTextColour"/>
         <Property name="Size" value="{{0, 128}, {0, 32}}" />
         <ImagerySection name="label">
             <TextComponent>
@@ -2789,6 +2789,14 @@
                 <Section section="select_mark"/>
                 <Section section="label">
                     <ColourProperty name="HoverTextColour"/>
+                </Section>
+            </Layer>
+        </StateImagery>
+	<StateImagery name="Disabled">
+            <Layer>
+                <Section section="normal"/>
+                <Section section="label">
+                    <ColourProperty name="DisabledTextColour"/>
                 </Section>
             </Layer>
         </StateImagery>

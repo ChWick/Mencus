@@ -12,6 +12,8 @@ private:
   static bool m_bLoaded;
   static tinyxml2::XMLDocument m_XMLDocument;
 public:
+  static bool has(const std::string &sFileName);
+  static SStatistics &get(const std::string &sFileName);
   static bool levelAccomplished(const std::string &sFileName);
 
 private:

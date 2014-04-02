@@ -10,6 +10,7 @@
 #include "Settings.hpp"
 #include "MapInfo.hpp"
 #include "MapEditor.hpp"
+#include "LevelState.hpp"
 
 using namespace std;
 using namespace CEGUI;
@@ -759,6 +760,7 @@ void CMainMenu::updateLevelsSelection() {
   unsigned int uiLevelsPerRow = 5;
   float fButtonSize = pContent->getPixelSize().d_width / uiLevelsPerRow;
   std::list<SLevelInfo>::const_iterator it = lList.cbegin();
+  std::string sPreviousLevelFileName;
   for (unsigned int i = 0; i < lList.size(); i++) {
     RadioButton *pBut = dynamic_cast<RadioButton*>(pPane->createChild("OgreTray/ToggleRadioButton", PropertyHelper<unsigned int>::toString(i + 1)));
     pBut->setText(pBut->getName());
@@ -771,6 +773,10 @@ void CMainMenu::updateLevelsSelection() {
 					   this));
     pBut->setGroupID(1249845902);
     it++;
+    if (i > 0) {
+      pBut->setEnabled(CLevelState::levelAccomplished(sPreviousLevelFileName));
+    }
+    sPreviousLevelFileName = it->sLevelFileName;
   }
   
   dynamic_cast<RadioButton*>(pPane->getChild("1"))->setSelected(true);

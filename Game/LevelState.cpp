@@ -13,6 +13,8 @@ bool CLevelState::m_bLoaded(false);
 XMLDocument CLevelState::m_XMLDocument;
 
 bool CLevelState::has(const std::string &sFileName) {
+  if (!m_bLoaded) {read();}
+
   for (auto &level : m_vLevelStatistics) {
     if (level.sLevelFileName == sFileName) {
       return true;
@@ -21,6 +23,8 @@ bool CLevelState::has(const std::string &sFileName) {
   return false;
 }
 SStatistics &CLevelState::get(const std::string &sFileName) {
+  if (!m_bLoaded) {read();}
+
   for (auto &level : m_vLevelStatistics) {
     if (level.sLevelFileName == sFileName) {
       return level;
@@ -28,6 +32,8 @@ SStatistics &CLevelState::get(const std::string &sFileName) {
   }
 }
 bool CLevelState::levelAccomplished(const std::string &sFileName) {
+  if (!m_bLoaded) {read();}
+
   for (auto &level : m_vLevelStatistics) {
     if (level.sLevelFileName == sFileName) {
       return level.eMissionState == MS_ACCOMPLISHED;
