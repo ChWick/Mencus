@@ -35,7 +35,7 @@ public:
 #if ENABLE_CAMPAIGN == 0
     GAME_USER_GAME    = 0,
 #if ENABLE_MAP_EDITOR
-    GAME_NEW_MAP      = 1,
+    GAME_MAP_EDITOR   = 1,
 #endif
 #else
     GAME_NEW_GAME     = 0,
@@ -43,6 +43,15 @@ public:
     GAME_LOAD_GAME    = 2,
 #endif
     GAME_BACK         = NUM_SLOTS - 1,
+  };
+  enum EMapEditorSlots {
+    MAP_EDITOR_NEW_MAP    = 0,
+    MAP_EDITOR_LOAD_MAP   = 1,
+
+    MAP_EDITOR_BACK       = NUM_SLOTS - 1,
+  };
+  enum EMapEditorLoadSlots {
+    MAP_EDITOR_LOAD_BACK  = NUM_SLOTS - 1
   };
   enum ELoadGameSlots {
     LOAD_GAME_BACK    = NUM_SLOTS - 1,
@@ -111,6 +120,9 @@ public:
 
   void windowSizeChanged(const CEGUI::Sizef &vSize);
 private:
+  // button setup
+  void setupButton(MainMenu::EState eState, unsigned int uiButtonID, const CEGUI::String &sLabel, MainMenu::EState iTargetID);
+
   // level selection
   void updateLevelsSelection();
   void selectLevel(unsigned int id);

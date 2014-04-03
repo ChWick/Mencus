@@ -30,11 +30,11 @@ CMainMenu &CMainMenu::getSingleton() {
 }
 
 CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
-  : m_vSlots(NUM_SLOTS),
+  : m_pLevelInfo(NULL),
+    m_vSlots(NUM_SLOTS),
     m_bSaveListSelected(false),
     m_iSelectedLoadState(0),
-    m_pStateToLoad(NULL),
-    m_pLevelInfo(NULL) {
+    m_pStateToLoad(NULL) {
   CInputListenerManager::getSingleton().addInputListener(this);
   ImageManager::getSingleton().loadImageset("main_menu_background.imageset");
   //ImageManager::getSingleton().loadImageset("save_pictures.imageset");
@@ -58,8 +58,8 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_iTargetState[MMS_GAME][GAME_USER_GAME] = MMS_USER_GAME;
   m_iTargetState[MMS_GAME][GAME_BACK] = MMS_START;
 #if ENABLE_MAP_EDITOR
-  m_iTargetState[MMS_GAME][GAME_NEW_MAP] = MMS_RESULT_NEW_MAP;
-  m_sButtonLabels[MMS_GAME][GAME_NEW_MAP] = "New map";
+  m_iTargetState[MMS_GAME][GAME_MAP_EDITOR] = MMS_MAP_EDITOR;
+  m_sButtonLabels[MMS_GAME][GAME_MAP_EDITOR] = "Map editor";
 #endif
 #if ENABLE_CAMPAIGN
   m_iTargetState[MMS_GAME][GAME_NEW_GAME] = MMS_RESULT_NEW_GAME;
@@ -70,9 +70,17 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_sButtonLabels[MMS_GAME][GAME_USER_GAME] = "Select map";
   m_sButtonLabels[MMS_GAME][GAME_BACK] = "Back";
 
-  m_iTargetState[MMS_LOAD_GAME][LOAD_GAME_BACK] = MMS_GAME;
-  m_sButtonLabels[MMS_LOAD_GAME][LOAD_GAME_BACK] = "Back";
+  // map editor
+  setupButton(MMS_MAP_EDITOR, MAP_EDITOR_NEW_MAP, "New map", MMS_RESULT_NEW_MAP);
+  setupButton(MMS_MAP_EDITOR, MAP_EDITOR_LOAD_MAP, "Load map", MMS_MAP_EDITOR_SELECT_MAP);
+  setupButton(MMS_MAP_EDITOR, MAP_EDITOR_BACK, "Back", MMS_GAME);
 
+  setupButton(MMS_MAP_EDITOR_SELECT_MAP, MAP_EDITOR_LOAD_BACK, "Back", MMS_MAP_EDITOR);
+
+  // load
+  setupButton(MMS_LOAD_GAME, LOAD_GAME_BACK, "Back", MMS_GAME);
+
+  // options
   m_iTargetState[MMS_OPTIONS][OPTIONS_VIDEO] = MMS_OPTIONS_VIDEO;
   m_iTargetState[MMS_OPTIONS][OPTIONS_INPUT] = MMS_OPTIONS_INPUT;
   m_iTargetState[MMS_OPTIONS][OPTIONS_BACK] = MMS_START;
@@ -276,9 +284,13 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 CMainMenu::~CMainMenu() {
   CInputListenerManager::getSingleton().removeInputListener(this);
 }
+void CMainMenu::setupButton(MainMenu::EState eState, unsigned int uiButtonID, const CEGUI::String &sLabel, MainMenu::EState iTargetID) {
+  m_sButtonLabels[eState][uiButtonID] = sLabel;
+  m_iTargetState[eState][uiButtonID] = iTargetID;
+}
 void CMainMenu::createResources() {
   if (!m_pMMRoot->getChild("Background")) {
-    throw Ogre::Exception(0, "asd", __FILE__);
+    throw Ogre::Exception(0, "Background child not found", __FILE__);
   }
   m_pMMRoot->getChild("Background")->setProperty("Image", "main_menu_background/full");
   for (int i = 0; i < NUM_SLOTS; i++) {
@@ -445,16 +457,15 @@ void CMainMenu::changeState(MainMenu::EState eState) {
 
     selectedSaveStateChanged();
   }
-  else if (eState == MMS_USER_GAME) {
-    m_pSaveStatesWindow->setVisible(false);
+  else if (eState == MMS_MAP_EDITOR_SELECT_MAP) {
+    m_pSaveStatesWindow->setVisible(true);
     m_pSaveStatePreviewWindow->setVisible(false);
-    //m_pMapInfoContainer->setVisible(true);
-    m_pLevelSelection->setVisible(true);
+    m_pMapInfoContainer->setVisible(true);
 #ifndef INPUT_KEYBOARD_ONLY
     m_pSelectButton->setVisible(true);
 #endif
 
-    /*while (m_pSaveStatesWindow->getItemCount() > 0) {
+    while (m_pSaveStatesWindow->getItemCount() > 0) {
       m_pSaveStatesWindow->removeItem(m_pSaveStatesWindow->getListboxItemFromIndex(0));
     }
     m_vUserFiles.clear();
@@ -473,7 +484,15 @@ void CMainMenu::changeState(MainMenu::EState eState) {
     }
 
     selectedSaveStateChanged();
-    */
+  }
+  else if (eState == MMS_USER_GAME) {
+    m_pSaveStatesWindow->setVisible(false);
+    m_pSaveStatePreviewWindow->setVisible(false);
+    m_pLevelSelection->setVisible(true);
+#ifndef INPUT_KEYBOARD_ONLY
+    m_pSelectButton->setVisible(true);
+#endif
+
     updateLevelsSelection();
   }
   else {
@@ -563,6 +582,7 @@ bool CMainMenu::keyPressed(const OIS::KeyEvent &arg) {
   return true;
 }
 void CMainMenu::selectedSaveStateChanged() {
+  Ogre::LogManager::getSingleton().logMessage("Save state " + Ogre::StringConverter::toString(m_iSelectedLoadState) + " selected.");
   if (m_eCurrentState == MMS_LOAD_GAME) {
     if (m_iSelectedLoadState < 0 || m_iSelectedLoadState >= static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
       m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/none");
@@ -571,7 +591,7 @@ void CMainMenu::selectedSaveStateChanged() {
     m_pStateToLoad = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
     m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/" + PropertyHelper<int>::toString(m_pStateToLoad->getActID()) + "-" + PropertyHelper<int>::toString(m_pStateToLoad->getSceneID()));
   }
-  else if (m_eCurrentState == MMS_USER_GAME) {
+  else if (m_eCurrentState == MMS_USER_GAME || m_eCurrentState == MMS_MAP_EDITOR_SELECT_MAP) {
     if (m_iSelectedLoadState < 0 || m_iSelectedLoadState >= static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
       m_pMapInfoWindow->setText("");
       return;
