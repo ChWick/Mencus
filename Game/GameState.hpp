@@ -3,6 +3,8 @@
 
 #include <OgreSingleton.h>
 #include <memory>
+#include "MainMenuStates.hpp"
+
 
 class CMainMenu;
 class CScreenplay;
@@ -26,6 +28,7 @@ private:
   EGameStates m_eCurrentGameState;
   EGameStates m_eNextGameState;
   CMainMenu *m_pMainMenu;
+  MainMenu::EState m_eMainMenuState;
   CScreenplay *m_pScreenplay;
   const CSaveState *m_pSaveState;
   std::shared_ptr<const CMapInfo> m_pMapInfo;
@@ -47,6 +50,8 @@ public:
   void changeGameState(EGameStates eNewGameState, bool bNow = false, bool bForce = true);
   void changeGameState(EGameStates eNewGameState, const CSaveState *pState);
   void changeGameState(EGameStates eNewGameState, std::shared_ptr<const CMapInfo> pInfo);
+  void changeGameState(EGameStates eNewGameState, MainMenu::EState eMainMenuState);
+
   const CSaveState *getSaveState() const {return m_pSaveState;}
   std::shared_ptr<const CMapInfo> getMapInfo() const {return m_pMapInfo;}
   void setMapInfo(std::shared_ptr<const CMapInfo> ptr) {m_pMapInfo = ptr;}

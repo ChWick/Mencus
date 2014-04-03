@@ -43,8 +43,11 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_bUpdatePause(false),
     m_bRenderPause(false),
     m_fPlayingTime(0),
-  m_Statistics(statistics),
-  m_pMapInfo(pMapInfo) {
+    m_Statistics(statistics),
+    m_pMapInfo(pMapInfo) {
+
+  m_Statistics.sLevelFileName = pMapInfo->getFileName();
+
   resizeTilesPerScreen(Ogre::Vector2(16, 12));
   CGame::getSingleton().showLoadingBar(0, 1);
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");

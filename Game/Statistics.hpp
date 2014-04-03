@@ -54,7 +54,9 @@ struct SStatistics {
     }
   }
 
-  void writeToXML(tinyxml2::XMLElement *pElem) {
+  void writeToXML(tinyxml2::XMLElement *pElem) const {
+    assert(pElem);
+
     pElem->SetAttribute("level", sLevelFileName.c_str());
     pElem->SetAttribute("mission_state", toString(eMissionState).c_str());
     pElem->SetAttribute("time", fTime);

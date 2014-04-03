@@ -10,6 +10,7 @@
 #include <memory>
 #include "GlobalBuildDefines.hpp"
 #include "LevelList.hpp"
+#include "MainMenuStates.hpp"
 
 class CMapInfo;
 class CSaveState;
@@ -23,27 +24,7 @@ class CMainMenu :
   public CPauseCaller {
 public:
   static const int NUM_SLOTS = 4;
-  enum EMainMenuState {
-    MMS_STATE_NONE = -1,
-
-    MMS_START = 0,
-    MMS_GAME,
-    MMS_LOAD_GAME,
-    MMS_OPTIONS,
-    MMS_OPTIONS_VIDEO,
-    MMS_OPTIONS_INPUT,
-    MMS_GAME_ESCAPE,
-    MMS_USER_GAME,
-
-    MMS_COUNT,
-
-    MMS_RESULT_CREDITS,
-    MMS_RESULT_BACK_TO_GAME,
-    MMS_RESULT_EXIT,
-    MMS_RESULT_NEW_GAME,
-    MMS_RESULT_LOAD_GAME,
-    MMS_RESULT_NEW_MAP,
-  };
+  
   enum EStartSlots {
     START_START_GAME  = 0,
     START_OPTIONS     = 1,
@@ -96,10 +77,10 @@ private:
   CEGUI::Window *m_pButtonContainer;
   CEGUI::Window *m_pOptionPages[OPTIONS_BACK];
   std::vector<CEGUI::Window *> m_vSlots;
-  EMainMenuState m_iTargetState[MMS_COUNT][NUM_SLOTS];
-  CEGUI::String m_sButtonLabels[MMS_COUNT][NUM_SLOTS];
+  MainMenu::EState m_iTargetState[MainMenu::MMS_COUNT][NUM_SLOTS];
+  CEGUI::String m_sButtonLabels[MainMenu::MMS_COUNT][NUM_SLOTS];
   CEGUI::Window *m_pSelectButton;
-  EMainMenuState m_eCurrentState;
+  MainMenu::EState m_eCurrentState;
   int m_iSelectedSlot;
   CEGUI::Listbox *m_pSaveStatesWindow;
   CEGUI::Window *m_pSaveStatePreviewWindow;
@@ -121,7 +102,7 @@ public:
 
   void update(Ogre::Real tpf);
 
-  void changeState(EMainMenuState eState);
+  void changeState(MainMenu::EState eState);
 
   virtual bool keyPressed(const OIS::KeyEvent &arg);
 

@@ -4,6 +4,7 @@
 #include "GameState.hpp"
 #include "SaveStateManager.hpp"
 #include "Statistics.hpp"
+#include "LevelState.hpp"
 #include <OgreStringConverter.h>
 
 using namespace CEGUI;
@@ -72,7 +73,7 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
   pToMenuButton->setPosition(UVector2(UDim(0.6, 0), UDim(0.85, 0)));
   pToMenuButton->setSize(USize(UDim(0.2, 0), UDim(0.1, 0)));
   pToMenuButton->setFont("dejavusans12");
-  pToMenuButton->setText("To main menu");
+  pToMenuButton->setText("To level selection");
   pToMenuButton->subscribeEvent(
 				CEGUI::PushButton::EventClicked,
 				CEGUI::Event::Subscriber(&CGUIStatistics::onToMenuClicked, this));
@@ -123,7 +124,7 @@ void CGUIStatistics::activateButton(int iBtn) {
       changeGameState(CGameState::GS_GAME, CGameState::getSingleton().getMapInfo());
     break;
   case BT_TO_MENU:
-    CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);
+    CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU, MainMenu::MMS_USER_GAME);
     break;
   }
 }
@@ -142,6 +143,8 @@ void CGUIStatistics::resize(const CEGUI::String &smallfont, const CEGUI::String 
   }
 }
 void CGUIStatistics::showStatistics(const SStatistics &stats) {
+  CLevelState::add(stats);
+
   Window *pButtonContainer = m_pStatisticsRoot->getChild("ButtonContainer");
   Window *group = pButtonContainer->getChild("statisticsgroup");
   Window *pTopText = pButtonContainer->getChild("text");

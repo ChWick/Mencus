@@ -14,7 +14,9 @@ private:
 public:
   static bool has(const std::string &sFileName);
   static SStatistics &get(const std::string &sFileName);
+  static tinyxml2::XMLElement *getXMLElement(const std::string &sFileName);
   static bool levelAccomplished(const std::string &sFileName);
+  static void add(const SStatistics &stats);
 
 private:
   static void read();

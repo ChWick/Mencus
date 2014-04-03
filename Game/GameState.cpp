@@ -28,7 +28,8 @@ CGameState::CGameState()
   m_pSaveState(NULL),
   m_bForce(true),
   m_bAdShown(false),
-  m_pCredits(NULL) {
+  m_pCredits(NULL),
+  m_eMainMenuState(MainMenu::MMS_START) {
 }
 CGameState::~CGameState() {
   if (m_pScreenplay) {
@@ -53,11 +54,19 @@ void CGameState::changeGameState(EGameStates eNewGameState, const CSaveState *pS
   m_eNextGameState = eNewGameState;
   m_pMapInfo.reset();
   m_pSaveState = pState;
+  m_eMainMenuState = MainMenu::MMS_START;
 }
 void CGameState::changeGameState(EGameStates eNewGameState, std::shared_ptr<const CMapInfo> pInfo) {
   m_eNextGameState = eNewGameState;
   m_pMapInfo = pInfo;
   m_pSaveState = NULL;
+  m_eMainMenuState = MainMenu::MMS_START;
+}
+void CGameState::changeGameState(EGameStates eNewGameState, MainMenu::EState eMainMenuState) {
+  m_eNextGameState = eNewGameState;
+  m_pMapInfo.reset();
+  m_pSaveState = NULL;
+  m_eMainMenuState = eMainMenuState;
 }
 void CGameState::changeGameStateImpl() {
   if (!m_bForce && m_eCurrentGameState == m_eNextGameState) {
@@ -103,7 +112,7 @@ void CGameState::changeGameStateImpl() {
       break;
     case GS_MAIN_MENU:
       m_pMainMenu->show();
-      m_pMainMenu->changeState(CMainMenu::MMS_START);
+      m_pMainMenu->changeState(m_eMainMenuState);
       break;
     case GS_GAME_OVER:
       CGUIGameOver::getSingleton().show();

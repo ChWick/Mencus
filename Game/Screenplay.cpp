@@ -330,7 +330,7 @@ void CScreenplay::update(Ogre::Real tpf) {
 bool CScreenplay::keyPressed( const OIS::KeyEvent &arg ) {
   if (arg.key == OIS::KC_ESCAPE) {
     CMainMenu::getSingleton().show();
-    CMainMenu::getSingleton().changeState(CMainMenu::MMS_GAME_ESCAPE);
+    CMainMenu::getSingleton().changeState(MainMenu::MMS_GAME_ESCAPE);
   }
   return true;
 }

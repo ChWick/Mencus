@@ -1,0 +1,28 @@
+#ifndef _MAIN_MENU_STATES_HPP_
+#define _MAIN_MENU_STATES_HPP_
+
+namespace MainMenu {
+  enum EState {
+    MMS_STATE_NONE = -1,
+
+    MMS_START = 0,
+    MMS_GAME,
+    MMS_LOAD_GAME,
+    MMS_OPTIONS,
+    MMS_OPTIONS_VIDEO,
+    MMS_OPTIONS_INPUT,
+    MMS_GAME_ESCAPE,
+    MMS_USER_GAME,
+
+    MMS_COUNT,
+
+    MMS_RESULT_CREDITS,
+    MMS_RESULT_BACK_TO_GAME,
+    MMS_RESULT_EXIT,
+    MMS_RESULT_NEW_GAME,
+    MMS_RESULT_LOAD_GAME,
+    MMS_RESULT_NEW_MAP,
+  };
+};
+
+#endif

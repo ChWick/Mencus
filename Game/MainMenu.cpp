@@ -14,6 +14,7 @@
 
 using namespace std;
 using namespace CEGUI;
+using namespace MainMenu;
 
 template<> CMainMenu *Ogre::Singleton<CMainMenu>::msSingleton = 0;
 
@@ -271,8 +272,6 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   pLevelInfoText->setProperty("FrameEnabled", "False");
 
   m_pLevelSelection->setVisible(false);
-
-  updateLevelsSelection();
 }
 CMainMenu::~CMainMenu() {
   CInputListenerManager::getSingleton().removeInputListener(this);
@@ -317,7 +316,7 @@ void CMainMenu::update(Ogre::Real tpf) {
     }
   }
 }
-void CMainMenu::changeState(EMainMenuState eState) {
+void CMainMenu::changeState(MainMenu::EState eState) {
   if (eState == MMS_OPTIONS && (m_eCurrentState == MMS_GAME_ESCAPE || m_eCurrentState == MMS_START)) {
     m_iTargetState[MMS_OPTIONS][OPTIONS_BACK] = m_eCurrentState;
   }
@@ -342,6 +341,7 @@ void CMainMenu::changeState(EMainMenuState eState) {
       m_pMapInfo = shared_ptr<CMapInfo>(new CMapInfo(m_pLevelInfo->sLevelFileName,
 						     "level_user"));
     }
+    m_pLevelInfo = NULL;
     break;
   default:
     break;
@@ -454,7 +454,7 @@ void CMainMenu::changeState(EMainMenuState eState) {
     m_pSelectButton->setVisible(true);
 #endif
 
-    while (m_pSaveStatesWindow->getItemCount() > 0) {
+    /*while (m_pSaveStatesWindow->getItemCount() > 0) {
       m_pSaveStatesWindow->removeItem(m_pSaveStatesWindow->getListboxItemFromIndex(0));
     }
     m_vUserFiles.clear();
@@ -473,6 +473,8 @@ void CMainMenu::changeState(EMainMenuState eState) {
     }
 
     selectedSaveStateChanged();
+    */
+    updateLevelsSelection();
   }
   else {
     m_pSaveStatesWindow->setVisible(false);
@@ -624,7 +626,10 @@ bool CMainMenu::onSelectionChanged(const CEGUI::EventArgs& args) {
   return true;
 }
 void CMainMenu::activateLoadState() {
-  if (m_iSelectedLoadState >= 0
+  if (m_pLevelInfo) {
+    changeState(MMS_RESULT_LOAD_GAME);
+  }
+  else if (m_iSelectedLoadState >= 0
       && m_iSelectedLoadState < static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
     if (m_eCurrentState == MMS_LOAD_GAME) {
       m_pStateToLoad
@@ -750,7 +755,7 @@ void CMainMenu::updateLevelsSelection() {
   pPane->getHorzScrollbar()->setVisible(false);
   pPane->setShowHorzScrollbar(false);
   const Window *pContent = pPane->getContentPane();
-  for (int i = pContent->getChildCount() - 1; i >= 0; i++) {
+  for (int i = pContent->getChildCount() - 1; i >= 0; i--) {
     pContent->getChildAtIdx(i)->destroy();
   }
 
@@ -761,6 +766,7 @@ void CMainMenu::updateLevelsSelection() {
   float fButtonSize = pContent->getPixelSize().d_width / uiLevelsPerRow;
   std::list<SLevelInfo>::const_iterator it = lList.cbegin();
   std::string sPreviousLevelFileName;
+  RadioButton *pLastEnabled = NULL;
   for (unsigned int i = 0; i < lList.size(); i++) {
     RadioButton *pBut = dynamic_cast<RadioButton*>(pPane->createChild("OgreTray/ToggleRadioButton", PropertyHelper<unsigned int>::toString(i + 1)));
     pBut->setText(pBut->getName());
@@ -772,14 +778,26 @@ void CMainMenu::updateLevelsSelection() {
 			 Event::Subscriber(&CMainMenu::onLevelButtonClicked,
 					   this));
     pBut->setGroupID(1249845902);
-    it++;
+    pBut->setSelected(false);
     if (i > 0) {
-      pBut->setEnabled(CLevelState::levelAccomplished(sPreviousLevelFileName));
+      if (CLevelState::levelAccomplished(sPreviousLevelFileName)) {
+	pLastEnabled = pBut;
+	pBut->setEnabled(true);
+      }
+      else {
+	pBut->setEnabled(false);
+      }
+    }
+    else {
+      pLastEnabled = pBut;
     }
     sPreviousLevelFileName = it->sLevelFileName;
+    it++;
   }
   
-  dynamic_cast<RadioButton*>(pPane->getChild("1"))->setSelected(true);
+  if (pLastEnabled) {
+    pLastEnabled->setSelected(true);
+  }
   //selectLevel(1);
 }
 void CMainMenu::selectLevel(unsigned int id) {
@@ -799,7 +817,7 @@ void CMainMenu::selectLevel(unsigned int id) {
 }
 bool CMainMenu::onLevelButtonClicked(const CEGUI::EventArgs &args) {
   const WindowEventArgs &wndArgs(dynamic_cast<const WindowEventArgs &>(args));
-
+  Ogre::LogManager::getSingleton().logMessage(Ogre::String("Level ") + wndArgs.window->getName().c_str() + Ogre::String(" selected"));
   selectLevel(PropertyHelper<unsigned int>::fromString(wndArgs.window->getName()));
   return true;
 }

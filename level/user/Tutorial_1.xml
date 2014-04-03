@@ -1,0 +1,25 @@
+<map difficulty="easy" name="Tutorial 1" description="In the first tutorial you learn how to move Menucs: Walking and jumping!
+" background="forest" sizex="16" sizey="12">
+    <tiles invert="0">
+        <row tiles="24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 "/>
+        <row tiles="27 27 27 27 27 27 31 27 27 31 27 31 31 27 27 27 "/>
+        <row tiles="23 23 29 23 23 23 23 23 23 31 23 31 31 23 23 23 "/>
+        <row tiles="23 23 29 23 23 23 29 23 23 31 23 31 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 31 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 31 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
+    </tiles>
+    <switches/>
+    <endangeredTiles/>
+    <links/>
+    <enemies/>
+    <objects/>
+    <exit type="region" posx="15" posy="0" sizex="1" sizey="11" id=""/>
+    <player x="0.5" y="1" hp="10" direction="1"/>
+    <camera posx="-10.165659" posy="-12"/>
+</map>
