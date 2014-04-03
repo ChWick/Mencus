@@ -13,6 +13,8 @@ namespace MainMenu {
     MMS_OPTIONS_INPUT,
     MMS_GAME_ESCAPE,
     MMS_USER_GAME,
+    MMS_MAP_EDITOR,
+    MMS_MAP_EDITOR_SELECT_MAP,
 
     MMS_COUNT,
 
