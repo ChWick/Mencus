@@ -9,7 +9,15 @@
 #include <OgreVector2.h>
 #include <OgreException.h>
 
+class CBoundingBox2d;
+
 namespace XMLHelper {
+  CBoundingBox2d BoundingBox2dAttribute(const tinyxml2::XMLElement *pElem,
+					const Ogre::String &prefix = Ogre::StringUtil::BLANK);
+  CBoundingBox2d BoundingBox2dAttribute(const tinyxml2::XMLElement *pElem,
+					const CBoundingBox2d &default,
+					const Ogre::String &prefix = Ogre::StringUtil::BLANK);
+
   bool BoolAttribute(const tinyxml2::XMLElement *pElem,
 		     const char *pLabel,
 		     bool bDefault = true,
@@ -81,6 +89,11 @@ namespace XMLHelper {
   void SetAttribute(tinyxml2::XMLElement *pElem,
 		    const char *pLabel,
 		    Ogre::Real value);
+
+  void SetAttribute(tinyxml2::XMLElement *pElem,
+
+		    const BoundingBox2d &bb,
+		    const Ogre::String &prefix = Ogre::StringUtil::BLANK);
 
   template <class T>
   void SetAttribute(tinyxml2::XMLElement *pElem,

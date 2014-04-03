@@ -19,6 +19,9 @@
     <links/>
     <enemies/>
     <objects/>
+    <messages>
+      <message title="Move" message="First message" bb_size="1 1" bb_pos="1 1"/>
+    </messages>
     <exit type="region" posx="15" posy="0" sizex="1" sizey="11" id=""/>
     <player x="0.5" y="1" hp="10" direction="1"/>
     <camera posx="-10.165659" posy="-12"/>

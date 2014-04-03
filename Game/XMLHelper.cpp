@@ -1,4 +1,5 @@
 #include "XMLHelper.hpp"
+#include "BoundingBox2d.hpp"
 
 namespace XMLHelper {
   bool BoolAttribute(const tinyxml2::XMLElement *pElem,
@@ -84,5 +85,11 @@ namespace XMLHelper {
 		    const char *pLabel,
 		    Ogre::Real value) {
     pElem->SetAttribute(pLabel, value);
+  }
+  void SetAttribute(tinyxml2::XMLElement *pElem,
+		    const CBoundingBox2d &bb,
+		    const Ogre::String &prefix) {
+    pElem->SetAttribute<Ogre::Vector2>(pElem, (prefix + "_pos").c_str(), bb.getPosition()); 
+    pElem->SetAttribute<Ogre::Vector2>(pElem, (prefix + "_size").c_str(), bb.getSize());
   }
 };

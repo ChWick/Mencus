@@ -31,7 +31,7 @@ CEGUI::Window *CGUITutorial::createMessageBox(const CEGUI::String &label) {
   pWnd->setText("Information");
 
   Window *pCloseBtn = pWnd->createChild("OgreTray/Button", "CloseButton");
-  pCloseBtn->setUserData(pWnd);
+  pCloseBtn->setUserData(dynamic_cast<Window*>(pWnd)); // to be sure that is a Window * ptr
   pCloseBtn->setPosition(UVector2(UDim(0.6, 0), UDim(0.85, 0)));
   pCloseBtn->setSize(USize(UDim(0.35, 0), UDim(0.1, 0)));
   pCloseBtn->setFont("dejavusans12");
@@ -78,7 +78,7 @@ void CGUITutorial::showSimpleTextMessageBox(const CEGUI::String &label, const CE
 }
 bool CGUITutorial::onCloseButtonClicked(const CEGUI::EventArgs &args) {
   Window *pBtn = dynamic_cast<const WindowEventArgs*>(&args)->window;
-  FrameWindow *pWnd = static_cast<FrameWindow*>(pBtn->getUserData());
+  Window *pWnd = static_cast<Window*>(pBtn->getUserData());
   pWnd->destroy();
   unpause(PAUSE_MAP_UPDATE);
   return true;
