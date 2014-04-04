@@ -20,6 +20,7 @@
 #include "EditBoxes/EditBoxString.hpp"
 #include "EditBoxes/EditBoxText.hpp"
 #include "EditBoxes/EditBoxExit.hpp"
+#include "ChangeTileEvent.hpp"
 
 using namespace CEGUI;
 
@@ -1161,13 +1162,13 @@ bool CMapEditor::onEditUIntVector2(const CEGUI::EventArgs &args) {
       Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
       CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
       if (pSwitch && pLB->getFirstSelectedItem()) {
-	SSwitchEntry &entry(pSwitch->getEntries()[pLB->getItemIndex(pLB->getFirstSelectedItem())]);
+	CChangeTileEvent *pTileEvent(static_cast<CChangeTileEvent*>(pLB->getFirstSelectedItem()->getUserData()));
 	m_pEditValueWindow = new CEditBoxUIntVector2(id,
 						     m_pRoot,
 						     m_fButtonSize,
 						     wndArgs.window->getText(),
-						     entry.uiTilePosX,
-						     entry.uiTilePosY);
+						     pTileEvent->getTilePosX(),
+						     pTileEvent->getTilePosY());
       }
     }
     break;
@@ -1231,12 +1232,12 @@ bool CMapEditor::onEditTileType(const CEGUI::EventArgs &args) {
       Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
       CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
       if (pSwitch && pLB->getFirstSelectedItem()) {
-	SSwitchEntry &entry(pSwitch->getEntries()[pLB->getItemIndex(pLB->getFirstSelectedItem())]);
+	CChangeTileEvent &pTileEvent(static_cast<CChangeTileEvent*>(pLB->getFirstSelectedItem()->getUserData()));
 	m_pEditValueWindow = new CEditBoxTileType(id,
 						  m_pRoot,
 						  m_fButtonSize,
 						  wndArgs.window->getText(),
-						  entry.uiTileType);
+						  pTileEvent->getTileType());
       }
     }
     break;
@@ -1262,19 +1263,19 @@ bool CMapEditor::onDeleteSwitchEntry(const CEGUI::EventArgs &args) {
   Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
   ListboxItem *pLBI = pLB->getFirstSelectedItem();
   if (pLBI) {
-    int index = pLB->getItemIndex(pLBI);
     pLB->removeItem(pLBI);
     CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
-    pSwitch->eraseEntry(index);
+    pSwitch->destroyEvent(static_cast<CChangeTileEvent*>(pLBI->getUserData()));
+    delete pLBI;
   }
   return true;
 }
 bool CMapEditor::onAddSwitchEntry(const CEGUI::EventArgs &args) {
   Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
   CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
-  SSwitchEntry entry;
-  pSwitch->addEntry(entry);
-  pLB->addItem(createSwitchEntry(entry));
+  CChangeTileEvent *pEvent = new CChangeTileEvent(*m_pMap);
+  pSwitch->addEvent(pEvent);
+  pLB->addItem(createSwitchEntry(*pEvent));
   return true;
 }
 bool CMapEditor::onDeleteLink(const CEGUI::EventArgs &args) {
@@ -1351,8 +1352,10 @@ void CMapEditor::selectedSprite(CSprite *pSprite) {
       while (pLB->getItemCount() > 0) {
 	pLB->removeItem(pLB->getListboxItemFromIndex(0));
       }
-      for (const SSwitchEntry &entry : pSwitch->getEntries()) {
-        pLB->addItem(createSwitchEntry(entry));
+      for (const CEvent *pEvent : pSwitch->getEvents()) {
+	if (pEvent->getType() == CEvent::EVENT_CHANGE_TILE) {
+	  pLB->addItem(createSwitchEntry(*dynamic_cast<const CChangeTileEvent*>(pEvent)));
+	}
       }
       
     }
@@ -1366,11 +1369,12 @@ CEGUI::ListboxTextItem *CMapEditor::createLinkEntry(const CLink &link) {
   pItem->setUserData(const_cast<CLink*>(&link));
   return pItem;
 }
-CEGUI::ListboxTextItem *CMapEditor::createSwitchEntry(const SSwitchEntry &entry) {
+CEGUI::ListboxTextItem *CMapEditor::createSwitchEntry(const CChangeTileEvent &event) {
   ListboxTextItem *pItem =
-    new ListboxTextItem(entry.toString().c_str());
+    new ListboxTextItem(event.toString().c_str());
   pItem->setSelectionColours(Colour(0.0,0.0,0.5,1));
   pItem->setSelectionBrushImage("OgreTrayImages/GenericBrush");
+  pItem->setUserData(&const_cast<CChangeTileEvent&>(event));
   return pItem;
 }
 void CMapEditor::onEditBoxAccept(CEditBoxBase *pBase) {

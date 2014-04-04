@@ -1,6 +1,7 @@
 #include "Sprite.hpp"
 #include "SpriteTransformPipeline.hpp"
 #include "XMLHelper.hpp"
+#include "Map.hpp"
 
 using namespace XMLHelper;
 
@@ -8,41 +9,41 @@ using namespace XMLHelper;
 const Ogre::Vector2 CSpriteTexture::DEFAULT_TEXTURE_TOP_LEFT(0, 1);
 const Ogre::Vector2 CSpriteTexture::DEFAULT_TEXTURE_BOTTOM_RIGHT(1, 0);
 
-CSprite::CSprite(const CSpriteTransformPipeline *pTransformPipeline, Ogre2dManager *pSpriteManager, const Ogre::Vector2 &vPosition, const Ogre::Vector2 &vSize, const Ogre::Vector2 &vScale, const Ogre::Radian radRotation)
-  : m_pTransformPipeline(pTransformPipeline),
-    m_pSpriteManager(pSpriteManager),
-    m_vPosition(vPosition),
-    m_vSize(vSize),
-    m_vScale(vScale),
+CSprite::CSprite(Map &map, const Ogre::Vector2 &vPosition, const Ogre::Vector2 &vSize, const Ogre::Vector2 &vScale, const Ogre::Radian radRotation)
+  : CEntity(map, "id", NULL),
+    m_pTransformPipeline(&map),
+    m_pSpriteManager(map.get2dManager()),
     m_radRotation(radRotation),
     m_pTextureToDraw(&m_Texture),
-    m_bbRelativeBoundingBox(Ogre::Vector2::ZERO, vSize * vScale),
     m_Colour(Ogre::ColourValue::White) {
+
+  setPosition(vPosition);
+  setSize(vSize);
+  setScale(vScale);
+  setRelativeBoundingBox(CBoundingBox2d(Ogre::Vector2::ZERO, vSize * vScale));
 }
-CSprite::CSprite(const CSpriteTransformPipeline *pTransformPipeline,
-		 Ogre2dManager *pSpriteManager,
+CSprite::CSprite(CMap &map,
 		 const tinyxml2::XMLElement *pElem,
 		 const Ogre::Vector2 &vSize)
-  : m_pTransformPipeline(pTransformPipeline),
-    m_pSpriteManager(pSpriteManager),
-    m_vPosition(Vector2Attribute(pElem, "", Ogre::Vector2::ZERO, true)),
-    m_vSize(Vector2Attribute(pElem, "sp_size", vSize)),
-    m_vScale(Vector2Attribute(pElem, "sp_scale", Ogre::Vector2::UNIT_SCALE)),
+  : CEntity(map, NULL, pElem, Ogre::Vector2::ZERO, vSize),
+    m_pTransformPipeline(&map),
+    m_pSpriteManager(map.get2dManager()),
     m_radRotation(RealAttribute(pElem, "sp_radRotation", 0)),
     m_pTextureToDraw(&m_Texture),
-  m_bbRelativeBoundingBox(Ogre::Vector2::ZERO, m_vSize * m_vScale),
-  m_Colour(Ogre::StringConverter::parseColourValue(Attribute(pElem, "sp_colour", "1 1 1 1"), Ogre::ColourValue::White)) {
+    m_Colour(Ogre::StringConverter::parseColourValue(Attribute(pElem, "sp_colour", "1 1 1 1"), Ogre::ColourValue::White)) {
 }
 CSprite::CSprite(const CSprite &src)
-  : m_pSpriteManager(src.m_pSpriteManager),
-    m_vPosition(src.m_vPosition),
-    m_vSize(src.m_vSize),
-    m_vScale(src.m_vScale),
+  : CEntity(src), 
+    m_pSpriteManager(src.m_pSpriteManager),
     m_radRotation(src.m_radRotation),
     m_Texture(src.m_Texture),
     m_pTextureToDraw(src.m_pTextureToDraw),
-    m_bbRelativeBoundingBox(src.m_bbRelativeBoundingBox),
     m_Colour(src.m_Colour) {
+
+  setPosition(src.m_vPosition);
+  setSize(src.m_vSize);
+  setScale(src.m_vScale);
+  setRelativeBoundingBox(src.m_bbRelativeBoundingBox);
 }
 CSprite::~CSprite() {
 }
@@ -79,12 +80,11 @@ void CSprite::setTexture(const string &sName) {
   }
 }
 void CSprite::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
+  CEntity::writeToXMLElement(pElem, eStyle);
+  
   using namespace XMLHelper;
 
-  SetAttribute(pElem, "", m_vPosition); // pos without label
   if (eStyle == OS_FULL) {
-    SetAttribute(pElem, "sp_size", m_vSize);
-    SetAttribute(pElem, "sp_scale", m_vScale);
     SetAttribute(pElem, "sp_radRotation", m_radRotation.valueRadians());
     SetAttribute<Ogre::ColourValue>(pElem, "sp_colour", m_Colour);
   }

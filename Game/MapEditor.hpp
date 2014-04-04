@@ -14,7 +14,7 @@ class CSprite;
 class CLink;
 class CMap;
 class CEditBoxBase;
-class SSwitchEntry;
+class CChangeTileEvent;
 
 class CMapEditor 
   : public Ogre::Singleton<CMapEditor>,
@@ -136,7 +136,7 @@ public:
   void mapEditorUpdatePauseChanged(bool bPause);
 private:
   CEGUI::ListboxTextItem *createLinkEntry(const CLink &link);
-  CEGUI::ListboxTextItem *createSwitchEntry(const SSwitchEntry &entry);
+  CEGUI::ListboxTextItem *createSwitchEntry(const CChangeTileEvent &entry);
   CEGUI::Window *createEditButton(CEGUI::Window *pParent,
 				  EEditButtons id,
 				  EEditButtonTypes type,

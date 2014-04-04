@@ -52,18 +52,7 @@ CSwitch::CSwitch(CMap *pMap,
   using namespace tinyxml2;
 
   for (const XMLElement *pChange = pElem->FirstChildElement(); pChange; pChange = pChange->NextSiblingElement()) {
-    if (strcmp(pChange->Value(), "changes") == 0) {
-      SSwitchEntry entry;
-      entry.uiTileType = pChange->IntAttribute("id");
-      entry.uiTilePosX = pChange->IntAttribute("x");
-      entry.uiTilePosY = pChange->IntAttribute("y");
-      if (pChange->Attribute("oldid")) {
-	entry.uiOldTileType = pChange->IntAttribute("oldid");
-      }
-
-      addEntry(entry);
-    }
-    else if (strcmp(pChange->Value(), "togglesLink") == 0) {
+    if (strcmp(pChange->Value(), "togglesLink") == 0) {
       STogglesLinkEntry entry;
       entry.sLinkID = pChange->Attribute("id");
       entry.bInitialState = BoolAttribute(pChange, "initial", true);
@@ -78,9 +67,6 @@ CSwitch::CSwitch(CMap *pMap,
 CSwitch::~CSwitch() {
 }
 void CSwitch::initialize() {
-  for (auto &entry : m_vEntries) {
-    entry.uiOldTileType = m_pMap->getTile(entry.uiTilePosX, entry.uiTilePosY)->getTileType();
-  }
 
   for (auto &entry : m_vLinkEntries) {
     if (!m_pMap->getLinkById(entry.sLinkID)) {
@@ -174,16 +160,6 @@ void CSwitch::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle
   if (eStyle == OS_FULL) {
     pElem->SetAttribute("state", m_eSwitchState);
     pElem->SetAttribute("timer", m_fTimer);
-  }
-  for (const SSwitchEntry &entry : getEntries()) {
-    XMLElement *pChange = doc.NewElement("changes");
-    pElem->InsertEndChild(pChange);
-    pChange->SetAttribute("id", entry.uiTileType);
-    if (eStyle == OS_FULL) {
-      pChange->SetAttribute("oldid", entry.uiOldTileType);
-    }
-    pChange->SetAttribute("x", entry.uiTilePosX);
-    pChange->SetAttribute("y", entry.uiTilePosY);
   }
   for (const STogglesLinkEntry &entry : getLinkEntries()) {
     XMLElement *pChange = doc.NewElement("togglesLink");

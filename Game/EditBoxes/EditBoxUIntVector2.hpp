@@ -20,10 +20,10 @@ public:
 		      unsigned int &uiX,
 		      unsigned int &uiY) 
     : CEditBoxBase(id, pParent, fButtonSize, sTitle),
-      m_uiX(uiX),
-      m_uiY(uiY),
       m_uiBackupX(uiX),
-      m_uiBackupY(uiY) {
+      m_uiBackupY(uiY),
+      m_uiX(uiX),
+      m_uiY(uiY) {
 
     using namespace CEGUI;
 

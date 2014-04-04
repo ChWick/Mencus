@@ -3,28 +3,25 @@
 
 using namespace XMLHelper;
 
-CAnimatedSprite::CAnimatedSprite(
-				 const CSpriteTransformPipeline *pTransformPipeline,
-				 Ogre2dManager *pSpriteManager,
+CAnimatedSprite::CAnimatedSprite(CMap &map,
 				 const Ogre::Vector2 &vPosition,
 				 const Ogre::Vector2 &vSize,
 				 const Ogre::Vector2 &vScale,
 				 const Ogre::Radian radRotation)
-  : CSprite(pTransformPipeline, pSpriteManager, vPosition, vSize, vScale, radRotation),
-    m_uiCurrentAnimationTexture(0),
+  : CSprite(map, vPosition, vSize, vScale, radRotation),
+    m_bAnimationPaused(false),
     m_uiCurrentAnimationSequence(0),
-    m_bAnimationPaused(false) {
+    m_uiCurrentAnimationTexture(0) {
   m_fAnimationTimer = 0;
   m_fAnimationSpeed = 1.0 / 20;
 }
-CAnimatedSprite::CAnimatedSprite(const CSpriteTransformPipeline *pTransformPipeline,
-				 Ogre2dManager *pSpriteManager,
+CAnimatedSprite::CAnimatedSprite(CMap &map,
 				 const tinyxml2::XMLElement *pElem,
 				 const Ogre::Vector2 &vSize) 
-  : CSprite(pTransformPipeline, pSpriteManager, pElem, vSize),
-    m_uiCurrentAnimationTexture(IntAttribute(pElem, "as_current_at", 0)),
-    m_uiCurrentAnimationSequence(IntAttribute(pElem, "as_current_as", 0)),
+  : CSprite(map, pElem, vSize),
     m_bAnimationPaused(BoolAttribute(pElem, "as_animation_paused", false)),
+    m_uiCurrentAnimationSequence(IntAttribute(pElem, "as_current_as", 0)),
+    m_uiCurrentAnimationTexture(IntAttribute(pElem, "as_current_at", 0)),
     m_fAnimationTimer(RealAttribute(pElem, "as_timer", 0)),
     m_fAnimationSpeed(1.0 / 20) {
 }

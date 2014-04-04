@@ -2,41 +2,34 @@
 #define SPRITE_H
 
 #include <Ogre.h>
+#include "Entity.hpp"
 #include "ogre2d-main.hpp"
 #include <vector>
-#include <string>
-#include "BoundingBox2d.hpp"
 #include "SpriteTexture.hpp"
 #include <tinyxml2.h>
-#include "OutputStyle.hpp"
 
 using namespace std;
 
 class CSpriteTransformPipeline;
+class CMap;
 
 
-class CSprite {
+class CSprite : public CEntity {
 protected:
   const CSpriteTransformPipeline *m_pTransformPipeline; //!<
   Ogre2dManager *m_pSpriteManager;			//
-  Ogre::Vector2 m_vPosition;				//
-  Ogre::Vector2 m_vSize;				//
-  Ogre::Vector2 m_vScale;				//
   Ogre::Radian m_radRotation;				//
   CSpriteTexture m_Texture;				//!< Texture of the sprite
   const CSpriteTexture *m_pTextureToDraw;		//!< Texture to draw in the update method (this is modified e.g. bywriteToXMLElement(tinyxml2::XMLElement *pElem the animated sprite)
-  CBoundingBox2d m_bbRelativeBoundingBox;		//!< Bounding box, realative position
   Ogre::ColourValue m_Colour;               //!< The draw colour
 public:
-  CSprite(const CSpriteTransformPipeline *pTransformPipeline,
-	  Ogre2dManager *pSpriteManager,
+  CSprite(CMap &map,
 	  const Ogre::Vector2 &vPosition,
 	  const Ogre::Vector2 &vSize,
 	  const Ogre::Vector2 &vScale = Ogre::Vector2::UNIT_SCALE,
 	  const Ogre::Radian radRotation = Ogre::Radian(0));
 
-  CSprite(const CSpriteTransformPipeline *pTransformPipeline,
-	  Ogre2dManager *pSpriteManager,
+  CSprite(CMap &map,
 	  const tinyxml2::XMLElement *pElem,
 	  const Ogre::Vector2 &vSize = Ogre::Vector2::UNIT_SCALE);
 
@@ -52,21 +45,6 @@ public:
 
   virtual void update(Ogre::Real tpf);
   virtual void render(Ogre::Real tpf);
-
-
-  const Ogre::Vector2 &getPosition() const {return m_vPosition;}
-  void setPosition(const Ogre::Vector2 &vPosition) {m_vPosition = vPosition;}
-
-  void translate(const Ogre::Vector2 &vOffset) {m_vPosition += vOffset;}
-
-  const Ogre::Vector2 &getSize() const {return m_vSize;}
-  void setSize(const Ogre::Vector2 &vSize) {m_vSize = vSize;}
-
-  Ogre::Vector2 getCenter() const {return m_vPosition + m_vSize / 2;}
-  void setCenter(const Ogre::Vector2 &vCenter) {m_vPosition = vCenter - m_vSize / 2;}
-
-  const CBoundingBox2d &getBoundingBox() const {return m_bbRelativeBoundingBox;}
-  CBoundingBox2d getWorldBoundingBox() const {return m_bbRelativeBoundingBox.translate(m_vPosition);}
 
   void setColour(const Ogre::ColourValue &colour) {m_Colour = colour;}
   const Ogre::ColourValue &getColour() const {return m_Colour;}

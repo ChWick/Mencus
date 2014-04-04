@@ -8,24 +8,6 @@ class CMap;
 
 typedef unsigned int SwitchType;
 
-struct SSwitchEntry {
-  unsigned int uiTileType;
-  unsigned int uiOldTileType;
-  unsigned int uiTilePosX;
-  unsigned int uiTilePosY;
-
-  SSwitchEntry() 
-    : uiTileType(1),
-      uiOldTileType(1),
-      uiTilePosX(0),
-      uiTilePosY(0) {
-  }
-  Ogre::String toString() const {
-    return "at (" + Ogre::StringConverter::toString(uiTilePosX) + ", "
-      + Ogre::StringConverter::toString(uiTilePosY) + ") tile " 
-      + Ogre::StringConverter::toString(uiTileType);
-  }
-};
 struct STogglesLinkEntry {
   Ogre::String sLinkID;
   bool bInitialState;
@@ -56,7 +38,6 @@ private:
   Ogre::Real m_fActiveTime;
   const SwitchType m_stSwitchType;
   ESwitchStates m_eSwitchState;
-  vector<SSwitchEntry> m_vEntries;
   vector<STogglesLinkEntry> m_vLinkEntries;
   unsigned int m_uiSwitchFlags;
 public:
@@ -73,13 +54,9 @@ public:
 
   void update(Ogre::Real tpf);
 
-  void addEntry(const SSwitchEntry &entry) {m_vEntries.push_back(entry);}
   void addEntry(const STogglesLinkEntry &entry) {m_vLinkEntries.push_back(entry);}
-  void eraseEntry(int iAt) {m_vEntries.erase(m_vEntries.begin() + iAt);}
   void eraseLinkEntry(int iAt) {m_vLinkEntries.erase(m_vLinkEntries.begin() + iAt);}
 
-  const vector<SSwitchEntry> &getEntries() const {return m_vEntries;}
-  vector<SSwitchEntry> &getEntries() {return m_vEntries;}
   const vector<STogglesLinkEntry> &getLinkEntries() const {return m_vLinkEntries;}
   ESwitchStates getState() const {return m_eSwitchState;}
   SwitchType getType() const {return m_stSwitchType;}
