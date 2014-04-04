@@ -4,6 +4,8 @@
   <level file="Tutorial.xml" />
   <level file="Castle_1.xml" />
   <level file="Escape.xml" />
+  <level file="Cave_Passage_1.xml" />
   <level file="TreeOfLife.xml" />
   <level file="Castle_2.xml" />
+  <level file="Cave_Passage_2.xml" />
 </levels>
