@@ -121,7 +121,7 @@ void CEnemy::update(Ogre::Real tpf) {
   }
   if (bWalk) {
     if (!m_bStunned) {
-      updateKI();
+      updateKI(tpf);
     }
 
     Ogre::Real fPenetration = 0;
@@ -193,7 +193,7 @@ void CEnemy::render(Ogre::Real tpf) {
   }
   CAnimatedSprite::render(tpf);
 }
-void CEnemy::updateKI() {
+void CEnemy::updateKI(Ogre::Real tpf) {
   if (m_bOnGround) {
     CBoundingBox2d bb(getWorldBoundingBox());
     bb = bb.translate(Ogre::Vector2(0, -0.1));
@@ -230,6 +230,8 @@ void CEnemy::updateKI() {
 
       if (bFlipWalkDirection) {
         m_vSpeed.x *= -1;
+	// make the movement step backwards
+	m_vPosition.x += m_vSpeed.x * tpf;
       }
     }
   }

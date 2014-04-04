@@ -84,7 +84,7 @@ protected:
   bool readyForWalking();
 private:
   void setup();
-  void updateKI();
+  void updateKI(Ogre::Real tpf);
 };
 
 #endif
