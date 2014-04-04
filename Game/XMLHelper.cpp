@@ -2,6 +2,40 @@
 #include "BoundingBox2d.hpp"
 
 namespace XMLHelper {
+
+  CBoundingBox2d BoundingBox2dAttribute(const tinyxml2::XMLElement *pElem,
+					const Ogre::String &prefix) {
+
+    assert(pElem);
+    CBoundingBox2d out;
+    if (!pElem->Attribute((prefix + "_pos").c_str())) {
+      throw Ogre::Exception(0,
+			    "Required attribute '" + Ogre::String(prefix + "_pos") + "' not found",
+			    __FILE__);
+    }
+    if (!pElem->Attribute((prefix + "_size").c_str())) {
+      throw Ogre::Exception(0,
+			    "Required attribute '" + Ogre::String(prefix + "_size") + "' not found",
+			    __FILE__);
+    }
+    out.setPosition(Ogre::StringConverter::parseVector2((prefix + "_pos").c_str()));
+    out.setPosition(Ogre::StringConverter::parseVector2((prefix + "_size").c_str()));
+    return out;
+
+  }
+  CBoundingBox2d BoundingBox2dAttribute(const tinyxml2::XMLElement *pElem,
+					const CBoundingBox2d &bbDefault,
+					const Ogre::String &prefix) {
+    assert(pElem);
+    CBoundingBox2d out(bbDefault);
+    if (pElem->Attribute((prefix + "_pos").c_str())) {
+      out.setPosition(Ogre::StringConverter::parseVector2((prefix + "_pos").c_str()));
+    }
+    if (pElem->Attribute((prefix + "_size").c_str())) {
+      out.setPosition(Ogre::StringConverter::parseVector2((prefix + "_size").c_str()));
+    }
+    return out;
+  }
   bool BoolAttribute(const tinyxml2::XMLElement *pElem,
 		     const char *pLabel,
 		     bool bDefault,
@@ -91,5 +125,11 @@ namespace XMLHelper {
 		    const Ogre::String &prefix) {
     SetAttribute<Ogre::Vector2>(pElem, (prefix + "_pos").c_str(), bb.getPosition()); 
     SetAttribute<Ogre::Vector2>(pElem, (prefix + "_size").c_str(), bb.getSize());
+  }
+  template <>
+  void SetAttribute<std::string>(tinyxml2::XMLElement *pElem,
+				 const char *pLabel,
+				 const std::string &value) {
+    pElem->SetAttribute(pLabel, value.c_str());
   }
 };
