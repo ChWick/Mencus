@@ -89,7 +89,7 @@ namespace XMLHelper {
   void SetAttribute(tinyxml2::XMLElement *pElem,
 		    const CBoundingBox2d &bb,
 		    const Ogre::String &prefix) {
-    pElem->SetAttribute<Ogre::Vector2>(pElem, (prefix + "_pos").c_str(), bb.getPosition()); 
-    pElem->SetAttribute<Ogre::Vector2>(pElem, (prefix + "_size").c_str(), bb.getSize());
+    SetAttribute<Ogre::Vector2>(pElem, (prefix + "_pos").c_str(), bb.getPosition()); 
+    SetAttribute<Ogre::Vector2>(pElem, (prefix + "_size").c_str(), bb.getSize());
   }
 };
