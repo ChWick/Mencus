@@ -254,6 +254,7 @@ void CMap::loadMap(const string &sFilename, const string &sResourceGroup) {
 void CMap::prepareMap() {
   // Initialise everything
   for (auto pSwitch : m_lSwitches) {
+    pSwitch->init();
     pSwitch->initialize();
   }
 

@@ -111,7 +111,7 @@ protected:
     return true;
   }
   bool accepted() {
-    
+    m_Exit.setID(m_pContentId->getChild("Exitid")->getText().c_str());
     return true;
   }
   bool canceled() {

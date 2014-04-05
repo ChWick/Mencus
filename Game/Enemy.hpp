@@ -42,7 +42,6 @@ private:
   bool m_bOnGround;
   CBarIndicator m_HPBar;
   bool m_bJumps;
-  Ogre::String m_sID;
   Ogre::Vector2 m_vExternalForce;
   bool m_bStunned;
   bool m_bAtLeastOneDamageDone;
@@ -52,8 +51,7 @@ public:
     EEnemyTypes eEnemyType,
     Ogre::Real fDirection,
     Ogre::Real fHitpoints,
-    bool bJumps,
-    const Ogre::String &sID);
+    bool bJumps);
   CEnemy(CMap &map, const tinyxml2::XMLElement *pElem);
 
   void update(Ogre::Real tpf);
@@ -61,8 +59,6 @@ public:
 
   void addExternalForce(const Ogre::Vector2 &vForce) {m_vExternalForce += vForce;}
 
-  const Ogre::String &getID() const {return m_sID;}
-  Ogre::String &getID() {return m_sID;}
   EEnemyTypes getType() const {return m_eEnemyType;}
 
   void setStunned(bool bStunned) {m_bStunned = bStunned;}

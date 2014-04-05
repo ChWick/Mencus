@@ -50,7 +50,7 @@ CMapEditor::CMapEditor(Window *pRoot)
     m_pEditValueWindow(NULL),
     m_uiCurrentTile(2),
     m_pMap(NULL),
-    m_pSelectedSprite(NULL),
+    m_pSelectedEntity(NULL),
     m_bInitialized(false),
     m_uiMapSizeX(0),
     m_uiMapSizeY(0) {
@@ -361,6 +361,7 @@ void CMapEditor::resize(float fButtonSize) {
   pDeleteButton->setText("Delete selection");
   pDeleteButton->subscribeEvent(PushButton::EventClicked,
 				Event::Subscriber(&CMapEditor::onDelete, this));
+  createEditButton(pEditScrollBar, EB_ID, EBT_STRING, fCurrentHeight);
   
   
   // edit sprite
@@ -525,6 +526,9 @@ Window* CMapEditor::createEditButton(Window *pParent,
   case EB_JUMPING:
     pButton->setText("Jumping");
     break;
+  case EB_ID:
+    pButton->setText("ID");
+    break;
   case EB_SWITCH_AFFECTING_BLOCKS:
     pButton->setText("Affecting blocks");
     break;
@@ -611,7 +615,7 @@ void CMapEditor::exit() {
   m_uiCurrentTile = 2;
   m_pMap = NULL;
   m_pTabControl = NULL;
-  m_pSelectedSprite = NULL;
+  m_pSelectedEntity = NULL;
   m_bVisible = false;
   m_bRenderPause = false;
   m_bInitialized = false;
@@ -670,9 +674,9 @@ void CMapEditor::stop() {
 }
 void CMapEditor::render() {
   if (!m_bVisible || m_bRenderPause) {return;}
-  if (m_pSelectedSprite) {
-    CDebugDrawer::getSingleton().draw(m_pSelectedSprite->getWorldBoundingBox());
-    CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
+  if (m_pSelectedEntity) {
+    CDebugDrawer::getSingleton().draw(m_pSelectedEntity->getWorldBoundingBox());
+    CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedEntity);
     if (pSwitch) {
       int iCounter = 0;
       int iSelected = -1;
@@ -880,8 +884,8 @@ void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
     }
     break;
   case B_MOVE:
-    if (m_pSelectedSprite &&
-	m_pSelectedSprite->getWorldBoundingBox().contains(m_pMap->mouseToMapPos(vPos))) {
+    if (m_pSelectedEntity &&
+	m_pSelectedEntity->getWorldBoundingBox().contains(m_pMap->mouseToMapPos(vPos))) {
       m_bGrabbedSprite = true;
     }
     else m_bGrabbedSprite = false;
@@ -907,8 +911,8 @@ void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2
       }
       break;
     case B_MOVE:
-      if (m_pSelectedSprite && m_bGrabbedSprite) {
-	m_pSelectedSprite->translate(vMapPos);
+      if (m_pSelectedEntity && m_bGrabbedSprite) {
+	m_pSelectedEntity->translate(vMapPos);
       }
       else {
 	// move map
@@ -926,8 +930,8 @@ void CMapEditor::handleBrushReleased(const Ogre::Vector2 &vPos) {
   case B_PLACE:
     break;
   case B_MOVE:
-    if (m_pSelectedSprite && m_bGrabbedSprite) {
-      m_pSelectedSprite->setPosition(snappedPos(m_pSelectedSprite->getPosition()));
+    if (m_pSelectedEntity && m_bGrabbedSprite) {
+      m_pSelectedEntity->setPosition(snappedPos(m_pSelectedEntity->getPosition()));
     }
     else if (bClick) {
       selectSprite(vPos);
@@ -935,14 +939,14 @@ void CMapEditor::handleBrushReleased(const Ogre::Vector2 &vPos) {
     break;
   case B_EDIT:
     if (bClick) {
-      if (!m_pSelectedSprite) {
+      if (!m_pSelectedEntity) {
 	selectSprite(vPos);
-	if (!m_pSelectedSprite) {
+	if (!m_pSelectedEntity) {
 	  editTile(vPos);
 	}
       }
       else {
-	m_pSelectedSprite = NULL;
+	m_pSelectedEntity = NULL;
 	editTile(vPos);
       }
     }
@@ -994,7 +998,7 @@ void CMapEditor::placeCurrentObject(const Ogre::Vector2 &vPos) {
   }
   else if (m_uiCurrentObject < CEnemy::ET_COUNT + CObject::OT_COUNT) {
     int id = m_uiCurrentObject - CObject::OT_COUNT;
-    CEnemy *pEnemy = new CEnemy(*m_pMap, vMapPos, static_cast<CEnemy::EEnemyTypes>(id), 1, 1, true, Ogre::StringConverter::toString(CIDGenerator::nextID()));
+    CEnemy *pEnemy = new CEnemy(*m_pMap, vMapPos, static_cast<CEnemy::EEnemyTypes>(id), 1, 1, true);
     pEnemy->setCenter(snappedPos(vMapPos));
     m_pMap->addEnemy(pEnemy);
     selectedSprite(pEnemy);
@@ -1049,9 +1053,9 @@ bool CMapEditor::onSaveMap(const EventArgs &args) {
   return true;
 }
 bool CMapEditor::onDelete(const CEGUI::EventArgs &args) {
-  if (!m_pSelectedSprite) {return true;}
+  if (!m_pSelectedEntity) {return true;}
 
-  CSprite *pBuffer = m_pSelectedSprite;
+  CEntity *pBuffer = m_pSelectedEntity;
   selectedSprite(NULL);
 
   if (dynamic_cast<CObject*>(pBuffer)) {
@@ -1119,6 +1123,15 @@ bool CMapEditor::onEditString(const CEGUI::EventArgs &args) {
 					    wndArgs.window->getText(),
 					    m_pMapInfo->getFileName());
     break;
+  case EB_ID:
+    if (m_pSelectedEntity) {
+      m_pEditValueWindow = new CEditBoxString(id,
+					      m_pRoot,
+					      m_fButtonSize,
+					      wndArgs.window->getText(),
+					      m_pSelectedEntity->getID());
+    }
+    break;
   }
   return true;
 }
@@ -1132,7 +1145,7 @@ bool CMapEditor::onEditFloat(const CEGUI::EventArgs &args) {
 					   m_pRoot,
 					   m_fButtonSize,
 					   wndArgs.window->getText(),
-					   dynamic_cast<CHitableObject*>(m_pSelectedSprite)
+					   dynamic_cast<CHitableObject*>(m_pSelectedEntity)
 					   ->getMaximumHitpoints());
     break;
   case EB_DAMAGE:
@@ -1147,7 +1160,7 @@ bool CMapEditor::onEditFloat(const CEGUI::EventArgs &args) {
 					   m_pRoot,
 					   m_fButtonSize,
 					   wndArgs.window->getText(),
-					   dynamic_cast<CSwitch*>(m_pSelectedSprite)
+					   dynamic_cast<CSwitch*>(m_pSelectedEntity)
 					   ->getActivationTime());
     break;
   }
@@ -1169,7 +1182,7 @@ bool CMapEditor::onEditUIntVector2(const CEGUI::EventArgs &args) {
   case EB_SWITCH_ENTRY_POSITION:
     {
       Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
-      CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
+      CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedEntity);
       if (pSwitch && pLB->getFirstSelectedItem()) {
 	CChangeTileEvent *pTileEvent(static_cast<CChangeTileEvent*>(pLB->getFirstSelectedItem()->getUserData()));
 	m_pEditValueWindow = new CEditBoxUIntVector2(id,
@@ -1218,16 +1231,16 @@ bool CMapEditor::onEditBoolChanged(const CEGUI::EventArgs &args) {
   ToggleButton *pBut = dynamic_cast<ToggleButton*>(wndArgs.window);
   switch (id) {
   case EB_JUMPING:
-    dynamic_cast<CEnemy*>(m_pSelectedSprite)->setMayJump(pBut->isSelected());
+    dynamic_cast<CEnemy*>(m_pSelectedEntity)->setMayJump(pBut->isSelected());
     break;
   case EB_SWITCH_AFFECTING_BLOCKS:
-    dynamic_cast<CSwitch*>(m_pSelectedSprite)->setFlag(CSwitch::SF_CHANGE_BLOCKS, pBut->isSelected());
+    dynamic_cast<CSwitch*>(m_pSelectedEntity)->setFlag(CSwitch::SF_CHANGE_BLOCKS, pBut->isSelected());
     break;
   case EB_SWITCH_DEACTIVABLE:
-    dynamic_cast<CSwitch*>(m_pSelectedSprite)->setFlag(CSwitch::SF_DEACTIVATABLE, pBut->isSelected());
+    dynamic_cast<CSwitch*>(m_pSelectedEntity)->setFlag(CSwitch::SF_DEACTIVATABLE, pBut->isSelected());
     break;
   case EB_SWITCH_TIMED:
-    dynamic_cast<CSwitch*>(m_pSelectedSprite)->setFlag(CSwitch::SF_TIMED, pBut->isSelected());
+    dynamic_cast<CSwitch*>(m_pSelectedEntity)->setFlag(CSwitch::SF_TIMED, pBut->isSelected());
     break;
   }
   return true;
@@ -1239,7 +1252,7 @@ bool CMapEditor::onEditTileType(const CEGUI::EventArgs &args) {
   case EB_SWITCH_ENTRY_TILE_TYPE:
     {
       Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
-      CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
+      CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedEntity);
       if (pSwitch && pLB->getFirstSelectedItem()) {
 	CChangeTileEvent *pTileEvent(static_cast<CChangeTileEvent*>(pLB->getFirstSelectedItem()->getUserData()));
 	m_pEditValueWindow = new CEditBoxTileType(id,
@@ -1273,7 +1286,7 @@ bool CMapEditor::onDeleteSwitchEntry(const CEGUI::EventArgs &args) {
   ListboxItem *pLBI = pLB->getFirstSelectedItem();
   if (pLBI) {
     pLB->removeItem(pLBI);
-    CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
+    CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedEntity);
     pSwitch->destroyEvent(static_cast<CChangeTileEvent*>(pLBI->getUserData()));
     delete pLBI;
   }
@@ -1281,7 +1294,7 @@ bool CMapEditor::onDeleteSwitchEntry(const CEGUI::EventArgs &args) {
 }
 bool CMapEditor::onAddSwitchEntry(const CEGUI::EventArgs &args) {
   Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
-  CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
+  CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedEntity);
   CChangeTileEvent *pEvent = new CChangeTileEvent(*m_pMap);
   pSwitch->addEvent(pEvent);
   pLB->addItem(createSwitchEntry(*pEvent));
@@ -1313,26 +1326,26 @@ Ogre::Vector2 CMapEditor::snappedPos(const Ogre::Vector2 &vPos) {
   return v;
 }
 void CMapEditor::selectedSprite(CSprite *pSprite) {
-  if (m_pSelectedSprite) {
+  if (m_pSelectedEntity) {
     // check for updates
-    if (dynamic_cast<CHitableObject*>(m_pSelectedSprite)) {
-      dynamic_cast<CHitableObject*>(m_pSelectedSprite)->
-	setHitpoints(dynamic_cast<CHitableObject*>(m_pSelectedSprite)->getMaximumHitpoints());
+    if (dynamic_cast<CHitableObject*>(m_pSelectedEntity)) {
+      dynamic_cast<CHitableObject*>(m_pSelectedEntity)->
+	setHitpoints(dynamic_cast<CHitableObject*>(m_pSelectedEntity)->getMaximumHitpoints());
     }
   }
-  m_pSelectedSprite = pSprite;
+  m_pSelectedEntity = pSprite;
 
   m_pEditSprite->setVisible(false);
   m_pEditSwitchPane->setVisible(false);
 
-  if (m_pSelectedSprite) {
+  if (m_pSelectedEntity) {
     m_pEditSprite->setVisible(true);
     
     m_pEditSprite->
       getChild(PropertyHelper<int>::toString(EB_HITPOINTS))->
-      setVisible(dynamic_cast<CHitableObject*>(m_pSelectedSprite));
+      setVisible(dynamic_cast<CHitableObject*>(m_pSelectedEntity));
 
-    CEnemy *pEnemy = dynamic_cast<CEnemy*>(m_pSelectedSprite);
+    CEnemy *pEnemy = dynamic_cast<CEnemy*>(m_pSelectedEntity);
     m_pEditSprite->
       getChild(PropertyHelper<int>::toString(EB_JUMPING))->
       setVisible(pEnemy);
@@ -1342,7 +1355,7 @@ void CMapEditor::selectedSprite(CSprite *pSprite) {
 	->setSelected(pEnemy->mayJump());
     }
 
-    CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
+    CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedEntity);
     m_pEditSwitchPane->setVisible(pSwitch);
     if (pSwitch) {
       dynamic_cast<ToggleButton*>(m_pEditSwitchPane->

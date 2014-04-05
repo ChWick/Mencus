@@ -10,6 +10,7 @@
 #include "MapInfo.hpp"
 #include "EditBoxes/EditBoxListener.hpp"
 
+class CEntity;
 class CSprite;
 class CLink;
 class CMap;
@@ -43,6 +44,7 @@ public:
     EB_HITPOINTS,
     EB_DAMAGE,
     EB_JUMPING,
+    EB_ID,
     EB_SWITCH_AFFECTING_BLOCKS,
     EB_SWITCH_ENTRY_POSITION,
     EB_SWITCH_ENTRY_TILE_TYPE,
@@ -84,7 +86,7 @@ private:
   unsigned int m_uiCurrentObject;
   CMap *m_pMap;
   EBrushes m_eSelectedBrush;
-  CSprite *m_pSelectedSprite;
+  CEntity *m_pSelectedEntity;
   bool m_bSnapToGrid;
   CMapInfoPtr m_pMapInfo;
   bool m_bInitialized;

@@ -2,12 +2,14 @@
 #include "XMLHelper.hpp"
 #include "Event.hpp"
 #include "EventCreator.hpp"
+#include "IDGenerator.hpp"
+#include <OgreStringConverter.h>
 
 using namespace XMLHelper;
 
 
 CEntity::CEntity(CMap &map, const std::string &sID, CEntity *pParent)
-  : m_sID(sID),
+  : m_sID(sID.length() == 0 ? Ogre::StringConverter::toString(CIDGenerator::nextID()) : sID),
     m_Map(map),
     m_pParent(pParent),
     
@@ -36,7 +38,7 @@ CEntity::CEntity(CMap &map,
 		 const Ogre::Vector2 &vDefaultPosition,
 		 const Ogre::Vector2 &vDefaultSize,
 		 const Ogre::Vector2 &vDefaultScale) 
-  : m_sID(Attribute(pElem, "id", "")),
+  : m_sID(Attribute(pElem, "id", Ogre::StringConverter::toString(CIDGenerator::nextID()))),
     m_Map(map),
     m_pParent(NULL),
     m_vPosition(Vector2Attribute(pElem, "", vDefaultPosition)),
