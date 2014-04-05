@@ -20,6 +20,7 @@
 #include "Exit.hpp"
 #include "OutputStyle.hpp"
 #include "TileTypes.hpp"
+#include "Entity.hpp"
 
 class CTile;
 class CPlayer;
@@ -33,7 +34,10 @@ class CTutorialManager;
 class CDebugText;
 struct SStatistics;
 
-class CMap : public CSpriteTransformPipeline, public CInputListener, public CPauseListener {
+class CMap : public CEntity,
+	     public CSpriteTransformPipeline,
+	     public CInputListener,
+	     public CPauseListener {
 private:
   CTutorialManager *m_pTutorialManager;
   std::list<CEnemy*> m_lEnemiesToDestroy;

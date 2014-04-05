@@ -1,5 +1,6 @@
 #include "EventCreator.hpp"
 #include "ChangeTileEvent.hpp"
+#include "ToggleEvent.hpp"
 #include "XMLHelper.hpp"
 #include "OgreException.h"
 
@@ -10,7 +11,8 @@ CEvent *CEventCreator::create(CMap &map, const tinyxml2::XMLElement *pElem) {
   switch (eType) {
   case CEvent::EVENT_CHANGE_TILE:
     return new CChangeTileEvent(map, pElem);
-    break;
+  case CEvent::EVENT_TOGGLE:
+    return new CToggleEvent(map, pElem);
   default:
     throw Ogre::Exception(0, "Event type not implemented", __FILE__);
   }

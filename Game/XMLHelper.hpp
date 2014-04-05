@@ -105,6 +105,10 @@ namespace XMLHelper {
   void SetAttribute<std::string>(tinyxml2::XMLElement *pElem,
 				 const char *pLabel,
 				 const std::string &value);
+  template <>
+  void SetAttribute<bool>(tinyxml2::XMLElement *pElem,
+				 const char *pLabel,
+				 const bool &value);
 };
 
 

@@ -129,12 +129,14 @@ void CEnemy::update(Ogre::Real tpf) {
     m_vSpeed.y += (m_vExternalForce.y + c_fGravity) * tpf;
     m_vPosition.y += m_vSpeed.y * tpf;
 
-    m_bOnGround = false;
-    if (m_vSpeed.y < 0) {
+    if (m_vSpeed.y != 0) {
+      m_bOnGround = false;
+      if (m_vSpeed.y < 0) {
         fPenetration = m_Map.hitsTile(CCD_BOTTOM, CTile::TF_UNPASSABLE, getWorldBoundingBox());
         if (fPenetration != 0) {
           m_bOnGround = true;
         }
+      }
     }
 
     if (fPenetration != 0) {

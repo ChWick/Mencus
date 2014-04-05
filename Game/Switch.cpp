@@ -5,6 +5,7 @@
 #include "XMLHelper.hpp"
 #include "Event.hpp"
 #include "ChangeTileEvent.hpp"
+#include "ToggleEvent.hpp"
 
 using namespace XMLHelper;
 
@@ -60,15 +61,11 @@ CSwitch::CSwitch(CMap &map,
   using namespace tinyxml2;
 
   for (const XMLElement *pChange = pElem->FirstChildElement(); pChange; pChange = pChange->NextSiblingElement()) {
+    // for supporting old maps
     if (strcmp(pChange->Value(), "togglesLink") == 0) {
-      STogglesLinkEntry entry;
-      entry.sLinkID = pChange->Attribute("id");
-      entry.bInitialState = BoolAttribute(pChange, "initial", true);
-
-      addEntry(entry);
+      addEvent(new CToggleEvent(m_Map, pChange));
     }
     else if (strcmp(pChange->Value(), "changes") == 0) {
-      // for supporting old maps
       CChangeTileEvent *pEvent = new CChangeTileEvent(m_Map, pChange);
       addEvent(pEvent);
     }
@@ -80,15 +77,6 @@ CSwitch::CSwitch(CMap &map,
 CSwitch::~CSwitch() {
 }
 void CSwitch::initialize() {
-
-  for (auto &entry : m_vLinkEntries) {
-    if (!m_Map.getLinkById(entry.sLinkID)) {
-      Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Link with id " + entry.sLinkID + " was not found.");
-      continue;
-    }
-    m_Map.getLinkById(entry.sLinkID)->setActivated(entry.bInitialState);
-  }
-
   Ogre::LogManager::getSingleton().logMessage("Created switch at (" + Ogre::StringConverter::toString(m_vPosition)
                                               + ") that affects " + Ogre::StringConverter::toString(m_lEvents.size())
                                               + " tiles" + Ogre::String((isFlagSet(SF_CHANGE_BLOCKS)) ? " and blocks." : "."));
@@ -136,9 +124,6 @@ void CSwitch::updateState(ESwitchStates eNewState) {
     for (auto *pEvent : m_lEvents) {
       execute(pEvent);
     }
-    for (auto &entry : m_vLinkEntries) {
-      m_Map.getLinkById(entry.sLinkID)->setActivated((m_eSwitchState == SS_ACTIVATED) ? !entry.bInitialState : entry.bInitialState);
-    }
   }
   m_eSwitchState = eNewState;
   if (m_eSwitchState == SS_DEACTIVATED) {
@@ -162,8 +147,6 @@ Ogre::String CSwitch::getPreviewImageName(int iType) {
 void CSwitch::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
   using namespace tinyxml2;
 
-  XMLDocument &doc(*pElem->GetDocument());
-
   CSprite::writeToXMLElement(pElem, eStyle);
   pElem->SetAttribute("type", m_stSwitchType);
   pElem->SetAttribute("flags", m_uiSwitchFlags);
@@ -171,11 +154,5 @@ void CSwitch::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle
   if (eStyle == OS_FULL) {
     pElem->SetAttribute("state", m_eSwitchState);
     pElem->SetAttribute("timer", m_fTimer);
-  }
-  for (const STogglesLinkEntry &entry : getLinkEntries()) {
-    XMLElement *pChange = doc.NewElement("togglesLink");
-    pElem->InsertEndChild(pChange);
-    pChange->SetAttribute("id", entry.sLinkID.c_str());
-    pChange->SetAttribute("initial", entry.bInitialState);
   }
 }

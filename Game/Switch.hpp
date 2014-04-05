@@ -8,11 +8,6 @@ class CMap;
 
 typedef unsigned int SwitchType;
 
-struct STogglesLinkEntry {
-  Ogre::String sLinkID;
-  bool bInitialState;
-};
-
 class CSwitch : public CSprite {
 public:
   enum ESwitchTypes : SwitchType {
@@ -37,7 +32,6 @@ private:
   Ogre::Real m_fActiveTime;
   const SwitchType m_stSwitchType;
   ESwitchStates m_eSwitchState;
-  vector<STogglesLinkEntry> m_vLinkEntries;
   unsigned int m_uiSwitchFlags;
 public:
   CSwitch(CMap &map,
@@ -53,10 +47,6 @@ public:
 
   void update(Ogre::Real tpf);
 
-  void addEntry(const STogglesLinkEntry &entry) {m_vLinkEntries.push_back(entry);}
-  void eraseLinkEntry(int iAt) {m_vLinkEntries.erase(m_vLinkEntries.begin() + iAt);}
-
-  const vector<STogglesLinkEntry> &getLinkEntries() const {return m_vLinkEntries;}
   ESwitchStates getState() const {return m_eSwitchState;}
   SwitchType getType() const {return m_stSwitchType;}
 

@@ -54,10 +54,12 @@ CEntity::CEntity(CMap &map,
   using namespace tinyxml2;
   const XMLElement *pEventsElement = pElem->FirstChildElement("events");
   if (pEventsElement) {
-    for (const XMLElement *pEventElement = pEventsElement->FirstChildElement();
-	 pEventElement;
-	 pEventElement = pEventElement->NextSiblingElement()) {
-      m_lEvents.push_back(CEventCreator::create(m_Map, pEventElement));
+    if (pEventsElement) {
+      for (const XMLElement *pEventElement = pEventsElement->FirstChildElement();
+	   pEventElement;
+	   pEventElement = pEventElement->NextSiblingElement()) {
+	m_lEvents.push_back(CEventCreator::create(m_Map, pEventElement));
+      }
     }
   }
 }
@@ -70,6 +72,7 @@ CEntity::~CEntity() {
     delete m_lEvents.front();
     m_lEvents.pop_front();
   }
+  attachTo(NULL);
 }
 void CEntity::init() {
   for (auto pEvent: m_lEvents) {
@@ -90,6 +93,59 @@ void CEntity::attachTo(CEntity *pParent) {
   if (m_pParent) {
     m_pParent->m_lChildren.push_back(this);
   }
+}
+
+CEntity *CEntity::getRoot() {
+  if (!m_pParent) {return this;}
+  return m_pParent->getRoot();
+}
+const CEntity *CEntity::getRoot() const {
+  if (!m_pParent) {return this;}
+  return m_pParent->getRoot();
+}
+CEntity *CEntity::getChild(const std::string &sID) {
+  for (auto *pChild : m_lChildren) {
+    if (pChild->m_sID == sID) {
+      return pChild;
+    }
+  }
+  return NULL;
+}
+CEntity *CEntity::getChildRecursive(const std::string &sID) {
+  for (auto *pChild : m_lChildren) {
+    if (pChild->m_sID == sID) {
+      return pChild;
+    }
+  }
+  for (auto *pChild : m_lChildren) {
+    CEntity *pRecursiveChild = pChild->getChildRecursive(sID);
+    if (pRecursiveChild) {
+      return pRecursiveChild;
+    }
+  }
+  return NULL;
+}
+const CEntity *CEntity::getChild(const std::string &sID) const {
+  for (auto *pChild : m_lChildren) {
+    if (pChild->m_sID == sID) {
+      return pChild;
+    }
+  }
+  return NULL;
+}
+const CEntity *CEntity::getChildRecursive(const std::string &sID) const {
+  for (auto *pChild : m_lChildren) {
+    if (pChild->m_sID == sID) {
+      return pChild;
+    }
+  }
+  for (auto *pChild : m_lChildren) {
+    const CEntity *pRecursiveChild = pChild->getChildRecursive(sID);
+    if (pRecursiveChild) {
+      return pRecursiveChild;
+    }
+  }
+  return NULL;
 }
 
 void CEntity::destroyEvent(CEvent *pEvent) {
@@ -120,13 +176,15 @@ void CEntity::writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eSt
   }
 
   // write events
-  XMLDocument *pDoc = pElement->GetDocument();
-  XMLElement *pEventsElement = pDoc->NewElement("events");
-  pElement->InsertEndChild(pEventsElement);
-
-  for (auto pEvent : m_lEvents) {
-    XMLElement *pEventElement = pDoc->NewElement("event");
-    pEventsElement->InsertEndChild(pEventElement);
-    pEvent->writeToXMLElement(pEventElement, eStyle);
+  if (m_lEvents.size() > 0) {
+    XMLDocument *pDoc = pElement->GetDocument();
+    XMLElement *pEventsElement = pDoc->NewElement("events");
+    pElement->InsertEndChild(pEventsElement);
+    
+    for (auto pEvent : m_lEvents) {
+      XMLElement *pEventElement = pDoc->NewElement("event");
+      pEventsElement->InsertEndChild(pEventElement);
+      pEvent->writeToXMLElement(pEventElement, eStyle);
+    }
   }
 }

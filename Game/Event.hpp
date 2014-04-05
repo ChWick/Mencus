@@ -12,6 +12,7 @@ class CEvent {
 public:
   enum ETypes {
     EVENT_CHANGE_TILE,
+    EVENT_TOGGLE,
     EVENT_SHOW_MESSAGE,
   };
   static std::string toString(ETypes eEventType);

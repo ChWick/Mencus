@@ -43,6 +43,12 @@ public:
   const CEntity *getParent() const {return m_pParent;}
   std::list<CEntity *> &getChildren() {return m_lChildren;}
   const std::list<CEntity *> &getChildren() const {return m_lChildren;}
+  CEntity *getRoot();
+  const CEntity *getRoot() const;
+  CEntity *getChild(const std::string &sID);
+  CEntity *getChildRecursive(const std::string &sID);
+  const CEntity *getChild(const std::string &sID) const ;
+  const CEntity *getChildRecursive(const std::string &sID) const;
   
   // events access
   std::list<CEvent*> &getEvents() {return m_lEvents;}
@@ -53,6 +59,10 @@ public:
   // methods
   virtual void init();
   virtual void exit();
+
+  virtual void setActivated(bool bActivated) {if (bActivated) {activate();} else {deactivate();}}
+  virtual void activate() {}
+  virtual void deactivate() {}
   
   virtual void update(Ogre::Real tpf);
   virtual void render(Ogre::Real tpf);
