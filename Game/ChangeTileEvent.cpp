@@ -1,6 +1,7 @@
 #include "ChangeTileEvent.hpp"
 #include "Map.hpp"
 #include "TileTypes.hpp"
+#include "Tile.hpp"
 
 using namespace XMLHelper;
 
@@ -20,10 +21,16 @@ CChangeTileEvent::CChangeTileEvent(CMap &map, const tinyxml2::XMLElement *pElem)
 }
 void CChangeTileEvent::init() {
   if (m_uiOldTileType == TT_NONE) {
-    m_uiOldTileType = m_pMap->getTile(m_uiTilePosX, m_uiTilePosY)->getTileType();
+    m_uiOldTileType = m_Map.getTile(m_uiTilePosX, m_uiTilePosY)->getTileType();
   }
 }
-void CChangeTileEvent::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) {
+void CChangeTileEvent::start() {
+  m_Map.changeTileType(m_uiTilePosX, m_uiTilePosY, m_uiTileType);
+}
+void CChangeTileEvent::stop() {
+  m_Map.changeTileType(m_uiTilePosX, m_uiTilePosY, m_uiOldTileType);
+}
+void CChangeTileEvent::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
   CEvent::writeToXMLElement(pElem, eStyle);
 
   pElem->SetAttribute("id", m_uiTileType);

@@ -41,34 +41,35 @@ const CEGUI::String MAP_EDITOR_BRUSH_LABELS[CMapEditor::B_COUNT] = {
 };
 
 CMapEditor::CMapEditor(Window *pRoot) 
-  : m_uiCurrentTile(2),
-    m_pRoot(pRoot),
-    m_pMap(NULL),
-    m_pTabControl(NULL),
-    m_pSelectedSprite(NULL),
-    m_bVisible(false),
+  : m_bMiddleMouseButtonPressed(false),
+    m_bShiftPressed(false),
     m_bRenderPause(false),
-    m_bInitialized(false),
+    m_bVisible(false),
+    m_pRoot(pRoot),
+    m_pTabControl(NULL),
     m_pEditValueWindow(NULL),
+    m_uiCurrentTile(2),
+    m_pMap(NULL),
+    m_pSelectedSprite(NULL),
+    m_bInitialized(false),
     m_uiMapSizeX(0),
-    m_uiMapSizeY(0),
-    m_bMiddleMouseButtonPressed(false) {
+    m_uiMapSizeY(0) {
   //init(0);
 }
 void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
-  for (int i = 0; i < TT_COUNT; i++) {
+  for (unsigned int i = 0; i < TT_COUNT; i++) {
     String tileName = "Tile" + PropertyHelper<int>::toString(i) + ".png";
     ImageManager::getSingleton().addFromImageFile(tileName, tileName, "Game");
   }
-  for (int i = 0; i < CObject::OT_COUNT; i++) {
+  for (unsigned int i = 0; i < CObject::OT_COUNT; i++) {
     String objectName = CObject::getPreviewImageName(i);
     ImageManager::getSingleton().addFromImageFile(objectName, objectName, "Game");
   }
-  for (int i = 0; i < CEnemy::ET_COUNT; i++) {
+  for (unsigned int i = 0; i < CEnemy::ET_COUNT; i++) {
     String objectName = CEnemy::getPreviewImageName(i);
     ImageManager::getSingleton().addFromImageFile(objectName, objectName, "Game");
   }
-  for (int i = 0; i < CSwitch::SWITCH_COUNT; i++) {
+  for (unsigned int i = 0; i < CSwitch::SWITCH_COUNT; i++) {
     String objectName = CSwitch::getPreviewImageName(i);
     ImageManager::getSingleton().addFromImageFile(objectName, objectName, "Game");
   }
@@ -313,7 +314,7 @@ void CMapEditor::resize(float fButtonSize) {
   // switches
   iIdOffset += CEnemy::ET_COUNT;
   id = 0;
-  for (int y = 0; y < CSwitch::SWITCH_COUNT / iTilesCountX + 1; y++) {
+  for (unsigned int y = 0; y < CSwitch::SWITCH_COUNT / iTilesCountX + 1; y++) {
     for (int x = 0; x < iTilesCountX; x++) {
       if (id == CSwitch::SWITCH_COUNT) {break;}
       String objectName(CSwitch::getPreviewImageName(id));
@@ -493,6 +494,8 @@ Window* CMapEditor::createEditButton(Window *pParent,
     pButton->subscribeEvent(PushButton::EventClicked,
 			    Event::Subscriber(&CMapEditor::onEditCustom, this));
     break;
+  default:
+    break;
   }
   switch (id) {
   case EB_MAP_FILENAME:
@@ -546,28 +549,30 @@ Window* CMapEditor::createEditButton(Window *pParent,
   case EB_LINK_TO:
     pButton->setText("Second");
     break;
+  default:
+    break;
   }
   return pButton;
 }
 void CMapEditor::reloadTextures() {
   if (!m_bInitialized) {return;}
 
-  for (int i = 0; i < TT_COUNT; i++) {
+  for (unsigned int i = 0; i < TT_COUNT; i++) {
     String tileName = "Tile" + PropertyHelper<int>::toString(i) + ".png";
     CGUIManager::getSingleton().getRenderer()->getTexture(tileName).
       loadFromFile(tileName, "Game");
   }
-  for (int i = 0; i < CObject::OT_COUNT; i++) {
+  for (unsigned int i = 0; i < CObject::OT_COUNT; i++) {
     String objectName = CObject::getPreviewImageName(i);
     CGUIManager::getSingleton().getRenderer()->getTexture(objectName).
       loadFromFile(objectName, "Game");
   }
-  for (int i = 0; i < CEnemy::ET_COUNT; i++) {
+  for (unsigned int i = 0; i < CEnemy::ET_COUNT; i++) {
     String objectName = CEnemy::getPreviewImageName(i);
     CGUIManager::getSingleton().getRenderer()->getTexture(objectName).
       loadFromFile(objectName, "Game");
   }
-  for (int i = 0; i < CSwitch::SWITCH_COUNT; i++) {
+  for (unsigned int i = 0; i < CSwitch::SWITCH_COUNT; i++) {
     String objectName = CSwitch::getPreviewImageName(i);
     CGUIManager::getSingleton().getRenderer()->getTexture(objectName).
       loadFromFile(objectName, "Game");
@@ -576,22 +581,22 @@ void CMapEditor::reloadTextures() {
 }
 void CMapEditor::exit() {
   Ogre::LogManager::getSingleton().logMessage("MapEditor exit ...");
-  for (int i = 0; i < TT_COUNT; i++) {
+  for (unsigned int i = 0; i < TT_COUNT; i++) {
     String tileName = "Tile" + PropertyHelper<int>::toString(i) + ".png";
     ImageManager::getSingleton().destroy(tileName);
     CGUIManager::getSingleton().getRenderer()->destroyTexture(tileName);
   }
-  for (int i = 0; i < CObject::OT_COUNT; i++) {
+  for (unsigned int i = 0; i < CObject::OT_COUNT; i++) {
     String objectName = CObject::getPreviewImageName(i);
     ImageManager::getSingleton().destroy(objectName);
     CGUIManager::getSingleton().getRenderer()->destroyTexture(objectName);
   }
-  for (int i = 0; i < CEnemy::ET_COUNT; i++) {
+  for (unsigned int i = 0; i < CEnemy::ET_COUNT; i++) {
     String objectName = CEnemy::getPreviewImageName(i);
     ImageManager::getSingleton().destroy(objectName);
     CGUIManager::getSingleton().getRenderer()->destroyTexture(objectName);
   }
-  for (int i = 0; i < CSwitch::SWITCH_COUNT; i++) {
+  for (unsigned int i = 0; i < CSwitch::SWITCH_COUNT; i++) {
     String objectName = CSwitch::getPreviewImageName(i);
     ImageManager::getSingleton().destroy(objectName);
     CGUIManager::getSingleton().getRenderer()->destroyTexture(objectName);
@@ -676,8 +681,8 @@ void CMapEditor::render() {
 	iSelected = pLB->getItemIndex(pLB->getFirstSelectedItem());
       }
       
-      for (const SSwitchEntry &entry : pSwitch->getEntries()) {
-	CDebugDrawer::getSingleton().draw(entry, (iCounter == iSelected) ? 0.9 : 0.5);
+      for (const CEvent *pEvent : pSwitch->getEvents()) {
+	CDebugDrawer::getSingleton().draw(pEvent, (iCounter == iSelected) ? 0.9 : 0.5);
 	iCounter++;
       }
     }
@@ -868,7 +873,6 @@ void CMapEditor::editTile(const Ogre::Vector2 &vPos) {
 }
 void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
   m_vClickPos = vPos;
-  CSprite *pSprite;
   switch (m_eSelectedBrush) {
   case B_PLACE:
     if (m_uiCurrentObject < CObject::OT_COUNT + CEnemy::ET_COUNT + CSwitch::SWITCH_COUNT) {
@@ -884,12 +888,15 @@ void CMapEditor::handleBrushPressed(const Ogre::Vector2 &vPos) {
     break;
   case B_EDIT:
     break;
+  default:
+    break;
   }
   handleBrushMoved(vPos, Ogre::Vector2::ZERO);
 }
 void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2 &vDelta) {
+  Ogre::Vector2 vMapPos(m_pMap->mouseToMapSize(vDelta));
+
   if (m_bMiddleMouseButtonPressed) {
-    Ogre::Vector2 vMapPos(m_pMap->mouseToMapSize(vDelta));
     m_pMap->translateCamera(-vMapPos);
   }
   else {
@@ -900,7 +907,6 @@ void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2
       }
       break;
     case B_MOVE:
-      Ogre::Vector2 vMapPos(m_pMap->mouseToMapSize(vDelta));
       if (m_pSelectedSprite && m_bGrabbedSprite) {
 	m_pSelectedSprite->translate(vMapPos);
       }
@@ -908,6 +914,8 @@ void CMapEditor::handleBrushMoved(const Ogre::Vector2 &vPos, const Ogre::Vector2
 	// move map
 	m_pMap->translateCamera(-vMapPos);
       }
+      break;
+    default:
       break;
     }
   }
@@ -939,6 +947,8 @@ void CMapEditor::handleBrushReleased(const Ogre::Vector2 &vPos) {
       }
     }
     break;
+  default:
+    break;
   }
 }
 void CMapEditor::placeCurrentTile(const Ogre::Vector2 &vPos) {
@@ -963,8 +973,7 @@ void CMapEditor::placeCurrentTile(int x, int y) {
   if (m_pMap->outOfMap(x, y)) {return;}
 
   if (m_uiCurrentTile < TT_COUNT) {
-    delete m_pMap->getTile(x, y);
-    m_pMap->getTile(x, y) = new CTile(m_pMap, m_pMap->get2dManager(), Ogre::Vector2(x, y), m_uiCurrentTile);
+    m_pMap->changeTileType(x, y, m_uiCurrentTile);
   }
 }
 void CMapEditor::placeCurrentObject(const Ogre::Vector2 &vPos) {
@@ -992,7 +1001,7 @@ void CMapEditor::placeCurrentObject(const Ogre::Vector2 &vPos) {
   }
   else if (m_uiCurrentObject < CEnemy::ET_COUNT + CObject::OT_COUNT + CSwitch::SWITCH_COUNT) {
     int id = m_uiCurrentObject - CObject::OT_COUNT - CEnemy::ET_COUNT;
-    CSwitch *pSwitch = new CSwitch(m_pMap,
+    CSwitch *pSwitch = new CSwitch(*m_pMap,
 				   vMapPos,
 				   static_cast<CSwitch::ESwitchTypes>(id),
 				   false,
@@ -1232,7 +1241,7 @@ bool CMapEditor::onEditTileType(const CEGUI::EventArgs &args) {
       Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
       CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedSprite);
       if (pSwitch && pLB->getFirstSelectedItem()) {
-	CChangeTileEvent &pTileEvent(static_cast<CChangeTileEvent*>(pLB->getFirstSelectedItem()->getUserData()));
+	CChangeTileEvent *pTileEvent(static_cast<CChangeTileEvent*>(pLB->getFirstSelectedItem()->getUserData()));
 	m_pEditValueWindow = new CEditBoxTileType(id,
 						  m_pRoot,
 						  m_fButtonSize,

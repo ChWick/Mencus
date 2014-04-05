@@ -22,7 +22,9 @@ public:
 		   bool bEnableNoTile = true,
 		   CTile *pTile = NULL) 
     : CEditBoxBase(iID, pParent, fButtonSize, sTitle),
-      m_tt(tt), m_uiCurrentTile(tt), m_ttBackup(tt),
+      m_ttBackup(tt),
+      m_tt(tt),
+      m_uiCurrentTile(tt),
       m_pTile(pTile) {
 
     using namespace CEGUI;

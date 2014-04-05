@@ -60,7 +60,6 @@ private:
 
 private:
   CFader m_Fader;
-  CMap *m_pMap;
   float m_fRightPressed;
   float m_fLeftPressed;
   bool m_bAttackPressed;
@@ -96,8 +95,8 @@ private:
   bool m_bPlayerNoCollisionActivated;
 #endif // DEBUG_PLAYER_NO_COLLISION
 public:
-  CPlayer(CMap *pMap, Ogre2dManager *pSpriteManager, SStatistics &statistics);
-  CPlayer(CMap *pMap, const tinyxml2::XMLElement *pElem, SStatistics &statistics);
+  CPlayer(CMap &map, SStatistics &statistics);
+  CPlayer(CMap &map, const tinyxml2::XMLElement *pElem, SStatistics &statistics);
   ~CPlayer();
 
   void startup(const Ogre::Vector2 &vPosition, Ogre::Real fDirection);

@@ -3,6 +3,7 @@
 #include "Map.hpp"
 #include "Tile.hpp"
 #include "XMLHelper.hpp"
+#include "Event.hpp"
 
 using namespace XMLHelper;
 
@@ -15,32 +16,38 @@ const unsigned int SWITCH_FLAGS[CSwitch::SWITCH_COUNT] = {
   CSwitch::SF_DEACTIVATABLE
 };
 
-CSwitch::CSwitch(CMap *pMap,
+CSwitch::CSwitch(CMap &map,
 		 const Ogre::Vector2 &vPosition,
 		 SwitchType stSwitchType,
 		 bool bChangeBlocks,
 		 ESwitchStates eSwitchState)
-  : CSprite(pMap, pMap->get2dManager(), vPosition, SWITCH_SIZES[stSwitchType]),
-    m_pMap(pMap),
-    m_stSwitchType(stSwitchType),
-    m_eSwitchState(eSwitchState),
+  : CSprite(map,
+	    &map,
+	    map.get2dManager(),
+	    vPosition,
+	    SWITCH_SIZES[stSwitchType]),
     m_fTimer(0),
-    m_fActiveTime(0) {
+    m_fActiveTime(0),
+    m_stSwitchType(stSwitchType),
+    m_eSwitchState(eSwitchState) {
   m_uiSwitchFlags = SWITCH_FLAGS[stSwitchType];
   if (bChangeBlocks) {
     m_uiSwitchFlags |= SF_CHANGE_BLOCKS;
   }
   setTexture(getSwitchTexture(stSwitchType, false));
 }
-CSwitch::CSwitch(CMap *pMap,
+CSwitch::CSwitch(CMap &map,
 	const tinyxml2::XMLElement *pElem) 
-  : CSprite(pMap, pMap->get2dManager(), pElem, SWITCH_SIZES[EnumAttribute<ESwitchTypes>(pElem, "type")]),
-    m_pMap(pMap),
+  : CSprite(map,
+	    &map,
+	    map.get2dManager(),
+	    pElem,
+	    SWITCH_SIZES[EnumAttribute<ESwitchTypes>(pElem, "type")]),
+    m_fTimer(RealAttribute(pElem, "timer", 0)),
+    m_fActiveTime(RealAttribute(pElem, "activeTime")),
     m_stSwitchType(EnumAttribute<ESwitchTypes>(pElem, "type")),
     m_eSwitchState(EnumAttribute<ESwitchStates>(pElem, "state", SS_DEACTIVATED)),
-    m_uiSwitchFlags(IntAttribute(pElem, "flags", SWITCH_FLAGS[EnumAttribute<ESwitchTypes>(pElem, "type")])),
-    m_fTimer(RealAttribute(pElem, "timer", 0)),
-    m_fActiveTime(RealAttribute(pElem, "activeTime")) {
+    m_uiSwitchFlags(IntAttribute(pElem, "flags", SWITCH_FLAGS[EnumAttribute<ESwitchTypes>(pElem, "type")])) {
 
   // ===========================================================
   // for old map format
@@ -69,15 +76,15 @@ CSwitch::~CSwitch() {
 void CSwitch::initialize() {
 
   for (auto &entry : m_vLinkEntries) {
-    if (!m_pMap->getLinkById(entry.sLinkID)) {
+    if (!m_Map.getLinkById(entry.sLinkID)) {
       Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Link with id " + entry.sLinkID + " was not found.");
       continue;
     }
-    m_pMap->getLinkById(entry.sLinkID)->setActivated(entry.bInitialState);
+    m_Map.getLinkById(entry.sLinkID)->setActivated(entry.bInitialState);
   }
 
   Ogre::LogManager::getSingleton().logMessage("Created switch at (" + Ogre::StringConverter::toString(m_vPosition)
-                                              + ") that affects " + Ogre::StringConverter::toString(m_vEntries.size())
+                                              + ") that affects " + Ogre::StringConverter::toString(m_lEvents.size())
                                               + " tiles" + Ogre::String((isFlagSet(SF_CHANGE_BLOCKS)) ? " and blocks." : "."));
 }
 void CSwitch::update(Ogre::Real tpf) {
@@ -118,13 +125,13 @@ void CSwitch::updateState(ESwitchStates eNewState) {
       || (m_eSwitchState == SS_DEACTIVATING && eNewState == SS_DEACTIVATED)) {
     m_eSwitchState = eNewState;
     if (isFlagSet(SF_CHANGE_BLOCKS)) {
-      m_pMap->swapBoxes();
+      m_Map.swapBoxes();
     }
-    for (auto &entry : m_vEntries) {
-      place(entry);
+    for (auto *pEvent : m_lEvents) {
+      execute(pEvent);
     }
     for (auto &entry : m_vLinkEntries) {
-      m_pMap->getLinkById(entry.sLinkID)->setActivated((m_eSwitchState == SS_ACTIVATED) ? !entry.bInitialState : entry.bInitialState);
+      m_Map.getLinkById(entry.sLinkID)->setActivated((m_eSwitchState == SS_ACTIVATED) ? !entry.bInitialState : entry.bInitialState);
     }
   }
   m_eSwitchState = eNewState;
@@ -135,15 +142,13 @@ void CSwitch::updateState(ESwitchStates eNewState) {
     setTexture(getSwitchTexture(m_stSwitchType, true));
   }
 }
-void CSwitch::place(const SSwitchEntry &entry) {
-  TileType ttToSet = (m_eSwitchState != SS_DEACTIVATED) ? entry.uiTileType : entry.uiOldTileType;
-
-  delete m_pMap->getTile(entry.uiTilePosX, entry.uiTilePosY);
-  m_pMap->getTile(entry.uiTilePosX, entry.uiTilePosY)
-    = new CTile(m_pMap,
-		m_pMap->get2dManager(),
-		Ogre::Vector2(entry.uiTilePosX, entry.uiTilePosY),
-		ttToSet);
+void CSwitch::execute(CEvent *pEvent) {
+  if (m_eSwitchState != SS_DEACTIVATED) {
+    pEvent->start();
+  }
+  else {
+    pEvent->stop();
+  }
 }
 Ogre::String CSwitch::getPreviewImageName(int iType) {
   return getSwitchTexture(iType, false);

@@ -7,9 +7,9 @@
 
 class CEditBoxBase : CPauseCaller {
 protected:
-  CEGUI::Window *m_pWindow;
-  CEditBoxListener *m_pListener;
   const int m_iID;
+  CEditBoxListener *m_pListener;
+  CEGUI::Window *m_pWindow;
 public:
   CEditBoxBase(int id, CEGUI::Window *pParent, float fButtonSize, const CEGUI::String &sTitle)
     : m_iID(id),
@@ -38,7 +38,7 @@ public:
     
     pause(PAUSE_MAP_EDITOR);
   }
-  ~CEditBoxBase() {
+  virtual ~CEditBoxBase() {
     unpause(PAUSE_MAP_EDITOR);
     m_pWindow->destroy();
   }

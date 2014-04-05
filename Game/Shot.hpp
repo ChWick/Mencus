@@ -39,7 +39,6 @@ public:
 
   static const Ogre::Real SHOT_DAMAGE[ST_COUNT];
 private:
-  CMap *m_pMap;
   const EShotTypes m_eShotType;
   const bool m_bAffectedByGravity;
   Ogre::Vector2 m_vSpeed;
@@ -49,13 +48,12 @@ private:
   unsigned int m_uiDamages;
   CEnemy *m_pCatchedEnemy;
 public:
-  CShot(CMap *pMap,
-	Ogre2dManager *pSpriteManager,
+  CShot(CMap &map,
 	const Ogre::Vector2 &vCenter,
 	EShotTypes eShotType,
 	EShotDirections eShotDirection,
 	unsigned int uiDmg = DMG_ALL);
-  CShot(CMap *pMap,
+  CShot(CMap &map,
 	const tinyxml2::XMLElement *pElement);
   //! Lanches a shot with the given speed
   /** This speed will be multiplied with the default speed of the shot

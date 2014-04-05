@@ -6,8 +6,8 @@
 #include "Enemy.hpp"
 
 CTutorialManager::CTutorialManager(const CMap &map)
-  : m_Map(map),
-    m_bEnabled(false) {
+  : m_bEnabled(false),
+    m_Map(map) {
   m_bInformationShown.resize(IS_COUNT, false);
 }
 void CTutorialManager::start() {

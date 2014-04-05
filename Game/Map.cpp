@@ -66,7 +66,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
 
   CInputListenerManager::getSingleton().addInputListener(this);
 
-  new CDebugDrawer(this, m_pDebugSpriteManager);
+  new CDebugDrawer(*this);
 
   CHUD::getSingleton().show();
 
@@ -170,17 +170,17 @@ void CMap::resizeTiles(unsigned int uiSizeX, unsigned int uiSizeY) {
   // create new
   for (unsigned int x = uiCopySizeX; x < uiSizeX; x++) {
     for (unsigned int y = uiCopySizeY; y < uiSizeY; y++) {
-      newGrid(x, y) = new CTile(this, this->get2dManager(), Ogre::Vector2(x, y), TT_WALL_FRONT);
+      newGrid(x, y) = new CTile(*this, Ogre::Vector2(x, y), TT_WALL_FRONT);
     }
   }
   for (unsigned int x = uiCopySizeX; x < uiSizeX; x++) {
     for (unsigned int y = 0; y < m_gridTiles.getSizeY(); y++) {
-      newGrid(x, y) = new CTile(this, this->get2dManager(), Ogre::Vector2(x, y), TT_WALL_FRONT);
+      newGrid(x, y) = new CTile(*this, Ogre::Vector2(x, y), TT_WALL_FRONT);
     }
   }
   for (unsigned int x = 0; x < m_gridTiles.getSizeX(); x++) {
     for (unsigned int y = uiCopySizeY; y < uiSizeY; y++) {
-      newGrid(x, y) = new CTile(this, this->get2dManager(), Ogre::Vector2(x, y), TT_WALL_FRONT);
+      newGrid(x, y) = new CTile(*this, Ogre::Vector2(x, y), TT_WALL_FRONT);
     }
   }
   // delete old
@@ -391,7 +391,7 @@ void CMap::activateSwitchOnHit(const CBoundingBox2d &bb) {
 }
 void CMap::createExplosion(const Ogre::Vector2 &vCenter, Ogre::Real r) {
   // create explosion
-  addExplosion(new CExplosion(this, vCenter, CExplosion::ET_BOMB));
+  addExplosion(new CExplosion(*this, vCenter, CExplosion::ET_BOMB));
 
   // check enemies
   for (auto pEnemy : m_lEnemies) {
@@ -428,7 +428,7 @@ void CMap::explodeTile(size_t x, size_t y, bool bExplodeNeighbours) {
   }
   TileType tt = tile->getEndangeredTileType();
   delete tile;
-  tile = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), tt);
+  tile = new CTile(*this, Ogre::Vector2(x, y), tt);
 
   // remove all scratches that collides with this tile
   for (CObject* pObject : m_lObjects) {
@@ -509,35 +509,42 @@ ECollisionCheckDirections CMap::playerVisibleFromPoint(const Ogre::Vector2 &vFro
   }
   return CCD_NONE;
 }
+void CMap::changeTileType(unsigned int uiTilePosX, unsigned int uiTilePosY, TileType ttTileType) {
+  delete m_gridTiles(uiTilePosX, uiTilePosY);
+  m_gridTiles(uiTilePosX, uiTilePosY)
+    = new CTile(*this,
+		Ogre::Vector2(uiTilePosX, uiTilePosY),
+		ttTileType);
+}
 void CMap::unlock(unsigned int x, unsigned int y) {
   TileType id = m_gridTiles(x, y)->getTileType();
   if (id == 49) {
     delete m_gridTiles(x, y);
     delete m_gridTiles(x, y + 1);
 
-    m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), 2);
-    m_gridTiles(x, y + 1) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y + 1), 51);
+    m_gridTiles(x, y) = new CTile(*this, Ogre::Vector2(x, y), 2);
+    m_gridTiles(x, y + 1) = new CTile(*this, Ogre::Vector2(x, y + 1), 51);
   }
   else if (id == 50) {
     delete m_gridTiles(x, y);
     delete m_gridTiles(x, y - 1);
 
-    m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), 51);
-    m_gridTiles(x, y - 1) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y - 1), 2);
+    m_gridTiles(x, y) = new CTile(*this, Ogre::Vector2(x, y), 51);
+    m_gridTiles(x, y - 1) = new CTile(*this, Ogre::Vector2(x, y - 1), 2);
   }
   else if (id == TT_DOOR_WOOD_BOT_CLOSED) {
     delete m_gridTiles(x, y);
     delete m_gridTiles(x, y + 1);
 
-    m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), TT_DOOR_WOOD_BOT_OPEN);
-    m_gridTiles(x, y + 1) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y + 1), TT_DOOR_WOOD_TOP_OPEN);
+    m_gridTiles(x, y) = new CTile(*this, Ogre::Vector2(x, y), TT_DOOR_WOOD_BOT_OPEN);
+    m_gridTiles(x, y + 1) = new CTile(*this, Ogre::Vector2(x, y + 1), TT_DOOR_WOOD_TOP_OPEN);
   }
   else if (id == TT_DOOR_WOOD_TOP_CLOSED) {
     delete m_gridTiles(x, y);
     delete m_gridTiles(x, y - 1);
 
-    m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), TT_DOOR_WOOD_TOP_OPEN);
-    m_gridTiles(x, y - 1) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y - 1), TT_DOOR_WOOD_BOT_OPEN);
+    m_gridTiles(x, y) = new CTile(*this, Ogre::Vector2(x, y), TT_DOOR_WOOD_TOP_OPEN);
+    m_gridTiles(x, y - 1) = new CTile(*this, Ogre::Vector2(x, y - 1), TT_DOOR_WOOD_BOT_OPEN);
   }
 }
 void CMap::swapBoxes() {
@@ -547,11 +554,11 @@ void CMap::swapBoxes() {
         TileType ttEndangered = m_gridTiles(x, y)->getEndangeredTileType();
         if (m_gridTiles(x, y)->getTileType() == 67) {
           delete m_gridTiles(x, y);
-          m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), 68);
+          m_gridTiles(x, y) = new CTile(*this, Ogre::Vector2(x, y), 68);
         }
         else if (m_gridTiles(x, y)->getTileType() == 68) {
           delete m_gridTiles(x, y);
-          m_gridTiles(x, y) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(x, y), 67);
+          m_gridTiles(x, y) = new CTile(*this, Ogre::Vector2(x, y), 67);
         }
         m_gridTiles(x, y)->setEndangeredTileType(ttEndangered);
       }
@@ -700,26 +707,26 @@ void CMap::render(Ogre::Real tpf) {
 
 
   
-  for (int x = xmin; x < xmax; x++) {
-    for (int y = ymin; y < ymax; y++) {
+  for (unsigned int x = xmin; x < xmax; x++) {
+    for (unsigned int y = ymin; y < ymax; y++) {
       m_gridTiles(x, y)->render(tpf);
     }
   }
 #if ENABLE_MAP_EDITOR
   if (CMapEditor::getSingleton().isVisible()) {
     // line numbers
-    for (int x = 0; x < m_vLineNumberX.size(); x++) {
+    for (unsigned int x = 0; x < m_vLineNumberX.size(); x++) {
       m_vLineNumberX[x]->setText(Ogre::StringConverter::toString(x + static_cast<int>(m_vCameraPos.x)));
       m_vLineNumberX[x]->setPos((static_cast<int>(m_vCameraPos.x) - m_vCameraPos.x + x) / m_vTilesPerScreen.x, 0);
     }
-    for (int y = 0; y < m_vLineNumberY.size(); y++) {
+    for (unsigned int y = 0; y < m_vLineNumberY.size(); y++) {
       m_vLineNumberY[y]->setText(Ogre::StringConverter::toString(static_cast<int>(floor(m_vCameraPos.y + m_vTilesPerScreen.y)) - y));
       m_vLineNumberY[y]->setPos(0, (m_vCameraPos.y - static_cast<int>(floor(m_vCameraPos.y
 									    )) + y) / m_vTilesPerScreen.y - 0.05);
     }
     // endangered tiles
-    for (int x = xmin; x < xmax; x++) {
-      for (int y = ymin; y < ymax; y++) {
+    for (unsigned int x = xmin; x < xmax; x++) {
+      for (unsigned int y = ymin; y < ymax; y++) {
 	if (m_gridTiles(x, y)->getEndangeredTileType() != TT_NONE) {
 	  CDebugDrawer::getSingleton().draw(m_gridTiles(x, y), m_gridTiles(x, y)->getEndangeredTileType(), 0.5);
 	}
@@ -824,12 +831,12 @@ void CMap::readRow(const XMLElement *pRow, unsigned int uiRow) {
   unsigned int uiColumn = 0;
   for (const auto &tile : vTiles) {
     unsigned int uiTileID = Ogre::StringConverter::parseInt(tile);
-    m_gridTiles(uiColumn, uiRow) = new CTile(this, m_p2dManagerMap, Ogre::Vector2(uiColumn, uiRow), uiTileID);
+    m_gridTiles(uiColumn, uiRow) = new CTile(*this, Ogre::Vector2(uiColumn, uiRow), uiTileID);
     ++uiColumn;
   }
 }
 void CMap::readSwitch(const XMLElement *pSwitch) {
-  CSwitch *pNewSwitch = new CSwitch(this, pSwitch);
+  CSwitch *pNewSwitch = new CSwitch(*this, pSwitch);
   m_lSwitches.push_back(pNewSwitch);
 }
 void CMap::readEndangeredTiles(const XMLElement *pTile) {
@@ -1056,7 +1063,7 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
 
   Ogre::String sBackground = pRoot->Attribute("background");
   if (sBackground.size() > 0) {
-    m_pBackground = new CBackground(m_p2dManagerMap, m_vCameraPos, sBackground, m_vTilesPerScreen, m_fScreenRatio);
+    m_pBackground = new CBackground(*this, m_vCameraPos, sBackground, m_vTilesPerScreen, m_fScreenRatio);
   }
 
   int sizeX = pRoot->IntAttribute("sizex");
@@ -1112,7 +1119,7 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
     else if (std::string(pElement->Value()) == "player") {
       assert(!m_pPlayer);
 
-      m_pPlayer = new CPlayer(this, pElement, m_Statistics);
+      m_pPlayer = new CPlayer(*this, pElement, m_Statistics);
       playerWarped();
     }
     else if (std::string(pElement->Value()) == "camera") {
@@ -1120,7 +1127,7 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
     }
     else if (std::string(pElement->Value()) == "shots") {
       for (const XMLElement *pObject = pElement->FirstChildElement(); pObject; pObject = pObject->NextSiblingElement()) {
-        addShot(new CShot(this, pObject));
+        addShot(new CShot(*this, pObject));
       }
     }
   }

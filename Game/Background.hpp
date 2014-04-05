@@ -23,7 +23,7 @@ private:
   const Ogre::Vector2 &m_vTilesPerScreen;
   const float &m_fScreenRatio;
 public:
-  CBackground(Ogre2dManager *pSpriteManager,
+  CBackground(CMap &map,
 	      const Ogre::Vector2 &vCameraPosition,
 	      const Ogre::String &sName,
 	      const Ogre::Vector2 &vTilesPerScreen,

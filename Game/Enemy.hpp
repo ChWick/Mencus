@@ -38,7 +38,6 @@ public:
   static Ogre::String getPreviewImageName(int iEnemyType);
 private:
   const EEnemyTypes m_eEnemyType;
-  CMap &m_Map;
   Ogre::Vector2 m_vSpeed;
   bool m_bOnGround;
   CBarIndicator m_HPBar;

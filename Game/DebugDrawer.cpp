@@ -4,6 +4,8 @@
 #include "Util.hpp"
 #include "Link.hpp"
 #include "Switch.hpp"
+#include "Map.hpp"
+#include "ChangeTileEvent.hpp"
 
 template<> CDebugDrawer *Ogre::Singleton<CDebugDrawer>::msSingleton = 0;
 
@@ -14,14 +16,14 @@ CDebugDrawer &CDebugDrawer::getSingleton() {
   assert(msSingleton);
   return *msSingleton;
 }
-CDebugDrawer::CDebugDrawer(const CSpriteTransformPipeline *pTransformPipeline,
-			   Ogre2dManager *pSpriteManager) {
+CDebugDrawer::CDebugDrawer(CMap &map) {
   m_DebugTextures[DT_PINK] = getTextureInGfx("debug_pink.png");
   m_DebugTextures[DT_BLUE] = getTextureInGfx("debug_blue.png");
   m_DebugTextures[DT_GREEN] = getTextureInGfx("debug_green.png");
 
-  m_pDebugSprite = new CSprite(pTransformPipeline,
-			       pSpriteManager,
+  m_pDebugSprite = new CSprite(map,
+			       &map,
+			       map.getDebug2dManager(),
 			       Ogre::Vector2::ZERO,
 			       Ogre::Vector2::UNIT_SCALE);
 }
@@ -57,11 +59,20 @@ void CDebugDrawer::draw(const CLink &link) const {
   m_pDebugSprite->setPosition(Ogre::Vector2(link.getSecondX(), link.getSecondY()));
   m_pDebugSprite->render(0);
 }
-void CDebugDrawer::draw(const SSwitchEntry &switchEntry, float fAlpha) const {
-  m_pDebugSprite->setTexture(getTileTexturePath(switchEntry.uiTileType));
-  m_pDebugSprite->setSize(CTile::DEFAULT_TILE_SIZE);
-  m_pDebugSprite->setPosition(Ogre::Vector2(switchEntry.uiTilePosX, switchEntry.uiTilePosY));
-  m_pDebugSprite->setAlpha(fAlpha);
-  m_pDebugSprite->render(0);
-  m_pDebugSprite->setAlpha(1);
+void CDebugDrawer::draw(const CEvent *pEvent, float fAlpha) const {
+  switch (pEvent->getType()) {
+  case CEvent::EVENT_CHANGE_TILE:
+    {
+      const CChangeTileEvent *pCCEvent(dynamic_cast<const CChangeTileEvent *>(pEvent));
+      m_pDebugSprite->setTexture(getTileTexturePath(pCCEvent->getTileType()));
+      m_pDebugSprite->setSize(CTile::DEFAULT_TILE_SIZE);
+      m_pDebugSprite->setPosition(Ogre::Vector2(pCCEvent->getTilePosX(), pCCEvent->getTilePosY()));
+      m_pDebugSprite->setAlpha(fAlpha);
+      m_pDebugSprite->render(0);
+      m_pDebugSprite->setAlpha(1);
+    }
+    break;
+  default:
+    break;
+  }
 }

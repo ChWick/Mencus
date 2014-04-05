@@ -24,13 +24,13 @@ const Ogre::Real EXPLOSION_FADING_TIMER[CExplosion::ET_COUNT] = {
   2
 };
 
-CExplosion::CExplosion(CMap *pMap, const Ogre::Vector2 &vCenter, EExplosionTypes eExplosionType)
+CExplosion::CExplosion(CMap &map, const Ogre::Vector2 &vCenter, EExplosionTypes eExplosionType)
   :
-  CAnimatedSprite(pMap,
-		  pMap->get2dManager(),
+  CAnimatedSprite(map,
+		  &map,
+		  map.get2dManager(),
 		  vCenter - EXPLOSION_RELATIVE_OFFSET[eExplosionType],
 		  EXPLOSION_SIZES[eExplosionType]),
-  m_pMap(pMap),
   m_eExplosionType(eExplosionType),
   m_fFadingTimer(-1) {
 
@@ -71,7 +71,7 @@ void CExplosion::update(Ogre::Real tpf) {
   if (m_fFadingTimer > 0) {
     m_fFadingTimer -= tpf;
     if (m_fFadingTimer <= 0) {
-      m_pMap->destroyExplosion(this);
+      m_Map.destroyExplosion(this);
     }
   }
 
@@ -81,7 +81,7 @@ void CExplosion::animationTextureChangedCallback(unsigned int uiOldText, unsigne
   // at the end of the sequence destroy the explosion
   if (uiNewText == 0 && uiOldText == m_AnimationSequences[m_uiCurrentAnimationSequence].size() - 1) {
     if (EXPLOSION_FADING_TIMER[m_eExplosionType] == 0) {
-      m_pMap->destroyExplosion(this);
+      m_Map.destroyExplosion(this);
     }
     m_fFadingTimer = EXPLOSION_FADING_TIMER[m_eExplosionType];
     setCurrentAnimationTexture(uiOldText);

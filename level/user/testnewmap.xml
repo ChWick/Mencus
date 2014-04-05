@@ -26,7 +26,7 @@
 	<events>
             <event type="change_tile" id="31" oldid="2" x="7" y="3"/>
 	</events>
-        </switch>
+      </switch>
     </switches>
     <endangeredTiles/>
     <links/>

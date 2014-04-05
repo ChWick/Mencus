@@ -11,7 +11,8 @@ class CBoundingBox2d;
 class CSpriteTransformPipeline;
 class Ogre2dManager;
 class CLink;
-struct SSwitchEntry;
+class CEvent;
+class CMap;
 
 class CDebugDrawer : public Ogre::Singleton<CDebugDrawer> {
 public:
@@ -29,15 +30,14 @@ public:
   static CDebugDrawer &getSingleton();
   static CDebugDrawer *getSingletonPtr();
 
-  CDebugDrawer(const CSpriteTransformPipeline *pTransformPipeline,
-    Ogre2dManager *pSpriteManager);
+  CDebugDrawer(CMap &map);
   ~CDebugDrawer();
 
   void draw(const CTile *pTile, unsigned int uiTT, float fAlpha = 0.5);
   void draw(const CTile *pTile, EDebugTextures dt = DT_PINK) const;
   void draw(const CBoundingBox2d &bb) const;
   void draw(const CLink &link) const;
-  void draw(const SSwitchEntry &switchEntry, float alpha = 1) const;
+  void draw(const CEvent *pEvent, float alpha = 1) const;
 };
 
 #endif

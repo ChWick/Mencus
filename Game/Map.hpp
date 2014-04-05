@@ -19,6 +19,7 @@
 #include "MapInfo.hpp"
 #include "Exit.hpp"
 #include "OutputStyle.hpp"
+#include "TileTypes.hpp"
 
 class CTile;
 class CPlayer;
@@ -116,7 +117,7 @@ public:
    *  \returns Whether the bb is out of the map
    */
   bool outOfMap(const CBoundingBox2d &bb, ECollisionCheckDirections eCollisionCheckDirection = CCD_ALL) const;
-  bool outOfMap(int x, int y) const {return x < 0 || y < 0 || x >= m_gridTiles.getSizeX() || y >= m_gridTiles.getSizeY();}
+  bool outOfMap(int x, int y) const {return x < 0 || y < 0 || x >= static_cast<int>(m_gridTiles.getSizeX()) || y >= static_cast<int>(m_gridTiles.getSizeY());}
   //! Function to check whether a bounding box collides with the map margin
   /**
    *  \param[in] bb The bounding box
@@ -161,6 +162,13 @@ public:
 
   void unlock(unsigned int x, unsigned int y);
   void swapBoxes();
+  //! Function to change the tile type of a tile
+  /**
+   *  \param[in] uiTilePosX x position of the tile
+   *  \param[in] uiTilePosY y position of the tile
+   *  \param[in] ttTileType the new tile type
+   */
+  void changeTileType(unsigned int uiTilePosX, unsigned int uiTilePosY, TileType ttTileType);
 
   void update(Ogre::Real tpf);
   void render(Ogre::Real tpf);
@@ -191,6 +199,7 @@ public:
   bool isInMap(unsigned int x, unsigned int y);
 
   Ogre2dManager *get2dManager() const {return m_p2dManagerMap;}
+  Ogre2dManager *getDebug2dManager() const {return m_pDebugSpriteManager;}
   CPlayer *getPlayer() const {return m_pPlayer;}
 
   CShot *addShot(CShot *pShot) {m_lShots.push_back(pShot); return pShot;}

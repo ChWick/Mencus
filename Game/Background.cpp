@@ -1,6 +1,7 @@
 #include "Background.hpp"
 #include "SpriteTransformPipeline.hpp"
 #include "Util.hpp"
+#include "Map.hpp"
 
 const Ogre::Real BACKGROUND_SIZE = 1.333333f;
 const Ogre::Real BACKGROUND_BOTTOM_OFFSET = 0.666667f;
@@ -29,15 +30,15 @@ CBackground::ETypes CBackground::fromString(const Ogre::String &sName) {
     throw Ogre::Exception(0, "Unknown background type: " + sName, __FILE__);
   }
 }
-CBackground::CBackground(Ogre2dManager *pSpriteManager,
+CBackground::CBackground(CMap &map,
 			 const Ogre::Vector2 &vCameraPosition,
 			 const Ogre::String &sName,
 			 const Ogre::Vector2 &vTilesPerScreen,
 			 const float &fScreenRatio)
-  : CSprite(&CDefaultSpriteTransformPipeline::INSTANCE, pSpriteManager, Ogre::Vector2(-1, -1), Ogre::Vector2(BACKGROUND_SIZE * fScreenRatio, BACKGROUND_SIZE)),
+  : CSprite(map, &CDefaultSpriteTransformPipeline::INSTANCE, map.get2dManager(), Ogre::Vector2(-1, -1), Ogre::Vector2(BACKGROUND_SIZE * fScreenRatio, BACKGROUND_SIZE)),
+    m_eBackgroundType(fromString(sName)),
     m_vCameraPosition(vCameraPosition),
     m_sName(sName),
-    m_eBackgroundType(fromString(sName)),
     m_vTilesPerScreen(vTilesPerScreen),
     m_fScreenRatio(fScreenRatio){
 

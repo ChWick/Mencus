@@ -18,6 +18,7 @@ public:
   static ETypes parseEventType(const std::string &sString);
 private:
   const ETypes m_eType;
+protected:
   CMap &m_Map;
 
 protected:
@@ -27,6 +28,9 @@ public:
   
   virtual void init() {}
   virtual void exit() {}
+  
+  virtual void start() {}
+  virtual void stop() {}
 
   ETypes getType() const {return m_eType;}
 

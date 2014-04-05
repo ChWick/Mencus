@@ -9,10 +9,16 @@ using namespace XMLHelper;
 const Ogre::Vector2 CSpriteTexture::DEFAULT_TEXTURE_TOP_LEFT(0, 1);
 const Ogre::Vector2 CSpriteTexture::DEFAULT_TEXTURE_BOTTOM_RIGHT(1, 0);
 
-CSprite::CSprite(Map &map, const Ogre::Vector2 &vPosition, const Ogre::Vector2 &vSize, const Ogre::Vector2 &vScale, const Ogre::Radian radRotation)
+CSprite::CSprite(CMap &map,
+		 const CSpriteTransformPipeline *pTransformPipeline,
+		 Ogre2dManager *pSpriteManager,
+		 const Ogre::Vector2 &vPosition,
+		 const Ogre::Vector2 &vSize,
+		 const Ogre::Vector2 &vScale,
+		 const Ogre::Radian radRotation)
   : CEntity(map, "id", NULL),
-    m_pTransformPipeline(&map),
-    m_pSpriteManager(map.get2dManager()),
+    m_pTransformPipeline(pTransformPipeline),
+    m_pSpriteManager(pSpriteManager),
     m_radRotation(radRotation),
     m_pTextureToDraw(&m_Texture),
     m_Colour(Ogre::ColourValue::White) {
@@ -23,11 +29,13 @@ CSprite::CSprite(Map &map, const Ogre::Vector2 &vPosition, const Ogre::Vector2 &
   setRelativeBoundingBox(CBoundingBox2d(Ogre::Vector2::ZERO, vSize * vScale));
 }
 CSprite::CSprite(CMap &map,
+		 const CSpriteTransformPipeline *pTransformPipeline,
+		 Ogre2dManager *pSpriteManager,
 		 const tinyxml2::XMLElement *pElem,
 		 const Ogre::Vector2 &vSize)
   : CEntity(map, NULL, pElem, Ogre::Vector2::ZERO, vSize),
-    m_pTransformPipeline(&map),
-    m_pSpriteManager(map.get2dManager()),
+    m_pTransformPipeline(pTransformPipeline),
+    m_pSpriteManager(pSpriteManager),
     m_radRotation(RealAttribute(pElem, "sp_radRotation", 0)),
     m_pTextureToDraw(&m_Texture),
     m_Colour(Ogre::StringConverter::parseColourValue(Attribute(pElem, "sp_colour", "1 1 1 1"), Ogre::ColourValue::White)) {

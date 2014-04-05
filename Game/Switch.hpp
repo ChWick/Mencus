@@ -33,7 +33,6 @@ public:
   };
   static Ogre::String getPreviewImageName(int iType);
 private:
-  CMap *m_pMap;
   Ogre::Real m_fTimer;
   Ogre::Real m_fActiveTime;
   const SwitchType m_stSwitchType;
@@ -41,12 +40,12 @@ private:
   vector<STogglesLinkEntry> m_vLinkEntries;
   unsigned int m_uiSwitchFlags;
 public:
-  CSwitch(CMap *pMap,
+  CSwitch(CMap &map,
 	  const Ogre::Vector2 &vPosition,
 	  SwitchType stSwitchType,
 	  bool bChangeBlocks,
 	  ESwitchStates eSwitchState);
-  CSwitch(CMap *pMap,
+  CSwitch(CMap &map,
 	  const tinyxml2::XMLElement *pElem);
   ~CSwitch();
 
@@ -75,7 +74,7 @@ public:
   void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
 private:
   void updateState(ESwitchStates eNewState);
-  void place(const SSwitchEntry &entry);
+  void execute(CEvent *pEvent);
 };
 
 #endif

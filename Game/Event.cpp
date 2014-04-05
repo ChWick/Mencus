@@ -21,8 +21,9 @@ CEvent::ETypes CEvent::parseEventType(const std::string &sString) {
   throw Ogre::Exception(0, "Event type " + sString + " could not be converted to a string", __FILE__);
 }
 
-CEvent::CEvent(ETypes eType)
-  : m_eType(eType) {
+CEvent::CEvent(CMap &map, ETypes eType)
+  : m_eType(eType),
+    m_Map(map) {
 }
 CEvent::~CEvent() {
 }

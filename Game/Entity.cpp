@@ -30,8 +30,8 @@ CEntity::CEntity(const CEntity &src)
   // and for events
   // so dont use it...
 }
-CEntity::CEntity(CEntity *pParent,
-		 CMap &map,
+CEntity::CEntity(CMap &map,
+		 CEntity *pParent,
 		 const tinyxml2::XMLElement *pElem,
 		 const Ogre::Vector2 &vDefaultPosition,
 		 const Ogre::Vector2 &vDefaultSize,
@@ -90,7 +90,7 @@ void CEntity::attachTo(CEntity *pParent) {
   }
 }
 
-void CEnemy::destroyEvent(CEvent *pEvent) {
+void CEntity::destroyEvent(CEvent *pEvent) {
   assert(pEvent);
   m_lEvents.remove(pEvent);
   delete pEvent;

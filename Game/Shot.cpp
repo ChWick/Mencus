@@ -39,18 +39,17 @@ const Ogre::Real CShot::SHOT_DAMAGE[CShot::ST_COUNT] = {
 const Ogre::Real BOMB_EXPLOSION_TIME = 5;
 const Ogre::Real BOMB_EXPLOSION_RADIUS = 1.75;
 
-CShot::CShot(CMap *pMap,
-             Ogre2dManager *pSpriteManager,
+CShot::CShot(CMap &map,
              const Ogre::Vector2 &vCenter,
              EShotTypes eShotType,
              EShotDirections eShotDirection,
              unsigned int uiDmg)
   :
-  CAnimatedSprite(pMap,
-                  pSpriteManager,
+  CAnimatedSprite(map,
+		  &map,
+                  map.get2dManager(),
                   vCenter - SHOT_SIZE[eShotType] * 0.5,
                   SHOT_SIZE[eShotType]),
-  m_pMap(pMap),
   m_eShotType(eShotType),
   m_bAffectedByGravity(SHOT_AFFECTED_BY_GRAVITY[eShotType]),
   m_vSpeed(Ogre::Vector2::ZERO),
@@ -60,13 +59,13 @@ CShot::CShot(CMap *pMap,
   m_pCatchedEnemy(NULL) {
   constructor_impl();
 }
-CShot::CShot(CMap *pMap,
+CShot::CShot(CMap &map,
 	     const tinyxml2::XMLElement *pElement) 
-  : CAnimatedSprite(pMap,
-		   pMap->get2dManager(),
-		   pElement,
-		   SHOT_SIZE[EnumAttribute<EShotTypes>(pElement, "type", ST_COUNT, true)]),
-    m_pMap(pMap),
+  : CAnimatedSprite(map,
+		    &map,
+		    map.get2dManager(),
+		    pElement,
+		    SHOT_SIZE[EnumAttribute<EShotTypes>(pElement, "type", ST_COUNT, true)]),
     m_eShotType(EnumAttribute<EShotTypes>(pElement, "type", ST_COUNT, true)),
     m_bAffectedByGravity(BoolAttribute(pElement,
 				       "affected_by_gravity",
@@ -75,7 +74,7 @@ CShot::CShot(CMap *pMap,
   m_eShotDirection(EnumAttribute<EShotDirections>(pElement, "direction", SD_RIGHT, true)),
   m_eState(EnumAttribute<EShotStates>(pElement, "state", SS_NONE)),
   m_uiDamages(IntAttribute(pElement, "damages", DMG_ALL, true)),
-  m_pCatchedEnemy(pMap->getEnemyById(Attribute(pElement, "catched_enemy"))),
+  m_pCatchedEnemy(map.getEnemyById(Attribute(pElement, "catched_enemy"))),
   m_fTimer(RealAttribute(pElement, "timer", 0)) {
   constructor_impl();
 }
@@ -139,28 +138,28 @@ void CShot::update(Ogre::Real tpf) {
       m_vPosition += m_vSpeed * tpf;
 
       // check for collisions
-      if (m_pMap->hitsTile(CTile::TF_UNPASSABLE, getWorldBoundingBox())) {
+      if (m_Map.hitsTile(CTile::TF_UNPASSABLE, getWorldBoundingBox())) {
         // create
-        if (m_eShotType == ST_BOLT) m_pMap->addExplosion(new CExplosion(m_pMap, getCenter(), CExplosion::ET_BOLT));
-        else if (m_eShotType == ST_SKULL) m_pMap->addExplosion(new CExplosion(m_pMap, getCenter(), CExplosion::ET_SKULL));
+        if (m_eShotType == ST_BOLT) m_Map.addExplosion(new CExplosion(m_Map, getCenter(), CExplosion::ET_BOLT));
+        else if (m_eShotType == ST_SKULL) m_Map.addExplosion(new CExplosion(m_Map, getCenter(), CExplosion::ET_SKULL));
 
-        m_pMap->destroyShot(this);
+        m_Map.destroyShot(this);
       }
-      if (m_pMap->outOfMap(getWorldBoundingBox())) {
+      if (m_Map.outOfMap(getWorldBoundingBox())) {
         // just destroy it
-        m_pMap->destroyShot(this);
+        m_Map.destroyShot(this);
       }
 
       hit();
     } else if (m_eShotType == ST_BOMB) {
       m_fTimer += tpf;
       if (m_fTimer > BOMB_EXPLOSION_TIME) {
-        m_pMap->createExplosion(getCenter(), BOMB_EXPLOSION_RADIUS);
-        m_pMap->destroyShot(this);
+        m_Map.createExplosion(getCenter(), BOMB_EXPLOSION_RADIUS);
+        m_Map.destroyShot(this);
       } else {
         bool bOnGround = false;
         CBoundingBox2d bbOverlap;
-        unsigned int uiCCD = m_pMap->hitsTile(CTile::TF_UNPASSABLE,
+        unsigned int uiCCD = m_Map.hitsTile(CTile::TF_UNPASSABLE,
                                               getWorldBoundingBox(),
                                               &bbOverlap);
 
@@ -174,7 +173,7 @@ void CShot::update(Ogre::Real tpf) {
         }
 
         m_vPosition.y += m_vSpeed.y * tpf;
-        uiCCD = m_pMap->hitsTile(CTile::TF_UNPASSABLE,
+        uiCCD = m_Map.hitsTile(CTile::TF_UNPASSABLE,
                                  getWorldBoundingBox(),
                                  &bbOverlap);
         if (uiCCD & CCD_BOTTOM && m_vSpeed.y < 0) {
@@ -204,7 +203,7 @@ void CShot::update(Ogre::Real tpf) {
 	m_pCatchedEnemy->setStunned(false);
 	m_pCatchedEnemy = NULL;
       }
-      m_pMap->destroyShot(this);
+      m_Map.destroyShot(this);
     }
   }
 
@@ -212,7 +211,7 @@ void CShot::update(Ogre::Real tpf) {
 }
 void CShot::hit() {
   if (m_uiDamages & DMG_ENEMY) {
-    for (auto *pEnemy : m_pMap->getEnemies()) {
+    for (auto *pEnemy : m_Map.getEnemies()) {
       if (pEnemy->getWorldBoundingBox().collidesWith(getWorldBoundingBox())) {
         if (m_eShotType == ST_COLUMN) {
           m_pCatchedEnemy = pEnemy;
@@ -221,7 +220,7 @@ void CShot::hit() {
           m_fTimer = COLUMN_CATCH_DURATION;
         }
         else {
-          m_pMap->destroyShot(this);
+          m_Map.destroyShot(this);
         }
 
         pEnemy->takeDamage(SHOT_DAMAGE[m_eShotType]);
@@ -231,9 +230,9 @@ void CShot::hit() {
     }
   }
   if (m_uiDamages & DMG_PLAYER) {
-    if (m_pMap->getPlayer()->getWorldBoundingBox().collidesWith(getWorldBoundingBox())) {
-      m_pMap->getPlayer()->takeDamage(SHOT_DAMAGE[m_eShotType]);
-      m_pMap->destroyShot(this);
+    if (m_Map.getPlayer()->getWorldBoundingBox().collidesWith(getWorldBoundingBox())) {
+      m_Map.getPlayer()->takeDamage(SHOT_DAMAGE[m_eShotType]);
+      m_Map.destroyShot(this);
       return;
     }
   }

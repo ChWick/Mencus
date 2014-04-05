@@ -11,6 +11,8 @@
 #include "InputListener.hpp"
 #include "PauseListener.hpp"
 
+class CMap;
+
 class CVideo : public CScene, public CInputListener, public CPauseListener {
 public:
   class CPicture {
@@ -46,7 +48,7 @@ public:
     Ogre::Vector2 m_vDrawSize;
     bool m_bStopped;
   public:
-    CPicture(const Ogre::String &sFile, const Ogre::Real fDuration, Ogre2dManager *p2dManager);
+    CPicture(const Ogre::String &sFile, const Ogre::Real fDuration, CMap &map);
     ~CPicture();
 
     void init();

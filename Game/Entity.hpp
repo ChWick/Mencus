@@ -9,7 +9,7 @@
 #include "OutputStyle.hpp"
 
 class CEvent;
-class CMap *pMap;
+class CMap;
 
 //! Class for an entity in the map
 class CEntity {

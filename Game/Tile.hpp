@@ -5,6 +5,7 @@
 #include "TileTypes.hpp"
 
 class Ogre2dManager;
+class CMap;
 
 
 class CTile : public CSprite {
@@ -35,7 +36,7 @@ private:
 
   TileType m_ttEndangeredTileType;
 public:
-  CTile(CSpriteTransformPipeline *pTransformPipeline, Ogre2dManager* p2dManagerMap, const Ogre::Vector2 &vPosition, TileType ttTileType);
+  CTile(CMap &map, const Ogre::Vector2 &vPosition, TileType ttTileType);
   CTile(const CTile &src);
 
   void update(Ogre::Real tpf);

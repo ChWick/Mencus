@@ -4,20 +4,25 @@
 #include "Sprite.hpp"
 #include "Util.hpp"
 
+class CMap;
+
 class CBarIndicator : public CSprite {
 private:
   CSprite m_Indicator;
   bool m_bVisible;
   Ogre::Real m_fValue;		//!< Value in [0,1]
 public:
-  CBarIndicator(const CSpriteTransformPipeline *pTransformPipeline,
+  CBarIndicator(CMap &map,
+		const CSpriteTransformPipeline *pTransformPipeline,
 		Ogre2dManager *pSpriteManager)
     :
-    CSprite(pTransformPipeline,
+    CSprite(map,
+	    pTransformPipeline,
 	    pSpriteManager,
 	    Ogre::Vector2::ZERO,
 	    Ogre::Vector2(1, 0.125)),
-    m_Indicator(pTransformPipeline,
+    m_Indicator(map,
+		pTransformPipeline,
 		pSpriteManager,
 		Ogre::Vector2::ZERO,
 		Ogre::Vector2(1, 0.125)),

@@ -15,7 +15,11 @@ const Ogre::Vector2 OBJECT_SIZES[CObject::OT_COUNT] = {
 CObject::CObject(CMap &map,
 		 const Ogre::Vector2 &vPosition,
 		 EObjectTypes eObjectType)
-  : CAnimatedSprite(&map, map.get2dManager(), vPosition, OBJECT_SIZES[eObjectType]),
+  : CAnimatedSprite(map,
+		    &map,
+		    map.get2dManager(),
+		    vPosition,
+		    OBJECT_SIZES[eObjectType]),
     m_eObjectType(eObjectType),
     m_Map(map),
     m_bIsPickable(false)

@@ -16,7 +16,10 @@ public:
 
   void init();
 
-  void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle);
+  void start();
+  void stop();
+
+  void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
 
   unsigned int getTileType() const {return m_uiTileType;}
   unsigned int getOldTileType() const {return m_uiOldTileType;}

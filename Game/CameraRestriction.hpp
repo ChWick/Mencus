@@ -60,6 +60,7 @@ public:
     }
   }
   CCameraRestriction& operator=(const CCameraRestriction&) {
+    return *this;
   }
 
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const {

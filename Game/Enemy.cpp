@@ -54,15 +54,18 @@ CEnemy::CEnemy(CMap &map,
 	       Ogre::Real fHitpoints,
 	       bool bJumps,
 	       const Ogre::String &sID)
-  : CAnimatedSprite(&map, map.get2dManager(), vPosition, ENEMY_SIZE[eEnemyType]),
+  : CAnimatedSprite(map,
+		    &map,
+		    map.get2dManager(),
+		    vPosition,
+		    ENEMY_SIZE[eEnemyType]),
     CHitableObject(fHitpoints),
     m_eEnemyType(eEnemyType),
-    m_Map(map),
     m_vSpeed(Ogre::Vector2(fDirection * ENEMY_SPEED[eEnemyType], 0)),
     m_bOnGround(false),
-    m_HPBar(&map, map.get2dManager()),
+    m_HPBar(map, &map, map.get2dManager()),
     m_bJumps(bJumps),
-  m_sID(sID.length() == 0 ? Ogre::StringConverter::toString(CIDGenerator::nextID()) : sID),
+    m_sID(sID.length() == 0 ? Ogre::StringConverter::toString(CIDGenerator::nextID()) : sID),
     m_vExternalForce(Ogre::Vector2::ZERO),
     m_bStunned(false),
     m_bAtLeastOneDamageDone(true) {
@@ -70,24 +73,25 @@ CEnemy::CEnemy(CMap &map,
   m_HPBar.setSize(Ogre::Vector2(m_vSize.x, m_HPBar.getSize().y));
 }
 CEnemy::CEnemy(CMap &map, const tinyxml2::XMLElement *pElem)
-  : m_eEnemyType(EnumAttribute(pElem, "type", ET_COUNT, -1, true)),
-    CAnimatedSprite(&map,
+  : CAnimatedSprite(map,
+		    &map,
 		    map.get2dManager(),
 		    pElem,
 		    ENEMY_SIZE[EnumAttribute(pElem, "type", ET_COUNT, -1, true)]),
     CHitableObject(pElem),
-    m_Map(map),
+    m_eEnemyType(EnumAttribute(pElem, "type", ET_COUNT, -1, true)),
     m_vSpeed(Vector2Attribute(pElem,
 			      "speed",
 			      Ogre::Vector2::UNIT_X * RealAttribute(pElem, "direction", 1)
 			      * ENEMY_SPEED[EnumAttribute(pElem, "type", ET_COUNT, -1, true)])),
     m_bOnGround(false),
-    m_HPBar(&map, map.get2dManager()),
+    m_HPBar(map, &map, map.get2dManager()),
     m_bJumps(BoolAttribute(pElem, "jumps", true)),
-  m_sID(Attribute(pElem, "id", Ogre::StringConverter::toString(CIDGenerator::nextID()))),
+    m_sID(Attribute(pElem, "id", Ogre::StringConverter::toString(CIDGenerator::nextID()))),
     m_vExternalForce(Ogre::Vector2::ZERO),
     m_bStunned(BoolAttribute(pElem, "stunned", false)),
     m_bAtLeastOneDamageDone(BoolAttribute(pElem, "oneDmgDone", true)) {
+
   setup();
   m_HPBar.setSize(Ogre::Vector2(m_vSize.x, m_HPBar.getSize().y));
 }
@@ -337,7 +341,7 @@ void CEnemy::damageTakenCallback(Ogre::Real fHitpoints) {
 
 void CEnemy::killedByDamageCallback() {
   m_Map.destroyEnemy(this);
-  m_Map.addExplosion(new CExplosion(&m_Map, getCenter(), static_cast<CExplosion::EExplosionTypes>(m_eEnemyType + CExplosion::ET_GREEN_MONSTER)));
+  m_Map.addExplosion(new CExplosion(m_Map, getCenter(), static_cast<CExplosion::EExplosionTypes>(m_eEnemyType + CExplosion::ET_GREEN_MONSTER)));
 }
 
 void CEnemy::animationTextureChangedCallback(unsigned int uiOldText, unsigned uiNewText) {
@@ -346,10 +350,10 @@ void CEnemy::animationTextureChangedCallback(unsigned int uiOldText, unsigned ui
       m_Map.getPlayer()->takeDamage(ENEMY_DAMAGE[m_eEnemyType]);
     }
     else if (m_uiCurrentAnimationSequence == AS_RANGED_ATTACK_LEFT) {
-      m_Map.addShot(new CShot(&m_Map, m_Map.get2dManager(), getCenter(), CShot::ST_SKULL, CShot::SD_LEFT, CShot::DMG_PLAYER))->launch(Ogre::Vector2(-1, 0));
+      m_Map.addShot(new CShot(m_Map, getCenter(), CShot::ST_SKULL, CShot::SD_LEFT, CShot::DMG_PLAYER))->launch(Ogre::Vector2(-1, 0));
     }
     else if (m_uiCurrentAnimationSequence == AS_RANGED_ATTACK_RIGHT) {
-      m_Map.addShot(new CShot(&m_Map, m_Map.get2dManager(), getCenter(), CShot::ST_SKULL, CShot::SD_RIGHT, CShot::DMG_PLAYER))->launch(Ogre::Vector2(+1, 0));
+      m_Map.addShot(new CShot(m_Map, getCenter(), CShot::ST_SKULL, CShot::SD_RIGHT, CShot::DMG_PLAYER))->launch(Ogre::Vector2(+1, 0));
     }
     m_bAtLeastOneDamageDone = true;
   }

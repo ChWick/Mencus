@@ -1,9 +1,10 @@
 #include "Tile.hpp"
 #include "ogre2d-main.hpp"
 #include "DebugDrawer.hpp"
+#include "Map.hpp"
 
-CTile::CTile(CSpriteTransformPipeline *pTransformPipeline, Ogre2dManager* p2dManagerMap, const Ogre::Vector2 &vPosition, TileType ttTileType)
-  : CSprite(pTransformPipeline, p2dManagerMap, vPosition, DEFAULT_TILE_SIZE),
+CTile::CTile(CMap &map, const Ogre::Vector2 &vPosition, TileType ttTileType)
+  : CSprite(map, &map, map.get2dManager(), vPosition, DEFAULT_TILE_SIZE),
     m_uiMapPosX(static_cast<unsigned int>(vPosition.x + 0.5)),
     m_uiMapPosY(static_cast<unsigned int>(vPosition.y + 0.5)),
     m_uiTileFlags(getTileFlags(ttTileType)),

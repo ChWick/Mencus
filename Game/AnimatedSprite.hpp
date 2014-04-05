@@ -22,12 +22,16 @@ protected:
   tGetPathFunctionType m_pDefaultGetPathFunction;
 public:
   CAnimatedSprite(CMap &map,
+		  const CSpriteTransformPipeline *pTransformPipeline,
+		  Ogre2dManager *pSpriteManager,
 		  const Ogre::Vector2 &vPosition,
 		  const Ogre::Vector2 &vSize,
 		  const Ogre::Vector2 &vScale = Ogre::Vector2::UNIT_SCALE,
 		  const Ogre::Radian radRotation = Ogre::Radian(0));
 
   CAnimatedSprite(CMap &map,
+		  const CSpriteTransformPipeline *pTransformPipeline,
+		  Ogre2dManager *pSpriteManager,
 		  const tinyxml2::XMLElement *pElem,
 		  const Ogre::Vector2 &vSize = Ogre::Vector2::UNIT_SCALE);
 

@@ -80,7 +80,8 @@ void CAct::stop() {
 }
 
 CScreenplay::CScreenplay()
-  : m_sResourceGroup("mencus_campaign"),
+  : m_eScreenplayType(SCREENPLAY_NONE),
+    m_sResourceGroup("mencus_campaign"),
     m_uiCurrentAct(0),
     m_uiCurrentScene(0),
     m_uiNextAct(0),
@@ -88,8 +89,7 @@ CScreenplay::CScreenplay()
     m_pCurrentScene(NULL),
     m_pOldScene(NULL),
     m_Fader(this),
-    m_bPaused(false),
-    m_eScreenplayType(SCREENPLAY_NONE) {
+    m_bPaused(false) {
   CInputListenerManager::getSingleton().addInputListener(this);
   CGUIInstructions::getSingleton().setScreenplayListener(this);
   
@@ -237,7 +237,7 @@ void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sReso
 	pScene = new CInstructions(*pAct, id, pFile->getAsString().c_str());
       }
       else if (type == "video") {
-        XMLElement *pVideoElem = pSceneElem->FirstChildElement("video");
+        /*XMLElement *pVideoElem = pSceneElem->FirstChildElement("video");
         CVideo *pVideo = new CVideo(*pAct, id, this);
 
         for (XMLElement *pPartElem = pVideoElem->FirstChildElement(); pPartElem; pPartElem = pPartElem->NextSiblingElement()) {
@@ -282,11 +282,11 @@ void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sReso
                   pPicture->addEffect(new CVideo::CPicture::CEffectScale(vCenter, vStartScale, vEndScale, eScaleType));
                 }
               }
-            }
+	    }
           }
         }
 
-        pScene = pVideo;
+        pScene = pVideo;*/
       }
       pAct->addScene(pScene);
     }
