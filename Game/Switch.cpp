@@ -19,11 +19,15 @@ const unsigned int SWITCH_FLAGS[CSwitch::SWITCH_COUNT] = {
 };
 
 CSwitch::CSwitch(CMap &map,
+		 const std::string &sID,
+		 CEntity *pParent,
 		 const Ogre::Vector2 &vPosition,
 		 SwitchType stSwitchType,
 		 bool bChangeBlocks,
 		 ESwitchStates eSwitchState)
   : CSprite(map,
+	    sID,
+	    pParent,
 	    &map,
 	    map.get2dManager(),
 	    vPosition,
@@ -39,8 +43,10 @@ CSwitch::CSwitch(CMap &map,
   setTexture(getSwitchTexture(stSwitchType, false));
 }
 CSwitch::CSwitch(CMap &map,
-	const tinyxml2::XMLElement *pElem) 
+		 CEntity *pParent,
+		 const tinyxml2::XMLElement *pElem) 
   : CSprite(map,
+	    pParent,
 	    &map,
 	    map.get2dManager(),
 	    pElem,
@@ -75,11 +81,6 @@ CSwitch::CSwitch(CMap &map,
 }
 
 CSwitch::~CSwitch() {
-}
-void CSwitch::initialize() {
-  Ogre::LogManager::getSingleton().logMessage("Created switch at (" + Ogre::StringConverter::toString(m_vPosition)
-                                              + ") that affects " + Ogre::StringConverter::toString(m_lEvents.size())
-                                              + " tiles" + Ogre::String((isFlagSet(SF_CHANGE_BLOCKS)) ? " and blocks." : "."));
 }
 void CSwitch::update(Ogre::Real tpf) {
   CSprite::update(tpf);

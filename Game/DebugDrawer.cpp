@@ -22,6 +22,8 @@ CDebugDrawer::CDebugDrawer(CMap &map) {
   m_DebugTextures[DT_GREEN] = getTextureInGfx("debug_green.png");
 
   m_pDebugSprite = new CSprite(map,
+			       "DebugTile",
+			       NULL,
 			       &map,
 			       map.getDebug2dManager(),
 			       Ogre::Vector2::ZERO,

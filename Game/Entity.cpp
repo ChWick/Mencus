@@ -3,6 +3,7 @@
 #include "Event.hpp"
 #include "EventCreator.hpp"
 #include "IDGenerator.hpp"
+#include "Map.hpp"
 #include <OgreStringConverter.h>
 
 using namespace XMLHelper;
@@ -10,6 +11,7 @@ using namespace XMLHelper;
 
 CEntity::CEntity(CMap &map, const std::string &sID, CEntity *pParent)
   : m_sID(sID.length() == 0 ? Ogre::StringConverter::toString(CIDGenerator::nextID()) : sID),
+    m_uiType(0),
     m_Map(map),
     m_pParent(pParent),
     
@@ -20,6 +22,7 @@ CEntity::CEntity(CMap &map, const std::string &sID, CEntity *pParent)
 }
 CEntity::CEntity(const CEntity &src) 
   : m_sID(src.m_sID),
+    m_uiType(src.m_uiType),
     m_Map(src.m_Map),
     m_pParent(src.m_pParent),
 
@@ -39,6 +42,7 @@ CEntity::CEntity(CMap &map,
 		 const Ogre::Vector2 &vDefaultSize,
 		 const Ogre::Vector2 &vDefaultScale) 
   : m_sID(Attribute(pElem, "id", Ogre::StringConverter::toString(CIDGenerator::nextID()))),
+    m_uiType(IntAttribute(pElem, "type", 0)),
     m_Map(map),
     m_pParent(NULL),
     m_vPosition(Vector2Attribute(pElem, "", vDefaultPosition)),
@@ -64,9 +68,11 @@ CEntity::CEntity(CMap &map,
   }
 }
 CEntity::~CEntity() {
-  while (m_lChildren.size() > 0) {
-    delete m_lChildren.front();
-    m_lChildren.pop_front();
+  std::list<CEntity *> lClone(m_lChildren);
+  m_lChildren.clear();
+  while (lClone.size() > 0) {
+    delete lClone.front();
+    lClone.pop_front();
   }
   while (m_lEvents.size() > 0) {
     delete m_lEvents.front();
@@ -148,6 +154,18 @@ const CEntity *CEntity::getChildRecursive(const std::string &sID) const {
   return NULL;
 }
 
+void CEntity::destroy() {
+  m_Map.destroy(this, true);
+}
+
+void CEntity::destroyChildren() {
+  while (m_lChildren.size() > 0) {
+    CEntity *toDel = m_lChildren.front();
+    m_lChildren.pop_front();
+    delete toDel;
+  }
+}
+
 void CEntity::destroyEvent(CEvent *pEvent) {
   assert(pEvent);
   m_lEvents.remove(pEvent);
@@ -169,6 +187,7 @@ void CEntity::writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eSt
 
   SetAttribute(pElement, "", m_vPosition); // pos without label
   SetAttribute(pElement, "id", m_sID);
+  SetAttribute(pElement, "type", m_uiType);
   if (eStyle == OS_FULL) {
     SetAttribute(pElement, "size", m_vSize);
     SetAttribute(pElement, "scale", m_vScale);

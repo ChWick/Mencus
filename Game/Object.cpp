@@ -13,9 +13,13 @@ const Ogre::Vector2 OBJECT_SIZES[CObject::OT_COUNT] = {
 };
 
 CObject::CObject(CMap &map,
+		 const std::string &sID,
+		 CEntity *pParent,
 		 const Ogre::Vector2 &vPosition,
 		 EObjectTypes eObjectType)
   : CAnimatedSprite(map,
+		    sID,
+		    pParent,
 		    &map,
 		    map.get2dManager(),
 		    vPosition,
@@ -75,7 +79,7 @@ Ogre::String CObject::getPreviewImageName(int iObjectType) {
 void CObject::update(Ogre::Real tpf) {
   if (m_bIsPickable) {
     if (m_Map.getPlayer()->getWorldBoundingBox().contains(getCenter()) ) {
-      m_Map.destroyObject(this);
+      destroy();
       m_Map.getPlayer()->pickobject(m_eObjectType);
     }
   }

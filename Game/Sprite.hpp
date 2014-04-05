@@ -24,6 +24,8 @@ protected:
   Ogre::ColourValue m_Colour;               //!< The draw colour
 public:
   CSprite(CMap &map,
+	  const std::string &sID,
+	  CEntity *pParent,
 	  const CSpriteTransformPipeline *pTransformPipeline,
 	  Ogre2dManager *pSpriteManager,
 	  const Ogre::Vector2 &vPosition,
@@ -32,6 +34,7 @@ public:
 	  const Ogre::Radian radRotation = Ogre::Radian(0));
 
   CSprite(CMap &map,
+	  CEntity *pParent,
 	  const CSpriteTransformPipeline *pTransformPipeline,
 	  Ogre2dManager *pSpriteManager,
 	  const tinyxml2::XMLElement *pElem,

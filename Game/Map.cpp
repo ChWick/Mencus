@@ -47,6 +47,14 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_Statistics(statistics),
     m_pMapInfo(pMapInfo) {
 
+  m_pTilesEntity = new CEntity(*this, "Tiles", this);
+  m_pEnemiesEntity = new CEntity(*this, "Enemies", this);
+  m_pSwitchesEntity = new CEntity(*this, "Switches", this);
+  m_pShotsEntity = new CEntity(*this, "Shots", this);
+  m_pExplosionsEntity = new CEntity(*this, "Explosions", this);
+  m_pLinksEntity = new CEntity(*this, "Links", this);
+  m_pObjectsEntity = new CEntity(*this, "Objects", this);
+
   m_Statistics.sLevelFileName = pMapInfo->getFileName();
 
   resizeTilesPerScreen(Ogre::Vector2(16, 12));
@@ -106,47 +114,24 @@ void CMap::clearLineNumbers() {
 }
 void CMap::clearMap() {
   m_vCameraRestrictions.clear();
-  m_lLinks.clear();
-  m_lShotsToDestroy.clear();
-  m_lExplosionsToDestroy.clear();
-  m_lEnemiesToDestroy.clear();
-  m_lObjectsToDestroy.clear();
+  m_lEntitiesToDestroy.clear();
+
+  
+  m_pEnemiesEntity->destroyChildren();
+  m_pSwitchesEntity->destroyChildren();
+  m_pShotsEntity->destroyChildren();
+  m_pExplosionsEntity->destroyChildren();
+  m_pLinksEntity->destroyChildren();
+  m_pObjectsEntity->destroyChildren();
 
   if (m_pBackground) {
     delete m_pBackground;
     m_pBackground = NULL;
   }
 
-  while (m_lEnemies.size() > 0) {
-    delete m_lEnemies.front();
-    m_lEnemies.pop_front();
-  }
-  while (m_lExplosions.size() > 0) {
-    delete m_lExplosions.front();
-    m_lExplosions.pop_front();
-  }
-  while (m_lShots.size() > 0) {
-    delete m_lShots.front();
-    m_lShots.pop_front();
-  }
-  while (m_lSwitches.size() > 0) {
-    delete m_lSwitches.front();
-    m_lSwitches.pop_front();
-  }
-  while (m_lEnemies.size() > 0) {
-    delete m_lEnemies.front();
-    m_lEnemies.pop_front();
-  }
-  while (m_lObjects.size() > 0) {
-    delete m_lObjects.front();
-    m_lObjects.pop_front();
-  }
-
   if (m_pPlayer) {delete m_pPlayer; m_pPlayer = NULL;}
 
-  for (auto pTile : m_gridTiles) {
-    delete pTile;
-  }
+  m_pTilesEntity->destroyChildren();
   m_gridTiles.clear();
 }
 void CMap::resize(const Ogre::Vector2 &vSize, const Ogre::Vector2 &vOrigin) {
@@ -254,9 +239,8 @@ void CMap::loadMap(const string &sFilename, const string &sResourceGroup) {
 }
 void CMap::prepareMap() {
   // Initialise everything
-  for (auto pSwitch : m_lSwitches) {
+  for (auto pSwitch : getSwitches()) {
     pSwitch->init();
-    pSwitch->initialize();
   }
 
   for (CTile *pTile : m_gridTiles) {
@@ -385,7 +369,7 @@ bool CMap::collidesWithMapMargin(const CBoundingBox2d &bb) const {
   return false;
 }
 void CMap::activateSwitchOnHit(const CBoundingBox2d &bb) {
-  for (auto pSwitch : m_lSwitches) {
+  for (auto pSwitch : getSwitches()) {
     if (pSwitch->getWorldBoundingBox().collidesWith(bb)) {
       pSwitch->activate();
     }
@@ -393,12 +377,12 @@ void CMap::activateSwitchOnHit(const CBoundingBox2d &bb) {
 }
 void CMap::createExplosion(const Ogre::Vector2 &vCenter, Ogre::Real r) {
   // create explosion
-  addExplosion(new CExplosion(*this, vCenter, CExplosion::ET_BOMB));
+  new CExplosion(*this, vCenter, CExplosion::ET_BOMB);
 
   // check enemies
-  for (auto pEnemy : m_lEnemies) {
+  for (auto pEnemy : getEnemies()) {
     if (vCenter.squaredDistance(pEnemy->getCenter()) < r * r) {
-      pEnemy->takeDamage(CShot::SHOT_DAMAGE[CExplosion::ET_BOMB]);
+      dynamic_cast<CEnemy*>(pEnemy)->takeDamage(CShot::SHOT_DAMAGE[CExplosion::ET_BOMB]);
     }
   }
   if (vCenter.squaredDistance(m_pPlayer->getCenter()) < r * r) {
@@ -433,9 +417,9 @@ void CMap::explodeTile(size_t x, size_t y, bool bExplodeNeighbours) {
   tile = new CTile(*this, Ogre::Vector2(x, y), tt);
 
   // remove all scratches that collides with this tile
-  for (CObject* pObject : m_lObjects) {
+  for (CEntity* pObject : getObjects()) {
     if (pObject->getWorldBoundingBox().collidesWith(tile->getWorldBoundingBox()) != CCD_NONE) {
-      destroyObject(pObject);
+      pObject->destroy();
     }
   }
 
@@ -448,27 +432,28 @@ void CMap::explodeTile(size_t x, size_t y, bool bExplodeNeighbours) {
   }
 }
 bool CMap::findLink(const CBoundingBox2d &bb, Ogre::Vector2 &vFromPos, Ogre::Vector2 &vToPos) const {
-  for (const auto &link : m_lLinks) {
-    if (link.isActivated() == false) {
+  for (auto *pLinkEnt : getLinks()) {
+    const CLink *pLink(dynamic_cast<const CLink*>(pLinkEnt));
+    if (pLink->isActivated() == false) {
       continue;
     }
-    if (((m_gridTiles(link.getFirstX(), link.getFirstY())->getTileFlags() & (CTile::TF_DOOR1 | CTile::TF_DOOR2 | CTile::TF_DOOR3)) == 0) ||
-	((m_gridTiles(link.getSecondX(), link.getSecondY())->getTileFlags() & (CTile::TF_DOOR1 | CTile::TF_DOOR2 | CTile::TF_DOOR3)) == 0)) {
+    if (((m_gridTiles(pLink->getFirstX(), pLink->getFirstY())->getTileFlags() & (CTile::TF_DOOR1 | CTile::TF_DOOR2 | CTile::TF_DOOR3)) == 0) ||
+	((m_gridTiles(pLink->getSecondX(), pLink->getSecondY())->getTileFlags() & (CTile::TF_DOOR1 | CTile::TF_DOOR2 | CTile::TF_DOOR3)) == 0)) {
       continue;
     }
 
-    if (link.getLinkDirection() & CLink::LD_FIRST_TO_SECOND) {
-      if (m_gridTiles(link.getFirstX(), link.getFirstY())->getWorldBoundingBox().collidesWith(bb) != CCD_NONE) {
-        vFromPos = Ogre::Vector2(link.getFirstX(), link.getFirstY());
-        vToPos   = Ogre::Vector2(link.getSecondX(), link.getSecondY());
+    if (pLink->getLinkDirection() & CLink::LD_FIRST_TO_SECOND) {
+      if (m_gridTiles(pLink->getFirstX(), pLink->getFirstY())->getWorldBoundingBox().collidesWith(bb) != CCD_NONE) {
+        vFromPos = Ogre::Vector2(pLink->getFirstX(), pLink->getFirstY());
+        vToPos   = Ogre::Vector2(pLink->getSecondX(), pLink->getSecondY());
         return true;
       }
     }
 
-    if (link.getLinkDirection() & CLink::LD_SECOND_TO_FIRST) {
-      if (m_gridTiles(link.getSecondX(), link.getSecondY())->getWorldBoundingBox().collidesWith(bb) != CCD_NONE) {
-        vFromPos = Ogre::Vector2(link.getSecondX(), link.getSecondY());
-        vToPos   = Ogre::Vector2(link.getFirstX(), link.getFirstY());
+    if (pLink->getLinkDirection() & CLink::LD_SECOND_TO_FIRST) {
+      if (m_gridTiles(pLink->getSecondX(), pLink->getSecondY())->getWorldBoundingBox().collidesWith(bb) != CCD_NONE) {
+        vFromPos = Ogre::Vector2(pLink->getSecondX(), pLink->getSecondY());
+        vToPos   = Ogre::Vector2(pLink->getFirstX(), pLink->getFirstY());
         return true;
       }
     }
@@ -618,37 +603,7 @@ void CMap::update(Ogre::Real tpf) {
 
     updateCameraPos(tpf);
 
-    // order of updates exquates drawing order, last one will be on top
-    updateBackground(tpf);
-    for (auto pTile : m_gridTiles) {
-      pTile->update(tpf);
-    }
-    for (auto pObject : m_lObjects) {
-      pObject->update(tpf);
-    }
-    if (!CPauseManager::getSingleton().isPause(PAUSE_ENEMY_MOVEMENT)) {
-      for (auto pEnemy : m_lEnemies) {
-        pEnemy->update(tpf);
-      }
-    }
-    for (auto pSwitch : m_lSwitches) {
-      pSwitch->update(tpf);
-    }
-    if (!CPauseManager::getSingleton().isPause(PAUSE_SHOT_MOVEMENT)) {
-      for (auto pShot : m_lShots) {
-        pShot->update(tpf);
-      }
-    }
-
-    m_pPlayer->update(tpf);
-
-    for (auto pExplosion : m_lExplosions) {
-      pExplosion->update(tpf);
-    }
-    
-    if (m_Exit.isInExit(m_pPlayer, this)) {
-      m_pScreenplayListener->playerExitsMap();
-    }
+    CEntity::update(tpf);
 
 #ifdef DEBUG_SHOW_OGRE_TRAY
     CGame::getSingleton().getDetailsPanel()->setParamValue(0, Ogre::StringConverter::toString(m_vCameraPos.x));
@@ -658,25 +613,9 @@ void CMap::update(Ogre::Real tpf) {
 #endif // DEBUG_SHOW_OGRE_TRAY
 
     // tidy up
-    while (m_lShotsToDestroy.size() > 0) {
-      delete m_lShotsToDestroy.front();
-      m_lShots.remove(m_lShotsToDestroy.front());
-      m_lShotsToDestroy.pop_front();
-    }
-    while(m_lExplosionsToDestroy.size() > 0) {
-      delete m_lExplosionsToDestroy.front();
-      m_lExplosions.remove(m_lExplosionsToDestroy.front());
-      m_lExplosionsToDestroy.pop_front();
-    }
-    while (m_lEnemiesToDestroy.size() > 0) {
-      delete m_lEnemiesToDestroy.front();
-      m_lEnemies.remove(m_lEnemiesToDestroy.front());
-      m_lEnemiesToDestroy.pop_front();
-    }
-    while (m_lObjectsToDestroy.size() > 0) {
-      delete m_lObjectsToDestroy.front();
-      m_lObjects.remove(m_lObjectsToDestroy.front());
-      m_lObjectsToDestroy.pop_front();
+    while (m_lEntitiesToDestroy.size() > 0) {
+      delete m_lEntitiesToDestroy.front();
+      m_lEntitiesToDestroy.pop_front();
     }
   }
   if (!m_bRenderPause) {
@@ -707,13 +646,8 @@ void CMap::render(Ogre::Real tpf) {
   unsigned int xmax = std::min<unsigned int>(floor(m_vCameraPos.x + m_vTilesPerScreen.x + 1), m_gridTiles.getSizeX());
   unsigned int ymax = std::min<unsigned int>(floor(m_vCameraPos.y + m_vTilesPerScreen.y + 1), m_gridTiles.getSizeY());
 
+  m_pTilesEntity->render(tpf);
 
-  
-  for (unsigned int x = xmin; x < xmax; x++) {
-    for (unsigned int y = ymin; y < ymax; y++) {
-      m_gridTiles(x, y)->render(tpf);
-    }
-  }
 #if ENABLE_MAP_EDITOR
   if (CMapEditor::getSingleton().isVisible()) {
     // line numbers
@@ -737,24 +671,12 @@ void CMap::render(Ogre::Real tpf) {
   }
 #endif
 
-  for (auto pObject : m_lObjects) {
-    pObject->render(tpf);
-  }
-  for (auto pEnemy : m_lEnemies) {
-    pEnemy->render(tpf);
-  }
-  for (auto pSwitch : m_lSwitches) {
-    pSwitch->render(tpf);
-  }
-  for (auto pShot : m_lShots) {
-    pShot->render(tpf);
-  }
-
+  m_pObjectsEntity->render(tpf);
+  m_pEnemiesEntity->render(tpf);
+  m_pSwitchesEntity->render(tpf);
+  m_pShotsEntity->render(tpf);
   m_pPlayer->render(tpf);
-
-  for (auto pExplosion : m_lExplosions) {
-    pExplosion->render(tpf);
-  }
+  m_pExplosionsEntity->render(tpf);
 }
 void CMap::updateBackground(Ogre::Real tpf) {
   if (m_pBackground) {
@@ -837,10 +759,6 @@ void CMap::readRow(const XMLElement *pRow, unsigned int uiRow) {
     ++uiColumn;
   }
 }
-void CMap::readSwitch(const XMLElement *pSwitch) {
-  CSwitch *pNewSwitch = new CSwitch(*this, pSwitch);
-  m_lSwitches.push_back(pNewSwitch);
-}
 void CMap::readEndangeredTiles(const XMLElement *pTile) {
   TileType tt = pTile->IntAttribute("targetTile");
   size_t x = pTile->IntAttribute("x");
@@ -849,25 +767,6 @@ void CMap::readEndangeredTiles(const XMLElement *pTile) {
   m_gridTiles(x, y)->setEndangeredTileType(tt);
 
   Ogre::LogManager::getSingleton().logMessage("Parsed endangered tile at (" + Ogre::StringConverter::toString(x) + ", " + Ogre::StringConverter::toString(y) + ") with target tile type " + Ogre::StringConverter::toString(tt));
-}
-
-void CMap::readLink(const XMLElement *pLink) {
-  Ogre::String sID(Ogre::StringUtil::BLANK);
-  if (pLink->Attribute("id")) {sID = pLink->Attribute("id");}
-
-  Ogre::String sLinkDirection("both");
-  if (pLink->Attribute("direction")) {sLinkDirection = pLink->Attribute("direction");}
-  CLink::ELinkDirection eLD = CLink::parseLinkDirection(sLinkDirection);
-  
-  m_lLinks.push_back(CLink(
-                           pLink->IntAttribute("fromx"),
-                           pLink->IntAttribute("fromy"),
-                           pLink->IntAttribute("tox"),
-                           pLink->IntAttribute("toy"),
-                           eLD,
-                           sID,
-			   BoolAttribute(pLink, "activated", true)));
-  Ogre::LogManager::getSingleton().logMessage("Parsed: " + m_lLinks.back().toString());
 }
 void CMap::readExit(const XMLElement *pExitElem) {
   Ogre::String sType = pExitElem->Attribute("type");
@@ -899,20 +798,10 @@ void CMap::readCamera(const tinyxml2::XMLElement *pCamera) {
   }
 }
 CLink *CMap::getLinkById(const Ogre::String &id) {
-  for (CLink &link : m_lLinks) {
-    if (link.getID() == id) {
-      return &link;
-    }
-  }
-  return NULL;
+  return dynamic_cast<CLink*>(m_pLinksEntity->getChild(id));
 }
 CEnemy *CMap::getEnemyById(const Ogre::String &id) {
-  for (CEnemy *pEnemy : m_lEnemies) {
-    if (pEnemy->getID() == id) {
-      return pEnemy;
-    }
-  }
-  return NULL;
+  return dynamic_cast<CEnemy*>(m_pEnemiesEntity->getChild(id));
 }
 void CMap::playerWarped() {
   m_vCameraTargetPos = m_pPlayer->getCenter() - m_vTilesPerScreen * 0.5;
@@ -921,34 +810,12 @@ void CMap::playerWarped() {
   }
   m_vCameraPos = m_vCameraTargetPos;
 }
-void CMap::destroySwich(CSwitch *pSwitch) {
-  m_lSwitches.remove(pSwitch);
-  delete pSwitch;
-}
-void CMap::destroyEnemy(CEnemy *pEnemy, bool bLater) {
-  for (CShot *pShot : m_lShots) {
-    pShot->enemyDestroyed(pEnemy);
-  }
-
+void CMap::destroy(CEntity *pEntity, bool bLater) {
   if (bLater) {
-    m_lEnemiesToDestroy.push_back(pEnemy);
+    m_lEntitiesToDestroy.push_back(pEntity);
   }
   else {
-    m_lEnemies.remove(pEnemy);
-    delete pEnemy;
-  }
-}
-void CMap::destroyObject(CObject *pObject, bool bLater) {
-  if (bLater) {
-    if (find(m_lObjectsToDestroy.begin(),
-	     m_lObjectsToDestroy.end(),
-	     pObject) == m_lObjectsToDestroy.end()) {
-    m_lObjectsToDestroy.push_back(pObject);
-    }
-  }
-  else {
-    m_lObjects.remove(pObject);
-    delete pObject;
+    delete pEntity;
   }
 }
 
@@ -981,7 +848,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
   
   XMLElement *pSwitches = doc.NewElement("switches");
   pMapElem->InsertEndChild(pSwitches);
-  for (CSwitch *pSwitch : m_lSwitches) {
+  for (const CEntity *pSwitch : getSwitches()) {
     XMLElement *pSwitchElem = doc.NewElement("switch");
     pSwitches->InsertEndChild(pSwitchElem);
     pSwitch->writeToXMLElement(pSwitchElem, eStyle);
@@ -1003,21 +870,15 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
 
   XMLElement *pLinks = doc.NewElement("links");
   pMapElem->InsertEndChild(pLinks);
-  for (const CLink &link : m_lLinks) {
-    XMLElement *pLink = doc.NewElement("link");
-    pLinks->InsertEndChild(pLink);
-    pLink->SetAttribute("id", link.getID().c_str());
-    pLink->SetAttribute("fromx", link.getFirstX());
-    pLink->SetAttribute("fromy", link.getFirstY());
-    pLink->SetAttribute("tox", link.getSecondX());
-    pLink->SetAttribute("toy", link.getSecondY());
-    pLink->SetAttribute("direction", CLink::toString(link.getLinkDirection()).c_str());
-    pLink->SetAttribute("activated", link.isActivated());
+  for (const CEntity *pLink : getLinks()) {
+    XMLElement *pLinkElem = doc.NewElement("link");
+    pLinks->InsertEndChild(pLinkElem);
+    pLink->writeToXMLElement(pLinkElem, eStyle);
   }
 
   XMLElement *pEnemies = doc.NewElement("enemies");
   pMapElem->InsertEndChild(pEnemies);
-  for (CEnemy *pEnemy : m_lEnemies) {
+  for (CEntity *pEnemy : getEnemies()) {
     XMLElement *pElem = doc.NewElement("enemy");
     pEnemies->InsertEndChild(pElem);
     pEnemy->writeToXMLElement(pElem, eStyle);
@@ -1025,7 +886,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
 
   XMLElement *pObjects = doc.NewElement("objects");
   pMapElem->InsertEndChild(pObjects);
-  for (CObject *pObject : m_lObjects) {
+  for (CEntity *pObject : getObjects()) {
     XMLElement *pElem = doc.NewElement("object");
     pObjects->InsertEndChild(pElem);
     pObject->writeToXMLElement(pElem, eStyle);
@@ -1051,7 +912,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
   if (eStyle == OS_FULL) {
     XMLElement *pShots = doc.NewElement("shots");
     pMapElem->InsertEndChild(pShots);
-    for (const CShot *pShot : m_lShots) {
+    for (const CEntity *pShot : getShots()) {
       XMLElement *pElem = doc.NewElement("shot");
       pShots->InsertEndChild(pElem);
       pShot->writeToXMLElement(pElem, eStyle);
@@ -1087,7 +948,7 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
     }
     else if (std::string(pElement->Value()) == "switches") {
       for (const XMLElement *pSwitch = pElement->FirstChildElement(); pSwitch; pSwitch = pSwitch->NextSiblingElement()){
-	readSwitch(pSwitch);
+	new CSwitch(*this, m_pSwitchesEntity, pSwitch);
       }
     }
     else if (std::string(pElement->Value()) == "endangeredTiles") {
@@ -1097,22 +958,23 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
     }
     else if (std::string(pElement->Value()) == "links") {
       for (const XMLElement *pLink = pElement->FirstChildElement(); pLink; pLink = pLink->NextSiblingElement()) {
-	readLink(pLink);
+        new CLink(*this, m_pLinksEntity, pLink);
       }
     }
     else if (std::string(pElement->Value()) == "enemies") {
       for (const XMLElement *pEnemy = pElement->FirstChildElement(); pEnemy; pEnemy = pEnemy->NextSiblingElement()) {
-	m_lEnemies.push_back(new CEnemy(*this, pEnemy));
+	new CEnemy(*this, m_pEnemiesEntity, pEnemy);
       }
     }
     else if (std::string(pElement->Value()) == "objects") {
       for (const XMLElement *pObject = pElement->FirstChildElement(); pObject; pObject = pObject->NextSiblingElement()) {
-	m_lObjects.
-	  push_back(new CObject(*this,
-				Vector2Attribute(pObject),
-				EnumAttribute<CObject::EObjectTypes>(pObject,
-								     "type",
-								     CObject::OT_COUNT)));
+        new CObject(*this,
+		    "Object",
+		    m_pObjectsEntity,
+		    Vector2Attribute(pObject),
+		    EnumAttribute<CObject::EObjectTypes>(pObject,
+							 "type",
+							 CObject::OT_COUNT));
       }
     }
     else if (std::string(pElement->Value()) == "exit") {
@@ -1129,7 +991,7 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
     }
     else if (std::string(pElement->Value()) == "shots") {
       for (const XMLElement *pObject = pElement->FirstChildElement(); pObject; pObject = pObject->NextSiblingElement()) {
-        addShot(new CShot(*this, pObject));
+        new CShot(*this, pObject);
       }
     }
   }

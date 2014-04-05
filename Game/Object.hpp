@@ -25,6 +25,8 @@ private:
   bool m_bIsPickable;
 public:
   CObject(CMap &map,
+	  const std::string &sID,
+	  CEntity *pParent,
 	  const Ogre::Vector2 &vPosition,
 	  EObjectTypes eObjectType);
 

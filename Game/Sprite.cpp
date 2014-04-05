@@ -10,13 +10,15 @@ const Ogre::Vector2 CSpriteTexture::DEFAULT_TEXTURE_TOP_LEFT(0, 1);
 const Ogre::Vector2 CSpriteTexture::DEFAULT_TEXTURE_BOTTOM_RIGHT(1, 0);
 
 CSprite::CSprite(CMap &map,
+		 const std::string &sID,
+		 CEntity *pParent,
 		 const CSpriteTransformPipeline *pTransformPipeline,
 		 Ogre2dManager *pSpriteManager,
 		 const Ogre::Vector2 &vPosition,
 		 const Ogre::Vector2 &vSize,
 		 const Ogre::Vector2 &vScale,
 		 const Ogre::Radian radRotation)
-  : CEntity(map, "id", NULL),
+  : CEntity(map, sID, pParent),
     m_pTransformPipeline(pTransformPipeline),
     m_pSpriteManager(pSpriteManager),
     m_radRotation(radRotation),
@@ -29,11 +31,12 @@ CSprite::CSprite(CMap &map,
   setRelativeBoundingBox(CBoundingBox2d(Ogre::Vector2::ZERO, vSize * vScale));
 }
 CSprite::CSprite(CMap &map,
+		 CEntity *pParent,
 		 const CSpriteTransformPipeline *pTransformPipeline,
 		 Ogre2dManager *pSpriteManager,
 		 const tinyxml2::XMLElement *pElem,
 		 const Ogre::Vector2 &vSize)
-  : CEntity(map, NULL, pElem, Ogre::Vector2::ZERO, vSize),
+  : CEntity(map, pParent, pElem, Ogre::Vector2::ZERO, vSize),
     m_pTransformPipeline(pTransformPipeline),
     m_pSpriteManager(pSpriteManager),
     m_radRotation(RealAttribute(pElem, "sp_radRotation", 0)),

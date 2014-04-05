@@ -32,7 +32,6 @@ private:
   const unsigned int m_uiMapPosY;
 
   unsigned int m_uiTileFlags;
-  const TileType m_ttTileType;
 
   TileType m_ttEndangeredTileType;
 public:
@@ -40,7 +39,7 @@ public:
   CTile(const CTile &src);
 
   void update(Ogre::Real tpf);
-  TileType getTileType() const {return m_ttTileType;}
+  TileType getTileType() const {return m_uiType;}
   unsigned int getTileFlags() const {return m_uiTileFlags;}
 
   TileType getEndangeredTileType() const {return m_ttEndangeredTileType;}

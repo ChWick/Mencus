@@ -24,7 +24,7 @@ void CVideo::CPicture::CEffectScale::update(Ogre::Real tpf, Ogre::Real fTimePos,
 CVideo::CPicture::CPicture(const Ogre::String &sFile, const Ogre::Real fDuration, CMap &map)
   : m_fDuration(fDuration),
     m_sFile(sFile),
-    m_Sprite(map, &CDefaultSpriteTransformPipeline::INSTANCE, map.get2dManager(), Ogre::Vector2(-1, -1), Ogre::Vector2(2, 2)),
+    m_Sprite(map, "Picture", NULL, &CDefaultSpriteTransformPipeline::INSTANCE, map.get2dManager(), Ogre::Vector2(-1, -1), Ogre::Vector2(2, 2)),
     m_bStopped(true) {
 }
 CVideo::CPicture::~CPicture() {

@@ -35,15 +35,16 @@ private:
   unsigned int m_uiSwitchFlags;
 public:
   CSwitch(CMap &map,
+	  const std::string &sID,
+	  CEntity *pParent,
 	  const Ogre::Vector2 &vPosition,
 	  SwitchType stSwitchType,
 	  bool bChangeBlocks,
 	  ESwitchStates eSwitchState);
   CSwitch(CMap &map,
+	  CEntity *pParent,
 	  const tinyxml2::XMLElement *pElem);
   ~CSwitch();
-
-  void initialize();
 
   void update(Ogre::Real tpf);
 

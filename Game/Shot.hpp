@@ -39,7 +39,6 @@ public:
 
   static const Ogre::Real SHOT_DAMAGE[ST_COUNT];
 private:
-  const EShotTypes m_eShotType;
   const bool m_bAffectedByGravity;
   Ogre::Vector2 m_vSpeed;
   const EShotDirections m_eShotDirection;

@@ -3,8 +3,11 @@
 
 #include <Ogre.h>
 #include <string>
+#include "Entity.hpp"
+#include "IDGenerator.hpp"
+#include "XMLHelper.hpp"
 
-class CLink {
+class CLink : public CEntity {
 public:
   enum ELinkDirection {
     LD_FIRST_TO_SECOND    = 1,
@@ -33,27 +36,27 @@ private:
   unsigned int m_uiFirstY;
   unsigned int m_uiSecondX;
   unsigned int m_uiSecondY;
-  const Ogre::String m_sID;
   bool m_bActivated;
   ELinkDirection m_eLinkDirection;
 public:
-  CLink(unsigned int uiFirstX, unsigned int uiFirstY,
-	unsigned int uiSecondX, unsigned int uiSecondY,
-	ELinkDirection eLinkDirection = LD_BOTH,
-	const Ogre::String &sID = Ogre::StringUtil::BLANK,
-	bool bActivated = true)
-    : m_uiFirstX(uiFirstX), m_uiFirstY(uiFirstY),
-      m_uiSecondX(uiSecondX), m_uiSecondY(uiSecondY),
-      m_sID(sID),
-      m_bActivated(bActivated),
-      m_eLinkDirection(eLinkDirection) {
+  CLink(CMap &map,
+	CEntity *pParent,
+	const tinyxml2::XMLElement *pElem)
+    : CEntity(map, pParent, pElem),
+      m_uiFirstX(XMLHelper::IntAttribute(pElem, "fromx")),
+      m_uiFirstY(XMLHelper::IntAttribute(pElem, "fromy")),
+      m_uiSecondX(XMLHelper::IntAttribute(pElem, "tox")),
+      m_uiSecondY(XMLHelper::IntAttribute(pElem, "toy")),
+      m_bActivated(XMLHelper::BoolAttribute(pElem, "activated", true)),
+      m_eLinkDirection(parseLinkDirection(XMLHelper::Attribute(pElem, "direction", "both"))) {
   }
-  CLink(const CLink &link)
-    : m_uiFirstX(link.m_uiFirstX), m_uiFirstY(link.m_uiFirstY),
-      m_uiSecondX(link.m_uiSecondX), m_uiSecondY(link.m_uiSecondY),
-      m_sID(link.m_sID),
-      m_bActivated(link.m_bActivated),
-      m_eLinkDirection(link.m_eLinkDirection) {
+  CLink(CMap &map,
+	CEntity *pParent)
+    : CEntity(map, CIDGenerator::nextID("Link_"), pParent),
+      m_uiFirstX(0), m_uiFirstY(0),
+      m_uiSecondX(1), m_uiSecondY(1),
+      m_bActivated(true),
+      m_eLinkDirection(LD_BOTH) {
   }
 
   bool operator==(const CLink &link) const {
@@ -76,8 +79,6 @@ public:
   unsigned int &getSecondX() {return m_uiSecondX;}
   unsigned int &getSecondY() {return m_uiSecondY;}
 
-  const Ogre::String &getID() const {return m_sID;}
-
   bool isActivated() const {return m_bActivated;}
   void setActivated(bool b) {m_bActivated = b;}
   bool &getActivated() {return m_bActivated;}
@@ -89,6 +90,19 @@ public:
       ", " + Ogre::StringConverter::toString(m_uiFirstY) + ") to (" +
       Ogre::StringConverter::toString(m_uiSecondX) + ", " +
       Ogre::StringConverter::toString(m_uiSecondY) + ")";
+  }
+
+  void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
+    CEntity::writeToXMLElement(pElem, eStyle);
+    
+    using namespace XMLHelper;
+    
+    SetAttribute(pElem, "fromx", m_uiFirstX);
+    SetAttribute(pElem, "fromy", m_uiFirstY);
+    SetAttribute(pElem, "tox", m_uiSecondX);
+    SetAttribute(pElem, "toy", m_uiSecondY);
+    SetAttribute(pElem, "activated", m_bActivated);
+    SetAttribute(pElem, "direction", toString(m_eLinkDirection).c_str());
   }
 };
 

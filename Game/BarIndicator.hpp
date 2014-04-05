@@ -3,6 +3,7 @@
 
 #include "Sprite.hpp"
 #include "Util.hpp"
+#include "IDGenerator.hpp"
 
 class CMap;
 
@@ -13,15 +14,20 @@ private:
   Ogre::Real m_fValue;		//!< Value in [0,1]
 public:
   CBarIndicator(CMap &map,
+		CEntity *pParent,
 		const CSpriteTransformPipeline *pTransformPipeline,
 		Ogre2dManager *pSpriteManager)
     :
     CSprite(map,
+	    CIDGenerator::nextID("BarIndicator_"),
+	    pParent,
 	    pTransformPipeline,
 	    pSpriteManager,
 	    Ogre::Vector2::ZERO,
 	    Ogre::Vector2(1, 0.125)),
     m_Indicator(map,
+		CIDGenerator::nextID("BarIndicator_indicator_"),
+		this,
 		pTransformPipeline,
 		pSpriteManager,
 		Ogre::Vector2::ZERO,
@@ -39,7 +45,6 @@ public:
       m_Indicator.getTexture().setTexturePosRight(m_fValue);
       m_Indicator.setSize(Ogre::Vector2(m_fValue * m_vSize.x, m_vSize.y));
       CSprite::update(tpf);
-      m_Indicator.update(tpf);
     }
   }
   void render(Ogre::Real tpf) {

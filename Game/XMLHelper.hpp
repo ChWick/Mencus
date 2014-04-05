@@ -30,8 +30,11 @@ namespace XMLHelper {
 
   int IntAttribute(const tinyxml2::XMLElement *pElem,
 		   const char *pLabel,
-		   int iDefault = 0,
-		   bool bRequired = false);
+		   int iDefault);
+
+
+  int IntAttribute(const tinyxml2::XMLElement *pElem,
+		   const char *pLabel);
 
   Ogre::String Attribute(const tinyxml2::XMLElement *pElem,
 			 const char *pLabel,

@@ -7,6 +7,7 @@
 #include "Enemy.hpp"
 #include "Player.hpp"
 #include "XMLHelper.hpp"
+#include "IDGenerator.hpp"
 
 using namespace XMLHelper;
 
@@ -46,36 +47,38 @@ CShot::CShot(CMap &map,
              unsigned int uiDmg)
   :
   CAnimatedSprite(map,
+		  CIDGenerator::nextID("Shot_"),
+		  map.getShotsEntity(),
 		  &map,
                   map.get2dManager(),
                   vCenter - SHOT_SIZE[eShotType] * 0.5,
                   SHOT_SIZE[eShotType]),
-  m_eShotType(eShotType),
   m_bAffectedByGravity(SHOT_AFFECTED_BY_GRAVITY[eShotType]),
   m_vSpeed(Ogre::Vector2::ZERO),
   m_eShotDirection(eShotDirection),
   m_eState(SS_NONE),
   m_uiDamages(uiDmg),
   m_pCatchedEnemy(NULL) {
+  setType(eShotType);
   constructor_impl();
 }
 CShot::CShot(CMap &map,
 	     const tinyxml2::XMLElement *pElement) 
   : CAnimatedSprite(map,
+		    map.getShotsEntity(),
 		    &map,
 		    map.get2dManager(),
 		    pElement,
 		    SHOT_SIZE[EnumAttribute<EShotTypes>(pElement, "type", ST_COUNT, true)]),
-    m_eShotType(EnumAttribute<EShotTypes>(pElement, "type", ST_COUNT, true)),
     m_bAffectedByGravity(BoolAttribute(pElement,
 				       "affected_by_gravity",
 				       SHOT_AFFECTED_BY_GRAVITY[EnumAttribute<EShotTypes>(pElement, "type", ST_COUNT, true)])),
     m_vSpeed(Vector2Attribute(pElement, "speed", Ogre::Vector2::ZERO)),
-  m_eShotDirection(EnumAttribute<EShotDirections>(pElement, "direction", SD_RIGHT, true)),
-  m_eState(EnumAttribute<EShotStates>(pElement, "state", SS_NONE)),
-  m_uiDamages(IntAttribute(pElement, "damages", DMG_ALL, true)),
-  m_pCatchedEnemy(map.getEnemyById(Attribute(pElement, "catched_enemy"))),
-  m_fTimer(RealAttribute(pElement, "timer", 0)) {
+    m_eShotDirection(EnumAttribute<EShotDirections>(pElement, "direction", SD_RIGHT, true)),
+    m_eState(EnumAttribute<EShotStates>(pElement, "state", SS_NONE)),
+    m_uiDamages(IntAttribute(pElement, "damages")),
+    m_pCatchedEnemy(map.getEnemyById(Attribute(pElement, "catched_enemy"))),
+    m_fTimer(RealAttribute(pElement, "timer", 0)) {
   constructor_impl();
 }
 void CShot::constructor_impl() {
@@ -84,21 +87,21 @@ void CShot::constructor_impl() {
     eMirrorType = CSpriteTexture::MIRROR_Y;
   }
 
-  if (m_eShotType == ST_BOLT) {
+  if (m_uiType == ST_BOLT) {
     init(1, 1);
     setupAnimation(SA_DEFAULT, "bolt", 2, eMirrorType, &getBoltTexture);
   }
-  else if (m_eShotType == ST_BOMB) {
+  else if (m_uiType == ST_BOMB) {
     init(1, 2);
     setDefaultGetPath(&getBombTexture);
     setupAnimation(SA_DEFAULT, "bomb", -1, eMirrorType);
     setupAnimation(SA_LAUNCHED, "bomb_on", 6, eMirrorType);
   }
-  else if (m_eShotType == ST_SKULL) {
+  else if (m_uiType == ST_SKULL) {
     init(1, 1);
     setupAnimation(SA_DEFAULT, "skull", 1, eMirrorType, &getSkullTexture);
   }
-  else if (m_eShotType == ST_COLUMN) {
+  else if (m_uiType == ST_COLUMN) {
     init(1, 1);
     setupAnimation(SA_DEFAULT, "column", 2, eMirrorType, &getColumnTexture);
     m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.4, 0));
@@ -110,9 +113,9 @@ void CShot::constructor_impl() {
 void CShot::launch(const Ogre::Vector2 &vInitialSpeed, unsigned int uiNewAnimationSequence) {
   m_fTimer = 0;
   m_eState = SS_LAUNCHED;
-  m_vSpeed = vInitialSpeed * SHOT_SPEED[m_eShotType];
+  m_vSpeed = vInitialSpeed * SHOT_SPEED[m_uiType];
   if (uiNewAnimationSequence == SA_COUNT) {
-    switch (m_eShotType) {
+    switch (m_uiType) {
     case ST_COLUMN:
     case ST_SKULL:
     case ST_BOLT:
@@ -134,28 +137,28 @@ void CShot::update(Ogre::Real tpf) {
       m_vSpeed.y += c_fGravity * tpf;
     }
 
-    if (m_eShotType == ST_BOLT || m_eShotType == ST_SKULL || m_eShotType == ST_COLUMN) {
+    if (m_uiType == ST_BOLT || m_uiType == ST_SKULL || m_uiType == ST_COLUMN) {
       m_vPosition += m_vSpeed * tpf;
 
       // check for collisions
       if (m_Map.hitsTile(CTile::TF_UNPASSABLE, getWorldBoundingBox())) {
         // create
-        if (m_eShotType == ST_BOLT) m_Map.addExplosion(new CExplosion(m_Map, getCenter(), CExplosion::ET_BOLT));
-        else if (m_eShotType == ST_SKULL) m_Map.addExplosion(new CExplosion(m_Map, getCenter(), CExplosion::ET_SKULL));
+        if (m_uiType == ST_BOLT) new CExplosion(m_Map, getCenter(), CExplosion::ET_BOLT);
+        else if (m_uiType == ST_SKULL) new CExplosion(m_Map, getCenter(), CExplosion::ET_SKULL);
 
-        m_Map.destroyShot(this);
+        destroy();
       }
       if (m_Map.outOfMap(getWorldBoundingBox())) {
         // just destroy it
-        m_Map.destroyShot(this);
+        destroy();
       }
 
       hit();
-    } else if (m_eShotType == ST_BOMB) {
+    } else if (m_uiType == ST_BOMB) {
       m_fTimer += tpf;
       if (m_fTimer > BOMB_EXPLOSION_TIME) {
         m_Map.createExplosion(getCenter(), BOMB_EXPLOSION_RADIUS);
-        m_Map.destroyShot(this);
+        destroy();
       } else {
         bool bOnGround = false;
         CBoundingBox2d bbOverlap;
@@ -203,7 +206,7 @@ void CShot::update(Ogre::Real tpf) {
 	m_pCatchedEnemy->setStunned(false);
 	m_pCatchedEnemy = NULL;
       }
-      m_Map.destroyShot(this);
+      destroy();
     }
   }
 
@@ -213,17 +216,17 @@ void CShot::hit() {
   if (m_uiDamages & DMG_ENEMY) {
     for (auto *pEnemy : m_Map.getEnemies()) {
       if (pEnemy->getWorldBoundingBox().collidesWith(getWorldBoundingBox())) {
-        if (m_eShotType == ST_COLUMN) {
-          m_pCatchedEnemy = pEnemy;
+        if (m_uiType == ST_COLUMN) {
+          m_pCatchedEnemy = dynamic_cast<CEnemy*>(pEnemy);
           m_pCatchedEnemy->setStunned(true);
           m_eState = SS_ENEMY_CAUGHT;
           m_fTimer = COLUMN_CATCH_DURATION;
         }
         else {
-          m_Map.destroyShot(this);
+          destroy();
         }
 
-        pEnemy->takeDamage(SHOT_DAMAGE[m_eShotType]);
+        dynamic_cast<CHitableObject*>(pEnemy)->takeDamage(SHOT_DAMAGE[m_uiType]);
 
         return;
       }
@@ -231,15 +234,15 @@ void CShot::hit() {
   }
   if (m_uiDamages & DMG_PLAYER) {
     if (m_Map.getPlayer()->getWorldBoundingBox().collidesWith(getWorldBoundingBox())) {
-      m_Map.getPlayer()->takeDamage(SHOT_DAMAGE[m_eShotType]);
-      m_Map.destroyShot(this);
+      m_Map.getPlayer()->takeDamage(SHOT_DAMAGE[m_uiType]);
+      destroy();
       return;
     }
   }
 }
 void CShot::writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eStyle) const {
   CAnimatedSprite::writeToXMLElement(pElement, eStyle);
-  pElement->SetAttribute("type", m_eShotType);
+  pElement->SetAttribute("type", m_uiType);
   pElement->SetAttribute("direction", m_eShotDirection);
   pElement->SetAttribute("damages", m_uiDamages);
   

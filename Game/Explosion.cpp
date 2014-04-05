@@ -1,6 +1,7 @@
 #include "Explosion.hpp"
 #include "Map.hpp"
 #include "Util.hpp"
+#include "IDGenerator.hpp"
 
 const Ogre::Vector2 EXPLOSION_SIZES[CExplosion::ET_COUNT] = {
   Ogre::Vector2(0.5, 0.25),
@@ -27,43 +28,45 @@ const Ogre::Real EXPLOSION_FADING_TIMER[CExplosion::ET_COUNT] = {
 CExplosion::CExplosion(CMap &map, const Ogre::Vector2 &vCenter, EExplosionTypes eExplosionType)
   :
   CAnimatedSprite(map,
+		  CIDGenerator::nextID("Explosion_"),
+		  map.getExplosionsEntity(),
 		  &map,
 		  map.get2dManager(),
 		  vCenter - EXPLOSION_RELATIVE_OFFSET[eExplosionType],
 		  EXPLOSION_SIZES[eExplosionType]),
-  m_eExplosionType(eExplosionType),
   m_fFadingTimer(-1) {
+  setType(eExplosionType);
 
   init(1, 1);
 
   CSpriteTexture::EMirrorTypes eMirrorType = CSpriteTexture::MIRROR_NONE;
 
-  if (m_eExplosionType == ET_BOLT) {
+  if (m_uiType == ET_BOLT) {
     setupAnimation(0, "bolt_explosion", 5, eMirrorType, &getBoltTexture);
   }
-  else if (m_eExplosionType == ET_BOMB) {
+  else if (m_uiType == ET_BOMB) {
     m_vPosition += Ogre::Vector2(0, 0.4);
     setupAnimation(0, "bomb_explosion", 14, eMirrorType, &getBombTexture);
   }
-  else if (m_eExplosionType == ET_GREEN_MONSTER) {
+  else if (m_uiType == ET_GREEN_MONSTER) {
     setupAnimation(0, "explosion", 7, eMirrorType, &getEnemyTexturePath<1>);
   }
-  else if (m_eExplosionType == ET_KNIGHT) {
+  else if (m_uiType == ET_KNIGHT) {
     setupAnimation(0, "explosion_right", 5, eMirrorType, &getEnemyTexturePath<2>);
   }
-  else if (m_eExplosionType == ET_BEAR) {
+  else if (m_uiType == ET_BEAR) {
     setupAnimation(0, "explosion_right", 1, eMirrorType, &getEnemyTexturePath<3>);
   }
-  else if (m_eExplosionType == ET_GHOST) {
+  else if (m_uiType == ET_GHOST) {
     setupAnimation(0, "explosion_right", 4, eMirrorType, &getEnemyTexturePath<4>);
   }
-  else if (m_eExplosionType == ET_DARK_MAGICAN) {
+  else if (m_uiType == ET_DARK_MAGICAN) {
     setupAnimation(0, "explosion_right", 4, eMirrorType, &getEnemyTexturePath<5>);
   }
-  else if (m_eExplosionType == ET_SANTA) {
+  else if (m_uiType == ET_SANTA) {
     setupAnimation(0, "explosion_right", 9, eMirrorType, &getEnemyTexturePath<6>);
   }
-  else if (m_eExplosionType == ET_SKULL) {
+  else if (m_uiType == ET_SKULL) {
     setupAnimation(0, "explosion", 3, eMirrorType, &getSkullTexture);
   }
 }
@@ -71,7 +74,7 @@ void CExplosion::update(Ogre::Real tpf) {
   if (m_fFadingTimer > 0) {
     m_fFadingTimer -= tpf;
     if (m_fFadingTimer <= 0) {
-      m_Map.destroyExplosion(this);
+      this->destroy();
     }
   }
 
@@ -80,10 +83,10 @@ void CExplosion::update(Ogre::Real tpf) {
 void CExplosion::animationTextureChangedCallback(unsigned int uiOldText, unsigned int uiNewText) {
   // at the end of the sequence destroy the explosion
   if (uiNewText == 0 && uiOldText == m_AnimationSequences[m_uiCurrentAnimationSequence].size() - 1) {
-    if (EXPLOSION_FADING_TIMER[m_eExplosionType] == 0) {
-      m_Map.destroyExplosion(this);
+    if (EXPLOSION_FADING_TIMER[m_uiType] == 0) {
+      this->destroy();
     }
-    m_fFadingTimer = EXPLOSION_FADING_TIMER[m_eExplosionType];
+    m_fFadingTimer = EXPLOSION_FADING_TIMER[m_uiType];
     setCurrentAnimationTexture(uiOldText);
     setPauseAnimation(true);
   }

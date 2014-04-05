@@ -21,6 +21,7 @@
 #include "EditBoxes/EditBoxText.hpp"
 #include "EditBoxes/EditBoxExit.hpp"
 #include "ChangeTileEvent.hpp"
+#include "IDGenerator.hpp"
 
 using namespace CEGUI;
 
@@ -638,7 +639,7 @@ void CMapEditor::start() {
   m_bPressed = false;
   Sizef vSize(m_pTabControl->getPixelSize());
   m_pMap->resize(Ogre::Vector2(CGame::getSingleton().getRenderWindow()->getWidth() - vSize.d_width, vSize.d_height));
-  selectedSprite(NULL);
+  selectedEntity(NULL);
   
   //reset map, but store camera pos
   Ogre::Vector2 vCamPos(m_pMap->getCameraTargetPos());
@@ -650,15 +651,15 @@ void CMapEditor::start() {
   while (pLinksList->getItemCount() > 0) {
     pLinksList->removeItem(pLinksList->getListboxItemFromIndex(0));
   }
-  for (const CLink &link : m_pMap->getLinks()) {
-    pLinksList->addItem(createLinkEntry(link));
+  for (const CEntity *pLink : m_pMap->getLinks()) {
+    pLinksList->addItem(createLinkEntry(*dynamic_cast<const CLink*>(pLink)));
   }
   // init map size
   m_uiMapSizeX = m_pMap->getTilesGrid().getSizeX();
   m_uiMapSizeY = m_pMap->getTilesGrid().getSizeY();
 }
 void CMapEditor::stop() {
-  selectedSprite(NULL);
+  selectedEntity(NULL);
   setInputListenerEnabled(false);
   unpause(PAUSE_MAP_UPDATE);
   CHUD::getSingleton().show();
@@ -822,39 +823,39 @@ if (m_bPressed) {
 bool CMapEditor::touchCancelled(const OIS::MultiTouchEvent& arg) {
   return touchReleased(arg);
 }
-CSprite *CMapEditor::getSpriteAtMousePos(const Ogre::Vector2 &vPos) {
+CEntity *CMapEditor::getEntityAtMousePos(const Ogre::Vector2 &vPos) {
   Ogre::Vector2 vMapPos(m_pMap->mouseToMapPos(vPos));
   if (!m_pMap->isVisible(m_pMap->transformPosition(vMapPos))) {return NULL;}
 
-  list<CSprite*> m_lSprites;
+  list<CEntity*> lEntities;
 
   if (m_pMap->getPlayer()->getWorldBoundingBox().contains(vMapPos)) {
-    m_lSprites.push_back(m_pMap->getPlayer());
+    lEntities.push_back(m_pMap->getPlayer());
   }
-  for (CEnemy *pSprite : m_pMap->getEnemies()) {
+  for (CEntity *pSprite : m_pMap->getEnemies()) {
     if (pSprite->getWorldBoundingBox().contains(vMapPos)) {
-      m_lSprites.push_back(pSprite);
+      lEntities.push_back(pSprite);
     }
   }
-  for (CObject *pSprite : m_pMap->getObjects()) {
+  for (CEntity *pSprite : m_pMap->getObjects()) {
     if (pSprite->getWorldBoundingBox().contains(vMapPos)) {
-      m_lSprites.push_back(pSprite);
+      lEntities.push_back(pSprite);
     }
   }
-  for (CSwitch *pSprite : m_pMap->getSwitches()) {
+  for (CEntity *pSprite : m_pMap->getSwitches()) {
     if (pSprite->getWorldBoundingBox().contains(vMapPos)) {
-      m_lSprites.push_back(pSprite);
+      lEntities.push_back(pSprite);
     }
   }
 
-  CSprite *pSelectedSprite = NULL;
-  if (m_lSprites.size() > 0) {
-    pSelectedSprite = m_lSprites.front();
+  CEntity *pSelectedSprite = NULL;
+  if (lEntities.size() > 0) {
+    pSelectedSprite = lEntities.front();
   }
   return pSelectedSprite;
 }
-bool CMapEditor::selectSprite(const Ogre::Vector2 &vPos) {
-  selectedSprite(getSpriteAtMousePos(vPos));
+bool CMapEditor::selectEntity(const Ogre::Vector2 &vPos) {
+  selectedEntity(getEntityAtMousePos(vPos));
   return true;
 }
 void CMapEditor::editTile(const Ogre::Vector2 &vPos) {
@@ -934,13 +935,13 @@ void CMapEditor::handleBrushReleased(const Ogre::Vector2 &vPos) {
       m_pSelectedEntity->setPosition(snappedPos(m_pSelectedEntity->getPosition()));
     }
     else if (bClick) {
-      selectSprite(vPos);
+      selectEntity(vPos);
     }
     break;
   case B_EDIT:
     if (bClick) {
       if (!m_pSelectedEntity) {
-	selectSprite(vPos);
+	selectEntity(vPos);
 	if (!m_pSelectedEntity) {
 	  editTile(vPos);
 	}
@@ -990,29 +991,35 @@ void CMapEditor::placeCurrentObject(const Ogre::Vector2 &vPos) {
   if (m_pMap->outOfMap(x, y)) {return;}
 
   if (m_uiCurrentObject < CObject::OT_COUNT) {
-    CObject *pObject = new CObject(*m_pMap, vMapPos, static_cast<CObject::EObjectTypes>(m_uiCurrentObject));
+    CObject *pObject = new CObject(*m_pMap,
+				   CIDGenerator::nextID("Object_"),
+				   m_pMap->getObjectsEntity(),
+				   vMapPos,
+				   static_cast<CObject::EObjectTypes>(m_uiCurrentObject));
     // set center to curser pos
     pObject->setCenter(snappedPos(vMapPos));
-    m_pMap->addObject(pObject); 
-    selectedSprite(pObject);
+    selectedEntity(pObject);
   }
   else if (m_uiCurrentObject < CEnemy::ET_COUNT + CObject::OT_COUNT) {
     int id = m_uiCurrentObject - CObject::OT_COUNT;
-    CEnemy *pEnemy = new CEnemy(*m_pMap, vMapPos, static_cast<CEnemy::EEnemyTypes>(id), 1, 1, true);
+    CEnemy *pEnemy = new CEnemy(*m_pMap,
+				m_pMap->getEnemiesEntity(), 
+				vMapPos,
+				static_cast<CEnemy::EEnemyTypes>(id), 1, 1, true);
     pEnemy->setCenter(snappedPos(vMapPos));
-    m_pMap->addEnemy(pEnemy);
-    selectedSprite(pEnemy);
+    selectedEntity(pEnemy);
   }
   else if (m_uiCurrentObject < CEnemy::ET_COUNT + CObject::OT_COUNT + CSwitch::SWITCH_COUNT) {
     int id = m_uiCurrentObject - CObject::OT_COUNT - CEnemy::ET_COUNT;
     CSwitch *pSwitch = new CSwitch(*m_pMap,
+				   CIDGenerator::nextID("Switch_"),
+				   m_pMap->getSwitchesEntity(),
 				   vMapPos,
 				   static_cast<CSwitch::ESwitchTypes>(id),
 				   false,
 				   CSwitch::SS_DEACTIVATED);
     pSwitch->setCenter(snappedPos(vMapPos));
-    m_pMap->addSwitch(pSwitch);
-    selectedSprite(pSwitch);
+    selectedEntity(pSwitch);
   }
 }
 bool CMapEditor::onBrushSelectionChanged(const EventArgs &args) {
@@ -1030,7 +1037,7 @@ bool CMapEditor::onSnapToGridChanged(const EventArgs &args) {
   return true;
 }
 bool CMapEditor::onSaveMap(const EventArgs &args) {
-  selectedSprite(NULL);
+  selectedEntity(NULL);
 
   // write file to map info
   tinyxml2::XMLElement *pElem = m_pMapInfo->getEmptyRootNode();
@@ -1056,20 +1063,9 @@ bool CMapEditor::onDelete(const CEGUI::EventArgs &args) {
   if (!m_pSelectedEntity) {return true;}
 
   CEntity *pBuffer = m_pSelectedEntity;
-  selectedSprite(NULL);
+  selectedEntity(NULL);
 
-  if (dynamic_cast<CObject*>(pBuffer)) {
-    CObject *pObject = dynamic_cast<CObject*>(pBuffer);
-    m_pMap->destroyObject(pObject, false);
-  }
-  else if (dynamic_cast<CEnemy*>(pBuffer)) {
-    CEnemy *pEnemy = dynamic_cast<CEnemy*>(pBuffer);
-    m_pMap->destroyEnemy(pEnemy, false);
-  }
-  else if (dynamic_cast<CSwitch*>(pBuffer)) {
-    CSwitch *pSwitch = dynamic_cast<CSwitch*>(pBuffer);
-    m_pMap->destroySwich(pSwitch);
-  }
+  delete pBuffer;
   
 
   return true;
@@ -1303,15 +1299,15 @@ bool CMapEditor::onAddSwitchEntry(const CEGUI::EventArgs &args) {
 bool CMapEditor::onDeleteLink(const CEGUI::EventArgs &args) {
   Listbox *pLinksList = dynamic_cast<Listbox*>(m_pTabControl->getChild("LinkContentPane")->getChild("ScrollPane")->getChild("List"));
   if (pLinksList->getFirstSelectedItem()) {
-    m_pMap->destroyLink(*static_cast<CLink*>(pLinksList->getFirstSelectedItem()->getUserData()));
+    delete static_cast<CLink*>(pLinksList->getFirstSelectedItem()->getUserData());
     pLinksList->removeItem(pLinksList->getFirstSelectedItem());
   }
   return true;
 }
 bool CMapEditor::onAddLink(const CEGUI::EventArgs &args) {
-  CLink link(0, 0, 0, 0);
+  CLink *pLink = new CLink(*m_pMap, m_pMap->getLinksEntity());
   Listbox *pLinksList = dynamic_cast<Listbox*>(m_pTabControl->getChild("LinkContentPane")->getChild("ScrollPane")->getChild("List"));
-  pLinksList->addItem(createLinkEntry(m_pMap->addLink(link)));
+  pLinksList->addItem(createLinkEntry(*pLink));
   return true;
 }
 Ogre::Vector2 CMapEditor::snappedPos(const Ogre::Vector2 &vPos) {
@@ -1325,7 +1321,7 @@ Ogre::Vector2 CMapEditor::snappedPos(const Ogre::Vector2 &vPos) {
 
   return v;
 }
-void CMapEditor::selectedSprite(CSprite *pSprite) {
+void CMapEditor::selectedEntity(CEntity *pEntity) {
   if (m_pSelectedEntity) {
     // check for updates
     if (dynamic_cast<CHitableObject*>(m_pSelectedEntity)) {
@@ -1333,7 +1329,7 @@ void CMapEditor::selectedSprite(CSprite *pSprite) {
 	setHitpoints(dynamic_cast<CHitableObject*>(m_pSelectedEntity)->getMaximumHitpoints());
     }
   }
-  m_pSelectedEntity = pSprite;
+  m_pSelectedEntity = pEntity;
 
   m_pEditSprite->setVisible(false);
   m_pEditSwitchPane->setVisible(false);

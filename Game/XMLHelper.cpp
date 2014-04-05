@@ -73,17 +73,20 @@ namespace XMLHelper {
   }
   int IntAttribute(const tinyxml2::XMLElement *pElem,
 		   const char *pLabel,
-		   int iDefault,
-		   bool bRequired) {
+		   int iDefault) {
     if (pElem->Attribute(pLabel)) {
       return pElem->IntAttribute(pLabel);
     }
-    if (bRequired) {
-      throw Ogre::Exception(0,
-			    "Required attribute '" + Ogre::String(pLabel) + "' not found",
-			    __FILE__);
-    }
     return iDefault;
+  }
+  int IntAttribute(const tinyxml2::XMLElement *pElem,
+		   const char *pLabel) {
+    if (pElem->Attribute(pLabel)) {
+      return pElem->IntAttribute(pLabel);
+    }
+    throw Ogre::Exception(0,
+			  "Required attribute '" + Ogre::String(pLabel) + "' not found",
+			  __FILE__);
   }
 
   Ogre::String Attribute(const tinyxml2::XMLElement *pElem,

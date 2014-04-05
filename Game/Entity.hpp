@@ -15,6 +15,7 @@ class CMap;
 class CEntity {
 protected:
   std::string m_sID;
+  unsigned int m_uiType;                                //!< one can set a type
 
   CMap &m_Map;
 
@@ -49,6 +50,8 @@ public:
   CEntity *getChildRecursive(const std::string &sID);
   const CEntity *getChild(const std::string &sID) const ;
   const CEntity *getChildRecursive(const std::string &sID) const;
+  void destroyChildren();
+  void destroy();
   
   // events access
   std::list<CEvent*> &getEvents() {return m_lEvents;}
@@ -98,7 +101,11 @@ public:
   CBoundingBox2d getWorldBoundingBox() const {return m_bbRelativeBoundingBox.translate(m_vPosition);}
   void setRelativeBoundingBox(const CBoundingBox2d &bb) {m_bbRelativeBoundingBox = bb;}
 
-  // for events
+  unsigned int getType() const {return m_uiType;}
+  void setType(unsigned int uiType) {m_uiType = uiType;}
+
+  // virtual methods
+  
   
 };
 

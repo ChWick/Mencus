@@ -4,6 +4,7 @@
 #include "AnimatedSprite.hpp"
 #include "HitableObject.hpp"
 #include "BarIndicator.hpp"
+#include "IDGenerator.hpp"
 
 class CMap;
 
@@ -37,7 +38,6 @@ public:
   };
   static Ogre::String getPreviewImageName(int iEnemyType);
 private:
-  const EEnemyTypes m_eEnemyType;
   Ogre::Vector2 m_vSpeed;
   bool m_bOnGround;
   CBarIndicator m_HPBar;
@@ -47,19 +47,20 @@ private:
   bool m_bAtLeastOneDamageDone;
 public:
   CEnemy(CMap &map,
-    const Ogre::Vector2 &vPosition,
-    EEnemyTypes eEnemyType,
-    Ogre::Real fDirection,
-    Ogre::Real fHitpoints,
-    bool bJumps);
-  CEnemy(CMap &map, const tinyxml2::XMLElement *pElem);
+	 CEntity *pParent,
+	 const Ogre::Vector2 &vPosition,
+	 EEnemyTypes eEnemyType,
+	 Ogre::Real fDirection,
+	 Ogre::Real fHitpoints,
+	 bool bJumps);
+  CEnemy(CMap &map,
+	 CEntity *pParent,
+	 const tinyxml2::XMLElement *pElem);
 
   void update(Ogre::Real tpf);
   void render(Ogre::Real tpf);
 
   void addExternalForce(const Ogre::Vector2 &vForce) {m_vExternalForce += vForce;}
-
-  EEnemyTypes getType() const {return m_eEnemyType;}
 
   void setStunned(bool bStunned) {m_bStunned = bStunned;}
   bool isStunned() const {return m_bStunned;}

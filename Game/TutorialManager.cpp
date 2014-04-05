@@ -21,7 +21,7 @@ void CTutorialManager::update() {
   }
   const CPlayer *pPlayer = m_Map.getPlayer();
   if (!m_bInformationShown[IS_SWITCH]) {
-    for (const CSwitch *pSwitch : m_Map.getSwitches()) {
+    for (const CEntity *pSwitch : m_Map.getSwitches()) {
       if (pSwitch->getCenter().squaredDistance(pPlayer->getCenter()) < 6) {
 	CGUITutorial::getSingleton().showSwitchInformationWindow();
 	m_bInformationShown[IS_SWITCH] = true;
@@ -30,7 +30,7 @@ void CTutorialManager::update() {
     }
   }
   if (!m_bInformationShown[IS_ENEMY] || !m_bInformationShown[IS_SMALL_ENEMY]) {
-    for (const CEnemy *pEnemy : m_Map.getEnemies()) {
+    for (const CEntity *pEnemy : m_Map.getEnemies()) {
       if (pEnemy->getCenter().squaredDistance(pPlayer->getCenter()) < 25) {
 	if (!m_bInformationShown[IS_ENEMY]) {
 	  CGUITutorial::getSingleton().showEnemyInformationWindow();

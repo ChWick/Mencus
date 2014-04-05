@@ -40,24 +40,22 @@ class CMap : public CEntity,
 	     public CPauseListener {
 private:
   CTutorialManager *m_pTutorialManager;
-  std::list<CEnemy*> m_lEnemiesToDestroy;
-  std::list<CShot*> m_lShotsToDestroy;
-  std::list<CExplosion*> m_lExplosionsToDestroy;
-  std::list<CObject*> m_lObjectsToDestroy;
+  std::list<CEntity*> m_lEntitiesToDestroy;
   Ogre2dManager* m_p2dManagerMap;
   Ogre2dManager* m_pDebugSpriteManager;
   grid2d<CTile*> m_gridTiles;
   std::vector<CDebugText*> m_vLineNumberX;
   std::vector<CDebugText*> m_vLineNumberY;
-  std::list<CEnemy*> m_lEnemies;
-  std::list<CSwitch*> m_lSwitches;
-  std::list<CShot*> m_lShots;
-  std::list<CExplosion*> m_lExplosions;
-  std::list<CLink> m_lLinks;
-  std::list<CObject*> m_lObjects;
   std::vector<CCameraRestriction> m_vCameraRestrictions;
 
   CBackground *m_pBackground;
+  CEntity *m_pTilesEntity;
+  CEntity *m_pEnemiesEntity;
+  CEntity *m_pSwitchesEntity;
+  CEntity *m_pShotsEntity;
+  CEntity *m_pExplosionsEntity;
+  CEntity *m_pLinksEntity;
+  CEntity *m_pObjectsEntity;
 
   Ogre::Vector2 m_vTilesPerScreen;
   float m_fScreenRatio;
@@ -193,10 +191,11 @@ public:
   const grid2d<CTile*> &getTilesGrid() const {return m_gridTiles;}
   CLink *getLinkById(const Ogre::String &id);
   CEnemy *getEnemyById(const Ogre::String &id);
-  const std::list<CSwitch*> &getSwitches() const {return m_lSwitches;}
-  const std::list<CEnemy*> &getEnemies() const {return m_lEnemies;}
-  const std::list<CLink> &getLinks() const {return m_lLinks;}
-  const std::list<CObject*> &getObjects() const {return m_lObjects;}
+  const std::list<CEntity*> &getSwitches() const {return m_pSwitchesEntity->getChildren();}
+  const std::list<CEntity*> &getEnemies() const {return m_pEnemiesEntity->getChildren();}
+  const std::list<CEntity*> &getLinks() const {return m_pLinksEntity->getChildren();}
+  const std::list<CEntity*> &getObjects() const {return m_pSwitchesEntity->getChildren();}
+  const std::list<CEntity*> &getShots() const {return m_pShotsEntity->getChildren();}
 
   CExit &getExit() {return m_Exit;}
 
@@ -206,23 +205,16 @@ public:
   Ogre2dManager *getDebug2dManager() const {return m_pDebugSpriteManager;}
   CPlayer *getPlayer() const {return m_pPlayer;}
 
-  CShot *addShot(CShot *pShot) {m_lShots.push_back(pShot); return pShot;}
-  void destroyShot(CShot *pShot) {m_lShotsToDestroy.push_back(pShot);}
 
-  CExplosion *addExplosion(CExplosion *pExplosion) {m_lExplosions.push_back(pExplosion); return pExplosion;}
-  void destroyExplosion(CExplosion *pExplosion) {m_lExplosionsToDestroy.push_back(pExplosion);}
+  CEntity *getTilesEntity() {return m_pTilesEntity;}
+  CEntity *getEnemiesEntity() {return m_pEnemiesEntity;}
+  CEntity *getSwitchesEntity() {return m_pSwitchesEntity;}
+  CEntity *getShotsEntity() {return m_pShotsEntity;}
+  CEntity *getExplosionsEntity() {return m_pExplosionsEntity;}
+  CEntity *getLinksEntity() {return m_pLinksEntity;}
+  CEntity *getObjectsEntity() {return m_pObjectsEntity;}
 
-  void addSwitch(CSwitch *pSwitch) {m_lSwitches.push_back(pSwitch);}
-  void destroySwich(CSwitch *pSwitch);
-
-  void addEnemy(CEnemy *pEnemy) {m_lEnemies.push_back(pEnemy);}
-  void destroyEnemy(CEnemy *pEnemy, bool bLater = true);
-
-  void addObject(CObject *pObject) {m_lObjects.push_back(pObject);}
-  void destroyObject(CObject *pObject, bool bLater = true);
-
-  CLink &addLink(const CLink &link) {m_lLinks.push_back(link); return m_lLinks.back();}
-  void destroyLink(const CLink &link) {m_lLinks.remove(link);}
+  void destroy(CEntity *pEntity, bool bLater = true);
 
   void playerWarped();
 
@@ -245,9 +237,7 @@ private:
   void clearLineNumbers();
 
   void readRow(const tinyxml2::XMLElement *pRow, unsigned int uiRow);
-  void readSwitch(const tinyxml2::XMLElement *pSwitch);
   void readEndangeredTiles(const tinyxml2::XMLElement *pTile);
-  void readLink(const tinyxml2::XMLElement *pLink);
   void readExit(const tinyxml2::XMLElement *pExit);
   void readCamera(const tinyxml2::XMLElement *pCamera);
 };

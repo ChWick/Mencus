@@ -21,7 +21,6 @@ public:
     ET_COUNT,
   };
 private:
-  const EExplosionTypes m_eExplosionType;
   Ogre::Real m_fFadingTimer;                 //!< after the last image the fading timer (alpha blending)
 public:
   CExplosion(CMap &map, const Ogre::Vector2 &vCenter, EExplosionTypes eExplosionType);

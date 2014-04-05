@@ -4,13 +4,15 @@
 using namespace XMLHelper;
 
 CAnimatedSprite::CAnimatedSprite(CMap &map,
+				 const std::string &sID,
+				 CEntity *pParent,
 				 const CSpriteTransformPipeline *pTransformPipeline,
 				 Ogre2dManager *pSpriteManager,
 				 const Ogre::Vector2 &vPosition,
 				 const Ogre::Vector2 &vSize,
 				 const Ogre::Vector2 &vScale,
 				 const Ogre::Radian radRotation)
-  : CSprite(map, pTransformPipeline, pSpriteManager, vPosition, vSize, vScale, radRotation),
+  : CSprite(map, sID, pParent, pTransformPipeline, pSpriteManager, vPosition, vSize, vScale, radRotation),
     m_bAnimationPaused(false),
     m_uiCurrentAnimationSequence(0),
     m_uiCurrentAnimationTexture(0) {
@@ -18,11 +20,12 @@ CAnimatedSprite::CAnimatedSprite(CMap &map,
   m_fAnimationSpeed = 1.0 / 20;
 }
 CAnimatedSprite::CAnimatedSprite(CMap &map,
+				 CEntity *pParent,
 				 const CSpriteTransformPipeline *pTransformPipeline,
 				 Ogre2dManager *pSpriteManager,
 				 const tinyxml2::XMLElement *pElem,
 				 const Ogre::Vector2 &vSize) 
-  : CSprite(map, pTransformPipeline, pSpriteManager, pElem, vSize),
+  : CSprite(map, pParent, pTransformPipeline, pSpriteManager, pElem, vSize),
     m_bAnimationPaused(BoolAttribute(pElem, "as_animation_paused", false)),
     m_uiCurrentAnimationSequence(IntAttribute(pElem, "as_current_as", 0)),
     m_uiCurrentAnimationTexture(IntAttribute(pElem, "as_current_at", 0)),

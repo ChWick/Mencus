@@ -48,7 +48,7 @@ const Ogre::Real SPIKES_DAMANGE_PER_HIT(1);
 
 CPlayer::CPlayer(CMap &map, SStatistics &statistics)
   :
-  CAnimatedSprite(map, &map, map.get2dManager(), Ogre::Vector2(0, 0), Ogre::Vector2(1, 2)),
+  CAnimatedSprite(map, "Player", &map, &map, map.get2dManager(), Ogre::Vector2(0, 0), Ogre::Vector2(1, 2)),
   CHitableObject(10),
   m_Fader(this),
   m_fRightPressed(0),
@@ -64,7 +64,7 @@ CPlayer::CPlayer(CMap &map, SStatistics &statistics)
   m_eLastDirection(LD_RIGHT),
   m_uiCurrentWeapon(W_BOLT),
   m_pBomb(NULL),
-  m_Shield(map, &map, map.get2dManager(), Ogre::Vector2::ZERO, Ogre::Vector2(2, 2)),
+  m_Shield(map, "Shield", this, &map, map.get2dManager(), Ogre::Vector2::ZERO, Ogre::Vector2(2, 2)),
   m_bShieldActive(false),
   m_eGoToLinkStatus(GTLS_NONE),
   m_fManaPoints(PLAYER_MAX_MANA_POINTS),
@@ -76,7 +76,7 @@ CPlayer::CPlayer(CMap &map, SStatistics &statistics)
   constructor_impl();
 }
 CPlayer::CPlayer(CMap &map, const tinyxml2::XMLElement *pElem, SStatistics &statistics) 
-  : CAnimatedSprite(map, &map, map.get2dManager(), pElem, Ogre::Vector2(1, 2)),
+  : CAnimatedSprite(map, &map, &map, map.get2dManager(), pElem, Ogre::Vector2(1, 2)),
     CHitableObject(pElem),
     m_Fader(this),
     m_fRightPressed(0),
@@ -93,7 +93,7 @@ CPlayer::CPlayer(CMap &map, const tinyxml2::XMLElement *pElem, SStatistics &stat
     m_uiCurrentWeapon(IntAttribute(pElem, "pl_cur_weapon", W_BOLT)),
     m_pBomb(NULL),
     m_fBombThrowStrength(RealAttribute(pElem, "pl_bomb_throw_str", 0)),
-  m_Shield(map, &map, map.get2dManager(), Ogre::Vector2::ZERO, Ogre::Vector2(2, 2)),
+  m_Shield(map, "Shield", this, &map, map.get2dManager(), Ogre::Vector2::ZERO, Ogre::Vector2(2, 2)),
   m_bShieldActive(BoolAttribute(pElem, "pl_shield_active", false)),
   m_vLinkFromPos(Vector2Attribute(pElem, "pl_gtl_from", Ogre::Vector2::ZERO)),
   m_vLinkToPos(Vector2Attribute(pElem, "pl_gtl_to", Ogre::Vector2::ZERO)),
@@ -118,7 +118,7 @@ void CPlayer::constructor_impl() {
   setupAnimations();
   m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.2, 0));
   m_bbRelativeBoundingBox.setSize(Ogre::Vector2(0.6, 1.8));
-  m_pThrowStrengthIndicator = new CBarIndicator(m_Map, &m_Map, m_Map.get2dManager());
+  m_pThrowStrengthIndicator = new CBarIndicator(m_Map, this, &m_Map, m_Map.get2dManager());
 
   m_Shield.init(1, 1);
   m_Shield.setupAnimation(0, "shield", 5, CSpriteTexture::MIRROR_NONE, &getPlayerTexturePath);
@@ -337,7 +337,6 @@ void CPlayer::update(Ogre::Real tpf) {
         if (!m_pBomb) {
           m_pThrowStrengthIndicator->show();
           m_pBomb = new CShot(m_Map, getCenter(), CShot::ST_BOMB, (m_eLastDirection == LD_LEFT) ? CShot::SD_LEFT : CShot::SD_RIGHT);
-          m_Map.addShot(m_pBomb);
           m_uiBombCount--;
 	  m_Statistics.uiUsedItems[Weapon::I_BOMB]++;
           CHUD::getSingleton().setBombCount(m_uiBombCount);
@@ -598,7 +597,8 @@ void CPlayer::animationTextureChangedCallback(unsigned int uiOldText, unsigned i
         else if (m_uiCurrentAnimationSequence == ANIM_ATTACK_RIGHT) {vOffset = getCenter() + PLAYER_BOLT_OFFSET_RIGHT;}
       }
 
-      m_Map.addShot(new CShot(m_Map, vOffset, eShotType, eShotDir, CShot::DMG_ENEMY))->launch(vLaunchDirection);
+      CShot *pShot = new CShot(m_Map, vOffset, eShotType, eShotDir, CShot::DMG_ENEMY);
+      pShot->launch(vLaunchDirection);
     }
   } else if (uiOldText == m_AnimationSequences[m_uiCurrentAnimationSequence].size() - 1 && uiNewText == 0) {
     // new loop of animation

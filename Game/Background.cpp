@@ -35,7 +35,7 @@ CBackground::CBackground(CMap &map,
 			 const Ogre::String &sName,
 			 const Ogre::Vector2 &vTilesPerScreen,
 			 const float &fScreenRatio)
-  : CSprite(map, &CDefaultSpriteTransformPipeline::INSTANCE, map.get2dManager(), Ogre::Vector2(-1, -1), Ogre::Vector2(BACKGROUND_SIZE * fScreenRatio, BACKGROUND_SIZE)),
+  : CSprite(map, "Background", &map, &CDefaultSpriteTransformPipeline::INSTANCE, map.get2dManager(), Ogre::Vector2(-1, -1), Ogre::Vector2(BACKGROUND_SIZE * fScreenRatio, BACKGROUND_SIZE)),
     m_eBackgroundType(fromString(sName)),
     m_vCameraPosition(vCameraPosition),
     m_sName(sName),
