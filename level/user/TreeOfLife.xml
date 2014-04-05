@@ -133,40 +133,56 @@
         <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
     </tiles>
     <switches>
-        <switch x="5.5" y="20" type="0" flags="0" activeTime="0">
-            <changes id="54" x="6" y="15"/>
-            <changes id="54" x="6" y="16"/>
-            <changes id="58" x="6" y="14"/>
+        <switch x="5.5" y="20" id="977260518" type="0" flags="0" activeTime="0">
+            <events>
+                <event type="change_tile" id="54" x="6" y="15"/>
+                <event type="change_tile" id="54" x="6" y="16"/>
+                <event type="change_tile" id="58" x="6" y="14"/>
+            </events>
         </switch>
-        <switch x="20" y="6" type="1" flags="1" activeTime="0">
-            <changes id="54" x="16" y="8"/>
-            <changes id="31" x="8" y="11"/>
-            <changes id="31" x="8" y="10"/>
-            <changes id="61" x="17" y="8"/>
-            <changes id="57" x="16" y="7"/>
-            <changes id="58" x="16" y="9"/>
+        <switch x="20" y="6" id="516341989" type="1" flags="1" activeTime="0">
+            <events>
+                <event type="change_tile" id="54" x="16" y="8"/>
+                <event type="change_tile" id="31" x="8" y="11"/>
+                <event type="change_tile" id="31" x="8" y="10"/>
+                <event type="change_tile" id="61" x="17" y="8"/>
+                <event type="change_tile" id="57" x="16" y="7"/>
+                <event type="change_tile" id="58" x="16" y="9"/>
+            </events>
         </switch>
-        <switch x="34.5" y="2" type="0" flags="0" activeTime="0">
-            <changes id="2" x="22" y="2"/>
-            <changes id="51" x="22" y="3"/>
+        <switch x="34.5" y="2" id="-1242150390" type="0" flags="0" activeTime="0">
+            <events>
+                <event type="change_tile" id="2" x="22" y="2"/>
+                <event type="change_tile" id="51" x="22" y="3"/>
+            </events>
         </switch>
-        <switch x="35" y="14" type="1" flags="3" activeTime="6.5">
-            <changes id="52" x="36" y="10"/>
-            <changes id="52" x="37" y="10"/>
-            <changes id="17" x="37" y="9"/>
-            <changes id="17" x="36" y="9"/>
-            <changes id="11" x="38" y="9"/>
-            <changes id="2" x="31" y="33"/>
-            <changes id="2" x="31" y="34"/>
-            <changes id="51" x="31" y="35"/>
+        <switch x="35" y="14" id="622268742" type="1" flags="3" activeTime="6.5">
+            <events>
+                <event type="change_tile" id="52" x="36" y="10"/>
+                <event type="change_tile" id="52" x="37" y="10"/>
+                <event type="change_tile" id="17" x="37" y="9"/>
+                <event type="change_tile" id="17" x="36" y="9"/>
+                <event type="change_tile" id="11" x="38" y="9"/>
+                <event type="change_tile" id="2" x="31" y="33"/>
+                <event type="change_tile" id="2" x="31" y="34"/>
+                <event type="change_tile" id="51" x="31" y="35"/>
+            </events>
         </switch>
-        <switch x="24" y="33" type="1" flags="5" activeTime="0"/>
-        <switch x="39.5" y="54" type="0" flags="4" activeTime="0">
-            <changes id="75" x="33" y="58"/>
+        <switch x="24" y="33" id="-1682797930" type="1" flags="5" activeTime="0">
+            <events/>
         </switch>
-        <switch x="32.5" y="49" type="1" flags="5" activeTime="0"/>
-        <switch x="25.5" y="91" type="1" flags="7" activeTime="26.5">
-            <changes id="119" x="15" y="116"/>
+        <switch x="39.5" y="54" id="-619410634" type="0" flags="4" activeTime="0">
+            <events>
+                <event type="change_tile" id="75" x="33" y="58"/>
+            </events>
+        </switch>
+        <switch x="32.5" y="49" id="-1325380730" type="1" flags="5" activeTime="0">
+            <events/>
+        </switch>
+        <switch x="25.5" y="91" id="-1160150619" type="1" flags="7" activeTime="26.5">
+            <events>
+                <event type="change_tile" id="119" x="15" y="116"/>
+            </events>
         </switch>
     </switches>
     <endangeredTiles>
@@ -184,43 +200,111 @@
         <link id="" fromx="17" fromy="82" tox="17" toy="78" direction="both" activated="1"/>
     </links>
     <enemies>
-        <enemy id="-1865008399" type="2" direction="1" jumps="0" hp="4" x="19.5" y="63"/>
-        <enemy id="470211270" type="2" direction="1" jumps="0" hp="4" x="16.5" y="63"/>
-        <enemy id="-1009961145" type="2" direction="1" jumps="0" hp="4" x="18" y="66"/>
-        <enemy id="-1557810091" type="2" direction="1" jumps="0" hp="4" x="22.5" y="78"/>
-        <enemy id="-1257795640" type="2" direction="1" jumps="0" hp="4" x="19" y="78"/>
+        <enemy id="-1865008399" type="2" direction="1" jumps="0" hp="4" x="19.5" y="63">
+            <events/>
+        </enemy>
+        <enemy id="470211270" type="2" direction="1" jumps="0" hp="4" x="16.5" y="63">
+            <events/>
+        </enemy>
+        <enemy id="-1009961145" type="2" direction="1" jumps="0" hp="4" x="18" y="66">
+            <events/>
+        </enemy>
+        <enemy id="-1557810091" type="2" direction="1" jumps="0" hp="4" x="22.5" y="78">
+            <events/>
+        </enemy>
+        <enemy id="-1257795640" type="2" direction="1" jumps="0" hp="4" x="19" y="78">
+            <events/>
+        </enemy>
     </enemies>
     <objects>
-        <object x="12" y="13" type="3"/>
-        <object x="20.5" y="2" type="3"/>
-        <object x="33.75" y="33" type="5"/>
-        <object x="34.75" y="23" type="5"/>
-        <object x="29.75" y="35" type="5"/>
-        <object x="33.75" y="3" type="5"/>
-        <object x="36.75" y="3" type="5"/>
-        <object x="20.75" y="2.5" type="5"/>
-        <object x="36.75" y="11.5" type="5"/>
-        <object x="8.5" y="34" type="3"/>
-        <object x="5.1500001" y="43.325001" type="3"/>
-        <object x="31" y="41" type="1"/>
-        <object x="36.5" y="73" type="3"/>
-        <object x="22.15" y="72.324997" type="3"/>
-        <object x="24.25" y="71.5" type="5"/>
-        <object x="21.25" y="66" type="5"/>
-        <object x="22.25" y="70.5" type="5"/>
-        <object x="17.25" y="67.5" type="5"/>
-        <object x="16" y="71" type="0"/>
-        <object x="17" y="71" type="0"/>
-        <object x="16.5" y="71" type="0"/>
-        <object x="21" y="74" type="4"/>
-        <object x="21" y="75" type="4"/>
-        <object x="21" y="74.5" type="4"/>
-        <object x="17.5" y="71" type="0"/>
-        <object x="18" y="71" type="0"/>
-        <object x="19" y="71" type="0"/>
-        <object x="18.5" y="71" type="0"/>
+        <object x="12" y="13" id="id" type="3">
+            <events/>
+        </object>
+        <object x="20.5" y="2" id="id" type="3">
+            <events/>
+        </object>
+        <object x="33.75" y="33" id="id" type="5">
+            <events/>
+        </object>
+        <object x="34.75" y="23" id="id" type="5">
+            <events/>
+        </object>
+        <object x="29.75" y="35" id="id" type="5">
+            <events/>
+        </object>
+        <object x="33.75" y="3" id="id" type="5">
+            <events/>
+        </object>
+        <object x="36.75" y="3" id="id" type="5">
+            <events/>
+        </object>
+        <object x="20.75" y="2.5" id="id" type="5">
+            <events/>
+        </object>
+        <object x="36.75" y="11.5" id="id" type="5">
+            <events/>
+        </object>
+        <object x="8.5" y="34" id="id" type="3">
+            <events/>
+        </object>
+        <object x="5.1500001" y="43.325001" id="id" type="3">
+            <events/>
+        </object>
+        <object x="31" y="41" id="id" type="1">
+            <events/>
+        </object>
+        <object x="36.5" y="73" id="id" type="3">
+            <events/>
+        </object>
+        <object x="22.15" y="72.324997" id="id" type="3">
+            <events/>
+        </object>
+        <object x="24.25" y="71.5" id="id" type="5">
+            <events/>
+        </object>
+        <object x="21.25" y="66" id="id" type="5">
+            <events/>
+        </object>
+        <object x="22.25" y="70.5" id="id" type="5">
+            <events/>
+        </object>
+        <object x="17.25" y="67.5" id="id" type="5">
+            <events/>
+        </object>
+        <object x="16" y="71" id="id" type="0">
+            <events/>
+        </object>
+        <object x="17" y="71" id="id" type="0">
+            <events/>
+        </object>
+        <object x="16.5" y="71" id="id" type="0">
+            <events/>
+        </object>
+        <object x="21" y="74" id="id" type="4">
+            <events/>
+        </object>
+        <object x="21" y="75" id="id" type="4">
+            <events/>
+        </object>
+        <object x="21" y="74.5" id="id" type="4">
+            <events/>
+        </object>
+        <object x="17.5" y="71" id="id" type="0">
+            <events/>
+        </object>
+        <object x="18" y="71" id="id" type="0">
+            <events/>
+        </object>
+        <object x="19" y="71" id="id" type="0">
+            <events/>
+        </object>
+        <object x="18.5" y="71" id="id" type="0">
+            <events/>
+        </object>
     </objects>
     <exit type="region" posx="17" posy="123" sizex="1" sizey="8" id=""/>
-    <player x="0.5" y="25" hp="10" direction="1"/>
-    <camera posx="4.5066853" posy="56.787674"/>
+    <player x="0.5" y="25" id="-1401250973" hp="10" direction="1">
+        <events/>
+    </player>
+    <camera posx="0" posy="20"/>
 </map>

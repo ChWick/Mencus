@@ -33,11 +33,15 @@
         <row tiles="53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 3 6 6 6 20 6 6 20 6 6 6 6 4 53 53 53 10 2 2 2 2 10 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 "/>
     </tiles>
     <switches>
-        <switch x="20.3125" y="21" type="0" flags="0" activeTime="0">
-            <changes id="66" x="9" y="15"/>
-            <changes id="65" x="9" y="16"/>
+        <switch x="20.3125" y="21" id="-796138425" type="0" flags="0" activeTime="0">
+            <events>
+                <event type="change_tile" id="66" x="9" y="15"/>
+                <event type="change_tile" id="65" x="9" y="16"/>
+            </events>
         </switch>
-        <switch x="40.0625" y="26" type="1" flags="5" activeTime="0"/>
+        <switch x="40.0625" y="26" id="-748926888" type="1" flags="5" activeTime="0">
+            <events/>
+        </switch>
     </switches>
     <endangeredTiles/>
     <links>
@@ -96,12 +100,22 @@
     </links>
     <enemies/>
     <objects>
-        <object x="3.5" y="1" type="3"/>
-        <object x="12.125" y="2" type="3"/>
-        <object x="28.34375" y="3" type="3"/>
-        <object x="8.15625" y="6" type="3"/>
+        <object x="3.5" y="1" id="id" type="3">
+            <events/>
+        </object>
+        <object x="12.125" y="2" id="id" type="3">
+            <events/>
+        </object>
+        <object x="28.34375" y="3" id="id" type="3">
+            <events/>
+        </object>
+        <object x="8.15625" y="6" id="id" type="3">
+            <events/>
+        </object>
     </objects>
     <exit type="region" posx="77" posy="9" sizex="1" sizey="2" id=""/>
-    <player x="0.375" y="27" hp="10" direction="1"/>
+    <player x="0.375" y="27" id="1724586124" hp="10" direction="1">
+        <events/>
+    </player>
     <camera posx="0" posy="18"/>
 </map>
