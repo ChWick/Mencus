@@ -4,6 +4,7 @@
 #include "Tile.hpp"
 #include "XMLHelper.hpp"
 #include "Event.hpp"
+#include "ChangeTileEvent.hpp"
 
 using namespace XMLHelper;
 
@@ -65,6 +66,11 @@ CSwitch::CSwitch(CMap &map,
       entry.bInitialState = BoolAttribute(pChange, "initial", true);
 
       addEntry(entry);
+    }
+    else if (strcmp(pChange->Value(), "changes") == 0) {
+      // for supporting old maps
+      CChangeTileEvent *pEvent = new CChangeTileEvent(m_Map, pChange);
+      addEvent(pEvent);
     }
   }
 
