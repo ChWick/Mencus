@@ -194,7 +194,7 @@ public:
   const std::list<CEntity*> &getSwitches() const {return m_pSwitchesEntity->getChildren();}
   const std::list<CEntity*> &getEnemies() const {return m_pEnemiesEntity->getChildren();}
   const std::list<CEntity*> &getLinks() const {return m_pLinksEntity->getChildren();}
-  const std::list<CEntity*> &getObjects() const {return m_pSwitchesEntity->getChildren();}
+  const std::list<CEntity*> &getObjects() const {return m_pObjectsEntity->getChildren();}
   const std::list<CEntity*> &getShots() const {return m_pShotsEntity->getChildren();}
 
   CExit &getExit() {return m_Exit;}

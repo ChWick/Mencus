@@ -31,7 +31,7 @@
     <endangeredTiles/>
     <links/>
     <enemies>
-        <enemy id="end_enemy" type="2" direction="1" jumps="1" hp="1" x="3.5" y="3">
+        <enemy id="end_enemy" type="1" direction="1" jumps="1" hp="1" x="3.5" y="3">
             <events/>
         </enemy>
     </enemies>

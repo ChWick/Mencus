@@ -137,12 +137,13 @@ void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
     }
   }
   catch (const Ogre::Exception &e) {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Error on loading a snapshot.");
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, e.getFullDescription());
-    CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU, true, false);
+    CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);
   }
   catch (...) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Unknown error on loading a snapshot.");
-    CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU, true, false);
+    CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);
   }
 }
 void CSnapshotManager::createFromFile(const Ogre::String &name) {

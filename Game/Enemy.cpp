@@ -80,12 +80,12 @@ CEnemy::CEnemy(CMap &map,
 		    &map,
 		    map.get2dManager(),
 		    pElem,
-		    ENEMY_SIZE[EnumAttribute(pElem, "type", ET_COUNT, -1, true)]),
+		    ENEMY_SIZE[EnumAttribute(pElem, "type", ET_COUNT)]),
     CHitableObject(pElem),
     m_vSpeed(Vector2Attribute(pElem,
 			      "speed",
 			      Ogre::Vector2::UNIT_X * RealAttribute(pElem, "direction", 1)
-			      * ENEMY_SPEED[EnumAttribute(pElem, "type", ET_COUNT, -1, true)])),
+			      * ENEMY_SPEED[EnumAttribute(pElem, "type", ET_COUNT)])),
     m_bOnGround(false),
     m_HPBar(map, this, &map, map.get2dManager()),
     m_bJumps(BoolAttribute(pElem, "jumps", true)),
@@ -253,25 +253,25 @@ void CEnemy::setup() {
   case ET_GREEN_MONSTER:
     m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.1, 0));
     m_bbRelativeBoundingBox.setSize(Ogre::Vector2(0.8, 0.9));
-    setDefaultGetPath(&getEnemyTexturePath<1>);
+    setDefaultGetPath(&getEnemyTexturePath<ET_GREEN_MONSTER>);
     setupAnimation(AS_WALK_LEFT, "walk_right", 4, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", 4);
     {
       CSpriteTexture &attackLeft
 	= addTextureToAnimationSequence(AS_ATTACK_LEFT,
-					getEnemyTexturePath<1>("attack_right", 1));
+					getEnemyTexturePath<ET_GREEN_MONSTER>("attack_right", 1));
       attackLeft.mirror(CSpriteTexture::MIRROR_Y);
       attackLeft.setSpriteOffset(Ogre::Vector2(-1, 0));
       attackLeft.setSpriteScale(Ogre::Vector2(2, 1));
       addTextureToAnimationSequence(AS_ATTACK_LEFT,
-				    getEnemyTexturePath<1>("walk_right", 1)).mirror(CSpriteTexture::MIRROR_Y);
+				    getEnemyTexturePath<ET_GREEN_MONSTER>("walk_right", 1)).mirror(CSpriteTexture::MIRROR_Y);
     }
     {
       CSpriteTexture &attackRight
 	= addTextureToAnimationSequence(AS_ATTACK_RIGHT,
-					       getEnemyTexturePath<1>("attack_right", 1));
+					       getEnemyTexturePath<ET_GREEN_MONSTER>("attack_right", 1));
       attackRight.setSpriteScale(Ogre::Vector2(2, 1));
-      addTextureToAnimationSequence(AS_ATTACK_RIGHT, getEnemyTexturePath<1>("walk_right", 1));
+      addTextureToAnimationSequence(AS_ATTACK_RIGHT, getEnemyTexturePath<ET_GREEN_MONSTER>("walk_right", 1));
     }
     setupAnimation(AS_JUMP_LEFT, "jump_right", 1, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_JUMP_RIGHT, "jump_right", 1);
@@ -279,7 +279,7 @@ void CEnemy::setup() {
   case ET_KNIGHT:
     m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.2, 0));
     m_bbRelativeBoundingBox.setSize(Ogre::Vector2(0.6, 1.9));
-    setDefaultGetPath(&getEnemyTexturePath<2>);
+    setDefaultGetPath(&getEnemyTexturePath<ET_KNIGHT>);
     setupAnimation(AS_WALK_LEFT, "walk_right", {0, 1, 2, 3, 0, 4, 5, 6}, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", {0, 1, 2, 3, 0, 4, 5, 6});
     for (int i = 0; i < 8; i++) {
@@ -304,7 +304,7 @@ void CEnemy::setup() {
   case ET_BEAR:
     m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.4, 0));
     m_bbRelativeBoundingBox.setSize(Ogre::Vector2(3.2, 1.7));
-    setDefaultGetPath(&getEnemyTexturePath<3>);
+    setDefaultGetPath(&getEnemyTexturePath<ET_BEAR>);
     setupAnimation(AS_WALK_LEFT, "walk_right", 6, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", 6);
     setupAnimation(AS_ATTACK_LEFT, "attack_right", {0, 1, 2, 1}, CSpriteTexture::MIRROR_Y);
@@ -313,7 +313,7 @@ void CEnemy::setup() {
     setupAnimation(AS_JUMP_RIGHT, "walk_right", 1);
     break;
   case ET_GHOST:
-    setDefaultGetPath(&getEnemyTexturePath<ET_GHOST + 1>);
+    setDefaultGetPath(&getEnemyTexturePath<ET_GHOST>);
     setupAnimation(AS_WALK_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", 1);
     setupAnimation(AS_ATTACK_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
@@ -322,7 +322,7 @@ void CEnemy::setup() {
     setupAnimation(AS_JUMP_RIGHT, "walk_right", 1);
     break;
   case ET_DARK_MAGICAN:
-    setDefaultGetPath(&getEnemyTexturePath<ET_DARK_MAGICAN + 1>);
+    setDefaultGetPath(&getEnemyTexturePath<ET_DARK_MAGICAN>);
     setupAnimation(AS_WALK_LEFT, "walk_right", 1, CSpriteTexture::MIRROR_Y);
     setupAnimation(AS_WALK_RIGHT, "walk_right", 1);
     setupAnimation(AS_RANGED_ATTACK_LEFT, "attack_right", 2, CSpriteTexture::MIRROR_Y);
@@ -380,9 +380,7 @@ bool CEnemy::readyForWalking() {
   return true;
 }
 
-void CEnemy::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) {
-  pElem->SetAttribute("id", getID().c_str());
-  pElem->SetAttribute("type", getType() + 1); // offset here of +1
+void CEnemy::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
   pElem->SetAttribute("direction", getDirection());
   pElem->SetAttribute("jumps", mayJump());
 
@@ -396,22 +394,22 @@ void CEnemy::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle)
 Ogre::String CEnemy::getPreviewImageName(int iEnemyType) {
   switch (iEnemyType) {
   case ET_GREEN_MONSTER:
-    return getEnemyTexturePath<ET_GREEN_MONSTER + 1>("walk_right_1");
+    return getEnemyTexturePath<ET_GREEN_MONSTER>("walk_right_1");
     break;
   case ET_KNIGHT:
-    return getEnemyTexturePath<ET_KNIGHT + 1>("walk_right_1");
+    return getEnemyTexturePath<ET_KNIGHT>("walk_right_1");
     break;
   case ET_BEAR:
-    return getEnemyTexturePath<ET_BEAR + 1>("walk_right_1");
+    return getEnemyTexturePath<ET_BEAR>("walk_right_1");
     break;
   case ET_GHOST:
-    return getEnemyTexturePath<ET_GHOST>("walk_right_2"); // debugging
+    return getEnemyTexturePath<ET_GHOST - 1>("walk_right_2"); // debugging
     break;
   case ET_DARK_MAGICAN:
-    return getEnemyTexturePath<ET_DARK_MAGICAN + 1>("walk_right_1");
+    return getEnemyTexturePath<ET_DARK_MAGICAN>("walk_right_1");
     break;
   case ET_SANTA:
-    return getEnemyTexturePath<ET_SANTA>("attack_right_1"); // debugging
+    return getEnemyTexturePath<ET_SANTA - 1>("attack_right_1"); // debugging
     break;
   default:
     throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Enemy type '" + Ogre::StringConverter::toString(iEnemyType) + "' is unknown", __FILE__);

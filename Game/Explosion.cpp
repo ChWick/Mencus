@@ -49,22 +49,22 @@ CExplosion::CExplosion(CMap &map, const Ogre::Vector2 &vCenter, EExplosionTypes 
     setupAnimation(0, "bomb_explosion", 14, eMirrorType, &getBombTexture);
   }
   else if (m_uiType == ET_GREEN_MONSTER) {
-    setupAnimation(0, "explosion", 7, eMirrorType, &getEnemyTexturePath<1>);
+    setupAnimation(0, "explosion", 7, eMirrorType, &getEnemyTexturePath<0>);
   }
   else if (m_uiType == ET_KNIGHT) {
-    setupAnimation(0, "explosion_right", 5, eMirrorType, &getEnemyTexturePath<2>);
+    setupAnimation(0, "explosion_right", 5, eMirrorType, &getEnemyTexturePath<1>);
   }
   else if (m_uiType == ET_BEAR) {
-    setupAnimation(0, "explosion_right", 1, eMirrorType, &getEnemyTexturePath<3>);
+    setupAnimation(0, "explosion_right", 1, eMirrorType, &getEnemyTexturePath<2>);
   }
   else if (m_uiType == ET_GHOST) {
-    setupAnimation(0, "explosion_right", 4, eMirrorType, &getEnemyTexturePath<4>);
+    setupAnimation(0, "explosion_right", 4, eMirrorType, &getEnemyTexturePath<3>);
   }
   else if (m_uiType == ET_DARK_MAGICAN) {
-    setupAnimation(0, "explosion_right", 4, eMirrorType, &getEnemyTexturePath<5>);
+    setupAnimation(0, "explosion_right", 4, eMirrorType, &getEnemyTexturePath<4>);
   }
   else if (m_uiType == ET_SANTA) {
-    setupAnimation(0, "explosion_right", 9, eMirrorType, &getEnemyTexturePath<6>);
+    setupAnimation(0, "explosion_right", 9, eMirrorType, &getEnemyTexturePath<5>);
   }
   else if (m_uiType == ET_SKULL) {
     setupAnimation(0, "explosion", 3, eMirrorType, &getSkullTexture);

@@ -113,6 +113,7 @@ CScreenplay::CScreenplay()
   }*/
 }
 CScreenplay::~CScreenplay() {
+  m_Fader.setVisible(false);
   clear();
   CInputListenerManager::getSingleton().removeInputListener(this);
 }
@@ -128,6 +129,7 @@ void CScreenplay::loadSingleMap(std::shared_ptr<const CMapInfo> pMapInfo) {
   pAct->addScene(pScene);
   m_mapActs[1] = pAct;
 
+  m_Fader.setVisible(true);
   m_Fader.startFadeOut(0);
   m_uiNextAct = 1;
   m_uiNextScene = 1;
