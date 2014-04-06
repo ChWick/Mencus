@@ -13,7 +13,7 @@ public:
   enum ETypes {
     EVENT_CHANGE_TILE,
     EVENT_TOGGLE,
-    EVENT_SHOW_MESSAGE,
+    EVENT_MESSAGE,
   };
   static std::string toString(ETypes eEventType);
   static ETypes parseEventType(const std::string &sString);

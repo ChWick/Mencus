@@ -2,6 +2,7 @@
 #include "GUIInput.hpp"
 #include <OgreStringConverter.h>
 #include <iostream>
+#include "HUDElement.hpp"
 
 using namespace std;
 
@@ -182,6 +183,11 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
   setCurrentWeapon(Weapon::W_BOLT);
 
   hide();
+}
+CHUD::~CHUD() {
+  while (m_lElements.size() > 0) {
+    delete m_lElements.front();
+  }
 }
 void CHUD::update(Ogre::Real tpf) {
   m_fTimer += tpf;

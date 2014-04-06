@@ -5,8 +5,10 @@
 #include <CEGUI/CEGUI.h>
 #include "Weapon.hpp"
 #include "PauseListener.hpp"
+#include <list>
 
 class CGUIInput;
+class CHUDElement;
 
 class CHUD : public Ogre::Singleton<CHUD>, public CPauseListener {
 private:
@@ -25,11 +27,13 @@ private:
   Ogre::Real m_fTimer;
   Ogre::Real m_fHP;		//!< Hp of the player as value [0,1]
   Ogre::Real m_fMP;		//!< Mp of the player as value [0,1]
+  std::list<CHUDElement *> m_lElements;
 public:
   static CHUD &getSingleton();
   static CHUD *getSingletonPtr();
 
   CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput);
+  ~CHUD();
 
   void update(Ogre::Real tpf);
 
@@ -42,6 +46,10 @@ public:
   void setBombCount(unsigned int uiCount);
 
   void setCurrentWeapon(unsigned int uiWeapon);
+
+  CEGUI::Window *getRoot() {return m_pHudRoot;}
+
+  std::list<CHUDElement *> &getElements() {return m_lElements;}
 
   void show();
   void hide();
