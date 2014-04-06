@@ -800,12 +800,21 @@ void CMainMenu::updateLevelsSelection() {
     pBut->setGroupID(1249845902);
     pBut->setSelected(false);
     if (i > 0) {
-      if (CLevelState::levelAccomplished(sPreviousLevelFileName)) {
-	pLastEnabled = pBut;
+      if (CLevelState::has(it->sLevelFileName) &&
+	  CLevelState::get(it->sLevelFileName).eMissionState == MS_SKIPPED) {
 	pBut->setEnabled(true);
+	pBut->setProperty("Image", "hud_weapons/skip");
       }
       else {
-	pBut->setEnabled(false);
+	pBut->setProperty("Image", "");
+	if (CLevelState::has(sPreviousLevelFileName) && 
+	    CLevelState::get(sPreviousLevelFileName).eMissionState != MS_FAILED) {
+	  pLastEnabled = pBut;
+	  pBut->setEnabled(true);
+	}
+	else {
+	  pBut->setEnabled(false);
+	}
       }
     }
     else {

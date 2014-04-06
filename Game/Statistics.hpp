@@ -8,12 +8,16 @@
 #include <XMLHelper.hpp>
 
 enum EMissionState {
-  MS_ACCOMPLISHED,
-  MS_FAILED
+  MS_ACCOMPLISHED,		//!< This mission has been accomplished
+  MS_FAILED,			//!< This mission has been played, but failed
+  MS_SKIPPED			//!< This mission has been skipped
 };
 struct SStatistics {
   static EMissionState parseMissionState(const std::string &s) {
-    if (s == "accomplished") {
+    if (s == "skipped") {
+      return MS_SKIPPED;
+    }
+    else if (s == "accomplished") {
       return MS_ACCOMPLISHED;
     }
     return MS_FAILED;
@@ -24,6 +28,8 @@ struct SStatistics {
       return "accomplished";
     case MS_FAILED:
       return "failed";
+    case MS_SKIPPED:
+      return "skipped";
     }
 
     throw Ogre::Exception(0, "Mission state could not be converted to string", __FILE__);
