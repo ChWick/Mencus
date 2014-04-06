@@ -3,8 +3,11 @@
 
 #include <CEGUI/CEGUI.h>
 #include "HUDElement.hpp"
+#include "PauseCaller.hpp"
 
-class CHUDMessageBox : public CHUDElement {
+class CHUDMessageBox
+  : public CHUDElement,
+    public CPauseCaller {
 private:
   CEGUI::Window *m_pMessageBox;
 

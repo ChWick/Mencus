@@ -24,12 +24,39 @@ CEvent::ETypes CEvent::parseEventType(const std::string &sString) {
   throw Ogre::Exception(0, "Event type " + sString + " could not be converted to a string", __FILE__);
 }
 
+std::string CEvent::toString(EEmitter eEmitter) {
+  switch (eEmitter) {
+  case EMIT_ON_CREATE:
+    return "create";
+  case EMIT_ON_DESTROY:
+    return "destroy";
+  case EMIT_ON_USER:
+    return "user";
+  }
+  
+  throw Ogre::Exception(0, "Emitter type " + Ogre::StringConverter::toString(eEmitter) + " could not be converted to a string", __FILE__);
+}
+CEvent::EEmitter CEvent::parseEmitter(const std::string &sString) {
+  if (sString == "create") {return EMIT_ON_CREATE;}
+  else if (sString == "destroy") {return EMIT_ON_DESTROY;}
+  else if (sString == "user") {return EMIT_ON_USER;}
+
+  throw Ogre::Exception(0, "Emitter type " + sString + " could not be converted to a string", __FILE__);
+}
+
 CEvent::CEvent(CMap &map, ETypes eType)
   : m_eType(eType),
+    m_eEmitter(EMIT_ON_USER),
+    m_Map(map) {
+}
+CEvent::CEvent(CMap &map, ETypes eType, const tinyxml2::XMLElement *pElement)
+  : m_eType(eType),
+    m_eEmitter(parseEmitter(Attribute(pElement, "emitter", "user"))),
     m_Map(map) {
 }
 CEvent::~CEvent() {
 }
 void CEvent::writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eStyle) const {
   SetAttribute(pElement, "type", toString(m_eType));
+  SetAttribute(pElement, "emitter", toString(m_eEmitter));
 }

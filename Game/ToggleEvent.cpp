@@ -11,7 +11,7 @@ CToggleEvent::CToggleEvent(CMap &map)
     m_bInitialState(true) {
 }
 CToggleEvent::CToggleEvent(CMap &map, const tinyxml2::XMLElement *pElem) 
-  : CEvent(map, EVENT_TOGGLE),
+  : CEvent(map, EVENT_TOGGLE, pElem),
     m_sEntityID(Attribute(pElem, "id", "")),
     m_bInitialState(BoolAttribute(pElem, "initial", true)) {
 }

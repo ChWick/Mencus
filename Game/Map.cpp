@@ -116,6 +116,8 @@ void CMap::clearMap() {
   m_vCameraRestrictions.clear();
   m_lEntitiesToDestroy.clear();
 
+  CHUD::getSingleton().clear();
+
   
   m_pEnemiesEntity->destroyChildren();
   m_pSwitchesEntity->destroyChildren();

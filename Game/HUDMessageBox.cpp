@@ -27,8 +27,11 @@ CHUDMessageBox::CHUDMessageBox(const char *pTitle, const char *pText) {
   pTextContainter->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pTextContainter->setSize(USize(UDim(1, 0), UDim(1, 0)));
   pTextContainter->setText(pText);
+
+  pause(PAUSE_MAP_UPDATE);
 }
 CHUDMessageBox::~CHUDMessageBox() {
+  unpause(PAUSE_MAP_UPDATE);
   m_pMessageBox->destroy();
 }
 bool CHUDMessageBox::onCloseButtonClicked(const CEGUI::EventArgs &args) {

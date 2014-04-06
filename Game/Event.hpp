@@ -15,15 +15,25 @@ public:
     EVENT_TOGGLE,
     EVENT_MESSAGE,
   };
+  enum EEmitter {
+    EMIT_ON_CREATE,
+    EMIT_ON_DESTROY,
+    EMIT_ON_USER,
+  };
   static std::string toString(ETypes eEventType);
   static ETypes parseEventType(const std::string &sString);
+
+  static std::string toString(EEmitter eEmitter);
+  static EEmitter parseEmitter(const std::string &sString);
 private:
   const ETypes m_eType;
+  const EEmitter m_eEmitter;
 protected:
   CMap &m_Map;
 
 protected:
   CEvent(CMap &map, ETypes eType);
+  CEvent(CMap &map, ETypes eType, const tinyxml2::XMLElement *pElement);
 public:
   virtual ~CEvent();
   
@@ -34,6 +44,7 @@ public:
   virtual void stop() {}
 
   ETypes getType() const {return m_eType;}
+  EEmitter getEmitter() const {return m_eEmitter;}
 
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eStyle) const;
 };

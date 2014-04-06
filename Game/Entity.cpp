@@ -84,6 +84,16 @@ void CEntity::init() {
   for (auto pEvent: m_lEvents) {
     pEvent->init();
   }
+  for (std::list<CEvent*>::iterator it = m_lEvents.begin(); it != m_lEvents.end();) {
+    if ((*it)->getEmitter() == CEvent::EMIT_ON_CREATE) {
+      (*it)->start();
+      delete (*it);
+      it = m_lEvents.erase(it);
+    }
+    else {
+      it++;
+    }
+  }
 }
 void CEntity::exit() {
   for (auto pEvent: m_lEvents) {

@@ -11,7 +11,7 @@ CMessageEvent::CMessageEvent(CMap &map)
     m_pMessageBox(NULL) {
 }
 CMessageEvent::CMessageEvent(CMap &map, const tinyxml2::XMLElement *pElem) 
-  : CEvent(map, EVENT_MESSAGE),
+  : CEvent(map, EVENT_MESSAGE, pElem),
     m_sTitle(Attribute(pElem,"title")),
     m_sText(Attribute(pElem, "text")),
     m_pMessageBox(NULL) {

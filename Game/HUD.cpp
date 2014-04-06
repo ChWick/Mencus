@@ -185,6 +185,9 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
   hide();
 }
 CHUD::~CHUD() {
+  clear();
+}
+void CHUD::clear() {
   while (m_lElements.size() > 0) {
     delete m_lElements.front();
   }

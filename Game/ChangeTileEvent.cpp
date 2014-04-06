@@ -13,7 +13,7 @@ CChangeTileEvent::CChangeTileEvent(CMap &map)
     m_uiTilePosY(0) {
 }
 CChangeTileEvent::CChangeTileEvent(CMap &map, const tinyxml2::XMLElement *pElem)
-  : CEvent(map, EVENT_CHANGE_TILE),
+  : CEvent(map, EVENT_CHANGE_TILE, pElem),
     m_uiTileType(IntAttribute(pElem, "id")),
     m_uiOldTileType(IntAttribute(pElem, "oldid", TT_NONE)),
     m_uiTilePosX(IntAttribute(pElem, "x")),

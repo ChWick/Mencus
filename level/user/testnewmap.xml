@@ -25,7 +25,7 @@
         <switch x="4.5" y="3" id="-1009961145" type="1" flags="1" activeTime="0">
             <events>
                 <event type="change_tile" id="31" x="7" y="3"/>
-		<event type="message" title="test message" text="this is only a test text"/>
+		<event type="message" emitter="create" title="test message" text="this is only a test text"/>
             </events>
         </switch>
     </switches>

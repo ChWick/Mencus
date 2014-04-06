@@ -47,6 +47,8 @@ public:
 
   void setCurrentWeapon(unsigned int uiWeapon);
 
+  void clear();
+
   CEGUI::Window *getRoot() {return m_pHudRoot;}
 
   std::list<CHUDElement *> &getElements() {return m_lElements;}
