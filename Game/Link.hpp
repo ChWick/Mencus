@@ -22,8 +22,9 @@ public:
     case LD_SECOND_TO_FIRST:
       return "second_to_first";
     default:
-      return "both";
+      break;
     }
+    return "both";
   }
   static ELinkDirection parseLinkDirection(const std::string &str) {
     if (str == "first_to_second") {return LD_FIRST_TO_SECOND;}
@@ -102,7 +103,7 @@ public:
     SetAttribute(pElem, "tox", m_uiSecondX);
     SetAttribute(pElem, "toy", m_uiSecondY);
     SetAttribute(pElem, "activated", m_bActivated);
-    SetAttribute(pElem, "direction", toString(m_eLinkDirection).c_str());
+    SetAttribute(pElem, "direction", CLink::toString(m_eLinkDirection));
   }
 };
 
