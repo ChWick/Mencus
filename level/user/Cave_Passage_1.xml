@@ -40,18 +40,18 @@
     </switches>
     <endangeredTiles/>
     <links>
-        <link x="0" y="0" id="" type="0" fromx="15" fromy="17" tox="18" toy="10" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="20" fromy="17" tox="8" toy="10" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="10" fromy="17" tox="34" toy="18" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="31" fromy="19" tox="26" toy="9" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="37" fromy="20" tox="35" toy="12" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="18" fromy="17" tox="44" toy="17" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="13" fromy="12" tox="51" toy="17" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="54" fromy="17" tox="53" toy="12" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="36" fromy="2" tox="56" toy="4" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="42" fromy="6" tox="46" toy="10" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="44" fromy="11" tox="48" toy="4" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="57" fromy="17" tox="5" toy="2" activated="true" direction="true"/>
+        <link x="0" y="0" id="" type="0" fromx="15" fromy="17" tox="18" toy="10" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="20" fromy="17" tox="8" toy="10" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="10" fromy="17" tox="34" toy="18" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="31" fromy="19" tox="26" toy="9" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="37" fromy="20" tox="35" toy="12" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="18" fromy="17" tox="44" toy="17" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="13" fromy="12" tox="51" toy="17" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="54" fromy="17" tox="53" toy="12" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="36" fromy="2" tox="56" toy="4" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="42" fromy="6" tox="46" toy="10" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="44" fromy="11" tox="48" toy="4" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="57" fromy="17" tox="5" toy="2" activated="true" direction="both"/>
     </links>
     <enemies>
         <enemy direction="-1" jumps="0" hp="1" x="22.5" y="17" id="-1557125704" type="0"/>

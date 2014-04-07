@@ -99,10 +99,10 @@
     </switches>
     <endangeredTiles/>
     <links>
-        <link x="0" y="0" id="" type="0" fromx="18" fromy="13" tox="18" toy="8" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="11" fromy="39" tox="11" toy="32" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="13" fromy="63" tox="13" toy="57" activated="true" direction="true"/>
-        <link x="0" y="0" id="" type="0" fromx="18" fromy="72" tox="15" toy="63" activated="true" direction="true"/>
+        <link x="0" y="0" id="" type="0" fromx="18" fromy="13" tox="18" toy="8" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="11" fromy="39" tox="11" toy="32" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="13" fromy="63" tox="13" toy="57" activated="true" direction="both"/>
+        <link x="0" y="0" id="" type="0" fromx="18" fromy="72" tox="15" toy="63" activated="true" direction="both"/>
     </links>
     <enemies>
         <enemy direction="1" jumps="0" hp="2" x="17.5" y="3" id="-1210297291" type="1"/>
