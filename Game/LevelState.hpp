@@ -13,7 +13,8 @@ private:
   static tinyxml2::XMLDocument m_XMLDocument;
 public:
   static bool has(const std::string &sFileName);
-  static SStatistics &get(const std::string &sFileName);
+  static SStatistics &get(const std::string &sFileName,
+			  bool createIfNotExisting = false);
   static tinyxml2::XMLElement *getXMLElement(const std::string &sFileName);
   static bool levelAccomplished(const std::string &sFileName);
   static void add(const SStatistics &stats);

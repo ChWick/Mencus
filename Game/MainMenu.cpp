@@ -279,6 +279,15 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   pLevelInfoText->setProperty("BackgroundEnabled", "False");
   pLevelInfoText->setProperty("FrameEnabled", "False");
 
+  Window *pChickenButton = m_pButtonContainer->createChild("OgreTray/ImageButton",
+						     "ChickenButton");
+  pChickenButton->setPosition(UVector2(UDim(0.45, 0), UDim(0.75, 0)));
+  pChickenButton->setSize(USize(UDim(0.15, 0), UDim(0.2, 0)));
+  pChickenButton->setText("0");
+  pChickenButton->setProperty("Image", "hud_weapons/skip");
+  pChickenButton->subscribeEvent(PushButton::EventClicked, 
+				 Event::Subscriber(&CMainMenu::onChickenPressed, this));
+
   m_pLevelSelection->setVisible(false);
 }
 CMainMenu::~CMainMenu() {
@@ -429,6 +438,7 @@ void CMainMenu::changeState(MainMenu::EState eState) {
 
   m_pMapInfoContainer->setVisible(false);
   m_pLevelSelection->setVisible(false);
+  m_pButtonContainer->getChild("ChickenButton")->setVisible(false);
   if (eState == MMS_LOAD_GAME) {
     m_pSaveStatesWindow->setVisible(true);
     m_pSaveStatePreviewWindow->setVisible(true);
@@ -489,6 +499,7 @@ void CMainMenu::changeState(MainMenu::EState eState) {
     m_pSaveStatesWindow->setVisible(false);
     m_pSaveStatePreviewWindow->setVisible(false);
     m_pLevelSelection->setVisible(true);
+    m_pButtonContainer->getChild("ChickenButton")->setVisible(true);
 #ifndef INPUT_KEYBOARD_ONLY
     m_pSelectButton->setVisible(true);
 #endif
@@ -771,6 +782,8 @@ void CMainMenu::hide() {
   unpause(PAUSE_ALL);
 }
 void CMainMenu::updateLevelsSelection() {
+  int iLeftChickens = 3; // maximum number of chickens
+  
   ScrollablePane *pPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->getChild("Pane"));
   pPane->getHorzScrollbar()->setVisible(false);
   pPane->setShowHorzScrollbar(false);
@@ -804,6 +817,7 @@ void CMainMenu::updateLevelsSelection() {
 	  CLevelState::get(it->sLevelFileName).eMissionState == MS_SKIPPED) {
 	pBut->setEnabled(true);
 	pBut->setProperty("Image", "hud_weapons/skip");
+	--iLeftChickens;
       }
       else {
 	pBut->setProperty("Image", "");
@@ -827,6 +841,10 @@ void CMainMenu::updateLevelsSelection() {
   if (pLastEnabled) {
     pLastEnabled->setSelected(true);
   }
+
+
+  m_pButtonContainer->getChild("ChickenButton")->setText(PropertyHelper<int>::toString(iLeftChickens));
+  m_pButtonContainer->getChild("ChickenButton")->setEnabled(iLeftChickens > 0);
   //selectLevel(1);
 }
 void CMainMenu::selectLevel(unsigned int id) {
@@ -839,7 +857,7 @@ void CMainMenu::selectLevel(unsigned int id) {
 
   SLevelInfo *pLevelInfo = static_cast<SLevelInfo*>(pBut->getUserData());
   pText->setText(pLevelInfo->sFullInfoText.c_str());
-
+  
   pInfoPane->getVertScrollbar()->setScrollPosition(0);
   pInfoPane->getHorzScrollbar()->setVisible(false);
   m_pLevelInfo = pLevelInfo;
@@ -848,5 +866,39 @@ bool CMainMenu::onLevelButtonClicked(const CEGUI::EventArgs &args) {
   const WindowEventArgs &wndArgs(dynamic_cast<const WindowEventArgs &>(args));
   Ogre::LogManager::getSingleton().logMessage(Ogre::String("Level ") + wndArgs.window->getName().c_str() + Ogre::String(" selected"));
   selectLevel(PropertyHelper<unsigned int>::fromString(wndArgs.window->getName()));
+  return true;
+}
+bool CMainMenu::onChickenPressed(const CEGUI::EventArgs &args) {
+  const WindowEventArgs &wndArgs(dynamic_cast<const WindowEventArgs &>(args));
+  unsigned int uiSelectedLevelID = m_uiSelectedLevelID;
+  if (PropertyHelper<int>::fromString(wndArgs.window->getText()) <= 0) {
+    // no more chicken available
+    return true;
+  }
+
+  ScrollablePane *pPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->getChild("Pane"));
+  Window *pBut = pPane->getChild(PropertyHelper<unsigned int>::toString(m_uiSelectedLevelID));
+
+  SLevelInfo *pLevelInfo = static_cast<SLevelInfo*>(pBut->getUserData());
+  SStatistics &stats(CLevelState::get(pLevelInfo->sLevelFileName, true));
+  if (stats.eMissionState == MS_FAILED) {
+    stats.eMissionState = MS_SKIPPED;
+    CLevelState::add(stats);
+  }
+  else {
+    return true;
+  }
+ 
+  // update levels
+  updateLevelsSelection();
+  try {
+    RadioButton *pRadio = dynamic_cast<RadioButton*>(pPane->getChild(PropertyHelper<unsigned int>::toString(uiSelectedLevelID + 1)));
+    if (pRadio) {
+      pRadio->setSelected(true);
+    }
+  }
+  catch (...) {
+    // child not found, end of map
+  }
   return true;
 }

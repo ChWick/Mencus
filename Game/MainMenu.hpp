@@ -127,6 +127,7 @@ private:
   void updateLevelsSelection();
   void selectLevel(unsigned int id);
   bool onLevelButtonClicked(const CEGUI::EventArgs &);
+  bool onChickenPressed(const CEGUI::EventArgs&);
 
   void selectedSaveStateChanged();
   void activateLoadState();

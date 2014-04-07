@@ -15,7 +15,7 @@ void CAdDisplayManager::showAdPopup() {
   CGame::getSingleton().getTrayMgr()->resourceGroupLoadStarted("Please wait", m_iWaitingLoops);
   CGame::getSingleton().getTrayMgr()->worldGeometryStageStarted("Please wait");
 #ifdef ADDS_ANDROID
-  m_iWaitingLoops = 14; // 14 * 0.5 secs max waiting time for the add
+  m_iWaitingLoops = 20; // 14 * 0.5 secs max waiting time for the add
   OgreAndroidBridge::showAdPopup();
 #else
   m_iWaitingLoops = 0; // set to value > 0 for testing

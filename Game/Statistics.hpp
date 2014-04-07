@@ -35,8 +35,8 @@ struct SStatistics {
     throw Ogre::Exception(0, "Mission state could not be converted to string", __FILE__);
   }
 
-  SStatistics() 
-    : sLevelFileName("unknown level file name"), 
+  SStatistics(const std::string &name = "unknown level file name") 
+    : sLevelFileName(name), 
       eMissionState(MS_FAILED),
       fTime(0),
       fHitpoints(0),

@@ -23,13 +23,20 @@ bool CLevelState::has(const std::string &sFileName) {
   }
   return false;
 }
-SStatistics &CLevelState::get(const std::string &sFileName) {
+SStatistics &CLevelState::get(const std::string &sFileName,
+			      bool createIfNotExisting) {
   if (!m_bLoaded) {read();}
 
   for (auto &level : m_vLevelStatistics) {
     if (level.sLevelFileName == sFileName) {
       return level;
     }
+  }
+
+  if (createIfNotExisting) {
+    SStatistics s(sFileName);
+    add(s);
+    return m_vLevelStatistics.back();
   }
 
   throw Ogre::Exception(0, sFileName + " not found in level states, check with 'has' function whether it exists", __FILE__);
@@ -108,7 +115,7 @@ void CLevelState::write() {
 			     LEVEL_STATE_FILE,
 			     std::ios::trunc | std::ios::out,
 			     CFileManager::SL_INTERNAL)) {
-    os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
+    //os << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
     os << printer.CStr();
   }
 }
