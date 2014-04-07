@@ -2787,6 +2787,7 @@
                 <Section section="normal"/>
                 <Section section="label">
                     <ColourProperty name="NormalTextColour"/>
+                    <ColourRectProperty name="ImageColours"/>
                 </Section>
             </Layer>
         </StateImagery>
@@ -2795,6 +2796,7 @@
                 <Section section="hover"/>
                 <Section section="label">
                     <ColourProperty name="HoverTextColour"/>
+                    <ColourRectProperty name="ImageColours"/>
                 </Section>
             </Layer>
         </StateImagery>
@@ -2804,6 +2806,7 @@
                 <Section section="select_mark"/>
                 <Section section="label">
                     <ColourProperty name="NormalTextColour"/>
+                    <ColourRectProperty name="ImageColours"/>
                 </Section>
             </Layer>
         </StateImagery>
@@ -2813,6 +2816,7 @@
                 <Section section="select_mark"/>
                 <Section section="label">
                     <ColourProperty name="HoverTextColour"/>
+                    <ColourRectProperty name="ImageColours"/>
                 </Section>
             </Layer>
         </StateImagery>
@@ -2821,6 +2825,7 @@
                 <Section section="normal"/>
                 <Section section="label">
                     <ColourProperty name="DisabledTextColour"/>
+                    <ColourRectProperty name="ImageColours"/>
                 </Section>
             </Layer>
         </StateImagery>
