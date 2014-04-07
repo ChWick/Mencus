@@ -607,6 +607,10 @@ void CMap::update(Ogre::Real tpf) {
 
     CEntity::update(tpf);
 
+    if (m_Exit.isInExit(m_pPlayer, this)) {
+      m_pScreenplayListener->playerExitsMap();
+    }
+
 #ifdef DEBUG_SHOW_OGRE_TRAY
     CGame::getSingleton().getDetailsPanel()->setParamValue(0, Ogre::StringConverter::toString(m_vCameraPos.x));
     CGame::getSingleton().getDetailsPanel()->setParamValue(1, Ogre::StringConverter::toString(m_vCameraPos.y));
