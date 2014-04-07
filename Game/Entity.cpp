@@ -165,6 +165,16 @@ const CEntity *CEntity::getChildRecursive(const std::string &sID) const {
 }
 
 void CEntity::destroy() {
+  for (std::list<CEvent*>::iterator it = m_lEvents.begin(); it != m_lEvents.end();) {
+    if ((*it)->getEmitter() == CEvent::EMIT_ON_DESTROY) {
+      (*it)->start();
+      delete (*it);
+      it = m_lEvents.erase(it);
+    }
+    else {
+      it++;
+    }
+  }
   m_Map.destroy(this, true);
 }
 
