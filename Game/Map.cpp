@@ -421,7 +421,7 @@ void CMap::explodeTile(size_t x, size_t y, bool bExplodeNeighbours) {
   // remove all scratches that collides with this tile
   for (CEntity* pObject : getObjects()) {
     if (pObject->getWorldBoundingBox().collidesWith(tile->getWorldBoundingBox()) != CCD_NONE) {
-      pObject->destroy();
+      destroy(pObject, true);
     }
   }
 
@@ -814,7 +814,10 @@ void CMap::playerWarped() {
 }
 void CMap::destroy(CEntity *pEntity, bool bLater) {
   if (bLater) {
-    m_lEntitiesToDestroy.push_back(pEntity);
+    if (find(begin(m_lEntitiesToDestroy), end(m_lEntitiesToDestroy), pEntity)
+	== end(m_lEntitiesToDestroy)) {
+      m_lEntitiesToDestroy.push_back(pEntity);
+    }
   }
   else {
     delete pEntity;
