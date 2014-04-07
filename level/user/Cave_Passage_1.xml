@@ -27,58 +27,42 @@
         <row tiles="53 53 53 58 57 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 "/>
     </tiles>
     <switches>
-        <switch x="2.21875" y="10" id="-1974926719" type="1" flags="5" activeTime="0">
-            <events/>
-        </switch>
+        <switch x="2.21875" y="10" id="-1974926719" type="1" flags="5" activeTime="0"/>
         <switch x="52.5" y="12" id="1652354187" type="0" flags="0" activeTime="0">
             <events>
-                <event type="change_tile" id="15" x="55" y="19"/>
-                <event type="change_tile" id="2" x="55" y="18"/>
-                <event type="change_tile" id="2" x="55" y="17"/>
-                <event type="change_tile" id="8" x="55" y="16"/>
+                <event type="change_tile" emitter="user" id="15" x="55" y="19"/>
+                <event type="change_tile" emitter="user" id="2" x="55" y="18"/>
+                <event type="change_tile" emitter="user" id="2" x="55" y="17"/>
+                <event type="change_tile" emitter="user" id="8" x="55" y="16"/>
             </events>
         </switch>
-        <switch x="49.96875" y="3" id="1651659858" type="0" flags="4" activeTime="0">
-            <events/>
-        </switch>
+        <switch x="49.96875" y="3" id="1651659858" type="0" flags="4" activeTime="0"/>
     </switches>
     <endangeredTiles/>
     <links>
-        <link id="" fromx="15" fromy="17" tox="18" toy="10" direction="both" activated="1"/>
-        <link id="" fromx="20" fromy="17" tox="8" toy="10" direction="both" activated="1"/>
-        <link id="" fromx="10" fromy="17" tox="34" toy="18" direction="both" activated="1"/>
-        <link id="" fromx="31" fromy="19" tox="26" toy="9" direction="both" activated="1"/>
-        <link id="" fromx="37" fromy="20" tox="35" toy="12" direction="both" activated="1"/>
-        <link id="" fromx="18" fromy="17" tox="44" toy="17" direction="both" activated="1"/>
-        <link id="" fromx="13" fromy="12" tox="51" toy="17" direction="both" activated="1"/>
-        <link id="" fromx="54" fromy="17" tox="53" toy="12" direction="both" activated="1"/>
-        <link id="" fromx="36" fromy="2" tox="56" toy="4" direction="both" activated="1"/>
-        <link id="" fromx="42" fromy="6" tox="46" toy="10" direction="both" activated="1"/>
-        <link id="" fromx="44" fromy="11" tox="48" toy="4" direction="both" activated="1"/>
-        <link id="" fromx="57" fromy="17" tox="5" toy="2" direction="both" activated="1"/>
+        <link x="0" y="0" id="" type="0" fromx="15" fromy="17" tox="18" toy="10" activated="true" direction="true"/>
+        <link x="0" y="0" id="" type="0" fromx="20" fromy="17" tox="8" toy="10" activated="true" direction="true"/>
+        <link x="0" y="0" id="" type="0" fromx="10" fromy="17" tox="34" toy="18" activated="true" direction="true"/>
+        <link x="0" y="0" id="" type="0" fromx="31" fromy="19" tox="26" toy="9" activated="true" direction="true"/>
+        <link x="0" y="0" id="" type="0" fromx="37" fromy="20" tox="35" toy="12" activated="true" direction="true"/>
+        <link x="0" y="0" id="" type="0" fromx="18" fromy="17" tox="44" toy="17" activated="true" direction="true"/>
+        <link x="0" y="0" id="" type="0" fromx="13" fromy="12" tox="51" toy="17" activated="true" direction="true"/>
+        <link x="0" y="0" id="" type="0" fromx="54" fromy="17" tox="53" toy="12" activated="true" direction="true"/>
+        <link x="0" y="0" id="" type="0" fromx="36" fromy="2" tox="56" toy="4" activated="true" direction="true"/>
+        <link x="0" y="0" id="" type="0" fromx="42" fromy="6" tox="46" toy="10" activated="true" direction="true"/>
+        <link x="0" y="0" id="" type="0" fromx="44" fromy="11" tox="48" toy="4" activated="true" direction="true"/>
+        <link x="0" y="0" id="" type="0" fromx="57" fromy="17" tox="5" toy="2" activated="true" direction="true"/>
     </links>
     <enemies>
-        <enemy id="-1557125704" type="1" direction="-1" jumps="0" hp="1" x="22.5" y="17">
-            <events/>
-        </enemy>
-        <enemy id="357571488" type="1" direction="-1" jumps="0" hp="1" x="12" y="17">
-            <events/>
-        </enemy>
+        <enemy direction="-1" jumps="0" hp="1" x="22.5" y="17" id="-1557125704" type="0"/>
+        <enemy direction="-1" jumps="0" hp="1" x="12" y="17" id="357571488" type="0"/>
     </enemies>
     <objects>
-        <object x="24.59375" y="9" id="id" type="3">
-            <events/>
-        </object>
-        <object x="39" y="14" id="id" type="3">
-            <events/>
-        </object>
-        <object x="42.4375" y="18" id="id" type="3">
-            <events/>
-        </object>
+        <object x="24.59375" y="9" id="Object" type="3"/>
+        <object x="39" y="14" id="Object" type="3"/>
+        <object x="42.4375" y="18" id="Object" type="3"/>
     </objects>
     <exit type="region" posx="59" posy="0" sizex="1" sizey="15" id=""/>
-    <player x="3.0625" y="18" id="1401494899" hp="10" direction="1">
-        <events/>
-    </player>
-    <camera posx="15.120015" posy="9.0799923"/>
+    <player x="3.0625" y="18" id="1401494899" type="0" hp="10" direction="1"/>
+    <camera posx="0" posy="12"/>
 </map>

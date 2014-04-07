@@ -26,6 +26,7 @@
             <events>
                 <event type="change_tile" id="31" x="7" y="3"/>
 		<event type="message" emitter="create" title="test message" text="this is only a test text"/>
+		<event type="message" emitter="user" title="test message" text="this switch has been activated"/>
             </events>
         </switch>
     </switches>
@@ -33,7 +34,10 @@
     <links/>
     <enemies>
         <enemy id="end_enemy" type="1" direction="1" jumps="1" hp="1" x="3.5" y="3">
-            <events/>
+            <events>
+                <event type="change_tile" emitter="destroy" id="31" x="9" y="3"/>
+		<event type="message" emitter="destroy" title="test message" text="this is only a test text"/>
+            </events>
         </enemy>
     </enemies>
     <objects/>

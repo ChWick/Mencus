@@ -41,8 +41,8 @@
         <link id="" fromx="9" fromy="14" tox="13" toy="14" direction="both" activated="1"/>
     </links>
     <enemies>
-        <enemy id="-689632770" type="2" direction="-1" jumps="0" hp="2" x="9" y="14"/>
-        <enemy id="1115438163" type="2" direction="-1" jumps="0" hp="2" x="12" y="3"/>
+        <enemy id="-689632770" type="1" direction="-1" jumps="0" hp="2" x="9" y="14"/>
+        <enemy id="1115438163" type="1" direction="-1" jumps="0" hp="2" x="12" y="3"/>
     </enemies>
     <objects>
         <object x="10.09375" y="15" type="5"/>
