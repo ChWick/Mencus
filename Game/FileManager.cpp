@@ -12,6 +12,22 @@
 
 typedef struct stat Stat;
 
+#if OGRE_PLATTFORM == OGRE_PLATTFORM_WINDOWS
+#include <direct.h>
+#ifndef S_ISDIR
+#define S_ISDIR(mode)  (((mode) & S_IFMT) == S_IFDIR)
+#endif
+
+#ifndef S_ISREG
+#define S_ISREG(mode)  (((mode) & S_IFMT) == S_IFREG)
+#endif
+
+typedef int mode_t;
+int mkdir(const char *path, mode_t mode) {
+  return _mkdir(path);
+}
+#endif
+
 #ifndef lint
 /* Prevent over-aggressive optimizers from eliminating ID string */
 const char jlss_id_mkpath_c[] = "@(#)$Id: mkpath.c,v 1.13 2012/07/15 00:40:37 jleffler Exp $";
