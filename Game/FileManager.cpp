@@ -12,7 +12,7 @@
 
 typedef struct stat Stat;
 
-#if OGRE_PLATTFORM == OGRE_PLATTFORM_WINDOWS
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #include <direct.h>
 #ifndef S_ISDIR
 #define S_ISDIR(mode)  (((mode) & S_IFMT) == S_IFDIR)
