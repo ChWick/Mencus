@@ -70,6 +70,7 @@ public:
   virtual void update(Ogre::Real tpf);
   virtual void render(Ogre::Real tpf);
 
+  virtual void readFromXMLElement(const tinyxml2::XMLElement *pElement);
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eStyle) const;
 
 

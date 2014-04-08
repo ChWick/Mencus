@@ -241,10 +241,11 @@ void CMap::loadMap(const string &sFilename, const string &sResourceGroup) {
 }
 void CMap::prepareMap() {
   // Initialise everything
-  CEntity::init();
-  /*for (auto pSwitch : getSwitches()) {
+  init();
+
+  for (auto pSwitch : getSwitches()) {
     pSwitch->init();
-    }*/
+  }
 
   for (CTile *pTile : m_gridTiles) {
     if (pTile->getEndangeredTileType() != TT_NONE) {
