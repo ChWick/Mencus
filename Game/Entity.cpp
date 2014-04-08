@@ -41,31 +41,18 @@ CEntity::CEntity(CMap &map,
 		 const Ogre::Vector2 &vDefaultPosition,
 		 const Ogre::Vector2 &vDefaultSize,
 		 const Ogre::Vector2 &vDefaultScale) 
-  : m_sID(Attribute(pElem, "id", Ogre::StringConverter::toString(CIDGenerator::nextID()))),
-    m_uiType(IntAttribute(pElem, "type", 0)),
+  : m_sID(Ogre::StringConverter::toString(CIDGenerator::nextID())),
+    m_uiType(0),
     m_Map(map),
     m_pParent(NULL),
-    m_vPosition(Vector2Attribute(pElem, "", vDefaultPosition)),
-    m_vSize(Vector2Attribute(pElem, "size", vDefaultSize)),
-    m_vScale(Vector2Attribute(pElem, "scale", vDefaultScale)),
-    m_bbRelativeBoundingBox(BoundingBox2dAttribute(pElem,
-						   CBoundingBox2d(Ogre::Vector2::ZERO,
-								  vDefaultSize * vDefaultScale),
-						   "relative_")) {
+    m_vPosition(vDefaultPosition),
+    m_vSize(vDefaultSize),
+    m_vScale(vDefaultScale),
+    m_bbRelativeBoundingBox(CBoundingBox2d(Ogre::Vector2::ZERO, vDefaultSize * vDefaultScale)) {
+
   attachTo(pParent);
 
-  // read events
-  using namespace tinyxml2;
-  const XMLElement *pEventsElement = pElem->FirstChildElement("events");
-  if (pEventsElement) {
-    if (pEventsElement) {
-      for (const XMLElement *pEventElement = pEventsElement->FirstChildElement();
-	   pEventElement;
-	   pEventElement = pEventElement->NextSiblingElement()) {
-	m_lEvents.push_back(CEventCreator::create(m_Map, pEventElement));
-      }
-    }
-  }
+  readFromXMLElement(pElem);
 }
 CEntity::~CEntity() {
   std::list<CEntity *> lClone(m_lChildren);
@@ -200,6 +187,37 @@ void CEntity::update(Ogre::Real tpf) {
 void CEntity::render(Ogre::Real tpf) {
   for (auto &pEnt : m_lChildren) {
     pEnt->render(tpf);
+  }
+}
+void CEntity::readFromXMLElement(const tinyxml2::XMLElement *pElem) {
+  // clear first
+  while (m_lEvents.size() > 0) {
+    delete m_lEvents.front();
+    m_lEvents.pop_front();
+  }
+
+
+  // now read
+  m_sID = Attribute(pElem, "id", m_sID);
+  m_uiType = IntAttribute(pElem, "type", 0);
+  m_vPosition = Vector2Attribute(pElem, "", m_vPosition);
+  m_vSize = Vector2Attribute(pElem, "size", m_vSize);
+  m_vScale = Vector2Attribute(pElem, "scale", m_vScale);
+  m_bbRelativeBoundingBox = BoundingBox2dAttribute(pElem,
+						   m_bbRelativeBoundingBox,
+						   "relative_");
+    
+  // read events
+  using namespace tinyxml2;
+  const XMLElement *pEventsElement = pElem->FirstChildElement("events");
+  if (pEventsElement) {
+    if (pEventsElement) {
+      for (const XMLElement *pEventElement = pEventsElement->FirstChildElement();
+	   pEventElement;
+	   pEventElement = pEventElement->NextSiblingElement()) {
+	m_lEvents.push_back(CEventCreator::create(m_Map, pEventElement));
+      }
+    }
   }
 }
 void CEntity::writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eStyle) const {

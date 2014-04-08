@@ -241,6 +241,8 @@ void CMap::loadMap(const string &sFilename, const string &sResourceGroup) {
 }
 void CMap::prepareMap() {
   // Initialise everything
+  init();
+
   for (auto pSwitch : getSwitches()) {
     pSwitch->init();
   }
@@ -930,6 +932,8 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
 }
 void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
   clearMap();
+
+  CEntity::readFromXMLElement(pRoot);
   
   m_pTutorialManager->setEnabled(BoolAttribute(pRoot, "tutorial", false));
 
