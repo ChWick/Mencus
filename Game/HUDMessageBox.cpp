@@ -3,7 +3,8 @@
 
 using namespace CEGUI;
 
-CHUDMessageBox::CHUDMessageBox(const char *pTitle, const char *pText) {
+CHUDMessageBox::CHUDMessageBox(const char *pTitle, const std::vector<std::string> &vPages)
+  : m_vPages(vPages) {
   Window *pWnd = CHUD::getSingleton().getRoot()->createChild("OgreTray/Group");
   m_pMessageBox = pWnd;
   // FrameWindow crashes on android, use default window
@@ -26,8 +27,9 @@ CHUDMessageBox::CHUDMessageBox(const char *pTitle, const char *pText) {
   Window *pTextContainter = pContent->createChild("OgreTray/StaticText", "Text");
   pTextContainter->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pTextContainter->setSize(USize(UDim(1, 0), UDim(1, 0)));
-  pTextContainter->setText(pText);
-
+  
+  showPage(0);
+  
   pause(PAUSE_MAP_UPDATE);
 }
 CHUDMessageBox::~CHUDMessageBox() {
@@ -35,6 +37,25 @@ CHUDMessageBox::~CHUDMessageBox() {
   m_pMessageBox->destroy();
 }
 bool CHUDMessageBox::onCloseButtonClicked(const CEGUI::EventArgs &args) {
-  delete this;
+  ++m_uiCurrentPage;
+  if (m_uiCurrentPage >= m_vPages.size()) {
+    delete this;
+  }
+  else {
+    showPage(m_uiCurrentPage);
+  }
   return true;
+}
+void CHUDMessageBox::showPage(unsigned int uiPage) {
+  m_uiCurrentPage = uiPage;
+
+  CEGUI::Window *pCloseBtn = m_pMessageBox->getChild("CloseButton");
+  if (m_uiCurrentPage + 1 >= m_vPages.size()) {
+    pCloseBtn->setText("Close");
+  }
+  else {
+    pCloseBtn->setText("Next");
+  }
+  Window *pTextContainter = m_pMessageBox->getChild("Content")->getChild("Text");
+  pTextContainter->setText(m_vPages[m_uiCurrentPage].c_str());
 }

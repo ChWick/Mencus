@@ -15,13 +15,20 @@ CMessageEvent::CMessageEvent(CMap &map, const tinyxml2::XMLElement *pElem)
     m_sTitle(Attribute(pElem,"title")),
     m_sText(Attribute(pElem, "text")),
     m_pMessageBox(NULL) {
+  if (m_sText.length() > 0) {m_vPagesText.push_back(m_sText);}
+
+  for (const tinyxml2::XMLElement *pPage = pElem->FirstChildElement();
+       pPage;
+       pPage = pPage->NextSiblingElement()) {
+    m_vPagesText.push_back(Attribute(pPage, "text"));
+  }
 }
 CMessageEvent::~CMessageEvent() {
 }
 void CMessageEvent::init() {
 }
 void CMessageEvent::start() {
-  m_pMessageBox = new CHUDMessageBox(m_sTitle.c_str(), m_sText.c_str());  
+  m_pMessageBox = new CHUDMessageBox(m_sTitle.c_str(), m_vPagesText);  
 }
 void CMessageEvent::stop() {
 }
