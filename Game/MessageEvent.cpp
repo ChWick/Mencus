@@ -37,4 +37,11 @@ void CMessageEvent::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle 
 
   SetAttribute(pElem, "text", m_sText);
   SetAttribute(pElem, "title", m_sTitle);
+
+  tinyxml2::XMLDocument *pDoc(pElem->GetDocument());
+  for (auto &s : m_vPagesText) {
+    tinyxml2::XMLElement *pPage = pDoc->NewElement("page");
+    pElem->InsertEndChild(pPage);
+    pPage->SetAttribute("text", s.c_str());
+  }
 }

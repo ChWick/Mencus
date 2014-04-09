@@ -19,6 +19,7 @@ public:
     EMIT_ON_CREATE,
     EMIT_ON_DESTROY,
     EMIT_ON_USER,
+    EMIT_ON_MESSAGE_BOX_PAGE_CHANGE,
   };
   static std::string toString(ETypes eEventType);
   static ETypes parseEventType(const std::string &sString);
@@ -28,6 +29,7 @@ public:
 private:
   const ETypes m_eType;
   const EEmitter m_eEmitter;
+  const std::string m_sID;
 protected:
   CMap &m_Map;
 

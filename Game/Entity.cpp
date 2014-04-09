@@ -179,6 +179,13 @@ void CEntity::destroyEvent(CEvent *pEvent) {
   delete pEvent;
 }
 
+void CEntity::sendMessageToAll(const CMessage &message) {
+  handleMessage(message);
+  for (auto pChild : m_lChildren) {
+    pChild->sendMessageToAll(message);
+  }
+}
+
 void CEntity::update(Ogre::Real tpf) {
   for (auto &pEnt : m_lChildren) {
     pEnt->update(tpf);

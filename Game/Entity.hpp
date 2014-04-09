@@ -10,6 +10,7 @@
 
 class CEvent;
 class CMap;
+class CMessage;
 
 //! Class for an entity in the map
 class CEntity {
@@ -59,6 +60,9 @@ public:
   void addEvent(CEvent *pEvent) {m_lEvents.push_back(pEvent);}
   void destroyEvent(CEvent *pEvent);
 
+  // messages access
+  void sendMessageToAll(const CMessage &message);
+
   // methods
   virtual void init();
   virtual void exit();
@@ -107,7 +111,8 @@ public:
 
   // virtual methods
   
-  
+protected:
+  virtual void handleMessage(const CMessage &message) {}
 };
 
 
