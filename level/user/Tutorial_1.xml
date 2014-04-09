@@ -19,9 +19,9 @@
     <links/>
     <enemies/>
     <objects/>
-    <messages>
-      <message title="Move" message="First message" bb_size="1 1" bb_pos="1 1"/>
-    </messages>
+    <events>
+      <event type="message" emiiter="create" title="Tutorial 1" text="Welcome to the Mencus Tutorial! Here you will learn how to control Mencus and how to interact with the game. Of-course you will also learn to use magic to defeat your enemies.\nIn this first tutorial you will learn how to move Mencus.\nTouch the two arrow-buttons on the right side to stir Mencus left or right."/>
+    </events>
     <exit type="region" posx="15" posy="0" sizex="1" sizey="11" id=""/>
     <player x="0.5" y="1" hp="10" direction="1"/>
     <camera posx="-10.165659" posy="-12"/>

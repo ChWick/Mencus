@@ -932,8 +932,6 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
 }
 void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
   clearMap();
-
-  CEntity::readFromXMLElement(pRoot);
   
   m_pTutorialManager->setEnabled(BoolAttribute(pRoot, "tutorial", false));
 
