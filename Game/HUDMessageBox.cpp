@@ -1,5 +1,6 @@
 #include "HUDMessageBox.hpp"
 #include "HUD.hpp"
+#include "MessageHandler.hpp"
 
 using namespace CEGUI;
 
@@ -58,4 +59,6 @@ void CHUDMessageBox::showPage(unsigned int uiPage) {
   }
   Window *pTextContainter = m_pMessageBox->getChild("Content")->getChild("Text");
   pTextContainter->setText(m_vPages[m_uiCurrentPage].c_str());
+
+  CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_MESSAGE_BOX_PAGE_CHANGED).setInt(m_uiCurrentPage));
 }

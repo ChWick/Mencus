@@ -19,6 +19,7 @@
 #include "TutorialManager.hpp"
 #include "MapEditor.hpp"
 #include "Exit.hpp"
+#include "MessageHandler.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -46,6 +47,9 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_fPlayingTime(0),
     m_Statistics(statistics),
     m_pMapInfo(pMapInfo) {
+
+  CMessageHandler::getSingleton().addInjector(this);
+  CInputListenerManager::getSingleton().addInputListener(this);
 
   m_pTilesEntity = new CEntity(*this, "Tiles", this);
   m_pEnemiesEntity = new CEntity(*this, "Enemies", this);
@@ -94,6 +98,7 @@ CMap::~CMap() {
   if (CDebugDrawer::getSingletonPtr()) {delete CDebugDrawer::getSingletonPtr();}
 
   CInputListenerManager::getSingleton().removeInputListener(this);
+  CMessageHandler::getSingleton().removeInjector(this);
   m_p2dManagerMap->end();
   delete m_p2dManagerMap;
 

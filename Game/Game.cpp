@@ -10,6 +10,7 @@
 #include "SnapshotManager.hpp"
 #include "InputDefines.hpp"
 #include "FileManager.hpp"
+#include "MessageHandler.hpp"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
 #include "Android/Android.hpp"
@@ -55,6 +56,7 @@ CGame::CGame(void)
 }
 //-------------------------------------------------------------------------------------
 CGame::~CGame(void) {
+  if (CMessageHandler::getSingletonPtr()) {delete CMessageHandler::getSingletonPtr();}
   if (mTrayMgr) delete mTrayMgr;
   if (mCameraMan) delete mCameraMan;
   if (CGameState::getSingletonPtr()) { delete CGameState::getSingletonPtr(); }
@@ -480,6 +482,8 @@ void CGame::createScene() {
 
   Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing singleton classes ***");
   //-------------------------------------------------------------------------------------
+  Ogre::LogManager::getSingletonPtr()->logMessage("    MessageManager ");
+  new CMessageHandler();
   Ogre::LogManager::getSingletonPtr()->logMessage("    ShaderManager ");
   new CShaderManager(mRoot->getRenderSystem());
   Ogre::LogManager::getSingletonPtr()->logMessage("    GameSate ");
@@ -545,6 +549,9 @@ void CGame::destroyScene() {
 bool CGame::frameStarted(const Ogre::FrameEvent& evt) {
   //Need to capture/update each device
   mInputContext.capture();
+  
+  // process messages
+  CMessageHandler::getSingleton().process();
 
   if (CGUIManager::getSingletonPtr()) {
     CGUIManager::getSingleton().update(evt.timeSinceLastFrame);

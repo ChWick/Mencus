@@ -112,7 +112,7 @@ public:
   // virtual methods
   
 protected:
-  virtual void handleMessage(const CMessage &message) {}
+  virtual void handleMessage(const CMessage &message);
 };
 
 

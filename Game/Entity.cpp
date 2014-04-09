@@ -5,6 +5,7 @@
 #include "IDGenerator.hpp"
 #include "Map.hpp"
 #include <OgreStringConverter.h>
+#include "Message.hpp"
 
 using namespace XMLHelper;
 
@@ -250,5 +251,18 @@ void CEntity::writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eSt
       pEventsElement->InsertEndChild(pEventElement);
       pEvent->writeToXMLElement(pEventElement, eStyle);
     }
+  }
+}
+void CEntity::handleMessage(const CMessage &message) {
+  switch (message.getType()) {
+  case CMessage::MT_MESSAGE_BOX_PAGE_CHANGED:
+    for (auto pEvent : m_lEvents) {
+      if (pEvent->getEmitter() == CEvent::EMIT_ON_MESSAGE_BOX_PAGE_CHANGE) {
+	pEvent->start();
+      }
+    }
+    break;
+  default:
+    break;
   }
 }
