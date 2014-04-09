@@ -184,6 +184,7 @@ void Ogre2dManager::renderBuffer()
       *buffer=currSpr->ty2; buffer++;
 
       // remember this chunk
+      thisChunk.colour = currSpr->colour;
       thisChunk.vertexCount+=6;
       currSpr++;
       if (currSpr==endSpr || thisChunk.texHandle!=currSpr->texHandle)
@@ -195,8 +196,6 @@ void Ogre2dManager::renderBuffer()
             thisChunk.vertexCount=0;
          }
       }
-
-      thisChunk.colour = currSpr->colour;
    }
 
    hardwareBuffer->unlock();
