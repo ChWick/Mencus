@@ -935,6 +935,8 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
   
   m_pTutorialManager->setEnabled(BoolAttribute(pRoot, "tutorial", false));
 
+  CEntity::readFromXMLElement(pRoot);
+
   Ogre::String sBackground = pRoot->Attribute("background");
   if (sBackground.size() > 0) {
     m_pBackground = new CBackground(*this, m_vCameraPos, sBackground, m_vTilesPerScreen, m_fScreenRatio);
