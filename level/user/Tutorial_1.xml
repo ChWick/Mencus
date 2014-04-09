@@ -20,11 +20,13 @@
     <enemies/>
     <objects/>
     <events>
-      <event type="message" emitter="create" title="Tutorial 1" text="Welcome to the Mencus Tutorial! Here you will learn how to control Mencus and how to interact with the game. Of-course you will also learn to use magic to defeat your enemies.
-
-In this first tutorial you will learn how to move Mencus.
+      <event type="message" emitter="create" title="Tutorial 1" id="InititalMessageBox">
+	<page text="Welcome to the Mencus Tutorial! Here you will learn how to control Mencus and how to interact with the game. Of-course you will also learn to use magic to defeat your enemies."/>
+	<page text="In this first tutorial you will learn how to move Mencus.
 
 Touch the two arrow-buttons on the right side to stir Mencus left or right."/>
+      </event>
+      <event type="message" emitter="message_page_chagned" src_id="InitialMessageBox" title="te" text="asd" />
     </events>
     <exit type="region" posx="15" posy="0" sizex="1" sizey="11" id=""/>
     <player x="0.5" y="1" hp="10" direction="1"/>
