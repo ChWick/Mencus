@@ -1,0 +1,87 @@
+#ifndef _EVENT_EMITTER_HPP_
+#define _EVENT_EMITTER_HPP_
+
+
+#include <tinyxml2.h>
+#include <string>
+#include "XMLHelper.hpp"
+
+namespace EventEmitter {
+  enum EEmitter {
+    EMIT_ON_CREATE,
+    EMIT_ON_DESTROY,
+    EMIT_ON_USER,
+    EMIT_ON_MESSAGE_BOX_PAGE_CHANGE,
+  };
+  std::string toString(EEmitter eEmitter);
+  EEmitter parseEmitter(const std::string &sString);
+
+  class CEmitter {
+  private:
+    const EEmitter m_eType;
+  public:
+    CEmitter(EEmitter eType, const tinyxml2::XMLElement *pElem) 
+      : m_eType(eType) {
+    }
+    virtual ~CEmitter() {
+    }
+
+    EEmitter getType() const {return m_eType;}
+
+    virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+      pElem->SetAttribute("emitter", toString(m_eType).c_str());
+    }
+  };
+
+  class COnCreate : public CEmitter  {
+  public:
+    COnCreate(const tinyxml2::XMLElement *pElem)
+      : CEmitter(EMIT_ON_CREATE, pElem) {
+    }
+  };
+
+  class COnDestroy : public CEmitter  {
+  public:
+    COnDestroy(const tinyxml2::XMLElement *pElem)
+      : CEmitter(EMIT_ON_DESTROY, pElem) {
+    }
+  };
+
+  class COnUser : public CEmitter  {
+  public:
+    COnUser(const tinyxml2::XMLElement *pElem)
+      : CEmitter(EMIT_ON_USER, pElem) {
+    }
+  };
+
+  class COnMessageBoxPageChange : public CEmitter {
+  private:
+    const std::string m_sSrcID;
+    const int m_iPageID;
+  public:
+    COnMessageBoxPageChange(const tinyxml2::XMLElement *pElem)
+      : CEmitter(EMIT_ON_MESSAGE_BOX_PAGE_CHANGE, pElem),
+	m_sSrcID(XMLHelper::Attribute(pElem, "src_id")),
+	m_iPageID(XMLHelper::IntAttribute(pElem, "src_page")) {
+    }
+
+    virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+      CEmitter::writeToXMLElement(pElem);
+
+      XMLHelper::SetAttribute(pElem, "src_id", m_sSrcID);
+      XMLHelper::SetAttribute(pElem, "src_page", m_iPageID);
+    }
+
+    const std::string &getSrcID() const {return m_sSrcID;}
+    const int getPageID() const {return m_iPageID;}
+  };
+
+
+  class CCreator {
+  public:
+    static CEmitter *create(const tinyxml2::XMLElement *pElem);
+  };
+
+};
+
+#endif

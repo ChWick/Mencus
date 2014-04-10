@@ -28,7 +28,7 @@ CMessageEvent::~CMessageEvent() {
 void CMessageEvent::init() {
 }
 void CMessageEvent::start() {
-  m_pMessageBox = new CHUDMessageBox(m_sTitle.c_str(), m_vPagesText);  
+  m_pMessageBox = new CHUDMessageBox(getID(), m_sTitle.c_str(), m_vPagesText);  
 }
 void CMessageEvent::stop() {
 }

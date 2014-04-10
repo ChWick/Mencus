@@ -4,8 +4,8 @@
 
 using namespace CEGUI;
 
-CHUDMessageBox::CHUDMessageBox(const char *pTitle, const std::vector<std::string> &vPages)
-  : m_vPages(vPages) {
+CHUDMessageBox::CHUDMessageBox(const std::string &sID, const char *pTitle, const std::vector<std::string> &vPages)
+  : m_sID(sID), m_vPages(vPages) {
   Window *pWnd = CHUD::getSingleton().getRoot()->createChild("OgreTray/Group");
   m_pMessageBox = pWnd;
   // FrameWindow crashes on android, use default window
@@ -60,5 +60,5 @@ void CHUDMessageBox::showPage(unsigned int uiPage) {
   Window *pTextContainter = m_pMessageBox->getChild("Content")->getChild("Text");
   pTextContainter->setText(m_vPages[m_uiCurrentPage].c_str());
 
-  CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_MESSAGE_BOX_PAGE_CHANGED).setInt(m_uiCurrentPage));
+  CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_MESSAGE_BOX_PAGE_CHANGED).setID(m_sID).setInt(m_uiCurrentPage));
 }

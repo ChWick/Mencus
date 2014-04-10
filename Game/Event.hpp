@@ -7,6 +7,9 @@
 #include "OutputStyle.hpp"
 
 class CMap;
+namespace EventEmitter {
+  class CEmitter;
+};
 
 class CEvent {
 public:
@@ -15,20 +18,11 @@ public:
     EVENT_TOGGLE,
     EVENT_MESSAGE,
   };
-  enum EEmitter {
-    EMIT_ON_CREATE,
-    EMIT_ON_DESTROY,
-    EMIT_ON_USER,
-    EMIT_ON_MESSAGE_BOX_PAGE_CHANGE,
-  };
   static std::string toString(ETypes eEventType);
   static ETypes parseEventType(const std::string &sString);
-
-  static std::string toString(EEmitter eEmitter);
-  static EEmitter parseEmitter(const std::string &sString);
 private:
   const ETypes m_eType;
-  const EEmitter m_eEmitter;
+  const EventEmitter::CEmitter *m_pEmitter;
   const std::string m_sID;
 protected:
   CMap &m_Map;
@@ -45,8 +39,9 @@ public:
   virtual void start() {}
   virtual void stop() {}
 
+  const std::string &getID() const {return m_sID;}
   ETypes getType() const {return m_eType;}
-  EEmitter getEmitter() const {return m_eEmitter;}
+  const EventEmitter::CEmitter *getEmitter() const {return m_pEmitter;}
 
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eStyle) const;
 };

@@ -9,11 +9,12 @@ class CHUDMessageBox
   : public CHUDElement,
     public CPauseCaller {
 private:
+  const std::string m_sID;
   CEGUI::Window *m_pMessageBox;
   const std::vector<std::string> m_vPages;
   unsigned int m_uiCurrentPage;
 public:
-  CHUDMessageBox(const char *pTitle, const std::vector<std::string> &vPages);
+  CHUDMessageBox(const std::string &sID, const char *pTitle, const std::vector<std::string> &vPages);
   ~CHUDMessageBox();
 
   bool onCloseButtonClicked(const CEGUI::EventArgs &args);

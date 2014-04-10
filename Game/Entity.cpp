@@ -6,6 +6,7 @@
 #include "Map.hpp"
 #include <OgreStringConverter.h>
 #include "Message.hpp"
+#include "EventEmitter.hpp"
 
 using namespace XMLHelper;
 
@@ -73,7 +74,7 @@ void CEntity::init() {
     pEvent->init();
   }
   for (std::list<CEvent*>::iterator it = m_lEvents.begin(); it != m_lEvents.end();) {
-    if ((*it)->getEmitter() == CEvent::EMIT_ON_CREATE) {
+    if ((*it)->getEmitter()->getType() == EventEmitter::EMIT_ON_CREATE) {
       (*it)->start();
       delete (*it);
       it = m_lEvents.erase(it);
@@ -154,7 +155,7 @@ const CEntity *CEntity::getChildRecursive(const std::string &sID) const {
 
 void CEntity::destroy() {
   for (std::list<CEvent*>::iterator it = m_lEvents.begin(); it != m_lEvents.end();) {
-    if ((*it)->getEmitter() == CEvent::EMIT_ON_DESTROY) {
+    if ((*it)->getEmitter()->getType() == EventEmitter::EMIT_ON_DESTROY) {
       (*it)->start();
       delete (*it);
       it = m_lEvents.erase(it);
@@ -257,8 +258,12 @@ void CEntity::handleMessage(const CMessage &message) {
   switch (message.getType()) {
   case CMessage::MT_MESSAGE_BOX_PAGE_CHANGED:
     for (auto pEvent : m_lEvents) {
-      if (pEvent->getEmitter() == CEvent::EMIT_ON_MESSAGE_BOX_PAGE_CHANGE) {
-	pEvent->start();
+      if (pEvent->getEmitter()->getType() == EventEmitter::EMIT_ON_MESSAGE_BOX_PAGE_CHANGE) {
+	const EventEmitter::COnMessageBoxPageChange *pEmitter(dynamic_cast<const EventEmitter::COnMessageBoxPageChange*>(pEvent->getEmitter()));
+	if (pEmitter->getSrcID() == message.getID()
+	    && pEmitter->getPageID() == message.getInt()) {
+	  pEvent->start();
+	}
       }
     }
     break;

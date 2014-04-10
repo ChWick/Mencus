@@ -2,6 +2,7 @@
 #define _MESSAGE_HPP_
 
 #include <vector>
+#include <string>
 
 class CMessage {
 public:
@@ -12,6 +13,7 @@ public:
 protected:
   const unsigned int m_uiType;
 
+  std::string m_sID;
   std::vector<int> m_aIntValues;
 public:
   CMessage(const unsigned int uiType)
@@ -26,12 +28,16 @@ public:
   }
   CMessage(const CMessage &src) 
     : m_uiType(src.m_uiType),
+      m_sID(src.m_sID),
       m_aIntValues(src.m_aIntValues) {
   }
   unsigned int getType() const {return m_uiType;}
 
   int getInt(unsigned int idx = 0) const {return m_aIntValues[idx];}
   CMessage &setInt(int i, unsigned int idx = 0) {m_aIntValues[idx] = i; return *this;}
+
+  const std::string &getID() const {return m_sID;}
+  CMessage &setID(const std::string &sID) {m_sID = sID; return *this;}
 };
 
 #endif
