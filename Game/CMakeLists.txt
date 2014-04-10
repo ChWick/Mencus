@@ -2,6 +2,7 @@ project(Game)
 
 
 file(GLOB Game_source_files *.cpp)
+file(GLOB Game_source_event_files Events/*.cpp)
 file(GLOB Game_include_files *.hpp)
 
 ADD_DEFINITIONS(-std=c++11 -Wall)
@@ -37,7 +38,7 @@ set(Game_link_libraries
 set(EXECUTABLE_OUTPUT_PATH ../bin)
 
 include_directories(${Game_include_directories})
-add_executable(Game ${Game_source_files} ${Game_include_files})
+add_executable(Game ${Game_source_files} ${Game_source_event_files} ${Game_include_files})
 target_link_libraries(Game ${Game_link_libraries})
 
 # create plugins file

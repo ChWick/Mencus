@@ -48,6 +48,8 @@ private:
   float m_fTimeSinceLastTouchMoveEvent;
 
   bool m_bPressed;		// !< is the button pressed (mouse or touch)
+
+  float m_fTimer;
 public:
   CGUIInput(CEGUI::Window *pGUIRoot);
   ~CGUIInput();

@@ -20,7 +20,7 @@
 #include "EditBoxes/EditBoxString.hpp"
 #include "EditBoxes/EditBoxText.hpp"
 #include "EditBoxes/EditBoxExit.hpp"
-#include "ChangeTileEvent.hpp"
+#include "Events/ChangeTileEvent.hpp"
 #include "IDGenerator.hpp"
 
 using namespace CEGUI;

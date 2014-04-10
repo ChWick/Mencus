@@ -12,7 +12,8 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
   : m_uiCurrentWeapon(1),
     m_fTimeSinceLastTouchMoveEvent(0),
     m_eDragState(DS_SLEEPING),
-    m_bPressed(false) {
+    m_bPressed(false),
+    m_fTimer(0) {
   CInputListenerManager::getSingleton().addInputListener(this);
 
   m_pDirectionButtonContainer = pGUIRoot->createChild("DefaultWindow", "ButtonContainer");
@@ -201,6 +202,11 @@ CEGUI::Window *CGUIInput::createWeaponButtonLabel(unsigned int uiWeapon) {
   return pButton;
 }
 void CGUIInput::update(float tpf) {
+  m_fTimer += tpf;
+  float fColValue = (sin(m_fTimer * 6) + 1) * 0.5;
+  m_pButtons[0]->setProperty("ImageColours", PropertyHelper<Colour>::toString(Colour(1, fColValue, fColValue)));
+
+
   if (m_eDragState == DS_DRAGGING || m_eDragState == DS_OPEN || m_eDragState == DS_OPENING) {
     m_pDragButton->setAlpha(0.5);
     if (m_eDragState == DS_DRAGGING) {

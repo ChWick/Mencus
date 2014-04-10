@@ -1,12 +1,12 @@
 #include "Entity.hpp"
 #include "XMLHelper.hpp"
-#include "Event.hpp"
-#include "EventCreator.hpp"
+#include "Events/Event.hpp"
+#include "Events/EventCreator.hpp"
 #include "IDGenerator.hpp"
 #include "Map.hpp"
 #include <OgreStringConverter.h>
 #include "Message.hpp"
-#include "EventEmitter.hpp"
+#include "Events/EventEmitter.hpp"
 
 using namespace XMLHelper;
 

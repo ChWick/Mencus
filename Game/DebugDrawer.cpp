@@ -5,7 +5,7 @@
 #include "Link.hpp"
 #include "Switch.hpp"
 #include "Map.hpp"
-#include "ChangeTileEvent.hpp"
+#include "Events/ChangeTileEvent.hpp"
 
 template<> CDebugDrawer *Ogre::Singleton<CDebugDrawer>::msSingleton = 0;
 

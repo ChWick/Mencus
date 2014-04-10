@@ -3,9 +3,9 @@
 #include "Map.hpp"
 #include "Tile.hpp"
 #include "XMLHelper.hpp"
-#include "Event.hpp"
-#include "ChangeTileEvent.hpp"
-#include "ToggleEvent.hpp"
+#include "Events/Event.hpp"
+#include "Events/ChangeTileEvent.hpp"
+#include "Events/ToggleEvent.hpp"
 
 using namespace XMLHelper;
 
