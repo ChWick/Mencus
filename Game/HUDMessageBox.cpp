@@ -6,6 +6,7 @@ using namespace CEGUI;
 
 CHUDMessageBox::CHUDMessageBox(const std::string &sID, const char *pTitle, const std::vector<std::string> &vPages)
   : m_sID(sID), m_vPages(vPages) {
+  assert(m_vPages.size() > 0);
   Window *pWnd = CHUD::getSingleton().getRoot()->createChild("OgreTray/Group");
   m_pMessageBox = pWnd;
   // FrameWindow crashes on android, use default window
@@ -49,6 +50,9 @@ bool CHUDMessageBox::onCloseButtonClicked(const CEGUI::EventArgs &args) {
 }
 void CHUDMessageBox::showPage(unsigned int uiPage) {
   m_uiCurrentPage = uiPage;
+
+  assert(m_vPages.size() > 0);
+  assert(m_uiCurrentPage < m_vPages.size());
 
   CEGUI::Window *pCloseBtn = m_pMessageBox->getChild("CloseButton");
   if (m_uiCurrentPage + 1 >= m_vPages.size()) {

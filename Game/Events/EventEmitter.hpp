@@ -10,6 +10,10 @@ class CEntity;
 class CMap;
 
 namespace EventEmitter {
+  enum ERepeatType {
+    REPEAT_NONE,
+    REPEAT_INFINITE
+  };
   enum EEmitter {
     EMIT_ON_CREATE,
     EMIT_ON_DESTROY,
@@ -20,12 +24,17 @@ namespace EventEmitter {
   std::string toString(EEmitter eEmitter);
   EEmitter parseEmitter(const std::string &sString);
 
+  std::string toString(ERepeatType eRepeatType);
+  ERepeatType parseRepeatType(const std::string &sString);
+
   class CEmitter {
   private:
     const EEmitter m_eType;
+    const ERepeatType m_eRepeatType;
   public:
-    CEmitter(EEmitter eType, const tinyxml2::XMLElement *pElem) 
-      : m_eType(eType) {
+    CEmitter(EEmitter eType, const tinyxml2::XMLElement *pElem, ERepeatType eRepeatType = REPEAT_NONE) 
+      : m_eType(eType),
+	m_eRepeatType(parseRepeatType(XMLHelper::Attribute(pElem, "repeat", toString(eRepeatType)))) {
     }
     virtual ~CEmitter() {
     }
@@ -33,9 +42,11 @@ namespace EventEmitter {
     virtual void init(const CMap &map) {}
 
     EEmitter getType() const {return m_eType;}
+    ERepeatType getRepeatType() const {return m_eRepeatType;}
 
     virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const {
       pElem->SetAttribute("emitter", toString(m_eType).c_str());
+      pElem->SetAttribute("repeat", toString(m_eRepeatType).c_str());
     }
   };
 

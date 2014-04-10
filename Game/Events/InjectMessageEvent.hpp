@@ -11,9 +11,10 @@ public:
   CInjectMessageEvent(CMap &map);
   CInjectMessageEvent(CMap &map, const tinyxml2::XMLElement *pElem);
 
-  void start();
-
   void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
+
+protected:
+  void start_impl(); 
 };
 
 #endif

@@ -110,6 +110,18 @@ CMap::~CMap() {
 
   Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup("Game");
 }
+void CMap::init() {
+  CEntity::init();
+
+  for (auto pEnt : m_pOthersEntity->getChildren()) {
+    pEnt->init();
+  }
+
+  if (m_pPlayer) {
+    updateCameraPos(0);
+    m_vCameraPos = m_vCameraTargetPos;
+  }
+}
 void CMap::clearLineNumbers() {
   for (auto &t : m_vLineNumberX) {
     delete t;
@@ -255,9 +267,6 @@ void CMap::prepareMap() {
   for (auto pSwitch : getSwitches()) {
     pSwitch->init();
   }
-  for (auto pEnt : m_pOthersEntity->getChildren()) {
-    pEnt->init();
-  }
 
   for (CTile *pTile : m_gridTiles) {
     if (pTile->getEndangeredTileType() != TT_NONE) {
@@ -265,10 +274,7 @@ void CMap::prepareMap() {
       pTile->setEndangeredTileType(pTile->getEndangeredTileType());
     }
   }
-  if (m_pPlayer) {
-    updateCameraPos(0);
-    m_vCameraPos = m_vCameraTargetPos;
-  }
+
   setLineNumbersVisible(false);
 }
 void CMap::setLineNumbersVisible(bool bVisible) {
@@ -1036,4 +1042,6 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
       new CRegion(*this, m_pOthersEntity, pElement);
     }
   }
+
+  init();
 }

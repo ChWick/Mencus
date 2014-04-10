@@ -193,15 +193,23 @@ void CEntity::update(Ogre::Real tpf) {
     pEnt->update(tpf);
   }
 
-  for (auto pEvent : m_lEvents) {
+  for (auto it = m_lEvents.begin(); it !=m_lEvents.end();) {
+    CEvent *pEvent = *it;
     if (pEvent->getEmitter()->getType() == EventEmitter::EMIT_ON_COLLISION) {
       if (getWorldBoundingBox().collidesWith(dynamic_cast<const EventEmitter::COnCollision*>(pEvent->getEmitter())->getEntity()->getWorldBoundingBox()) != CCD_NONE) {
 	pEvent->start();
+	if (pEvent->getEmitter()->getRepeatType() == EventEmitter::REPEAT_NONE) {
+	  delete pEvent;
+	  it = m_lEvents.erase(it);
+	  continue;
+	}
       }
       else {
 	pEvent->stop();
       }
     }
+
+    it++;
   }
 }
 void CEntity::render(Ogre::Real tpf) {

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <string>
+#include <OgreException.h>
 
 class CMessage {
 public:
@@ -24,7 +25,8 @@ public:
     case MT_MESSAGE_BOX_PAGE_CHANGED:
       return "message_box_page_changed";
     }
-    return "unset";
+
+    throw Ogre::Exception(0, "Message type could not be converted to string", __FILE__);
   }
   static EMessageTypes parseMessageType(const std::string &s) {
     if (s == "unset") {return MT_MESSAGE_UNSET;}
@@ -32,7 +34,7 @@ public:
     else if (s == "toggle_touch_input_blink") {return MT_TOGGLE_TOUCH_INPUT_BLINK;}
     else if (s == "message_box_page_changed") {return MT_MESSAGE_BOX_PAGE_CHANGED;}
 
-    return MT_MESSAGE_UNSET;
+    throw Ogre::Exception(0, "Message type could not be parsed: " + s, __FILE__);
   }
   
 

@@ -6,10 +6,10 @@ using namespace XMLHelper;
 
 
 CInjectMessageEvent::CInjectMessageEvent(CMap &map) 
-  : CEvent(map, EVENT_MESSAGE) {
+  : CEvent(map, EVENT_INJECT_MESSAGE) {
 }
 CInjectMessageEvent::CInjectMessageEvent(CMap &map, const tinyxml2::XMLElement *pElem) 
-  : CEvent(map, EVENT_MESSAGE, pElem) {
+  : CEvent(map, EVENT_INJECT_MESSAGE, pElem) {
   m_Message.setType(CMessage::parseMessageType(Attribute(pElem, "msg_type")));
 
   switch (m_Message.getType()) {
@@ -27,7 +27,7 @@ CInjectMessageEvent::CInjectMessageEvent(CMap &map, const tinyxml2::XMLElement *
     break;
   };
 }
-void CInjectMessageEvent::start() {
+void CInjectMessageEvent::start_impl() {
   CMessageHandler::getSingleton().addMessage(m_Message);
 }
 void CInjectMessageEvent::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {

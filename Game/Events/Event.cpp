@@ -30,6 +30,7 @@ CEvent::ETypes CEvent::parseEventType(const std::string &sString) {
 }
 
 
+
 CEvent::CEvent(CMap &map, ETypes eType)
   : m_eType(eType),
     m_pEmitter(new EventEmitter::COnUser(NULL)),

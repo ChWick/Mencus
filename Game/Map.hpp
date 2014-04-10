@@ -83,6 +83,8 @@ public:
        const CMapInfoConstPtr m_pMapInfo);
   ~CMap();
 
+  void init();
+
   void loadMap(const string &sFilename, const string &sResourceGroup);
   void loadMap(const CMapInfoConstPtr pMapInfo);
   void prepareMap();

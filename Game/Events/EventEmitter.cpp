@@ -35,6 +35,28 @@ EEmitter parseEmitter(const std::string &sString) {
 }
 
 
+std::string toString(ERepeatType eRepeatType) {
+  switch (eRepeatType) {
+  case REPEAT_NONE:
+    return "none";
+  case REPEAT_INFINITE:
+    return "infinite";
+  }
+
+  throw Ogre::Exception(0, "Repeat type " + Ogre::StringConverter::toString(eRepeatType) + " could not be converted to a string", __FILE__);
+}
+ERepeatType parseRepeatType(const std::string &sString) {
+  if (sString == "none") {
+    return REPEAT_NONE;
+  }
+  else if (sString == "infinite") {
+    return REPEAT_INFINITE;
+  }
+
+
+  throw Ogre::Exception(0, "Repeat type " + sString + " could not be converted to a string", __FILE__);
+}
+
 void COnCollision::init(const CMap &map) {
   m_pEntity = map.getChildRecursive(m_sSrcID);
   if (!m_pEntity) {

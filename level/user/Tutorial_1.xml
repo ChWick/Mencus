@@ -24,7 +24,7 @@
 	<page text="Welcome to the Mencus Tutorial! Here you will learn how to control Mencus and how to interact with the game. Of-course you will also learn to use magic to defeat your enemies."/>
 	<page text="In this first tutorial you will learn how to move Mencus.
 
-Touch the two arrow-buttons on the right side to stir Mencus left or right."/>
+Touch the two arrow-buttons on the left side to stir Mencus left or right."/>
       </event>
       <event type="inject_message" emitter="message_page_chagned" src_id="InitialMessageBox" src_page="1" msg_type="toggle_touch_input_blink" msg_button="left" msg_enabled="true"/>
       <event type="inject_message" emitter="message_page_chagned" src_id="InitialMessageBox" src_page="1" msg_type="toggle_touch_input_blink" msg_button="right" msg_enabled="true"/>
@@ -32,9 +32,22 @@ Touch the two arrow-buttons on the right side to stir Mencus left or right."/>
     <exit type="region" posx="15" posy="0" sizex="1" sizey="11" id=""/>
     <player x="0.5" y="1" hp="10" direction="1"/>
     <camera posx="-10.165659" posy="-12"/>
-    <region x="5" y="1" sizex="2" sizey="10">
+    <region x="5" y="1" sizex="2" sizey="14">
       <events>
-	<event type="message" emitter="collision" src_id="Player" title="123" text="asdf"/>
+	<event type="message" emitter="collision" repeat="none" src_id="Player" title="Tutorial 1">
+	  <page text="There is a obstacle next to you. Use the jump button on the right side!"/>
+	</event>
+	<event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="jump" msg_enabled="true"/>
+	<event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="left" msg_enabled="false"/>
+	<event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="right" msg_enabled="false"/>
+      </events>
+    </region>
+    <region x="12" y="1" sizex="2" sizey="14">
+      <events>
+	<event type="message" emitter="collision" repeat="none" src_id="Player" title="Tutorial 1">
+	  <page text="Congratulations you learned how to move Mencus! Reach the goal to finish this tutorial"/>
+	</event>
+	<event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="jump" msg_enabled="false"/>
       </events>
     </region>
 </map>

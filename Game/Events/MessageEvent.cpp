@@ -13,7 +13,7 @@ CMessageEvent::CMessageEvent(CMap &map)
 CMessageEvent::CMessageEvent(CMap &map, const tinyxml2::XMLElement *pElem) 
   : CEvent(map, EVENT_MESSAGE, pElem),
     m_sTitle(Attribute(pElem,"title")),
-    m_sText(Attribute(pElem, "text")),
+    m_sText(Attribute(pElem, "text", "")),
     m_pMessageBox(NULL) {
   if (m_sText.length() > 0) {m_vPagesText.push_back(m_sText);}
 
@@ -22,6 +22,8 @@ CMessageEvent::CMessageEvent(CMap &map, const tinyxml2::XMLElement *pElem)
        pPage = pPage->NextSiblingElement()) {
     m_vPagesText.push_back(Attribute(pPage, "text"));
   }
+
+  assert(m_vPagesText.size() > 0);
 }
 CMessageEvent::~CMessageEvent() {
 }
@@ -33,7 +35,6 @@ void CMessageEvent::stop_impl() {
 void CMessageEvent::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
   CEvent::writeToXMLElement(pElem, eStyle);
 
-  SetAttribute(pElem, "text", m_sText);
   SetAttribute(pElem, "title", m_sTitle);
 
   tinyxml2::XMLDocument *pDoc(pElem->GetDocument());
