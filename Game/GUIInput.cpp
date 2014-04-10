@@ -98,6 +98,10 @@ CGUIInput::~CGUIInput() {
 CGUIInput::EButtonTypes CGUIInput::parseButtonType(const std::string &s) {
   if (s == "left") {return BT_LEFT;}
   else if (s == "right") {return BT_RIGHT;}
+  else if (s == "enter_link") {return BT_ENTER_LINK;}
+  else if (s == "activate") {return BT_ACTIVATE;}
+  else if (s == "jump") {return BT_JUMP;}
+  else if (s == "attack") {return BT_ATTACK;}
  
   return BT_COUNT;
 }
