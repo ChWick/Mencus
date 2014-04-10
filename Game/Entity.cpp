@@ -192,6 +192,17 @@ void CEntity::update(Ogre::Real tpf) {
   for (auto &pEnt : m_lChildren) {
     pEnt->update(tpf);
   }
+
+  for (auto pEvent : m_lEvents) {
+    if (pEvent->getEmitter()->getType() == EventEmitter::EMIT_ON_COLLISION) {
+      if (getWorldBoundingBox().collidesWith(dynamic_cast<const EventEmitter::COnCollision*>(pEvent->getEmitter())->getEntity()->getWorldBoundingBox()) != CCD_NONE) {
+	pEvent->start();
+      }
+      else {
+	pEvent->stop();
+      }
+    }
+  }
 }
 void CEntity::render(Ogre::Real tpf) {
   for (auto &pEnt : m_lChildren) {

@@ -20,6 +20,7 @@
 #include "MapEditor.hpp"
 #include "Exit.hpp"
 #include "MessageHandler.hpp"
+#include "Region.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -58,6 +59,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
   m_pExplosionsEntity = new CEntity(*this, "Explosions", this);
   m_pLinksEntity = new CEntity(*this, "Links", this);
   m_pObjectsEntity = new CEntity(*this, "Objects", this);
+  m_pOthersEntity = new CEntity(*this, "Others", this);
 
   m_Statistics.sLevelFileName = pMapInfo->getFileName();
 
@@ -131,6 +133,7 @@ void CMap::clearMap() {
   m_pExplosionsEntity->destroyChildren();
   m_pLinksEntity->destroyChildren();
   m_pObjectsEntity->destroyChildren();
+  m_pOthersEntity->destroyChildren();
 
   if (m_pBackground) {
     delete m_pBackground;
@@ -251,6 +254,9 @@ void CMap::prepareMap() {
 
   for (auto pSwitch : getSwitches()) {
     pSwitch->init();
+  }
+  for (auto pEnt : m_pOthersEntity->getChildren()) {
+    pEnt->init();
   }
 
   for (CTile *pTile : m_gridTiles) {
@@ -691,6 +697,7 @@ void CMap::render(Ogre::Real tpf) {
   m_pShotsEntity->render(tpf);
   m_pPlayer->render(tpf);
   m_pExplosionsEntity->render(tpf);
+  m_pOthersEntity->render(tpf);
 }
 void CMap::updateBackground(Ogre::Real tpf) {
   if (m_pBackground) {
@@ -1012,6 +1019,9 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
       for (const XMLElement *pObject = pElement->FirstChildElement(); pObject; pObject = pObject->NextSiblingElement()) {
         new CShot(*this, pObject);
       }
+    }
+    else if (std::string(pElement->Value()) == "region") {
+      new CRegion(*this, m_pOthersEntity, pElement);
     }
   }
 }

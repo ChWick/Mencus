@@ -6,11 +6,15 @@
 #include <string>
 #include "XMLHelper.hpp"
 
+class CEntity;
+class CMap;
+
 namespace EventEmitter {
   enum EEmitter {
     EMIT_ON_CREATE,
     EMIT_ON_DESTROY,
     EMIT_ON_USER,
+    EMIT_ON_COLLISION,
     EMIT_ON_MESSAGE_BOX_PAGE_CHANGE,
   };
   std::string toString(EEmitter eEmitter);
@@ -25,6 +29,8 @@ namespace EventEmitter {
     }
     virtual ~CEmitter() {
     }
+
+    virtual void init(const CMap &map) {}
 
     EEmitter getType() const {return m_eType;}
 
@@ -52,6 +58,28 @@ namespace EventEmitter {
     COnUser(const tinyxml2::XMLElement *pElem)
       : CEmitter(EMIT_ON_USER, pElem) {
     }
+  };
+
+  class COnCollision : public CEmitter {
+  private:
+    const CEntity *m_pEntity;
+    const std::string m_sSrcID;
+  public:
+    COnCollision(const tinyxml2::XMLElement *pElem)
+      : CEmitter(EMIT_ON_COLLISION, pElem),
+	m_sSrcID(XMLHelper::Attribute(pElem, "src_id")) {
+    }
+
+    virtual void init(const CMap &map);
+
+    virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+      CEmitter::writeToXMLElement(pElem);
+
+      XMLHelper::SetAttribute(pElem, "src_id", m_sSrcID);
+    }
+
+    const std::string &getSrcID() const {return m_sSrcID;}
+    const CEntity *getEntity() const {return m_pEntity;}
   };
 
   class COnMessageBoxPageChange : public CEmitter {

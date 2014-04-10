@@ -56,6 +56,7 @@ private:
   CEntity *m_pExplosionsEntity;
   CEntity *m_pLinksEntity;
   CEntity *m_pObjectsEntity;
+  CEntity *m_pOthersEntity;
 
   Ogre::Vector2 m_vTilesPerScreen;
   float m_fScreenRatio;

@@ -20,14 +20,16 @@ CChangeTileEvent::CChangeTileEvent(CMap &map, const tinyxml2::XMLElement *pElem)
     m_uiTilePosY(IntAttribute(pElem, "y")) {
 }
 void CChangeTileEvent::init() {
+  CEvent::init();
+
   if (m_uiOldTileType == TT_NONE) {
     m_uiOldTileType = m_Map.getTile(m_uiTilePosX, m_uiTilePosY)->getTileType();
   }
 }
-void CChangeTileEvent::start() {
+void CChangeTileEvent::start_impl() {
   m_Map.changeTileType(m_uiTilePosX, m_uiTilePosY, m_uiTileType);
 }
-void CChangeTileEvent::stop() {
+void CChangeTileEvent::stop_impl() {
   m_Map.changeTileType(m_uiTilePosX, m_uiTilePosY, m_uiOldTileType);
 }
 void CChangeTileEvent::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {

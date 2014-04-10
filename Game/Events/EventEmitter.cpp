@@ -1,6 +1,7 @@
 #include "EventEmitter.hpp"
 #include <OgreException.h>
 #include "XMLHelper.hpp"
+#include "Map.hpp"
 
 using namespace XMLHelper;
 using namespace EventEmitter;
@@ -15,6 +16,8 @@ std::string toString(EEmitter eEmitter) {
     return "destroy";
   case EMIT_ON_USER:
     return "user";
+  case EMIT_ON_COLLISION:
+    return "collision";
   case EMIT_ON_MESSAGE_BOX_PAGE_CHANGE:
     return "message_page_chagned";
   }
@@ -25,9 +28,18 @@ EEmitter parseEmitter(const std::string &sString) {
   if (sString == "create") {return EMIT_ON_CREATE;}
   else if (sString == "destroy") {return EMIT_ON_DESTROY;}
   else if (sString == "user") {return EMIT_ON_USER;}
+  else if (sString == "collision") {return EMIT_ON_COLLISION;}
   else if (sString == "message_page_chagned") {return EMIT_ON_MESSAGE_BOX_PAGE_CHANGE;}
 
   throw Ogre::Exception(0, "Emitter type " + sString + " could not be converted to a string", __FILE__);
+}
+
+
+void COnCollision::init(const CMap &map) {
+  m_pEntity = map.getChildRecursive(m_sSrcID);
+  if (!m_pEntity) {
+    throw Ogre::Exception(0, "An entity with id " + m_sSrcID + " was not found.", __FILE__);
+  }
 }
 
 CEmitter *CCreator::create(const tinyxml2::XMLElement *pElem) {
@@ -38,6 +50,8 @@ CEmitter *CCreator::create(const tinyxml2::XMLElement *pElem) {
     return new COnDestroy(pElem);
   case EMIT_ON_USER:
     return new COnUser(pElem);
+  case EMIT_ON_COLLISION:
+    return new COnCollision(pElem);
   case EMIT_ON_MESSAGE_BOX_PAGE_CHANGE:
     return new COnMessageBoxPageChange(pElem);
   default:

@@ -25,12 +25,10 @@ CMessageEvent::CMessageEvent(CMap &map, const tinyxml2::XMLElement *pElem)
 }
 CMessageEvent::~CMessageEvent() {
 }
-void CMessageEvent::init() {
-}
-void CMessageEvent::start() {
+void CMessageEvent::start_impl() {
   m_pMessageBox = new CHUDMessageBox(getID(), m_sTitle.c_str(), m_vPagesText);  
 }
-void CMessageEvent::stop() {
+void CMessageEvent::stop_impl() {
 }
 void CMessageEvent::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
   CEvent::writeToXMLElement(pElem, eStyle);

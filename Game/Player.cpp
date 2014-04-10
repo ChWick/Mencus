@@ -108,6 +108,8 @@ CPlayer::CPlayer(CMap &map, const tinyxml2::XMLElement *pElem, SStatistics &stat
   startup(getPosition(), RealAttribute(pElem, "direction", 1));
 }
 void CPlayer::constructor_impl() {
+  setID("Player");
+
 #ifdef DEBUG_PLAYER_NO_COLLISION
   m_bPlayerNoCollisionActivated = false;
 #endif // DEBUG_PLAYER_NO_COLLISION

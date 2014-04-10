@@ -16,9 +16,6 @@ public:
 
   void init();
 
-  void start();
-  void stop();
-
   void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
 
   unsigned int getTileType() const {return m_uiTileType;}
@@ -37,6 +34,10 @@ public:
       + ") Tile " + Ogre::StringConverter::toString(m_uiTileType)
       + "->" + Ogre::StringConverter::toString(m_uiOldTileType);
   }
+
+protected:
+  void start_impl();
+  void stop_impl();
 };
 
 #endif
