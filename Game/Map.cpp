@@ -942,6 +942,18 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
       pShot->writeToXMLElement(pElem, eStyle);
     }
   }
+
+  for (const CEntity *pEnt : m_pOthersEntity->getChildren()) {
+    XMLElement *pOther = NULL;
+    if (dynamic_cast<const CRegion*>(pEnt)) {
+      pOther = doc.NewElement("region");
+    }
+
+    if (pOther) {
+      pMapElem->InsertEndChild(pOther);
+      pEnt->writeToXMLElement(pOther, eStyle);
+    }
+  }
 }
 void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
   clearMap();

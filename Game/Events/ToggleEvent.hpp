@@ -13,10 +13,11 @@ public:
 
   void init();
 
-  void start();
-  void stop();
-
   void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
+
+protected:
+  void start_impl();
+  void stop_impl();
 };
 
 #endif

@@ -16,18 +16,19 @@ CToggleEvent::CToggleEvent(CMap &map, const tinyxml2::XMLElement *pElem)
     m_bInitialState(BoolAttribute(pElem, "initial", true)) {
 }
 void CToggleEvent::init() {
-  /*CEntity *pEnt = m_Map.getChildRecursive(m_sEntityID);
+  CEvent::init();
+  CEntity *pEnt = m_Map.getChildRecursive(m_sEntityID);
   if (pEnt) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Entity with id " + m_sEntityID + " was not found.");
     return;
   }
-  pEnt->setActivated(m_bInitialState);*/
+  pEnt->setActivated(m_bInitialState);
 }
-void CToggleEvent::start() {
-  //m_Map.getChildRecursive(m_sEntityID)->setActivated(!m_bInitialState);
+void CToggleEvent::start_impl() {
+  m_Map.getChildRecursive(m_sEntityID)->setActivated(!m_bInitialState);
 }
-void CToggleEvent::stop() {
-  //m_Map.getChildRecursive(m_sEntityID)->setActivated(m_bInitialState);
+void CToggleEvent::stop_impl() {
+  m_Map.getChildRecursive(m_sEntityID)->setActivated(m_bInitialState);
 }
 void CToggleEvent::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
   CEvent::writeToXMLElement(pElem, eStyle);
