@@ -5,12 +5,12 @@
 #include <list>
 #include "Message.hpp"
 
-class CEntity;
+class CMessageInjector;
 
 class CMessageHandler
   : public Ogre::Singleton<CMessageHandler> {
 private:
-  std::list<CEntity*> m_lEntityInjectors;
+  std::list<CMessageInjector*> m_lInjectors;
   std::list<CMessage> m_lMessages;
 public:
   static CMessageHandler &getSingleton();
@@ -18,8 +18,8 @@ public:
 
   void process();
 
-  void addInjector(CEntity *pEntity) {m_lEntityInjectors.push_back(pEntity);}
-  void removeInjector(CEntity *pEntity) {m_lEntityInjectors.remove(pEntity);}
+  void addInjector(CMessageInjector *pInjector) {m_lInjectors.push_back(pInjector);}
+  void removeInjector(CMessageInjector *pInjector) {m_lInjectors.remove(pInjector);}
 
   void addMessage(const CMessage &m);
 };

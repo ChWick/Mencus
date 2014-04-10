@@ -1,6 +1,7 @@
 #ifndef _ENTITY_HPP_
 #define _ENTITY_HPP_
 
+#include "MessageInjector.hpp"
 #include <string>
 #include <list>
 #include <OgreVector2.h>
@@ -13,7 +14,7 @@ class CMap;
 class CMessage;
 
 //! Class for an entity in the map
-class CEntity {
+class CEntity : public CMessageInjector {
 protected:
   std::string m_sID;
   unsigned int m_uiType;                                //!< one can set a type

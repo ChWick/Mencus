@@ -1,5 +1,5 @@
 #include "MessageHandler.hpp"
-#include "Entity.hpp"
+#include "MessageInjector.hpp"
 
 template<> CMessageHandler *Ogre::Singleton<CMessageHandler>::msSingleton = 0;
 
@@ -12,8 +12,8 @@ CMessageHandler &CMessageHandler::getSingleton() {
 }
 void CMessageHandler::process() {
   while (m_lMessages.size() > 0) {
-    for (auto pEntity : m_lEntityInjectors) {
-      pEntity->sendMessageToAll(m_lMessages.front());
+    for (auto pInjector : m_lInjectors) {
+      pInjector->sendMessageToAll(m_lMessages.front());
     }
     m_lMessages.pop_front();
   }

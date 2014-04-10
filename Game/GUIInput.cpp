@@ -4,6 +4,7 @@
 #include <OgreLogManager.h>
 #include "Weapon.hpp"
 #include "Game.hpp"
+#include "MessageHandler.hpp"
 #include "GUIManager.hpp"
 
 using namespace CEGUI;
@@ -15,6 +16,7 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
     m_bPressed(false),
     m_fTimer(0) {
   CInputListenerManager::getSingleton().addInputListener(this);
+  CMessageHandler::getSingleton().addInjector(this);
 
   m_pDirectionButtonContainer = pGUIRoot->createChild("DefaultWindow", "ButtonContainer");
   m_pDirectionButtonContainer->setInheritsAlpha(false);
@@ -91,6 +93,13 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
 }
 CGUIInput::~CGUIInput() {
   CInputListenerManager::getSingleton().removeInputListener(this);
+  CMessageHandler::getSingleton().removeInjector(this);
+}
+CGUIInput::EButtonTypes CGUIInput::parseButtonType(const std::string &s) {
+  if (s == "left") {return BT_LEFT;}
+  else if (s == "right") {return BT_RIGHT;}
+ 
+  return BT_COUNT;
 }
 void CGUIInput::windowResized() {
   buttonSizeChanged(m_fButtonSize);
@@ -202,9 +211,13 @@ CEGUI::Window *CGUIInput::createWeaponButtonLabel(unsigned int uiWeapon) {
   return pButton;
 }
 void CGUIInput::update(float tpf) {
-  m_fTimer += tpf;
-  float fColValue = (sin(m_fTimer * 6) + 1) * 0.5;
-  m_pButtons[0]->setProperty("ImageColours", PropertyHelper<Colour>::toString(Colour(1, fColValue, fColValue)));
+  if (m_lBlinkingButtons.size() > 0) {
+    m_fTimer += tpf;
+    float fColValue = (cos(m_fTimer * 6) + 1) * 0.5;
+    for (auto pButton : m_lBlinkingButtons) {
+      pButton->setProperty("ImageColours", PropertyHelper<Colour>::toString(Colour(1, fColValue, fColValue)));
+    }
+  }
 
 
   if (m_eDragState == DS_DRAGGING || m_eDragState == DS_OPEN || m_eDragState == DS_OPENING) {
@@ -399,6 +412,32 @@ void CGUIInput::pressReleased() {
       m_eDragState = DS_CLOSING;
       unpause(PAUSE_MAP_UPDATE);
     }
+  }
+}
+void CGUIInput::sendMessageToAll(const CMessage &message) {
+  switch (message.getType()) {
+  case CMessage::MT_TOGGLE_TOUCH_INPUT_BLINK:
+    {
+      EButtonTypes bt = parseButtonType(message.getID());
+      if (bt != BT_COUNT) {
+	bool bEnable = message.getBool();
+	if (bEnable) {m_lBlinkingButtons.push_back(m_pButtons[bt]);}
+	else {
+	  m_pButtons[bt]->setProperty("ImageColours", "FFFFFFFF");
+	  m_lBlinkingButtons.remove(m_pButtons[bt]);
+	}
+      }
+      if (m_lBlinkingButtons.size() == 0) {
+	m_fTimer = 0;
+      }
+    }
+    break;
+  case CMessage::MT_MAP_DESTROYED:
+    m_lBlinkingButtons.clear();
+    m_fTimer = 0;
+    break;
+  default:
+    break;
   }
 }
 void CGUIInput::show() {

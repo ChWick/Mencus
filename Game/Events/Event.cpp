@@ -14,6 +14,8 @@ std::string CEvent::toString(ETypes eEventType) {
     return "message";
   case EVENT_TOGGLE:
     return "toggle";
+  case EVENT_INJECT_MESSAGE:
+    return "inject_message";
   }
   
   throw Ogre::Exception(0, "Event type " + Ogre::StringConverter::toString(eEventType) + " could not be converted to a string", __FILE__);
@@ -22,6 +24,7 @@ CEvent::ETypes CEvent::parseEventType(const std::string &sString) {
   if (sString == "change_tile") {return EVENT_CHANGE_TILE;}
   else if (sString == "message") {return EVENT_MESSAGE;}
   else if (sString == "toggle") {return EVENT_TOGGLE;}
+  else if (sString == "inject_message") {return EVENT_INJECT_MESSAGE;}
   
   throw Ogre::Exception(0, "Event type " + sString + " could not be converted to a string", __FILE__);
 }

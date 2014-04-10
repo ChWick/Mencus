@@ -6,8 +6,9 @@
 #include "Weapon.hpp"
 #include "PauseCaller.hpp"
 #include "InputListener.hpp"
+#include "MessageInjector.hpp"
 
-class CGUIInput : public CPauseCaller, public CInputListener {
+class CGUIInput : public CPauseCaller, public CInputListener, public CMessageInjector {
 private:
   enum EButtonTypes {
     BT_LEFT,
@@ -26,6 +27,7 @@ private:
     DS_OPENING,
     DS_OPEN,
   };
+  static EButtonTypes parseButtonType(const std::string &s);
 private:
   CEGUI::Window *m_pRoot;
   CEGUI::Window *m_pDirectionButtonContainer;
@@ -49,7 +51,9 @@ private:
 
   bool m_bPressed;		// !< is the button pressed (mouse or touch)
 
+  // for making buttons blink
   float m_fTimer;
+  std::list<CEGUI::Window *> m_lBlinkingButtons;
 public:
   CGUIInput(CEGUI::Window *pGUIRoot);
   ~CGUIInput();
@@ -69,6 +73,8 @@ public:
   void windowResized();
 
   void buttonSizeChanged(float fSize);
+
+  void sendMessageToAll(const CMessage &message);
 private:
   
   void updateInput();

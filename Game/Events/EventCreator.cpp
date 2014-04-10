@@ -2,6 +2,8 @@
 #include "ChangeTileEvent.hpp"
 #include "MessageEvent.hpp"
 #include "ToggleEvent.hpp"
+#include "InjectMessageEvent.hpp"
+
 #include "XMLHelper.hpp"
 #include "OgreException.h"
 #include <iostream>
@@ -19,6 +21,8 @@ CEvent *CEventCreator::create(CMap &map, const tinyxml2::XMLElement *pElem) {
     return new CToggleEvent(map, pElem);
   case CEvent::EVENT_MESSAGE:
     return new CMessageEvent(map, pElem);
+  case CEvent::EVENT_INJECT_MESSAGE:
+    return new CInjectMessageEvent(map, pElem);
   default:
     throw Ogre::Exception(0, "Event type not implemented", __FILE__);
   }

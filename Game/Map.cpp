@@ -87,6 +87,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
 		       CGame::getSingleton().getRenderWindow()->getHeight()));
 }
 CMap::~CMap() {
+  CMessageHandler::getSingleton().addMessage(CMessage::MT_MAP_DESTROYED);
   clearLineNumbers();
 #if ENABLE_MAP_EDITOR
   CMapEditor::getSingleton().exit();

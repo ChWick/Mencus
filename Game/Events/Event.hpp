@@ -17,6 +17,7 @@ public:
     EVENT_CHANGE_TILE,
     EVENT_TOGGLE,
     EVENT_MESSAGE,
+    EVENT_INJECT_MESSAGE,
   };
   static std::string toString(ETypes eEventType);
   static ETypes parseEventType(const std::string &sString);
