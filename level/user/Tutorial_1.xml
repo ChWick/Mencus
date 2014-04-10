@@ -32,4 +32,9 @@ Touch the two arrow-buttons on the right side to stir Mencus left or right."/>
     <exit type="region" posx="15" posy="0" sizex="1" sizey="11" id=""/>
     <player x="0.5" y="1" hp="10" direction="1"/>
     <camera posx="-10.165659" posy="-12"/>
+    <region x="5" y="1" sizex="2" sizey="10">
+      <events>
+	<event type="message" emitter="collision" src_id="Player" title="123" text="asdf"/>
+      </events>
+    </region>
 </map>

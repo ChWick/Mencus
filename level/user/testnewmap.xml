@@ -1,4 +1,7 @@
 <map difficulty="unknown" name="unknown" description="" background="forest" sizex="20" sizey="20">
+    <events>
+      <event type="message" emitter="create" title="test main message" text="this is the welcome message"/>
+    </events>
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
