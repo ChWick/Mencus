@@ -739,6 +739,10 @@ void CMap::updateCameraPos(Ogre::Real tpf) {
   m_vCameraPos.x = min(m_vCameraPos.x, m_gridTiles.getSizeX() - m_vTilesPerScreen.x);
   m_vCameraPos.y = min(m_vCameraPos.y, m_gridTiles.getSizeY() - m_vTilesPerScreen.y);
 }
+Ogre::Vector2 CMap::mapToRelativeScreenPos(const Ogre::Vector2 &vMapPos) const {
+  Ogre::Vector2 vOffset(m_vCameraPos + m_vCameraDebugOffset);
+  return ((vMapPos - vOffset) / m_vTilesPerScreen) * Ogre::Vector2(1, -1) + Ogre::Vector2(0, 1);
+}
 Ogre::Vector2 CMap::mouseToMapPos(const Ogre::Vector2 &vMousePos) const {
   Ogre::RenderWindow *pWnd = CGame::getSingleton().getRenderWindow();
 

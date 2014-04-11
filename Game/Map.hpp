@@ -223,6 +223,7 @@ public:
 
   Ogre::Vector2 mouseToMapPos(const Ogre::Vector2 &vMousePos) const;
   Ogre::Vector2 mouseToMapSize(const Ogre::Vector2 &vMouseSize) const;
+  Ogre::Vector2 mapToRelativeScreenPos(const Ogre::Vector2 &vMapPos) const;
 
   void setCameraPos(const Ogre::Vector2 &vPos) {m_vCameraTargetPos = m_vCameraPos = vPos;}
   const Ogre::Vector2 &getCameraTargetPos() const {return m_vCameraTargetPos;}

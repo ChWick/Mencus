@@ -5,6 +5,7 @@
 #include "Grid2d.hpp"
 
 class CMap;
+class CDebugText;
 
 typedef unsigned int SwitchType;
 
@@ -33,6 +34,7 @@ private:
   const SwitchType m_stSwitchType;
   ESwitchStates m_eSwitchState;
   unsigned int m_uiSwitchFlags;
+  CDebugText *m_pLeftTimeText;
 public:
   CSwitch(CMap &map,
 	  const std::string &sID,

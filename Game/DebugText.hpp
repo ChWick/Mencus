@@ -65,6 +65,9 @@ szElement="element_"+Ogre::StringConverter::toString(init);
     {
         textArea->setPosition(x,y);
     }
+  void setPosition(const Ogre::Vector2 &vPosition) {
+    textArea->setPosition(vPosition.x, vPosition.y);
+  }
     void setCol(float R,float G,float B,float I)
     {
         textArea->setColour(Ogre::ColourValue(R,G,B,I));
@@ -74,6 +77,12 @@ szElement="element_"+Ogre::StringConverter::toString(init);
       textArea->show();
     else
       textArea->hide();
+  }
+  Ogre::TextAreaOverlayElement *getTextArea() {
+    return textArea;
+  }
+  void scale(Ogre::Real scale) {
+    textArea->setCharHeight(0.03f * scale);
   }
 private:
 Ogre::OverlayManager *olm;

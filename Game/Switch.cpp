@@ -6,6 +6,7 @@
 #include "Events/Event.hpp"
 #include "Events/ChangeTileEvent.hpp"
 #include "Events/ToggleEvent.hpp"
+#include "DebugText.hpp"
 
 using namespace XMLHelper;
 
@@ -35,7 +36,8 @@ CSwitch::CSwitch(CMap &map,
     m_fTimer(0),
     m_fActiveTime(0),
     m_stSwitchType(stSwitchType),
-    m_eSwitchState(eSwitchState) {
+    m_eSwitchState(eSwitchState),
+    m_pLeftTimeText(NULL) {
   m_uiSwitchFlags = SWITCH_FLAGS[stSwitchType];
   if (bChangeBlocks) {
     m_uiSwitchFlags |= SF_CHANGE_BLOCKS;
@@ -55,7 +57,8 @@ CSwitch::CSwitch(CMap &map,
     m_fActiveTime(RealAttribute(pElem, "activeTime")),
     m_stSwitchType(EnumAttribute<ESwitchTypes>(pElem, "type")),
     m_eSwitchState(EnumAttribute<ESwitchStates>(pElem, "state", SS_DEACTIVATED)),
-    m_uiSwitchFlags(IntAttribute(pElem, "flags", SWITCH_FLAGS[EnumAttribute<ESwitchTypes>(pElem, "type")])) {
+    m_uiSwitchFlags(IntAttribute(pElem, "flags", SWITCH_FLAGS[EnumAttribute<ESwitchTypes>(pElem, "type")])),
+  m_pLeftTimeText(NULL) {
 
   // ===========================================================
   // for old map format
@@ -78,13 +81,23 @@ CSwitch::CSwitch(CMap &map,
   }
 
   setTexture(getSwitchTexture(m_stSwitchType, m_eSwitchState != SS_DEACTIVATED));
+
+  updateState(m_eSwitchState);
 }
 
 CSwitch::~CSwitch() {
+  if (m_pLeftTimeText) {
+    delete m_pLeftTimeText;
+  }
 }
 void CSwitch::update(Ogre::Real tpf) {
   CSprite::update(tpf);
   if (m_eSwitchState == SS_DEACTIVATING) {
+    assert(m_pLeftTimeText);
+    int iRoundedTime = static_cast<int>(ceil(m_fTimer));
+    m_pLeftTimeText->setText(Ogre::StringConverter::toString(iRoundedTime));
+    m_pLeftTimeText->setPosition(m_Map.mapToRelativeScreenPos(getCenter()));
+    m_pLeftTimeText->scale(((m_fTimer - floor(m_fTimer)) * 2 + 1));
     m_fTimer -= tpf;
     if (m_fTimer <= 0) {
       deactivate();
@@ -132,6 +145,19 @@ void CSwitch::updateState(ESwitchStates eNewState) {
   }
   else {
     setTexture(getSwitchTexture(m_stSwitchType, true));
+  }
+
+  if (m_eSwitchState == SS_DEACTIVATING) {
+    if (!m_pLeftTimeText) {
+      m_pLeftTimeText = new CDebugText();
+      m_pLeftTimeText->getTextArea()->setAlignment(Ogre::TextAreaOverlayElement::Center);
+    }
+  }
+  else {
+    if (m_pLeftTimeText) {
+      delete m_pLeftTimeText;
+      m_pLeftTimeText = NULL;
+    }
   }
 }
 void CSwitch::execute(CEvent *pEvent) {
