@@ -50,7 +50,7 @@ Touch the two arrow-buttons on the left side to stir Mencus left or right."/>
     <region x="12" y="1" sizex="2" sizey="14">
       <events>
 	<event type="message" emitter="collision" repeat="none" src_id="Player" title="Tutorial 1">
-	  <page text="Congratulations you learned how to move Mencus! Reach the goal to finish this tutorial"/>
+	  <page text="Congratulations you learned how to move Mencus! Reach the flag to finish this tutorial"/>
 	</event>
 	<event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="jump" msg_enabled="false"/>
       </events>
