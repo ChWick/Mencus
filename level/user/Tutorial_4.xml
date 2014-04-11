@@ -1,0 +1,57 @@
+<map difficulty="easy" name="Tutorial 4" description="This Tutorial shall introduce you to doors.
+" background="forest" sizex="16" sizey="14">
+    <tiles invert="0">
+        <row tiles="71 71 71 71 71 71 71 71 71 7 5 5 5 5 1 4 "/>
+        <row tiles="23 23 121 122 120 80 80 80 80 2 2 2 2 22 3 4 "/>
+        <row tiles="23 23 84 84 84 23 23 23 23 2 2 2 2 21 3 4 "/>
+        <row tiles="23 23 84 84 84 23 23 23 70 13 6 6 6 6 11 4 "/>
+        <row tiles="23 111 83 81 82 110 23 23 2 3 1 1 1 1 1 4 "/>
+        <row tiles="113 106 94 81 93 105 112 23 2 7 5 5 5 5 1 4 "/>
+        <row tiles="107 107 107 107 107 107 107 23 44 2 2 2 2 22 3 4 "/>
+        <row tiles="107 107 107 107 107 107 107 23 23 2 2 2 2 21 3 4 "/>
+        <row tiles="114 107 107 107 107 107 115 23 23 44 44 44 13 6 11 4 "/>
+        <row tiles="23 108 107 107 107 109 23 23 23 23 23 23 3 1 1 4 "/>
+        <row tiles="23 23 114 107 115 23 23 23 23 23 23 23 3 1 1 4 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 3 1 1 4 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 47 48 48 46 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
+    </tiles>
+    <events>
+      <event type="message" emitter="create" title="Tutorial 4" id="InitialMessageBox">
+	<page text="This is the fourth tutorial. Here you will learn how to access links and move trough doors."/>
+	<page text="Walk to the door on the right side"/>
+      </event>
+    </events>
+    <switches/>
+    <endangeredTiles/>
+    <links>
+        <link x="0" y="0" id="Link_-1465572686" type="0" fromx="13" fromy="6" tox="13" toy="1" activated="true" direction="both"/>
+    </links>
+    <enemies/>
+    <objects>
+        <object x="3" y="6" id="Object_-684303796" type="6">
+            <events>
+                <event type="inject_message" id="Event1912844173" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
+            </events>
+        </object>
+        <object x="12" y="2" id="Object_832633819" type="5"/>
+        <object x="9.5" y="2" id="Object_316824710" type="5"/>
+        <object x="9.5" y="7" id="Object_1815859899" type="5"/>
+        <object x="12" y="7" id="Object_2051724829" type="5"/>
+    </objects>
+    <player x="0.5" y="1" id="Player" type="0" hp="10" direction="1"/>
+    <camera/>
+    <region x="13" y="1" id="832633819" type="0">
+        <events>
+            <event type="message" id="Event316824710" emitter="collision" repeat="none" src_id="Player" title="Tutorial 4">
+                <page text="Press the upper button on the right side to enter the door. You will emerge at another door."/>
+            </event>
+            <event type="inject_message" id="Event1815859899" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="enter_link" msg_enabled="true"/>
+        </events>
+    </region>
+    <region x="13" y="6" id="2051724829" type="0">
+        <events>
+            <event type="inject_message" id="Event318153055" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="enter_link" msg_enabled="false"/>
+        </events>
+    </region>
+</map>

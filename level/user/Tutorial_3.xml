@@ -27,7 +27,7 @@
         <enemy direction="1" jumps="0" hp="2" x="8" y="1" id="SingleEnemy" type="1"/>
     </enemies>
     <objects>
-        <object x="6" y="1" id="Object_-1210297291" type="6">
+        <object x="8" y="1" id="Flag" type="6">
 	  <events>
 	    <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
 	  </events>
