@@ -945,7 +945,9 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
   m_pPlayer->writeToXMLElement(pPlayer, eStyle);
 
   XMLElement *pCamera = doc.NewElement("camera");
-  SetAttribute(pCamera, "pos", m_vCameraPos);
+  if (eStyle == OS_FULL) {
+    SetAttribute(pCamera, "pos", m_vCameraPos);
+  }
   pMapElem->InsertEndChild(pCamera);
   for (const CCameraRestriction &res : m_vCameraRestrictions) {
     XMLElement *pElem = doc.NewElement("restriction")            ;
