@@ -59,8 +59,10 @@ CSprite::CSprite(const CSprite &src)
 CSprite::~CSprite() {
 }
 void CSprite::update(Ogre::Real tpf) {
+  CEntity::update(tpf);
 }
 void CSprite::render(Ogre::Real tpf) {
+  if (!m_bVisible) {return;}
   //Ogre::LogManager::getSingleton().logMessage("Test1" + Ogre::StringConverter::toString(m_vPosition) + " //// " + Ogre::StringConverter::toString(m_vSize));
   Ogre::Vector2 vStart = m_pTransformPipeline->transformPosition(m_vPosition + m_pTextureToDraw->getSpriteOffset());
   Ogre::Vector2 vEnd = m_pTransformPipeline->transformPosition(m_vPosition + m_pTextureToDraw->getSpriteOffset() + m_vSize * m_pTextureToDraw->getSpriteScale());
@@ -82,6 +84,7 @@ void CSprite::render(Ogre::Real tpf) {
 				  m_pTextureToDraw->getTexturePosBottomRight().y,
           m_Colour);
 
+  CEntity::render(tpf);
 }
 void CSprite::setTexture(const string &sName) {
   m_Texture.setTexture(Ogre::TextureManager::getSingleton().getByName(sName));

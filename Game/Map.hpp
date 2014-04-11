@@ -231,6 +231,9 @@ public:
   // PauseListener
   virtual void mapUpdatePauseChanged(bool bPause) {m_bUpdatePause = bPause;}
   virtual void mapRenderPauseChanged(bool bPause);
+
+protected:
+  virtual void handleMessage(const CMessage &message);
 private:
   void updateBackground(Ogre::Real tpf);
   void renderBackground(Ogre::Real tpf);

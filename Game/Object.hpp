@@ -14,14 +14,13 @@ public:
     OT_KEY,
     OT_SCRATCH,
     OT_TORCH,
+    OT_FLAG,
 
     OT_COUNT
   };
 
   static Ogre::String getPreviewImageName(int iObjectType);
 private:
-  const EObjectTypes m_eObjectType;
-  CMap &m_Map;
   bool m_bIsPickable;
 public:
   CObject(CMap &map,
@@ -30,10 +29,16 @@ public:
 	  const Ogre::Vector2 &vPosition,
 	  EObjectTypes eObjectType);
 
+  CObject(CMap &map,
+	  CEntity *pParent,
+	  const tinyxml2::XMLElement *pElement);
+
   void update(Ogre::Real tpf);
 
   void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
 
+private:
+  void constructor_impl();
 };
 
 

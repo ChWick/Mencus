@@ -14,6 +14,7 @@ using namespace XMLHelper;
 CEntity::CEntity(CMap &map, const std::string &sID, CEntity *pParent)
   : m_sID(sID.length() == 0 ? Ogre::StringConverter::toString(CIDGenerator::nextID()) : sID),
     m_uiType(0),
+    m_bVisible(true),
     m_Map(map),
     m_pParent(pParent),
     
@@ -25,6 +26,7 @@ CEntity::CEntity(CMap &map, const std::string &sID, CEntity *pParent)
 CEntity::CEntity(const CEntity &src) 
   : m_sID(src.m_sID),
     m_uiType(src.m_uiType),
+    m_bVisible(src.m_bVisible),
     m_Map(src.m_Map),
     m_pParent(src.m_pParent),
 
@@ -45,6 +47,7 @@ CEntity::CEntity(CMap &map,
 		 const Ogre::Vector2 &vDefaultScale) 
   : m_sID(Ogre::StringConverter::toString(CIDGenerator::nextID())),
     m_uiType(0),
+    m_bVisible(true),
     m_Map(map),
     m_pParent(NULL),
     m_vPosition(vDefaultPosition),
@@ -228,6 +231,7 @@ void CEntity::readFromXMLElement(const tinyxml2::XMLElement *pElem) {
   // now read
   m_sID = Attribute(pElem, "id", m_sID);
   m_uiType = IntAttribute(pElem, "type", 0);
+  m_bVisible = BoolAttribute(pElem, "visible", m_bVisible);
   m_vPosition = Vector2Attribute(pElem, "", m_vPosition);
   m_vSize = Vector2Attribute(pElem, "size", m_vSize);
   m_vScale = Vector2Attribute(pElem, "scale", m_vScale);
@@ -239,12 +243,10 @@ void CEntity::readFromXMLElement(const tinyxml2::XMLElement *pElem) {
   using namespace tinyxml2;
   const XMLElement *pEventsElement = pElem->FirstChildElement("events");
   if (pEventsElement) {
-    if (pEventsElement) {
-      for (const XMLElement *pEventElement = pEventsElement->FirstChildElement();
-	   pEventElement;
-	   pEventElement = pEventElement->NextSiblingElement()) {
-	m_lEvents.push_back(CEventCreator::create(m_Map, pEventElement));
-      }
+    for (const XMLElement *pEventElement = pEventsElement->FirstChildElement();
+	 pEventElement;
+	 pEventElement = pEventElement->NextSiblingElement()) {
+      m_lEvents.push_back(CEventCreator::create(m_Map, pEventElement));
     }
   }
 }
@@ -255,6 +257,7 @@ void CEntity::writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eSt
   SetAttribute(pElement, "id", m_sID);
   SetAttribute(pElement, "type", m_uiType);
   if (eStyle == OS_FULL) {
+    SetAttribute(pElement, "visible", m_bVisible);
     SetAttribute(pElement, "size", m_vSize);
     SetAttribute(pElement, "scale", m_vScale);
     SetAttribute(pElement, m_bbRelativeBoundingBox, "relative_");

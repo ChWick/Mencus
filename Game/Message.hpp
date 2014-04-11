@@ -12,6 +12,7 @@ public:
     MT_MAP_DESTROYED,
     MT_TOGGLE_TOUCH_INPUT_BLINK,
     MT_MESSAGE_BOX_PAGE_CHANGED,
+    MT_EXIT_REACHED,
   };
   
   static std::string toString(EMessageTypes eMT) {
@@ -24,6 +25,8 @@ public:
       return "toggle_touch_input_blink";
     case MT_MESSAGE_BOX_PAGE_CHANGED:
       return "message_box_page_changed";
+    case MT_EXIT_REACHED:
+      return "exit_reached";
     }
 
     throw Ogre::Exception(0, "Message type could not be converted to string", __FILE__);
@@ -33,6 +36,7 @@ public:
     else if (s == "map_destroyed") {return MT_MAP_DESTROYED;}
     else if (s == "toggle_touch_input_blink") {return MT_TOGGLE_TOUCH_INPUT_BLINK;}
     else if (s == "message_box_page_changed") {return MT_MESSAGE_BOX_PAGE_CHANGED;}
+    else if (s == "exit_reached") {return MT_EXIT_REACHED;}
 
     throw Ogre::Exception(0, "Message type could not be parsed: " + s, __FILE__);
   }

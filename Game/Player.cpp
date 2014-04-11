@@ -124,6 +124,7 @@ void CPlayer::constructor_impl() {
 
   m_Shield.init(1, 1);
   m_Shield.setupAnimation(0, "shield", 5, CSpriteTexture::MIRROR_NONE, &getPlayerTexturePath);
+  m_Shield.setVisible(false);
 
   // initialize hud
   CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
@@ -381,7 +382,6 @@ void CPlayer::update(Ogre::Real tpf) {
 
   m_pThrowStrengthIndicator->setCenter(getCenter() + 0.5 * getSize().y * Ogre::Vector2::UNIT_Y);
   m_pThrowStrengthIndicator->setValue(m_fBombThrowStrength / PLAYER_BOMB_MAX_TRHOW_STRENGTH);
-  m_pThrowStrengthIndicator->update(tpf);
 
   m_Fader.fade(tpf);
 
@@ -394,11 +394,11 @@ void CPlayer::update(Ogre::Real tpf) {
       m_fManaPoints = 0;
     } else {
       m_Shield.setCenter(getCenter());
-      m_Shield.update(tpf);
     }
   }
 
   setInvunerable(m_bShieldActive);
+  m_Shield.setVisible(m_bShieldActive);
 
 
   m_Statistics.fHitpoints = getHitpoints();
@@ -410,10 +410,6 @@ void CPlayer::render(Ogre::Real tpf) {
 #ifdef DEBUG_CHARACTER_BOUNDING_BOXES
   CDebugDrawer::getSingleton().draw(getWorldBoundingBox());
 #endif
-  m_pThrowStrengthIndicator->render(tpf);
-  if (m_bShieldActive) {
-    m_Shield.render(tpf);
-  }
 }
 void CPlayer::pickobject(unsigned int uiObjectId) {
   switch (uiObjectId) {

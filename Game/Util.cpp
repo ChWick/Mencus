@@ -51,3 +51,9 @@ std::string getTorchTexturePath(std::string sName, int index) {
   }
   return "objects/torch/" + sName + "_" + Ogre::StringConverter::toString(index) + ".png";
 }
+std::string getFlagTexturePath(std::string sName, int index) {
+  if (index < 0) {
+    return "objects/flag/" + sName + ".png";
+  }
+  return "objects/flag/" + sName + "_" + Ogre::StringConverter::toString(index) + ".png";
+}

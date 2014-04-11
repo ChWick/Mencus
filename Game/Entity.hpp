@@ -19,6 +19,8 @@ protected:
   std::string m_sID;
   unsigned int m_uiType;                                //!< one can set a type
 
+  bool m_bVisible;		                        //!< set this for visibility
+
   CMap &m_Map;
 
   CEntity *m_pParent;
@@ -35,7 +37,7 @@ public:
 	  CEntity *pParent,
 	  const tinyxml2::XMLElement *pElem,
 	  const Ogre::Vector2 &vDefaultPosition = Ogre::Vector2::ZERO,
-	  const Ogre::Vector2 &vDefaultSize = Ogre::Vector2::ZERO,
+	  const Ogre::Vector2 &vDefaultSize = Ogre::Vector2::UNIT_SCALE,
 	  const Ogre::Vector2 &vDefaultScale = Ogre::Vector2::UNIT_SCALE);
   CEntity(const CEntity &src);
   virtual ~CEntity();
@@ -86,6 +88,9 @@ public:
   const std::string &getID() const {return m_sID;}
   std::string &getID() {return m_sID;}
   void setID(const std::string &sID) {m_sID = sID;}
+
+  void setVisible(bool bVisible) {m_bVisible = bVisible;}
+  bool isVisible() const {return m_bVisible;}
 
   Ogre::Vector2 &getPosition() {return m_vPosition;}
   const Ogre::Vector2 &getPosition() const {return m_vPosition;}

@@ -12,7 +12,7 @@ using namespace std;
 using namespace XMLHelper;
 
 CEvent *CEventCreator::create(CMap &map, const tinyxml2::XMLElement *pElem) {
-  cout << "Event:" << Attribute(pElem, "type", "unknown", true) << endl;
+  cout << "Event: " << Attribute(pElem, "type", "unknown", true) << endl;
   CEvent::ETypes eType = CEvent::parseEventType(Attribute(pElem, "type", "unknown", true));
   switch (eType) {
   case CEvent::EVENT_CHANGE_TILE:

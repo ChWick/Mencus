@@ -116,6 +116,9 @@ void CMap::init() {
   for (auto pEnt : m_pOthersEntity->getChildren()) {
     pEnt->init();
   }
+  for (auto pEnt : m_pObjectsEntity->getChildren()) {
+    pEnt->init();
+  }
 
   if (m_pPlayer) {
     updateCameraPos(0);
@@ -848,7 +851,14 @@ void CMap::destroy(CEntity *pEntity, bool bLater) {
     delete pEntity;
   }
 }
-
+void CMap::handleMessage(const CMessage &message) {
+  switch (message.getType()) {
+  case CMessage::MT_EXIT_REACHED:
+    m_pScreenplayListener->playerExitsMap();
+    break;
+  }
+  CEntity::handleMessage(message);
+}
 void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle) const {
   using namespace tinyxml2;
 
@@ -1012,13 +1022,7 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
     }
     else if (std::string(pElement->Value()) == "objects") {
       for (const XMLElement *pObject = pElement->FirstChildElement(); pObject; pObject = pObject->NextSiblingElement()) {
-        new CObject(*this,
-		    "Object",
-		    m_pObjectsEntity,
-		    Vector2Attribute(pObject),
-		    EnumAttribute<CObject::EObjectTypes>(pObject,
-							 "type",
-							 CObject::OT_COUNT));
+        new CObject(*this, m_pObjectsEntity, pObject);
       }
     }
     else if (std::string(pElement->Value()) == "exit") {
