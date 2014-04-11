@@ -211,16 +211,19 @@ void CGame::locateResources() {
 #endif
 }
 void CGame::loadResources() {
+  // only load required resources for the game menu (cegui resources)
+  Ogre::LogManager::getSingleton().logMessage("Loading resources start");
   //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
-  showLoadingBar(7, 0);
-  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("PreloadGame");
+  showLoadingBar(5, 0);
+  //Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("PreloadGame");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Imagesets");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Fonts");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Schemes");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("LookNFeel");
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Layouts");
-  Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("level_user");
+  //Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("level_user");
   hideLoadingBar();
+  Ogre::LogManager::getSingleton().logMessage("Loading resources end");
 }
 void CGame::setupInput(bool nograb) {
 #if OGRE_PLATFORM != OGRE_PLATFORM_ANDROID && OGRE_PLATFORM != OGRE_PLATFORM_WINRT
@@ -884,9 +887,10 @@ void CGame::destroyResources() {
     //new CGUIManager(mSceneMgr, *mWindow);
   }
 }
-void CGame::showLoadingBar(unsigned int numGroupsInit, unsigned int numGroupsLoad) {
+OgreBites::SdkTrayManager* CGame::showLoadingBar(unsigned int numGroupsInit, unsigned int numGroupsLoad) {
   assert(mTrayMgr);
   mTrayMgr->showLoadingBar(numGroupsInit, numGroupsLoad);
+  return mTrayMgr;
 }
 void CGame::hideLoadingBar() {
   assert(mTrayMgr);

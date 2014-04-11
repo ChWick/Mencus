@@ -9,6 +9,8 @@
 #include "GUIStatistics.hpp"
 #include "GUITutorial.hpp"
 #include "MapEditor.hpp"
+#include "Game.hpp"
+#include <SdkTrays.h>
 
 using namespace CEGUI;
 
@@ -32,11 +34,17 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   m_vNativeRes(target.getWidth(), target.getHeight()) {
   CInputListenerManager::getSingleton().addInputListener(this);
 
+  OgreBites::SdkTrayManager *pTrayMgr = CGame::getSingleton().showLoadingBar(1, 1);
+  pTrayMgr->loadBarSetCaption("GUI ...");
   Ogre::LogManager::getSingletonPtr()->logMessage("*** Initializing CEGUI ***");
+
   Ogre::LogManager::getSingletonPtr()->logMessage("    creating bootstrapSystem");
+  pTrayMgr->userUpdateLoadBar("Creating bootstrap system", 0.1);
   m_pCEGuiOgreRenderer = &CEGUI::OgreRenderer::bootstrapSystem(target);
   m_pCEGuiOgreRenderer->setFrameControlExecutionEnabled(false);
-  Ogre::LogManager::getSingletonPtr()->logMessage("    setting upresource paths");
+
+  Ogre::LogManager::getSingletonPtr()->logMessage("    setting up resource paths");
+  pTrayMgr->userUpdateLoadBar("Setting up resource paths", 0.1);
   CEGUI::ImageManager::setImagesetDefaultResourceGroup("Imagesets");
   CEGUI::Font::setDefaultResourceGroup("Fonts");
   CEGUI::Scheme::setDefaultResourceGroup("Schemes");
@@ -44,11 +52,13 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   CEGUI::WindowManager::setDefaultResourceGroup("Layouts");
 
   Ogre::LogManager::getSingletonPtr()->logMessage("    creating scheme");
+  pTrayMgr->userUpdateLoadBar("Creating scheme", 0.1);
   createResources();
 
   pSceneManager->addRenderQueueListener(this);
 
   Ogre::LogManager::getSingletonPtr()->logMessage("    creating root window");
+  pTrayMgr->userUpdateLoadBar("Initializing the root window", 0.1);
   CEGUI::Window *guiRoot = CEGUI::WindowManager::getSingleton().createWindow("DefaultWindow", "MasterRoot");
   //guiRoot->setAlpha(0);
   guiRoot->setSize(USize(UDim(1, 0), UDim(1, 0)));
@@ -61,6 +71,8 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
 #endif
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setPosition(CEGUI::Vector2f(0,0));
 
+
+  pTrayMgr->userUpdateLoadBar("Creating fonts", 0.2);
   createFreeTypeFont("dejavusans12", 12, "DejaVuSans.ttf");
   createFreeTypeFont("dejavusans8", 8, "DejaVuSans.ttf");
   createFreeTypeFont("diploma15", 15, "diploma.ttf");
@@ -70,6 +82,7 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   guiRoot->setFont("dejavusans12");
 
 
+  pTrayMgr->userUpdateLoadBar("Creating gui components", 0.2);
   //destroyResources();
 #ifdef INPUT_TOUCH
   m_pGUIInput = new CGUIInput(guiRoot); // gui input before hud, since hud depends
@@ -85,8 +98,11 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   new CGUIStatistics(guiRoot);
   new CGUITutorial(guiRoot);
 
-;
+ 
+
+  pTrayMgr->userUpdateLoadBar("done...", 0.2);
   Ogre::LogManager::getSingleton().logMessage("GUIManager initialized...");
+  CGame::getSingleton().hideLoadingBar();
 }
 CGUIManager::~CGUIManager() {
   CInputListenerManager::getSingleton().removeInputListener(this);

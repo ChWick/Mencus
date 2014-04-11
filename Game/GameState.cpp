@@ -115,6 +115,7 @@ void CGameState::changeGameStateImpl() {
     m_eCurrentGameState = m_eNextGameState;
     switch (m_eCurrentGameState) {
     case GS_GAME:
+      Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("PreloadGame");
       m_pScreenplay = new CScreenplay();
       if (m_pMapInfo) {
 	m_pScreenplay->loadSingleMap(m_pMapInfo);

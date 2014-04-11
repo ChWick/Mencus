@@ -2856,6 +2856,15 @@ namespace OgreBites
 
 		void resourceGroupLoadEnded(const Ogre::String& groupName) {}
 
+		void loadBarSetCaption(const Ogre::String &caption) {
+		  mLoadBar->setCaption(caption);
+		}
+		void userUpdateLoadBar(const Ogre::String &comment, float fInc) {
+		  mLoadBar->setProgress(mLoadBar->getProgress() + fInc);
+		  mLoadBar->setComment(comment);
+		  windowUpdate();
+		}
+
 		/*-----------------------------------------------------------------------------
 		| Toggles visibility of advanced statistics.
 		-----------------------------------------------------------------------------*/

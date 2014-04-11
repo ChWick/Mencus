@@ -56,7 +56,7 @@ public:
   void createResources();
   void destroyResources();
   
-  void showLoadingBar(unsigned int numGroupsInit = 1, unsigned int numGroupsLoad = 1);
+  OgreBites::SdkTrayManager* showLoadingBar(unsigned int numGroupsInit = 1, unsigned int numGroupsLoad = 1);
   void hideLoadingBar();
   
   bool renderOneFrame();
