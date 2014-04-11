@@ -1,0 +1,47 @@
+<map difficulty="easy" name="Tutorial 3" description="In this tutorial you learn how to use keys and handle locked doors.
+" background="forest" sizex="16" sizey="12">
+    <tiles invert="0">
+        <row tiles="1 5 5 5 5 5 5 5 5 5 5 5 5 5 5 1 "/>
+        <row tiles="4 2 2 2 2 49 2 2 2 43 2 2 2 2 2 3 "/>
+        <row tiles="4 2 2 2 2 50 2 2 2 43 2 2 2 2 2 3 "/>
+        <row tiles="4 2 2 18 6 5 17 17 17 5 17 19 2 2 2 3 "/>
+        <row tiles="12 19 2 2 10 2 2 2 2 2 2 2 2 2 2 3 "/>
+        <row tiles="4 2 2 2 10 2 2 2 2 2 2 2 2 2 2 3 "/>
+        <row tiles="4 2 2 2 9 2 2 2 2 2 2 2 2 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 "/>
+        <row tiles="12 6 6 6 6 6 6 6 6 6 6 6 6 6 6 11 "/>
+        <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
+    </tiles>
+    <events>
+      <event type="message" emitter="create" title="Tutorial 3" id="InitialMessageBox">
+	<page text="This is the third tutorial. Here you will learn how to use keys to open locked doors."/>
+	<page text="Next to you you see locked bars. Search and pickup a key to unlock it."/>
+      </event>
+    </events>
+    <switches/>
+    <endangeredTiles/>
+    <links/>
+    <enemies>
+        <enemy direction="1" jumps="0" hp="2" x="8" y="1" id="SingleEnemy" type="1"/>
+    </enemies>
+    <objects>
+        <object x="6" y="1" id="Object_-1210297291" type="6">
+	  <events>
+	    <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
+	  </events>
+	</object>
+        <object x="10.5" y="1" id="Object_685118022" type="3">
+	  <events>
+	    <event type="message" emitter="destroy" title="Tutorial 3" text="You found the key! Now open that door and reach the flag!"/>
+	  </events>
+	</object>
+        <object x="2.25" y="6" id="Object_-1952636240" type="5"/>
+        <object x="8.5" y="6" id="Object_824938979" type="5"/>
+        <object x="7.5" y="2" id="Object_-185075635" type="5"/>
+        <object x="14" y="6" id="Object_997389812" type="5"/>
+        <object x="14.5" y="2" id="Object_-669037147" type="5"/>
+    </objects>
+    <player x="4" y="1" id="Player" type="0" hp="10" direction="1"/>
+</map>
