@@ -38,8 +38,9 @@ public class MencusAdListener extends AdListener {
                 errorReason = "No fill";
                 break;
         }
-        Toast.makeText(mContext, String.format("onAdFailedToLoad(%s)", errorReason),
-                Toast.LENGTH_SHORT).show();
+	// ad blocker, etc...
+        //Toast.makeText(mContext, String.format("onAdFailedToLoad(%s)", errorReason),
+	//      Toast.LENGTH_SHORT).show();
         mContext.setAdClosed(true);
     }
 
