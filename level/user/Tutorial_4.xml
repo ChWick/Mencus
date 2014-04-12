@@ -1,5 +1,4 @@
-<map difficulty="easy" name="Tutorial 4" description="This Tutorial shall introduce you to doors.
-" background="forest" sizex="16" sizey="14">
+<map difficulty="easy" name="Tutorial 4" description="This Tutorial shall introduce you to doors." tutorial="true" background="forest" sizex="16" sizey="14">
     <tiles invert="0">
         <row tiles="71 71 71 71 71 71 71 71 71 7 5 5 5 5 1 4 "/>
         <row tiles="23 23 121 122 120 80 80 80 80 2 2 2 2 22 3 4 "/>

@@ -1,5 +1,4 @@
-<map difficulty="easy" name="Tutorial 5" description="To be written!
-" background="forest" sizex="37" sizey="16">
+<map difficulty="easy" name="Tutorial 5" description="In this tutorial you will learn the basics about switches" tutorial="true" background="forest" sizex="37" sizey="16">
     <player x="5" y="1" id="Player" type="0" hp="10" direction="1"/>
     <tiles invert="0">
         <row tiles="26 24 24 24 24 24 24 26 26 24 24 26 24 24 24 26 24 24 24 26 26 26 24 24 24 24 24 26 26 26 26 24 24 24 24 24 24 "/>
@@ -51,7 +50,7 @@
     </switches>
     <events>
       <event type="message" emitter="create" title="Tutorial 5" id="InitialMessageBox">
-	<page text="This is the fourth tutorial. Here you will learn how to interact with switches."/>
+	<page text="This is the fifth tutorial. Here you will learn how to interact with switches."/>
 	<page text="As you can see, the wall is too high for jumping over it. But there is a switch that will help you. Walk to it!"/>
       </event>
     </events>

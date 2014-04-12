@@ -1,5 +1,4 @@
-<map difficulty="easy" name="Tutorial 2" description="In the second tutorial you learn how to fight enemies with your magic bolt.
-" background="forest" sizex="16" sizey="12">
+<map difficulty="easy" name="Tutorial 2" description="In the second tutorial you learn how to fight enemies with your magic bolt." tutorial="true" background="forest" sizex="16" sizey="12">
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
         <row tiles="5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 "/>
