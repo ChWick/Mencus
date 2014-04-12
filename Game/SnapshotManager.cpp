@@ -90,6 +90,8 @@ bool CSnapshotManager::loadBackupSnapshot() {
   CSnapshot *pSnapshot = NULL;
   try {
     pSnapshot = new CSnapshot(CFileManager::getValidPath("backup.xml", CFileManager::SL_INTERNAL).c_str());
+    // delete snapshot file (if there is an error in the file, then on second start, should be in normal main menu
+    CFileManager::deleteFile("backup.xml", CFileManager::SL_INTERNAL);
   }
   catch (const Ogre::Exception &e) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, e.getFullDescription());
