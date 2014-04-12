@@ -57,6 +57,8 @@ public:
   void destroyChildren();
   void destroy();
   
+  void sendCallToAll(void (CEntity::*pFunction)());
+  
   // events access
   std::list<CEvent*> &getEvents() {return m_lEvents;}
   const std::list<CEvent*> &getEvents() const {return m_lEvents;}

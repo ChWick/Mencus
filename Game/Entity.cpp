@@ -170,6 +170,13 @@ void CEntity::destroy() {
   m_Map.destroy(this, true);
 }
 
+void CEntity::sendCallToAll(void (CEntity::*pFunction)()) {
+  (this->*pFunction)();
+  for (auto pChild : m_lChildren) {
+    pChild->sendCallToAll(pFunction);
+  }
+}
+
 void CEntity::destroyChildren() {
   while (m_lChildren.size() > 0) {
     CEntity *toDel = m_lChildren.front();
@@ -199,7 +206,11 @@ void CEntity::update(Ogre::Real tpf) {
   for (auto it = m_lEvents.begin(); it !=m_lEvents.end();) {
     CEvent *pEvent = *it;
     if (pEvent->getEmitter()->getType() == EventEmitter::EMIT_ON_COLLISION) {
-      if (getWorldBoundingBox().collidesWith(dynamic_cast<const EventEmitter::COnCollision*>(pEvent->getEmitter())->getEntity()->getWorldBoundingBox()) != CCD_NONE) {
+      if (getWorldBoundingBox()
+	  .collidesWith(dynamic_cast<const EventEmitter::COnCollision*>(pEvent->getEmitter())
+			->getEntity()
+			->getWorldBoundingBox())
+	  != CCD_NONE) {
 	pEvent->start();
 	if (pEvent->getEmitter()->getRepeatType() == EventEmitter::REPEAT_NONE) {
 	  delete pEvent;

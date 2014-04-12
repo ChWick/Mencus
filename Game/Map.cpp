@@ -21,6 +21,7 @@
 #include "Exit.hpp"
 #include "MessageHandler.hpp"
 #include "Region.hpp"
+#include "Events/Event.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -111,19 +112,21 @@ CMap::~CMap() {
   Ogre::ResourceGroupManager::getSingleton().unloadResourceGroup("Game");
 }
 void CMap::init() {
+  Ogre::LogManager::getSingleton().logMessage("Initializing map start...");
   CEntity::init();
 
-  for (auto pEnt : m_pOthersEntity->getChildren()) {
+  /*for (auto pEnt : m_pOthersEntity->getChildren()) {
     pEnt->init();
   }
   for (auto pEnt : m_pObjectsEntity->getChildren()) {
     pEnt->init();
-  }
+    }*/
 
   if (m_pPlayer) {
     updateCameraPos(0);
     m_vCameraPos = m_vCameraTargetPos;
   }
+  Ogre::LogManager::getSingleton().logMessage("Initializing map done.");
 }
 void CMap::clearLineNumbers() {
   for (auto &t : m_vLineNumberX) {
@@ -136,29 +139,30 @@ void CMap::clearLineNumbers() {
   m_vLineNumberY.clear();
 }
 void CMap::clearMap() {
+  while (m_lEvents.size() > 0) {
+    delete m_lEvents.front();
+    m_lEvents.pop_front();
+  }
+  destroyChildren();
+
   m_vCameraRestrictions.clear();
   m_lEntitiesToDestroy.clear();
 
   CHUD::getSingleton().clear();
 
-  
-  m_pEnemiesEntity->destroyChildren();
-  m_pSwitchesEntity->destroyChildren();
-  m_pShotsEntity->destroyChildren();
-  m_pExplosionsEntity->destroyChildren();
-  m_pLinksEntity->destroyChildren();
-  m_pObjectsEntity->destroyChildren();
-  m_pOthersEntity->destroyChildren();
-
-  if (m_pBackground) {
-    delete m_pBackground;
-    m_pBackground = NULL;
-  }
-
-  if (m_pPlayer) {delete m_pPlayer; m_pPlayer = NULL;}
-
-  m_pTilesEntity->destroyChildren();
   m_gridTiles.clear();
+
+  m_pPlayer = NULL;
+  m_pBackground = NULL;
+
+  m_pTilesEntity = new CEntity(*this, "Tiles", this);
+  m_pEnemiesEntity = new CEntity(*this, "Enemies", this);
+  m_pSwitchesEntity = new CEntity(*this, "Switches", this);
+  m_pShotsEntity = new CEntity(*this, "Shots", this);
+  m_pExplosionsEntity = new CEntity(*this, "Explosions", this);
+  m_pLinksEntity = new CEntity(*this, "Links", this);
+  m_pObjectsEntity = new CEntity(*this, "Objects", this);
+  m_pOthersEntity = new CEntity(*this, "Others", this);
 }
 void CMap::resize(const Ogre::Vector2 &vSize, const Ogre::Vector2 &vOrigin) {
   m_vMapSize = vSize;
@@ -1055,5 +1059,5 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
     }
   }
 
-  init();
+  this->sendCallToAll(&CEntity::init);
 }

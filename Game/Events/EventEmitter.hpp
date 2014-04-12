@@ -78,6 +78,7 @@ namespace EventEmitter {
   public:
     COnCollision(const tinyxml2::XMLElement *pElem)
       : CEmitter(EMIT_ON_COLLISION, pElem),
+	m_pEntity(NULL),
 	m_sSrcID(XMLHelper::Attribute(pElem, "src_id")) {
     }
 

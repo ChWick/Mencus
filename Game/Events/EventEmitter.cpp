@@ -2,6 +2,7 @@
 #include <OgreException.h>
 #include "XMLHelper.hpp"
 #include "Map.hpp"
+#include <OgreLogManager.h>
 
 using namespace XMLHelper;
 using namespace EventEmitter;
@@ -61,6 +62,9 @@ void COnCollision::init(const CMap &map) {
   m_pEntity = map.getChildRecursive(m_sSrcID);
   if (!m_pEntity) {
     throw Ogre::Exception(0, "An entity with id " + m_sSrcID + " was not found.", __FILE__);
+  }
+  else {
+    Ogre::LogManager::getSingleton().logMessage("Entity with id " + m_sSrcID + " set as collisions object.");
   }
 }
 
