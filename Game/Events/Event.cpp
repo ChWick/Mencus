@@ -43,7 +43,7 @@ CEvent::CEvent(CMap &map, ETypes eType, const tinyxml2::XMLElement *pElement)
     m_pEmitter(EventEmitter::CCreator::create(pElement)),
     m_sID(Attribute(pElement, "id", CIDGenerator::nextID("Event"))),
     m_Map(map),
-    m_bStarted(false) {
+    m_bStarted(BoolAttribute(pElement, "started", false)) {
 }
 CEvent::~CEvent() {
   delete m_pEmitter;
@@ -66,5 +66,8 @@ void CEvent::stop() {
 void CEvent::writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eStyle) const {
   SetAttribute(pElement, "type", toString(m_eType));
   SetAttribute(pElement, "id", m_sID);
+  if (eStyle == OS_FULL) {
+    SetAttribute(pElement, "started", m_bStarted);
+  }
   m_pEmitter->writeToXMLElement(pElement);
 }
