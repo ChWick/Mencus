@@ -86,7 +86,7 @@ void CMapInfo::constructor_impl() {
   m_eDifficulty = parseMapDifficlty(Attribute(pRoot, "difficulty", "unknown"));
   m_sName = Attribute(pRoot, "name", "unknown");
   m_sDescription = Attribute(pRoot, "description");
-  m_bIsTutorial = BoolAttribute(pRoot, "tutorial");
+  m_bIsTutorial = BoolAttribute(pRoot, "tutorial", false);
 
   m_bValid = true;
 }
@@ -95,7 +95,7 @@ void CMapInfo::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyp
   pElem->SetAttribute("difficulty", toString(m_eDifficulty).c_str());
   pElem->SetAttribute("name", m_sName.c_str());
   pElem->SetAttribute("description", m_sDescription.c_str());
-  SetAttribute(pElem, "tutorial", true);
+  SetAttribute(pElem, "tutorial", m_bIsTutorial);
 }
 std::string CMapInfo::generateInfoText() const {
   return "Name: " + m_sName + "\nDifficulty: " + toString(m_eDifficulty) + "\nDescription: " + m_sDescription;
