@@ -159,3 +159,13 @@ bool CFileManager::openFile(std::fstream &stream,
   }
   return true;
 }
+
+void CFileManager::deleteFile(const std::string &sFileName,
+			      EStorageLocation eLocation) {
+  if (remove(getValidPath(sFileName, eLocation).c_str()) != 0) {
+    Ogre::LogManager::getSingleton().logMessage("File " + sFileName + " could not be deleted");
+  }
+  else {
+    Ogre::LogManager::getSingleton().logMessage("File " + sFileName + " has been deleted");
+  }
+}

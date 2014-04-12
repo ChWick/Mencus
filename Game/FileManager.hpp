@@ -37,6 +37,8 @@ public:
 		       const std::string &sFileName,
 		       std::ios_base::openmode mode,
 		       EStorageLocation eLocation = SL_INTERNAL);
+  static void deleteFile(const std::string &sFileName,
+			 EStorageLocation eLocation);
   static std::string getValidPath(const std::string &sFileName,
 				  EStorageLocation eLocation = SL_INTERNAL);
 };
