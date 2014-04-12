@@ -437,6 +437,9 @@ void CGUIInput::sendMessageToAll(const CMessage &message) {
     }
     break;
   case CMessage::MT_MAP_DESTROYED:
+    for (auto *pButton : m_pButtons) {
+      pButton->setProperty("ImageColours", "FFFFFFFF");
+    }
     m_lBlinkingButtons.clear();
     m_fTimer = 0;
     break;
