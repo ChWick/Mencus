@@ -868,6 +868,12 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
 
   XMLDocument &doc = *pMapElem->GetDocument();
 
+
+  // player first!
+  XMLElement *pPlayer = doc.NewElement("player");
+  pMapElem->InsertEndChild(pPlayer);
+  m_pPlayer->writeToXMLElement(pPlayer, eStyle);
+
   m_pMapInfo->writeToXMLElement(pMapElem, eStyle);
   
   if (m_pBackground) {
@@ -889,7 +895,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
     }
     pRow->SetAttribute("tiles", ss.str().c_str());
   }
-  
+
   XMLElement *pSwitches = doc.NewElement("switches");
   pMapElem->InsertEndChild(pSwitches);
   for (const CEntity *pSwitch : getSwitches()) {
@@ -939,10 +945,6 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
   XMLElement *pExit = doc.NewElement("exit");
   pMapElem->InsertEndChild(pExit);
   m_Exit.writeToXMLElement(pExit);
-
-  XMLElement *pPlayer = doc.NewElement("player");
-  pMapElem->InsertEndChild(pPlayer);
-  m_pPlayer->writeToXMLElement(pPlayer, eStyle);
 
   XMLElement *pCamera = doc.NewElement("camera");
   if (eStyle == OS_FULL) {
