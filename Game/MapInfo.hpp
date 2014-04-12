@@ -40,6 +40,7 @@ private:
   std::string m_sName;
   std::string m_sDescription;
   std::string m_sFileName;
+  bool m_bIsTutorial;
 public:
   CMapInfo();
   CMapInfo(const std::string &sFileName, const std::string &sResourceGroup);
@@ -52,6 +53,7 @@ public:
   tinyxml2::XMLElement *getEmptyRootNode();
   const tinyxml2::XMLDocument &getDocument() const {return m_Document;}
   bool isValid() const {return m_bValid;}
+  bool isTutorial() const {return m_bIsTutorial;}
   void setDifficulty(EMapDifficulty eDiff) {m_eDifficulty = eDiff;}
   EMapDifficulty getDifficulty() const {return m_eDifficulty;}
   std::string getDifficultyAsString() const {return toString(m_eDifficulty);}

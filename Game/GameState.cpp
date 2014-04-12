@@ -83,8 +83,10 @@ void CGameState::changeGameStateImpl() {
     return;
   }
   auto ePreviousGameState = m_eCurrentGameState;
-  if (m_eNextGameState == GS_GAME && !m_bAdShown) {
-    m_eNextGameState = GS_AD;
+  if (!(m_pMapInfo && m_pMapInfo->isTutorial())) {
+    if (m_eNextGameState == GS_GAME && !m_bAdShown) {
+      m_eNextGameState = GS_AD;
+    }
   }
   switch (m_eCurrentGameState) {
   case GS_GAME:

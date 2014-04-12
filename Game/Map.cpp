@@ -628,7 +628,7 @@ void CMap::update(Ogre::Real tpf) {
     m_fPlayingTime += tpf;
     CHUD::getSingleton().setCurrentTime(m_fPlayingTime);
 
-    m_pTutorialManager->update();
+    //m_pTutorialManager->update();
 
     updateCameraPos(tpf);
 
@@ -986,7 +986,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
 void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
   clearMap();
   
-  m_pTutorialManager->setEnabled(BoolAttribute(pRoot, "tutorial", false));
+  //m_pTutorialManager->setEnabled(BoolAttribute(pRoot, "tutorial", false));
 
   CEntity::readFromXMLElement(pRoot);
 
