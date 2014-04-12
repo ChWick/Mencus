@@ -31,7 +31,6 @@ public:
 private:
   Ogre::Real m_fTimer;
   Ogre::Real m_fActiveTime;
-  const SwitchType m_stSwitchType;
   ESwitchStates m_eSwitchState;
   unsigned int m_uiSwitchFlags;
   CDebugText *m_pLeftTimeText;
@@ -51,7 +50,6 @@ public:
   void update(Ogre::Real tpf);
 
   ESwitchStates getState() const {return m_eSwitchState;}
-  SwitchType getType() const {return m_stSwitchType;}
 
   Ogre::Real &getActivationTime() {return m_fActiveTime;}
   Ogre::Real getActivationTime() const {return m_fActiveTime;}

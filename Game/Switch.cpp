@@ -4,6 +4,7 @@
 #include "Tile.hpp"
 #include "XMLHelper.hpp"
 #include "Events/Event.hpp"
+#include "Events/EventEmitter.hpp"
 #include "Events/ChangeTileEvent.hpp"
 #include "Events/ToggleEvent.hpp"
 #include "DebugText.hpp"
@@ -35,9 +36,9 @@ CSwitch::CSwitch(CMap &map,
 	    SWITCH_SIZES[stSwitchType]),
     m_fTimer(0),
     m_fActiveTime(0),
-    m_stSwitchType(stSwitchType),
     m_eSwitchState(eSwitchState),
     m_pLeftTimeText(NULL) {
+  setType(stSwitchType);
   m_uiSwitchFlags = SWITCH_FLAGS[stSwitchType];
   if (bChangeBlocks) {
     m_uiSwitchFlags |= SF_CHANGE_BLOCKS;
@@ -55,7 +56,6 @@ CSwitch::CSwitch(CMap &map,
 	    SWITCH_SIZES[EnumAttribute<ESwitchTypes>(pElem, "type")]),
     m_fTimer(RealAttribute(pElem, "timer", 0)),
     m_fActiveTime(RealAttribute(pElem, "activeTime")),
-    m_stSwitchType(EnumAttribute<ESwitchTypes>(pElem, "type")),
     m_eSwitchState(EnumAttribute<ESwitchStates>(pElem, "state", SS_DEACTIVATED)),
     m_uiSwitchFlags(IntAttribute(pElem, "flags", SWITCH_FLAGS[EnumAttribute<ESwitchTypes>(pElem, "type")])),
   m_pLeftTimeText(NULL) {
@@ -80,7 +80,7 @@ CSwitch::CSwitch(CMap &map,
     }
   }
 
-  setTexture(getSwitchTexture(m_stSwitchType, m_eSwitchState != SS_DEACTIVATED));
+  setTexture(getSwitchTexture(m_uiType, m_eSwitchState != SS_DEACTIVATED));
 
   updateState(m_eSwitchState);
 }
@@ -136,15 +136,17 @@ void CSwitch::updateState(ESwitchStates eNewState) {
       m_Map.swapBoxes();
     }
     for (auto *pEvent : m_lEvents) {
-      execute(pEvent);
+      if (pEvent->getEmitter()->getType() == EventEmitter::EMIT_ON_USER) {
+	execute(pEvent);
+      }
     }
   }
   m_eSwitchState = eNewState;
   if (m_eSwitchState == SS_DEACTIVATED) {
-    setTexture(getSwitchTexture(m_stSwitchType, false));
+    setTexture(getSwitchTexture(m_uiType, false));
   }
   else {
-    setTexture(getSwitchTexture(m_stSwitchType, true));
+    setTexture(getSwitchTexture(m_uiType, true));
   }
 
   if (m_eSwitchState == SS_DEACTIVATING) {
@@ -175,7 +177,6 @@ void CSwitch::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle
   using namespace tinyxml2;
 
   CSprite::writeToXMLElement(pElem, eStyle);
-  pElem->SetAttribute("type", m_stSwitchType);
   pElem->SetAttribute("flags", m_uiSwitchFlags);
   pElem->SetAttribute("activeTime", m_fActiveTime);
   if (eStyle == OS_FULL) {
