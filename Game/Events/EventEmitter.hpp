@@ -34,7 +34,7 @@ namespace EventEmitter {
   public:
     CEmitter(EEmitter eType, const tinyxml2::XMLElement *pElem, ERepeatType eRepeatType = REPEAT_NONE) 
       : m_eType(eType),
-	m_eRepeatType(parseRepeatType(XMLHelper::Attribute(pElem, "repeat", toString(eRepeatType)))) {
+	m_eRepeatType((pElem) ? parseRepeatType(XMLHelper::Attribute(pElem, "repeat", toString(eRepeatType))) : REPEAT_INFINITE) {
     }
     virtual ~CEmitter() {
     }
