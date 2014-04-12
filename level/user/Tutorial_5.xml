@@ -36,7 +36,7 @@
                   <page text="Press the button on the right side to activate the switch. This will have effects on the map, like creaing/removing blocks, objects, ..."/>
 		</event>
 		<event type="inject_message" id="Event1815859899" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="activate" msg_enabled="true"/>
-		<event type="inject_message" id="Event1815859899" emitter="user" repeat="none" msg_type="toggle_touch_input_blink" msg_button="activate" msg_enabled="true"/>
+		<event type="inject_message" id="Event1815859899" emitter="user" repeat="none" msg_type="toggle_touch_input_blink" msg_button="activate" msg_enabled="false"/>
                 <event type="change_tile" id="31" emitter="user" repeat="infinite" x="4" y="1"/>
             </events>
         </switch>
