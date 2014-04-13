@@ -4,7 +4,6 @@
 #include "AnimatedSprite.hpp"
 
 class CMap;
-class CEnemy;
 
 class CShot : public CAnimatedSprite {
 public:
@@ -45,7 +44,8 @@ private:
   Ogre::Real m_fTimer;
   EShotStates m_eState;
   unsigned int m_uiDamages;
-  CEnemy *m_pCatchedEnemy;
+  CEntity *m_pCatchedEnemy;
+  std::string m_sCatchedEnemyID;
 public:
   CShot(CMap &map,
 	const Ogre::Vector2 &vCenter,
@@ -54,6 +54,8 @@ public:
 	unsigned int uiDmg = DMG_ALL);
   CShot(CMap &map,
 	const tinyxml2::XMLElement *pElement);
+
+  void init();
   //! Lanches a shot with the given speed
   /** This speed will be multiplied with the default speed of the shot
    *  \param[in] vInitialSpeed The initial speed or direction vector

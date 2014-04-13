@@ -57,9 +57,11 @@ CShot::CShot(CMap &map,
   m_bAffectedByGravity(SHOT_AFFECTED_BY_GRAVITY[eShotType]),
   m_vSpeed(Ogre::Vector2::ZERO),
   m_eShotDirection(eShotDirection),
+  m_fTimer(0),
   m_eState(SS_NONE),
   m_uiDamages(uiDmg),
-  m_pCatchedEnemy(NULL) {
+  m_pCatchedEnemy(NULL),
+  m_sCatchedEnemyID("") {
   setType(eShotType);
   constructor_impl();
 }
@@ -76,11 +78,18 @@ CShot::CShot(CMap &map,
 				       SHOT_AFFECTED_BY_GRAVITY[EnumAttribute<EShotTypes>(pElement, "type", ST_COUNT, true)])),
     m_vSpeed(Vector2Attribute(pElement, "speed", Ogre::Vector2::ZERO)),
     m_eShotDirection(EnumAttribute<EShotDirections>(pElement, "direction", SD_RIGHT, true)),
+    m_fTimer(RealAttribute(pElement, "timer", 0)),
     m_eState(EnumAttribute<EShotStates>(pElement, "state", SS_NONE)),
     m_uiDamages(IntAttribute(pElement, "damages")),
-    m_fTimer(RealAttribute(pElement, "timer", 0)),
-    m_pCatchedEnemy(map.getEnemyById(Attribute(pElement, "catched_enemy"))) {
+    m_pCatchedEnemy(NULL),
+    m_sCatchedEnemyID(Attribute(pElement, "catched_enemy", Ogre::StringUtil::BLANK)) {
   constructor_impl();
+}
+void CShot::init() {
+  CEntity::init();
+  if (m_sCatchedEnemyID.size() > 0) {
+    m_pCatchedEnemy = m_Map.getChildRecursive(m_sCatchedEnemyID);
+  }
 }
 void CShot::constructor_impl() {
   CSpriteTexture::EMirrorTypes eMirrorType = CSpriteTexture::MIRROR_NONE;
@@ -89,21 +98,21 @@ void CShot::constructor_impl() {
   }
 
   if (m_uiType == ST_BOLT) {
-    init(1, 1);
+    CAnimatedSprite::init(1, 1);
     setupAnimation(SA_DEFAULT, "bolt", 2, eMirrorType, &getBoltTexture);
   }
   else if (m_uiType == ST_BOMB) {
-    init(1, 2);
+    CAnimatedSprite::init(1, 2);
     setDefaultGetPath(&getBombTexture);
     setupAnimation(SA_DEFAULT, "bomb", -1, eMirrorType);
     setupAnimation(SA_LAUNCHED, "bomb_on", 6, eMirrorType);
   }
   else if (m_uiType == ST_SKULL) {
-    init(1, 1);
+    CAnimatedSprite::init(1, 1);
     setupAnimation(SA_DEFAULT, "skull", 1, eMirrorType, &getSkullTexture);
   }
   else if (m_uiType == ST_COLUMN) {
-    init(1, 1);
+    CAnimatedSprite::init(1, 1);
     setupAnimation(SA_DEFAULT, "column", 2, eMirrorType, &getColumnTexture);
     m_bbRelativeBoundingBox.setPosition(Ogre::Vector2(0.4, 0));
     m_bbRelativeBoundingBox.setSize(Ogre::Vector2(0.2, 1.6));
@@ -197,14 +206,14 @@ void CShot::update(Ogre::Real tpf) {
   }
   else if (m_eState == SS_ENEMY_CAUGHT) {
     if (m_pCatchedEnemy) {
-      m_pCatchedEnemy->setStunned(true);
-      m_pCatchedEnemy->addExternalForce((getCenter() - m_pCatchedEnemy->getCenter()) * 50);
+      dynamic_cast<CEnemy*>(m_pCatchedEnemy)->setStunned(true);
+      dynamic_cast<CEnemy*>(m_pCatchedEnemy)->addExternalForce((getCenter() - m_pCatchedEnemy->getCenter()) * 50);
     }
     m_fTimer -= tpf;
     setAlpha(m_fTimer / COLUMN_CATCH_DURATION);
     if (m_fTimer <= 0) {
       if (m_pCatchedEnemy) {
-	m_pCatchedEnemy->setStunned(false);
+        dynamic_cast<CEnemy*>(m_pCatchedEnemy)->setStunned(false);
 	m_pCatchedEnemy = NULL;
       }
       destroy();
@@ -229,8 +238,8 @@ void CShot::hit() {
     for (auto *pEnemy : m_Map.getEnemies()) {
       if (pEnemy->getWorldBoundingBox().collidesWith(getWorldBoundingBox())) {
         if (m_uiType == ST_COLUMN) {
-          m_pCatchedEnemy = dynamic_cast<CEnemy*>(pEnemy);
-          m_pCatchedEnemy->setStunned(true);
+          m_pCatchedEnemy = pEnemy;
+          dynamic_cast<CEnemy*>(m_pCatchedEnemy)->setStunned(true);
           m_eState = SS_ENEMY_CAUGHT;
           m_fTimer = COLUMN_CATCH_DURATION;
         }
