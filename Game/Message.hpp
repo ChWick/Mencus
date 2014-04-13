@@ -5,11 +5,14 @@
 #include <string>
 #include <OgreException.h>
 
+class CEntity;
+
 class CMessage {
 public:
   enum EMessageTypes {
     MT_MESSAGE_UNSET,
     MT_MAP_DESTROYED,
+    MT_ENTITY_DESTROYED,
     MT_TOGGLE_TOUCH_INPUT_BLINK,
     MT_MESSAGE_BOX_PAGE_CHANGED,
     MT_EXIT_REACHED,
@@ -21,6 +24,8 @@ public:
       return "unset";
     case MT_MAP_DESTROYED:
       return "map_destroyed";
+    case MT_ENTITY_DESTROYED:
+      return "entity_destroyed";
     case MT_TOGGLE_TOUCH_INPUT_BLINK:
       return "toggle_touch_input_blink";
     case MT_MESSAGE_BOX_PAGE_CHANGED:
@@ -37,6 +42,7 @@ public:
     else if (s == "toggle_touch_input_blink") {return MT_TOGGLE_TOUCH_INPUT_BLINK;}
     else if (s == "message_box_page_changed") {return MT_MESSAGE_BOX_PAGE_CHANGED;}
     else if (s == "exit_reached") {return MT_EXIT_REACHED;}
+    else if (s == "entity_destroyed") {return MT_ENTITY_DESTROYED;}
 
     throw Ogre::Exception(0, "Message type could not be parsed: " + s, __FILE__);
   }
@@ -50,16 +56,19 @@ protected:
   std::string m_sID;
   std::vector<int> m_aIntValues;
   std::vector<bool> m_aBoolValues;
+  const CEntity *m_pEntity;
 public:
   CMessage(const unsigned int uiType = MT_MESSAGE_UNSET)
     : m_uiType(uiType),
       m_aIntValues(MAX_INT_VALUES, 0),
-      m_aBoolValues(MAX_BOOL_VALUES, false) {
+      m_aBoolValues(MAX_BOOL_VALUES, false),
+      m_pEntity(NULL) {
   }
   CMessage(const unsigned int uiType, int i0, int i1 = 0)
     : m_uiType(uiType),
       m_aIntValues(MAX_INT_VALUES),
-      m_aBoolValues(MAX_BOOL_VALUES, false) {
+      m_aBoolValues(MAX_BOOL_VALUES, false),
+      m_pEntity(NULL) {
     m_aIntValues[0] = i0;
     m_aIntValues[1] = i1;
   }
@@ -67,7 +76,8 @@ public:
     : m_uiType(src.m_uiType),
       m_sID(src.m_sID),
       m_aIntValues(src.m_aIntValues),
-      m_aBoolValues(src.m_aBoolValues) {
+      m_aBoolValues(src.m_aBoolValues),
+      m_pEntity(src.m_pEntity) {
   }
   unsigned int getType() const {return m_uiType;}
   CMessage &setType(unsigned int uiType) {m_uiType = uiType; return *this;}
@@ -80,6 +90,9 @@ public:
 
   const std::string &getID() const {return m_sID;}
   CMessage &setID(const std::string &sID) {m_sID = sID; return *this;}
+
+  const CEntity *getEntity() const {return m_pEntity;}
+  CMessage &setEntity(const CEntity *pEntity) {m_pEntity = pEntity; return *this;}
 };
 
 #endif

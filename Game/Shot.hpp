@@ -63,9 +63,9 @@ public:
 
   void update(Ogre::Real tpf);
 
-  void enemyDestroyed(CEnemy *pEnemy) {if (m_pCatchedEnemy == pEnemy) {m_pCatchedEnemy = NULL;} }
-
   void writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eStyle) const;
+protected:
+  virtual void handleMessage(const CMessage &message);
 private:
   void constructor_impl();
   void hit();

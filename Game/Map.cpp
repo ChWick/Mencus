@@ -849,6 +849,7 @@ void CMap::playerWarped() {
   m_vCameraPos = m_vCameraTargetPos;
 }
 void CMap::destroy(CEntity *pEntity, bool bLater) {
+  CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_ENTITY_DESTROYED).setEntity(pEntity));
   if (bLater) {
     if (find(begin(m_lEntitiesToDestroy), end(m_lEntitiesToDestroy), pEntity)
 	== end(m_lEntitiesToDestroy)) {

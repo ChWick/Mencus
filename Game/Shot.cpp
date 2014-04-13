@@ -8,6 +8,7 @@
 #include "Player.hpp"
 #include "XMLHelper.hpp"
 #include "IDGenerator.hpp"
+#include "Message.hpp"
 
 using namespace XMLHelper;
 
@@ -77,8 +78,8 @@ CShot::CShot(CMap &map,
     m_eShotDirection(EnumAttribute<EShotDirections>(pElement, "direction", SD_RIGHT, true)),
     m_eState(EnumAttribute<EShotStates>(pElement, "state", SS_NONE)),
     m_uiDamages(IntAttribute(pElement, "damages")),
-    m_pCatchedEnemy(map.getEnemyById(Attribute(pElement, "catched_enemy"))),
-    m_fTimer(RealAttribute(pElement, "timer", 0)) {
+    m_fTimer(RealAttribute(pElement, "timer", 0)),
+    m_pCatchedEnemy(map.getEnemyById(Attribute(pElement, "catched_enemy"))) {
   constructor_impl();
 }
 void CShot::constructor_impl() {
@@ -211,6 +212,17 @@ void CShot::update(Ogre::Real tpf) {
   }
 
   CAnimatedSprite::update(tpf);
+}
+void CShot::handleMessage(const CMessage &message) {
+  switch (message.getType()) {
+  case CMessage::MT_ENTITY_DESTROYED:
+    if (m_pCatchedEnemy == message.getEntity()) {
+      m_pCatchedEnemy = NULL;
+    }
+    break;
+  default:
+    break;
+  }
 }
 void CShot::hit() {
   if (m_uiDamages & DMG_ENEMY) {
