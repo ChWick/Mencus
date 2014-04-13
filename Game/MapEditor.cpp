@@ -1281,10 +1281,8 @@ bool CMapEditor::onDeleteSwitchEntry(const CEGUI::EventArgs &args) {
   Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
   ListboxItem *pLBI = pLB->getFirstSelectedItem();
   if (pLBI) {
-    pLB->removeItem(pLBI);
-    CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedEntity);
-    pSwitch->destroyEvent(static_cast<CChangeTileEvent*>(pLBI->getUserData()));
-    delete pLBI;
+    m_pSelectedEntity->destroyEvent(static_cast<CChangeTileEvent*>(pLBI->getUserData()));
+    pLB->removeItem(pLBI); // auto delete is set
   }
   return true;
 }
