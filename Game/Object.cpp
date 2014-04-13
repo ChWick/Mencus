@@ -72,7 +72,8 @@ void CObject::constructor_impl() {
     setupAnimation(0, "torch1", 10, CSpriteTexture::MIRROR_NONE, &getTorchTexturePath);
     break;
   case OT_FLAG:
-    setupAnimation(0, "flag", 1, CSpriteTexture::MIRROR_NONE, &getFlagTexturePath);
+    m_fAnimationSpeed = 0.08;
+    setupAnimation(0, "flag", 12, CSpriteTexture::MIRROR_NONE, &getFlagTexturePath);
     break;
   default:
     throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Object type '" + Ogre::StringConverter::toString(m_uiType) + "' is unknown!", __FILE__);
