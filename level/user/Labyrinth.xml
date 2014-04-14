@@ -1,4 +1,4 @@
-<map difficulty="easy" name="Labyrinth" description="" tutorial="false" background="forest" sizex="120" sizey="30">
+<map difficulty="easy" name="Labyrinth" description="This is an easy but long level without enemies." tutorial="false" background="forest" sizex="120" sizey="30">
     <player x="26" y="12" id="Player" type="0" hp="10" direction="1"/>
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
