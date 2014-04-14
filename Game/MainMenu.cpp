@@ -799,6 +799,7 @@ void CMainMenu::updateLevelsSelection() {
   float fButtonSize = pContent->getPixelSize().d_width / uiLevelsPerRow;
   std::list<SLevelInfo>::const_iterator it = lList.cbegin();
   std::string sPreviousLevelFileName;
+  const SLevelInfo *pPreviousLevelInfo(NULL);
   RadioButton *pLastEnabled = NULL;
   for (unsigned int i = 0; i < lList.size(); i++) {
     RadioButton *pBut = dynamic_cast<RadioButton*>(pPane->createChild("OgreTray/ToggleRadioButton", PropertyHelper<unsigned int>::toString(i + 1)));
@@ -821,8 +822,14 @@ void CMainMenu::updateLevelsSelection() {
       }
       else {
 	pBut->setProperty("Image", "");
-	if (CLevelState::has(sPreviousLevelFileName) && 
-	    CLevelState::get(sPreviousLevelFileName).eMissionState != MS_FAILED) {
+	if (it->bTutorial) {
+	  CLevelState::get(it->sLevelFileName, true);
+	  pBut->setEnabled(true);
+	}
+	else if ((CLevelState::has(sPreviousLevelFileName) && 
+		 CLevelState::get(sPreviousLevelFileName).eMissionState
+		  != MS_FAILED) ||
+		 (pPreviousLevelInfo && pPreviousLevelInfo->bTutorial)) {
 	  pLastEnabled = pBut;
 	  pBut->setEnabled(true);
 	}
@@ -835,6 +842,7 @@ void CMainMenu::updateLevelsSelection() {
       pLastEnabled = pBut;
     }
     sPreviousLevelFileName = it->sLevelFileName;
+    pPreviousLevelInfo = &(*it);
     it++;
   }
   
@@ -881,7 +889,7 @@ bool CMainMenu::onChickenPressed(const CEGUI::EventArgs &args) {
 
   SLevelInfo *pLevelInfo = static_cast<SLevelInfo*>(pBut->getUserData());
   SStatistics &stats(CLevelState::get(pLevelInfo->sLevelFileName, true));
-  if (stats.eMissionState == MS_FAILED) {
+  if (stats.eMissionState == MS_FAILED && !pLevelInfo->bTutorial) {
     stats.eMissionState = MS_SKIPPED;
     CLevelState::add(stats);
   }

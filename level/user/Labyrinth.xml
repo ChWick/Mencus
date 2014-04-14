@@ -1,0 +1,148 @@
+<map difficulty="easy" name="Labyrinth" description="This is an easy but long level without enemies." tutorial="false" background="forest" sizex="120" sizey="30">
+    <player x="26" y="12" id="Player" type="0" hp="10" direction="1"/>
+    <tiles invert="0">
+        <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
+        <row tiles="1 5 5 5 5 1 5 5 1 5 5 5 5 5 5 1 1 1 5 5 5 5 5 5 5 5 1 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 1 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 1 1 1 1 "/>
+        <row tiles="4 52 52 52 52 10 2 2 43 2 2 2 2 22 2 3 1 4 2 2 2 2 43 2 2 2 10 2 2 2 2 2 49 43 43 43 2 22 2 2 2 49 2 10 2 43 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 7 5 5 1 "/>
+        <row tiles="4 2 2 2 2 9 2 2 43 2 2 2 2 21 2 3 1 4 2 2 2 2 43 2 2 2 10 2 2 2 2 2 50 43 43 43 2 21 2 2 2 50 2 10 2 43 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 2 13 1 6 6 6 6 6 6 11 1 4 2 2 13 6 1 14 2 2 3 6 6 6 6 6 1 1 1 1 6 6 14 2 13 1 6 20 6 1 6 14 2 2 13 6 6 6 6 6 14 2 13 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 14 2 2 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 2 3 1 5 5 1 1 1 1 1 5 8 2 2 3 5 5 8 2 2 3 1 1 1 1 1 1 1 1 1 1 1 4 2 7 5 5 1 5 5 5 8 2 2 3 1 5 5 5 1 4 2 7 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 1 1 1 1 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 1 5 5 5 1 12 6 14 2 2 3 "/>
+        <row tiles="4 2 16 2 2 2 2 3 4 2 2 3 1 1 1 4 2 2 2 2 10 2 2 2 2 2 3 1 1 1 1 1 1 1 1 1 1 1 4 2 2 49 2 10 2 43 2 2 2 2 3 4 2 22 2 3 4 2 2 43 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 1 1 4 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 10 2 2 2 3 1 1 8 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 2 3 4 2 2 7 5 1 1 8 2 2 2 2 10 2 2 2 2 2 3 1 5 5 5 5 5 5 1 1 1 1 4 2 2 50 2 10 2 43 2 2 2 2 3 4 2 21 2 3 4 2 2 43 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 1 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 10 2 2 2 3 1 4 2 2 13 11 "/>
+        <row tiles="4 2 2 2 2 2 2 3 12 14 2 2 2 7 4 2 2 2 13 6 4 2 2 13 6 6 11 4 22 2 2 2 2 22 3 1 1 1 4 2 13 1 6 20 6 1 14 2 2 2 3 12 6 6 6 11 12 6 6 1 6 6 14 2 2 2 15 2 13 14 2 13 14 2 13 6 19 2 15 2 18 6 14 2 13 14 2 13 14 2 3 1 1 4 2 2 2 2 2 2 2 2 2 2 2 2 16 2 2 9 2 15 2 3 1 4 2 2 3 1 "/>
+        <row tiles="4 2 2 2 2 2 13 11 1 4 2 2 2 2 10 2 2 2 3 1 4 2 2 7 5 5 1 4 21 2 2 2 2 21 3 1 1 1 4 2 7 5 5 1 5 5 8 2 2 2 3 1 1 1 1 1 1 1 1 1 1 1 4 2 2 2 10 2 3 4 2 3 4 2 3 4 2 2 10 2 2 3 4 2 3 4 2 3 4 2 3 1 1 4 2 2 2 16 2 2 2 16 2 2 2 2 2 2 2 2 2 10 2 3 1 8 2 13 11 1 "/>
+        <row tiles="4 2 2 2 16 2 3 1 1 12 6 14 2 2 3 6 6 6 11 1 4 2 2 2 2 2 3 12 6 6 6 6 6 6 11 1 1 1 4 2 2 49 2 10 2 43 2 2 2 2 3 1 1 1 1 1 1 1 1 1 1 1 4 2 2 2 10 2 3 4 2 3 4 2 3 4 2 2 10 2 2 3 4 2 3 4 2 3 4 2 3 1 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 10 2 3 4 2 2 7 5 1 "/>
+        <row tiles="4 2 2 2 2 2 3 1 1 1 1 5 17 17 5 5 5 5 5 1 4 2 2 2 2 2 7 5 5 5 5 5 1 1 1 1 1 1 4 2 2 50 2 10 2 43 2 2 2 2 3 1 1 1 1 1 1 1 1 1 1 1 4 2 2 2 9 2 7 8 2 7 8 2 7 8 2 2 10 2 2 7 8 2 7 8 2 7 8 2 7 5 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 10 2 7 8 2 2 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 3 1 1 5 8 2 2 2 2 2 2 2 2 3 12 6 6 6 14 2 2 43 49 49 2 2 3 1 5 5 5 5 8 2 13 1 6 20 6 1 6 6 6 6 11 1 1 1 1 1 1 1 1 1 1 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 10 2 2 2 2 2 2 2 2 2 2 2 2 2 3 4 2 2 2 2 2 2 2 2 2 2 16 2 2 2 2 2 2 10 2 2 2 2 2 2 2 3 "/>
+        <row tiles="12 19 2 2 2 2 3 1 8 2 2 2 2 2 2 2 2 2 2 7 5 5 5 5 8 2 2 43 50 50 2 2 3 4 2 2 2 22 2 2 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 10 2 2 2 2 2 2 2 2 2 2 2 2 2 3 4 2 16 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 10 2 2 2 2 2 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 3 8 2 2 2 2 2 13 6 14 2 2 2 2 2 2 2 2 2 2 13 1 1 1 6 6 11 8 2 2 2 21 2 2 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 20 6 6 6 6 6 6 6 6 6 6 6 6 6 11 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 10 2 2 13 6 6 19 2 3 "/>
+        <row tiles="4 2 2 2 2 2 9 2 2 2 2 13 6 11 1 12 14 2 2 2 2 2 2 2 2 2 7 1 1 1 1 1 8 2 2 2 13 6 6 17 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 1 1 1 1 1 1 1 1 5 5 5 5 5 5 5 5 5 5 1 1 1 1 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 10 2 2 3 1 4 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 2 2 2 2 13 11 1 1 1 1 4 2 13 6 6 6 6 14 2 2 2 7 5 5 5 8 2 2 2 2 3 1 4 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 52 3 1 1 1 1 1 1 4 52 52 52 52 52 52 52 52 52 52 3 1 1 1 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 10 2 13 11 1 8 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 2 2 13 6 11 1 1 1 1 1 8 2 3 1 1 1 1 4 2 2 2 2 2 43 2 2 2 2 2 2 3 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 1 1 1 1 1 1 4 2 2 2 2 2 2 2 2 2 2 3 1 1 1 1 4 2 2 2 16 2 2 2 2 2 2 16 2 2 2 16 2 2 10 2 3 1 8 2 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 2 2 3 1 1 1 1 1 1 8 2 2 3 1 1 1 1 12 19 2 2 2 2 43 2 2 2 2 2 2 3 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 1 1 1 1 1 1 4 2 2 2 2 2 2 2 2 2 2 3 1 1 1 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 10 2 3 4 2 2 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 2 2 3 5 5 5 5 5 8 2 2 2 3 1 1 1 1 4 2 2 2 13 6 1 6 6 6 6 6 6 11 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 1 1 1 1 5 5 8 2 2 2 2 2 2 2 2 2 2 7 5 5 1 1 4 2 2 2 2 2 2 2 16 2 2 2 2 2 2 2 2 2 10 2 3 4 2 2 13 6 11 "/>
+        <row tiles="4 2 2 2 2 2 13 6 4 2 2 2 2 2 2 2 2 2 3 1 1 1 1 4 2 2 2 3 1 5 5 5 5 5 5 1 1 1 4 2 2 2 2 2 2 2 16 2 2 2 16 2 2 2 16 2 2 2 16 2 2 2 16 2 2 2 2 2 2 2 3 1 1 1 4 2 22 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 9 2 3 12 14 2 7 1 1 "/>
+        <row tiles="12 6 6 6 6 17 5 5 8 2 2 2 2 2 2 2 2 2 3 1 1 1 1 8 2 2 2 3 4 2 2 2 2 2 22 3 1 1 4 2 2 2 16 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 16 2 2 2 3 1 1 1 4 2 21 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 1 4 2 2 3 1 "/>
+        <row tiles="1 1 1 1 4 2 2 2 2 2 2 2 2 2 2 2 15 2 3 1 1 1 4 2 2 13 6 11 4 2 2 2 2 2 21 3 1 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 1 1 1 12 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 11 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 1 4 2 2 7 1 "/>
+        <row tiles="1 1 1 1 4 2 2 2 2 2 2 2 13 6 6 6 4 2 7 5 5 5 8 2 2 3 5 5 12 6 6 6 6 6 6 11 1 1 4 2 16 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 11 1 4 2 2 2 3 "/>
+        <row tiles="1 5 5 5 8 2 13 6 6 6 6 6 11 1 1 1 4 2 2 2 2 2 2 2 2 9 2 2 7 5 5 5 5 5 5 5 5 5 8 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 16 2 3 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 12 14 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 3 1 1 1 1 1 1 1 1 1 4 2 2 2 2 2 2 2 2 2 2 2 2 2 2 49 2 2 22 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 7 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 8 2 2 3 "/>
+        <row tiles="4 2 2 2 2 2 3 1 1 1 1 1 1 1 1 1 12 6 6 6 6 6 6 14 2 2 2 2 2 2 2 50 2 2 21 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 22 2 43 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 "/>
+        <row tiles="12 6 6 6 6 6 11 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 12 6 14 2 2 2 13 6 1 6 6 6 6 14 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 51 2 21 2 43 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 3 "/>
+        <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 12 6 6 6 11 1 1 1 1 1 1 12 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 1 6 6 6 1 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 11 "/>
+        <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
+    </tiles>
+    <switches>
+        <switch x="9.5" y="6" id="Switch_-1952636240" type="1" flags="1" activeTime="0">
+            <events>
+                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="8" y="3"/>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="8" y="2"/>
+            </events>
+        </switch>
+        <switch x="42" y="10" id="Switch_-669037147" type="1" flags="1" activeTime="0">
+            <events>
+                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="35" y="3"/>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="35" y="2"/>
+                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="45" y="11"/>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="45" y="10"/>
+            </events>
+        </switch>
+        <switch x="42" y="6" id="Switch_-1489662525" type="1" flags="1" activeTime="0">
+            <events>
+                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="34" y="3"/>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="34" y="2"/>
+                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="45" y="7"/>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="45" y="6"/>
+            </events>
+        </switch>
+        <switch x="42" y="2" id="Switch_1102246880" type="1" flags="1" activeTime="0">
+            <events>
+                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="33" y="3"/>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="33" y="2"/>
+                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="45" y="3"/>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="45" y="2"/>
+            </events>
+        </switch>
+        <switch x="29.5" y="21" id="Switch_1816731564" type="1" flags="1" activeTime="0">
+            <events>
+                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="29" y="18"/>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="29" y="17"/>
+            </events>
+        </switch>
+        <switch x="54" y="6" id="Switch_-748926888" type="1" flags="1" activeTime="0">
+            <events>
+                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="59" y="7"/>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="59" y="6"/>
+            </events>
+        </switch>
+        <switch x="15" y="8" id="Switch_1724586124" type="1" flags="1" activeTime="0">
+            <events>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="12" y="11"/>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="13" y="11"/>
+                <event type="change_tile" id="8" emitter="user" repeat="infinite" x="11" y="11"/>
+                <event type="change_tile" id="7" emitter="user" repeat="infinite" x="14" y="11"/>
+            </events>
+        </switch>
+        <switch x="27.5" y="2" id="Switch_-1124354142" type="1" flags="1" activeTime="0">
+            <events>
+                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="22" y="3"/>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="22" y="2"/>
+            </events>
+        </switch>
+        <switch x="75" y="20" id="Switch_-1857338489" type="1" flags="3" activeTime="10">
+            <events>
+                <event type="change_tile" id="5" emitter="user" repeat="infinite" x="77" y="19"/>
+                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="78" y="19"/>
+                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="79" y="19"/>
+                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="80" y="19"/>
+                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="81" y="19"/>
+                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="82" y="19"/>
+                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="83" y="19"/>
+                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="84" y="19"/>
+                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="85" y="19"/>
+                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="86" y="19"/>
+                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="87" y="19"/>
+                <event type="change_tile" id="5" emitter="user" repeat="infinite" x="88" y="19"/>
+            </events>
+        </switch>
+        <switch x="30" y="8" id="Switch_298918982" type="1" flags="1" activeTime="0">
+            <events>
+                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="27" y="13"/>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="27" y="12"/>
+            </events>
+        </switch>
+        <switch x="89" y="20" id="Switch_-1042260879" type="1" flags="1" activeTime="0">
+            <events>
+                <event type="change_tile" id="43" emitter="user" repeat="infinite" x="74" y="27"/>
+                <event type="change_tile" id="43" emitter="user" repeat="infinite" x="74" y="26"/>
+                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="78" y="27"/>
+                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="78" y="26"/>
+            </events>
+        </switch>
+    </switches>
+    <endangeredTiles/>
+    <links>
+        <link x="0" y="0" id="Link_-1764527820" type="0" fromx="28" fromy="8" tox="13" toy="2" activated="true" direction="both"/>
+        <link x="0" y="0" id="Link_-919864290" type="0" fromx="53" fromy="6" tox="33" toy="8" activated="true" direction="both"/>
+        <link x="0" y="0" id="Link_1070477902" type="0" fromx="37" fromy="2" tox="37" toy="13" activated="true" direction="both"/>
+        <link x="0" y="0" id="Link_1912844173" type="0" fromx="34" fromy="21" tox="34" toy="25" activated="true" direction="both"/>
+        <link x="0" y="0" id="Link_1808266296" type="0" fromx="76" fromy="20" tox="76" toy="26" activated="true" direction="both"/>
+    </links>
+    <enemies/>
+    <objects>
+        <object x="31" y="12" id="Flag" type="6">
+	  <events>
+	    <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
+	  </events>
+	</object>
+        <object x="1.5" y="25" id="Object_685118022" type="3"/>
+        <object x="44" y="10" id="Object_824938979" type="3"/>
+        <object x="44" y="6" id="Object_-185075635" type="3"/>
+        <object x="44" y="2" id="Object_997389812" type="3"/>
+        <object x="111" y="21" id="Object_1807130335" type="3"/>
+        <object x="91" y="12" id="Object_-1255430504" type="3"/>
+        <object x="66" y="12" id="Object_1004844895" type="3"/>
+    </objects>
+    <exit type="region" posx="0" posy="0" sizex="0" sizey="0" id=""/>
+    <camera/>
+</map>

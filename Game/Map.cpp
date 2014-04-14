@@ -691,7 +691,7 @@ void CMap::render(Ogre::Real tpf) {
     for (unsigned int y = 0; y < m_vLineNumberY.size(); y++) {
       m_vLineNumberY[y]->setText(Ogre::StringConverter::toString(static_cast<int>(floor(m_vCameraPos.y + m_vTilesPerScreen.y)) - y));
       m_vLineNumberY[y]->setPos(0, (m_vCameraPos.y - static_cast<int>(floor(m_vCameraPos.y
-									    )) + y) / m_vTilesPerScreen.y - 0.05);
+									    )) + y) / m_vTilesPerScreen.y - 0.03);
     }
     // endangered tiles
     for (unsigned int x = xmin; x < xmax; x++) {

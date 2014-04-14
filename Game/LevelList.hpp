@@ -11,6 +11,7 @@ struct SLevelInfo {
   std::string sLevelName;
   std::string sLevelDescription;
   std::string sFullInfoText;
+  bool bTutorial;
 };
 
 class CLevelList {
