@@ -69,6 +69,7 @@ void CObject::constructor_impl() {
     addTextureToAnimationSequence(0, getOtherObjectsTexturePath("scratch"));
     break;
   case OT_TORCH:
+    m_fAnimationSpeed = 0.12;
     setupAnimation(0, "torch1", 10, CSpriteTexture::MIRROR_NONE, &getTorchTexturePath);
     break;
   case OT_FLAG:
