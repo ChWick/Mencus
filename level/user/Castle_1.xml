@@ -1,5 +1,6 @@
 <map difficulty="medium" name="Castle entrance" description="An easy map if you make out why there are bombs at the beginning.
-" background="fog" sizex="17" sizey="24">
+" tutorial="false" background="fog" sizex="17" sizey="24">
+    <player x="1" y="14" id="Player" type="0" hp="10" direction="1"/>
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
@@ -38,42 +39,45 @@
         <tile targetTile="51" x="15" y="15"/>
     </endangeredTiles>
     <links>
-        <link id="" fromx="9" fromy="14" tox="13" toy="14" direction="both" activated="1"/>
+        <link x="0" y="0" id="" type="0" fromx="9" fromy="14" tox="13" toy="14" activated="true" direction="both"/>
     </links>
     <enemies>
-        <enemy id="-689632770" type="1" direction="-1" jumps="0" hp="2" x="9" y="14"/>
-        <enemy id="1115438163" type="1" direction="-1" jumps="0" hp="2" x="12" y="3"/>
+        <enemy direction="-1" jumps="0" hp="2" x="9" y="14" id="-689632770" type="1"/>
+        <enemy direction="-1" jumps="0" hp="2" x="12" y="3" id="1115438163" type="1"/>
     </enemies>
     <objects>
-        <object x="10.09375" y="15" type="5"/>
-        <object x="14.21875" y="15" type="5"/>
-        <object x="6.15625" y="15" type="5"/>
-        <object x="13.875" y="3" type="3"/>
-        <object x="11.4375" y="4" type="5"/>
-        <object x="4.75" y="4" type="5"/>
-        <object x="4.6875" y="7" type="5"/>
-        <object x="4.59375" y="10" type="5"/>
-        <object x="12.28125" y="15" type="5"/>
-        <object x="7.75" y="3" type="0"/>
-        <object x="2.21875" y="14" type="0"/>
-        <object x="2.46875" y="14" type="0"/>
-        <object x="2.21875" y="14.125" type="0"/>
-        <object x="1.96875" y="14" type="0"/>
-        <object x="13.96875" y="14" type="0"/>
-        <object x="9.59375" y="14" type="0"/>
-        <object x="9.1875" y="14.3125" type="4"/>
-        <object x="9.375" y="14.3125" type="4"/>
-        <object x="9.3125" y="14.15625" type="4"/>
-        <object x="9.28125" y="13.84375" type="4"/>
-        <object x="9.25" y="14.875" type="4"/>
-        <object x="14.875" y="14.09375" type="4"/>
-        <object x="14.84375" y="14.90625" type="4"/>
-        <object x="9.34375" y="3.28125" type="4"/>
-        <object x="8.78125" y="4.21875" type="4"/>
+        <object x="10.09375" y="15" id="1496786969" type="5"/>
+        <object x="14.21875" y="15" id="1045501368" type="5"/>
+        <object x="6.15625" y="15" id="1525679889" type="5"/>
+        <object x="13.875" y="3" id="594094831" type="3"/>
+        <object x="11.4375" y="4" id="601518175" type="5"/>
+        <object x="4.75" y="4" id="1283070432" type="5"/>
+        <object x="4.6875" y="7" id="494500520" type="5"/>
+        <object x="4.59375" y="10" id="-215776758" type="5"/>
+        <object x="12.28125" y="15" id="-748366835" type="5"/>
+        <object x="7.75" y="3" id="-137576521" type="0"/>
+        <object x="2.21875" y="14" id="-303297864" type="0"/>
+        <object x="2.46875" y="14" id="-102153778" type="0"/>
+        <object x="2.21875" y="14.125" id="264032579" type="0"/>
+        <object x="1.96875" y="14" id="1508545800" type="0"/>
+        <object x="13.96875" y="14" id="231367330" type="0"/>
+        <object x="9.59375" y="14" id="739972375" type="0"/>
+        <object x="9.1875" y="14.3125" id="-520504638" type="4"/>
+        <object x="9.375" y="14.3125" id="710298148" type="4"/>
+        <object x="9.3125" y="14.15625" id="-916582707" type="4"/>
+        <object x="9.28125" y="13.84375" id="434826718" type="4"/>
+        <object x="9.25" y="14.875" id="-55087536" type="4"/>
+        <object x="14.875" y="14.09375" id="1728536150" type="4"/>
+        <object x="14.84375" y="14.90625" id="-1804788634" type="4"/>
+        <object x="9.34375" y="3.28125" id="-1826968730" type="4"/>
+        <object x="8.78125" y="4.21875" id="817350099" type="4"/>
+        <object x="4" y="12" id="Object_1109242888" type="4"/>
+        <object x="4.5" y="12" id="Object_567222276" type="4"/>
+        <object x="5" y="12" id="Object_-357237887" type="4"/>
+        <object x="16" y="14" id="Object_-784648808" type="6"/>
     </objects>
     <exit type="region" posx="16" posy="14" sizex="1" sizey="2" id=""/>
-    <player x="1" y="14" hp="10" direction="1"/>
-    <camera posx="0" posy="12">
+    <camera>
         <restriction type="horizontal" y="12"/>
     </camera>
 </map>

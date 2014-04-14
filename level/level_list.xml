@@ -6,6 +6,7 @@
   <level file="Tutorial_4.xml" />
   <level file="Tutorial_5.xml" />
   <level file="Simple_Pathway.xml" />
+  <level file="Adventure.xml"/>
   <level file="Labyrinth.xml"/>
   <level file="Castle_1.xml" />
   <level file="Escape.xml" />
