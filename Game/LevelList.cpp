@@ -51,6 +51,7 @@ void CLevelList::load() {
       info.sDifficulty = mapInfo.getDifficultyAsString();
       info.sLevelDescription = mapInfo.getDescription();
       info.sFullInfoText = mapInfo.generateInfoText();
+      info.bTutorial = mapInfo.isTutorial();
     }
     catch (...) {
       Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Error while parsing the level: " + info.sLevelFileName);
