@@ -1065,7 +1065,10 @@ bool CMapEditor::onDelete(const CEGUI::EventArgs &args) {
   CEntity *pBuffer = m_pSelectedEntity;
   selectedEntity(NULL);
 
-  delete pBuffer;
+  if (pBuffer->getID() != "Player") {
+    // dont delete the player
+    delete pBuffer;
+  }
   
 
   return true;
