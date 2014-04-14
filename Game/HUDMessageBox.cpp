@@ -17,8 +17,8 @@ CHUDMessageBox::CHUDMessageBox(const std::string &sID, const char *pTitle, const
 
   Window *pCloseBtn = pWnd->createChild("OgreTray/Button", "CloseButton");
   pCloseBtn->setUserData(dynamic_cast<Window*>(pWnd)); // to be sure that is a Window * ptr
-  pCloseBtn->setPosition(UVector2(UDim(0.6, 0), UDim(0.85, 0)));
-  pCloseBtn->setSize(USize(UDim(0.35, 0), UDim(0.1, 0)));
+  pCloseBtn->setPosition(UVector2(UDim(0.6, 0), UDim(0.80, 0)));
+  pCloseBtn->setSize(USize(UDim(0.35, 0), UDim(0.2, 0)));
   pCloseBtn->setText("Close");
   pCloseBtn->subscribeEvent(PushButton::EventClicked, Event::Subscriber(&CHUDMessageBox::onCloseButtonClicked, this));
 
@@ -26,9 +26,10 @@ CHUDMessageBox::CHUDMessageBox(const std::string &sID, const char *pTitle, const
   pContent->setPosition(UVector2(UDim(0.05, 0), UDim(0.05, 0)));
   pContent->setSize(USize(UDim(0.9, 0), UDim(0.75, 0)));
 
-  Window *pTextContainter = pContent->createChild("OgreTray/StaticText", "Text");
+  MultiLineEditbox *pTextContainter = dynamic_cast<MultiLineEditbox*>(pContent->createChild("OgreTray/MultiLineEditbox", "Text"));
   pTextContainter->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pTextContainter->setSize(USize(UDim(1, 0), UDim(1, 0)));
+  pTextContainter->setReadOnly(true);
   
   showPage(0);
   
