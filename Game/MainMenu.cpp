@@ -835,6 +835,8 @@ void CMainMenu::updateLevelsSelection() {
 	}
 	else {
 	  pBut->setEnabled(false);
+	  pBut->setText("");
+	  pBut->setProperty("Image", "hud_weapons/lock");
 	}
       }
     }
