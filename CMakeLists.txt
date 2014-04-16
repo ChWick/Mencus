@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 project(Mencus)
 
 # set version
-set (MENCUS_VERSION_CODE 8)
-set (MENCUS_VERSION_NAME 0.0.8)
+set (MENCUS_VERSION_CODE 9)
+set (MENCUS_VERSION_NAME 0.0.9)
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set (MENCUS_TEMPLATES_DIR "${CMAKE_MODULE_PATH}/templates")
 #include(cotire)
