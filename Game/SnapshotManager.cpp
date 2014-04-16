@@ -50,6 +50,11 @@ const CSnapshot &CSnapshotManager::makeSnapshot(const Ogre::String &name, CSnaps
   doc.InsertEndChild(pElem);
 
   switch (snapshot.getGameState()) {
+  case CGameState::GS_AD:
+    {
+      pElem->SetAttribute("map_name", CGameState::getSingleton().getMapInfo()->getFileName().c_str());
+    }
+    break;
   case CGameState::GS_GAME:
     {
       CScreenplay *pScreenplay = CGameState::getSingleton().getScreenplay();
@@ -106,25 +111,38 @@ bool CSnapshotManager::loadBackupSnapshot() {
 }
 void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
   try {
-    //Ogre::LogManager::getSingleton().logMessage("Loading snapshot");
+    CGameState::EGameStates eGameStateToChangeTo = snapshot.getGameState();
+    const tinyxml2::XMLElement *pSnapshotElem =
+      snapshot.getXMLDocument().FirstChildElement("snapshot");
+    
+    Ogre::LogManager::getSingleton().logMessage("Loading snapshot...");
+
     if (snapshot.getGameState() == CGameState::GS_GAME) {
       // no ad when loading from savesate
       CGameState::getSingleton().setAdShown(true);
     }
+    else if (snapshot.getGameState() == CGameState::GS_AD) {
+      // no ad when loading from savesate
+      CGameState::getSingleton().setAdShown(true);
+      std::shared_ptr<CMapInfo> pMapInfo(new CMapInfo(Attribute(pSnapshotElem,
+								"map_name").c_str(),
+						      "level_user"));
+      CGameState::getSingleton().setMapInfo(pMapInfo);
+      //eGameStateToChangeTo = CGameState::GS_GAME;
+    }
 
-    CGameState::getSingleton().changeGameState(snapshot.getGameState(), true, false);
-    const tinyxml2::XMLElement *pSnapshotElem = snapshot.getXMLDocument().FirstChildElement("snapshot");
+    CGameState::getSingleton().changeGameState(eGameStateToChangeTo, true, false);
+    
     switch (CGameState::getSingleton().getCurrentGameState()) {
+    case CGameState::GS_AD:
+      {
+      }
+      break;
     case CGameState::GS_GAME:
       { 
 	CScreenplay *pScreenplay = CGameState::getSingleton().getScreenplay();
 	assert(pScreenplay);
 	pScreenplay->readFromXMLElement(pSnapshotElem->FirstChildElement("screenplay"));
-
-	// this is a very dirty hack, that prevent on android jittering!
-	CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(200, 200);
-	CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::LeftButton);
-	CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::LeftButton);
       }
       break;
     case CGameState::GS_STATISTICS:
@@ -147,6 +165,15 @@ void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Unknown error on loading a snapshot.");
     CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);
   }
+
+
+  // this is a very dirty hack, that prevent on android jittering!
+  // appearing when no input has been done, and goming to game (from ad or game, not userinput needed)
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(200, 200);
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::LeftButton);
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::LeftButton);
+
+  Ogre::LogManager::getSingleton().logMessage("Loading snapshot done.");
 }
 void CSnapshotManager::createFromFile(const Ogre::String &name) {
   CSnapshot *pSnapshot = new CSnapshot();
