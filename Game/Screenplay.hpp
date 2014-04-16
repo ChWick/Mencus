@@ -172,6 +172,11 @@ private:
 
   CFader m_Fader;
   bool m_bPaused;
+
+  // framerate computation
+  static const int TPF_AVERAGE_COUNT = 10;
+  Ogre::Real m_fAveragedTpf;
+  std::list<Ogre::Real> m_lLastFrames;
 public:
   CScreenplay();
   virtual ~CScreenplay();

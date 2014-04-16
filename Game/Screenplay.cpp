@@ -301,31 +301,42 @@ void CScreenplay::update(Ogre::Real tpf) {
     return;
   }
 
-  if (m_Fader.isFading() && tpf > 0.2) {
+  if (m_Fader.isFading() && tpf > 0.1) {
     m_Fader.fade(0);
     // Probably loading causes this fps, next time step update
     return;
   }
-
-  if (m_Fader.isFading()) {
-    m_Fader.fade(tpf);
+  
+  if (m_lLastFrames.size() == 0) {
+    for (int i = 1; i < TPF_AVERAGE_COUNT; i++) {
+      m_lLastFrames.push_back(tpf);
+    }
+    m_fAveragedTpf = tpf;
   }
 
+  m_lLastFrames.push_back(tpf);
+  m_fAveragedTpf = (m_fAveragedTpf * TPF_AVERAGE_COUNT - m_lLastFrames.front() + tpf) / TPF_AVERAGE_COUNT;
+  m_lLastFrames.pop_front();
+
+  if (m_Fader.isFading()) {
+    m_Fader.fade(m_fAveragedTpf);
+  }
+  
   if (m_pCurrentScene) {
-    if (tpf > 0.05) {
+    if (m_fAveragedTpf > 0.05) {
       float fUpdated = 0.05;
       while (1) {
 	m_pCurrentScene->update(0.05);
 	fUpdated += 0.05;
-	if (fUpdated > tpf) {
-	  m_pCurrentScene->update(fUpdated - tpf);
+	if (fUpdated > m_fAveragedTpf) {
+	  m_pCurrentScene->update(fUpdated - m_fAveragedTpf);
 	  break;
 	}
       }
     } else {
-      m_pCurrentScene->update(tpf);
+      m_pCurrentScene->update(m_fAveragedTpf);
     }
-    m_pCurrentScene->render(tpf);
+    m_pCurrentScene->render(m_fAveragedTpf);
   }
 
 }
