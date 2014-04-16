@@ -146,6 +146,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
     m_vSlots[i]->subscribeEvent(
 				CEGUI::PushButton::EventMouseEntersArea,
 				CEGUI::Event::Subscriber(&CMainMenu::buttonSelected, this));
+    m_vSlots[i]->setVisible(false);
   }
 
 #ifndef INPUT_KEYBOARD_ONLY
@@ -183,7 +184,8 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pMapInfoWindow->setText("Difficulty: easy");
   m_pMapInfoWindow->setProperty("VertFormatting", "TopAligned");
 
-
+  m_pMapInfoContainer->setVisible(false);
+  
   // option pages
   // ======================
   
@@ -289,6 +291,15 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 				 Event::Subscriber(&CMainMenu::onChickenPressed, this));
 
   m_pLevelSelection->setVisible(false);
+
+  // hide everything from start
+  m_pMapInfoContainer->setVisible(false);
+  m_pLevelSelection->setVisible(false);
+  m_pButtonContainer->getChild("ChickenButton")->setVisible(false);
+  m_pSaveStatesWindow->setVisible(false);
+  m_pSaveStatePreviewWindow->setVisible(false);
+
+  hide();
 }
 CMainMenu::~CMainMenu() {
   CInputListenerManager::getSingleton().removeInputListener(this);
@@ -439,6 +450,8 @@ void CMainMenu::changeState(MainMenu::EState eState) {
   m_pMapInfoContainer->setVisible(false);
   m_pLevelSelection->setVisible(false);
   m_pButtonContainer->getChild("ChickenButton")->setVisible(false);
+  m_pSaveStatesWindow->setVisible(false);
+  m_pSaveStatePreviewWindow->setVisible(false);
   if (eState == MMS_LOAD_GAME) {
     m_pSaveStatesWindow->setVisible(true);
     m_pSaveStatePreviewWindow->setVisible(true);
