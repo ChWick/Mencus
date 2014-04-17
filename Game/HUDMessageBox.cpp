@@ -1,6 +1,7 @@
 #include "HUDMessageBox.hpp"
 #include "HUD.hpp"
 #include "MessageHandler.hpp"
+#include "XMLResources/Manager.hpp"
 
 using namespace CEGUI;
 
@@ -19,7 +20,7 @@ CHUDMessageBox::CHUDMessageBox(const std::string &sID, const CEGUI::String &sTit
   pCloseBtn->setUserData(dynamic_cast<Window*>(pWnd)); // to be sure that is a Window * ptr
   pCloseBtn->setPosition(UVector2(UDim(0.6, 0), UDim(0.80, 0)));
   pCloseBtn->setSize(USize(UDim(0.35, 0), UDim(0.2, 0)));
-  pCloseBtn->setText("Close");
+  pCloseBtn->setText(XMLResources::GLOBAL.getCEGUIString("close"));
   pCloseBtn->subscribeEvent(PushButton::EventClicked, Event::Subscriber(&CHUDMessageBox::onCloseButtonClicked, this));
 
   Window *pContent = pWnd->createChild("DefaultWindow", "Content");
@@ -57,10 +58,10 @@ void CHUDMessageBox::showPage(unsigned int uiPage) {
 
   CEGUI::Window *pCloseBtn = m_pMessageBox->getChild("CloseButton");
   if (m_uiCurrentPage + 1 >= m_vPages.size()) {
-    pCloseBtn->setText("Close");
+    pCloseBtn->setText(XMLResources::GLOBAL.getCEGUIString("close"));
   }
   else {
-    pCloseBtn->setText("Next");
+    pCloseBtn->setText(XMLResources::GLOBAL.getCEGUIString("next"));
   }
   Window *pTextContainter = m_pMessageBox->getChild("Content")->getChild("Text");
   pTextContainter->setText(reinterpret_cast<const CEGUI::utf8*>(m_vPages[m_uiCurrentPage].c_str()));
