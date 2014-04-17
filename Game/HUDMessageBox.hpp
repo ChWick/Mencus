@@ -14,7 +14,7 @@ private:
   const std::vector<std::string> m_vPages;
   unsigned int m_uiCurrentPage;
 public:
-  CHUDMessageBox(const std::string &sID, const char *pTitle, const std::vector<std::string> &vPages);
+  CHUDMessageBox(const std::string &sID, const CEGUI::String &sTitle, const std::vector<std::string> &vPages);
   ~CHUDMessageBox();
 
   bool onCloseButtonClicked(const CEGUI::EventArgs &args);

@@ -4,8 +4,8 @@ namespace XMLResources {
   std::string CManager::LANGUAGE_CODE;
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-  CManager GLOBAL("", "", false);
+  CManager GLOBAL("", "language/", false);
 #else
-  CManager GLOBAL("", "../", false);
+  CManager GLOBAL("", "../language/", false);
 #endif
 };

@@ -6,14 +6,14 @@
 using namespace std;
 
 CMapPack::CMapPack(const std::string &sMapName) 
-  : XMLResources::CManager(sMapName, "", false),
+  : XMLResources::CManager(sMapName, "res/", false),
     m_sMapName(sMapName),
     m_bInitialised(false) {
 
   init();
 }
 CMapPack::CMapPack(shared_ptr<CMapInfo> pInfo) 
-  : XMLResources::CManager(pInfo->getFileName(), "", false),
+  : XMLResources::CManager(pInfo->getFileName(), "res/", false),
     m_sMapName(pInfo->getFileName()),
     m_bInitialised(false),
     m_pMapInfo(pInfo) {

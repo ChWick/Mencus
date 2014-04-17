@@ -189,6 +189,7 @@ public:
 
   void setLineNumbersVisible(bool bVisible);
 
+  const CMapPackConstPtr getMapPack() const {return m_pMapPack;}
   CTile* &getTile(unsigned int x, unsigned int y) {return m_gridTiles(x, y);}
   CTile *getTile(unsigned int x, unsigned int y) const {return m_gridTiles(x, y);}
   const grid2d<CTile*> &getTilesGrid() const {return m_gridTiles;}

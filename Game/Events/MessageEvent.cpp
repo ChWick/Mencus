@@ -3,6 +3,7 @@
 #include "Map.hpp"
 #include "OgreLogManager.h"
 #include "HUDMessageBox.hpp"
+#include "MapPack.hpp"
 
 using namespace XMLHelper;
 
@@ -28,7 +29,12 @@ CMessageEvent::CMessageEvent(CMap &map, const tinyxml2::XMLElement *pElem)
 CMessageEvent::~CMessageEvent() {
 }
 void CMessageEvent::start_impl() {
-  m_pMessageBox = new CHUDMessageBox(getID(), m_sTitle.c_str(), m_vPagesText);  
+  // read translation strings
+  std::vector<std::string> vTranslatedPagesText(m_vPagesText.size());
+  for (unsigned int i = 0; i < m_vPagesText.size(); i++){
+    vTranslatedPagesText[i] = m_Map.getMapPack()->getString(m_vPagesText[i]);
+  }
+  m_pMessageBox = new CHUDMessageBox(getID(), m_Map.getMapPack()->getCEGUIString(m_sTitle), vTranslatedPagesText);
 }
 void CMessageEvent::stop_impl() {
 }

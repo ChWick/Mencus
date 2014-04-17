@@ -28,14 +28,14 @@ namespace XMLResources {
       }
     }
     
-    const std::string &getString(const std::string &id) {return m_lStringResources.at(id);}
-    const CEGUI::String getCEGUIString(const std::string &id) {
+    const std::string &getString(const std::string &id) const {return m_lStringResources.at(id);}
+    const CEGUI::String getCEGUIString(const std::string &id) const {
       return reinterpret_cast<const CEGUI::utf8*>(m_lStringResources.at(id).c_str());
     }
     void loadLanguage() {
-      parse(m_sPrefix + "language/values/strings.xml");
+      parse(m_sPrefix + "values/strings.xml");
       if (LANGUAGE_CODE.length() > 0) {
-	parse(m_sPrefix + "language/values-" + LANGUAGE_CODE + "/strings.xml");
+	parse(m_sPrefix + "values-" + LANGUAGE_CODE + "/strings.xml");
       }
     }
   private:

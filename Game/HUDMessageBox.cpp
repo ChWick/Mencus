@@ -4,7 +4,7 @@
 
 using namespace CEGUI;
 
-CHUDMessageBox::CHUDMessageBox(const std::string &sID, const char *pTitle, const std::vector<std::string> &vPages)
+CHUDMessageBox::CHUDMessageBox(const std::string &sID, const CEGUI::String &sTitle, const std::vector<std::string> &vPages)
   : m_sID(sID), m_vPages(vPages) {
   assert(m_vPages.size() > 0);
   Window *pWnd = CHUD::getSingleton().getRoot()->createChild("OgreTray/Group");
@@ -13,7 +13,7 @@ CHUDMessageBox::CHUDMessageBox(const std::string &sID, const char *pTitle, const
   //FrameWindow *pWnd = dynamic_cast<FrameWindow*>(m_pRoot->createChild("OgreTray/FrameWindow", label));
   pWnd->setPosition(UVector2(UDim(0.2, 0), UDim(0.2, 0)));
   pWnd->setSize(USize(UDim(0.6, 0), UDim(0.6, 0)));
-  pWnd->setText(pTitle);
+  pWnd->setText(sTitle);
 
   Window *pCloseBtn = pWnd->createChild("OgreTray/Button", "CloseButton");
   pCloseBtn->setUserData(dynamic_cast<Window*>(pWnd)); // to be sure that is a Window * ptr
@@ -63,7 +63,7 @@ void CHUDMessageBox::showPage(unsigned int uiPage) {
     pCloseBtn->setText("Next");
   }
   Window *pTextContainter = m_pMessageBox->getChild("Content")->getChild("Text");
-  pTextContainter->setText(m_vPages[m_uiCurrentPage].c_str());
+  pTextContainter->setText(reinterpret_cast<const CEGUI::utf8*>(m_vPages[m_uiCurrentPage].c_str()));
 
   CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_MESSAGE_BOX_PAGE_CHANGED).setID(m_sID).setInt(m_uiCurrentPage));
 }
