@@ -3,6 +3,7 @@
 #include "Screenplay.hpp"
 #include "FileManager.hpp"
 #include "MapInfo.hpp"
+#include "MapPack.hpp"
 #include "XMLHelper.hpp"
 #include <fstream>
 #include <CEGUI/CEGUI.h>
@@ -52,7 +53,7 @@ const CSnapshot &CSnapshotManager::makeSnapshot(const Ogre::String &name, CSnaps
   switch (snapshot.getGameState()) {
   case CGameState::GS_AD:
     {
-      pElem->SetAttribute("map_name", CGameState::getSingleton().getMapInfo()->getFileName().c_str());
+      pElem->SetAttribute("map_name", CGameState::getSingleton().getMapPack()->getMapName().c_str());
     }
     break;
   case CGameState::GS_GAME:
@@ -65,7 +66,7 @@ const CSnapshot &CSnapshotManager::makeSnapshot(const Ogre::String &name, CSnaps
     break;
   case CGameState::GS_STATISTICS:
     {
-      pElem->SetAttribute("map_name", CGameState::getSingleton().getMapInfo()->getFileName().c_str());
+      pElem->SetAttribute("map_name", CGameState::getSingleton().getMapPack()->getMapName().c_str());
       tinyxml2::XMLElement *pStatElem = doc.NewElement("statistics");
       pElem->InsertEndChild(pStatElem);
     }
@@ -124,16 +125,13 @@ void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
     else if (snapshot.getGameState() == CGameState::GS_AD) {
       // no ad when loading from savesate
       CGameState::getSingleton().setAdShown(true);
-      std::shared_ptr<CMapInfo> pMapInfo(new CMapInfo(Attribute(pSnapshotElem,
-								"map_name").c_str(),
-						      "level_user"));
-      CGameState::getSingleton().setMapInfo(pMapInfo);
+      std::shared_ptr<CMapPack> pMapPack(new CMapPack(Attribute(pSnapshotElem,
+								"map_name").c_str()));
+      CGameState::getSingleton().setMapPack(pMapPack);
       //eGameStateToChangeTo = CGameState::GS_GAME;
     }
 
-    cout << "asd" << endl;
     CGameState::getSingleton().changeGameState(eGameStateToChangeTo, true, false);
-    cout << "asdasd" << endl;
     
     switch (CGameState::getSingleton().getCurrentGameState()) {
     case CGameState::GS_AD:
@@ -149,8 +147,8 @@ void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
       break;
     case CGameState::GS_STATISTICS:
       {
-	std::shared_ptr<CMapInfo> pMapInfo(new CMapInfo(Attribute(pSnapshotElem, "map_name").c_str(), "level_user"));
-	CGameState::getSingleton().setMapInfo(pMapInfo);
+	std::shared_ptr<CMapPack> pMapPack(new CMapPack(Attribute(pSnapshotElem, "map_name").c_str()));
+	CGameState::getSingleton().setMapPack(pMapPack);
       }
       break;
     default:

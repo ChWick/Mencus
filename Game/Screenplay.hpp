@@ -17,6 +17,7 @@ class CMap;
 class CScreenplay;
 class CAct;
 class CMapInfo;
+class CMapPack;
 
 class CScene {
 public:
@@ -78,15 +79,15 @@ public:
 
 class CLevel : public CScene {
 private:
-  std::shared_ptr<const CMapInfo> m_pMapInfo;
+  std::shared_ptr<const CMapPack> m_pMapPack;
   CMap *m_pMap;
   CScreenplayListener *m_pScreenplayListener;
   SStatistics m_Statistics;
   
 public:
-  CLevel(const CAct &act, unsigned int uiID, std::shared_ptr<const CMapInfo> pMapInfo, CScreenplayListener *pScreenplayListener)
+  CLevel(const CAct &act, unsigned int uiID, std::shared_ptr<const CMapPack> pMapPack, CScreenplayListener *pScreenplayListener)
     : CScene(act, uiID, ST_LEVEL),
-      m_pMapInfo(pMapInfo),
+      m_pMapPack(pMapPack),
       m_pMap(NULL),
       m_pScreenplayListener(pScreenplayListener) {
   }
@@ -99,7 +100,7 @@ public:
   void update(Ogre::Real tpf);
   void render(Ogre::Real tpf);
 
-  std::shared_ptr<const CMapInfo> getMapInfo() const {return m_pMapInfo;}
+  std::shared_ptr<const CMapPack> getMapPack() const {return m_pMapPack;}
   const SStatistics &getStatistics() const {return m_Statistics;}
   SStatistics &getStatistics() {return m_Statistics;}
   CMap *getMap() {return m_pMap;}
@@ -168,7 +169,7 @@ private:
   CScene *m_pCurrentScene;
   CScene *m_pOldScene;
 
-  std::shared_ptr<const CMapInfo> m_pMapInfo;
+  std::shared_ptr<const CMapPack> m_pMapPack;
 
   CFader m_Fader;
   bool m_bPaused;
@@ -181,7 +182,7 @@ public:
   CScreenplay();
   virtual ~CScreenplay();
 
-  void loadSingleMap(std::shared_ptr<const CMapInfo> pMapInfo);
+  void loadSingleMap(std::shared_ptr<const CMapPack> pMapPack);
 
   void clear();
 

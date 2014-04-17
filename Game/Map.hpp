@@ -16,7 +16,7 @@
 #include "ScreenplayListener.hpp"
 #include "PauseListener.hpp"
 #include "CameraRestriction.hpp"
-#include "MapInfo.hpp"
+#include "MapPack.hpp"
 #include "Exit.hpp"
 #include "OutputStyle.hpp"
 #include "TileTypes.hpp"
@@ -75,18 +75,18 @@ private:
   bool m_bRenderPause;
   Ogre::Real m_fPlayingTime;
   SStatistics &m_Statistics;
-  const CMapInfoConstPtr m_pMapInfo;
+  const CMapPackConstPtr m_pMapPack;
 public:
   CMap(Ogre::SceneManager *pSceneManager,
        CScreenplayListener *pScreenplayListener,
        SStatistics &statistics,
-       const CMapInfoConstPtr m_pMapInfo);
+       const CMapPackConstPtr m_pMapPack);
   ~CMap();
 
   void init();
 
   void loadMap(const string &sFilename, const string &sResourceGroup);
-  void loadMap(const CMapInfoConstPtr pMapInfo);
+  void loadMap(const CMapPackConstPtr pMapPack);
   void prepareMap();
   void writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStype) const;
   void readFromXMLElement(const tinyxml2::XMLElement *pRoot);

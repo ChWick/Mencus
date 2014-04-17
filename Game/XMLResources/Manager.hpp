@@ -16,9 +16,13 @@ namespace XMLResources {
 
     std::map<std::string, std::string> m_lStringResources;
     const std::string m_sResourceGroup;
+    const std::string m_sPrefix;
   public:
-    CManager(const std::string &sResourceGroup, bool bLoadOnCreate = true)
-      : m_sResourceGroup(sResourceGroup) {
+    CManager(const std::string &sResourceGroup,
+	     const std::string sPrefix = "",
+	     bool bLoadOnCreate = true) 
+      : m_sResourceGroup(sResourceGroup),
+	m_sPrefix(sPrefix) {
       if (bLoadOnCreate) {
 	loadLanguage();
       }
@@ -29,17 +33,10 @@ namespace XMLResources {
       return reinterpret_cast<const CEGUI::utf8*>(m_lStringResources.at(id).c_str());
     }
     void loadLanguage() {
-#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-      parse("language/values/strings.xml");
+      parse(m_sPrefix + "language/values/strings.xml");
       if (LANGUAGE_CODE.length() > 0) {
-	parse("language/values-" + LANGUAGE_CODE + "/strings.xml");
+	parse(m_sPrefix + "language/values-" + LANGUAGE_CODE + "/strings.xml");
       }
-#else
-      parse("../language/values/strings.xml");
-      if (LANGUAGE_CODE.length() > 0) {
-	parse("../language/values-" + LANGUAGE_CODE + "/strings.xml");
-      }
-#endif
     }
   private:
     void parse(const Ogre::String &path) {

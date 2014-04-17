@@ -13,6 +13,7 @@
 #include "MainMenuStates.hpp"
 
 class CMapInfo;
+class CMapPack;
 class CSaveState;
 
 extern const float BUTTON_MIN_ALPHA;
@@ -99,7 +100,7 @@ private:
   int m_iSelectedLoadState;
   const CSaveState *m_pStateToLoad;
   std::vector<Ogre::String> m_vUserFiles;
-  std::shared_ptr<CMapInfo> m_pMapInfo;
+  std::shared_ptr<CMapPack> m_pMapPack;
 public:
   static CMainMenu &getSingleton();
   static CMainMenu *getSingletonPtr();

@@ -22,6 +22,7 @@
 #include "EditBoxes/EditBoxExit.hpp"
 #include "Events/ChangeTileEvent.hpp"
 #include "IDGenerator.hpp"
+#include "MapInfo.hpp"
 
 using namespace CEGUI;
 
@@ -57,7 +58,7 @@ CMapEditor::CMapEditor(Window *pRoot)
     m_uiMapSizeY(0) {
   //init(0);
 }
-void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
+void CMapEditor::init(CMap *pMap, const CMapPackConstPtr pMapPack) {
   for (unsigned int i = 0; i < TT_COUNT; i++) {
     String tileName = "Tile" + PropertyHelper<int>::toString(i) + ".png";
     ImageManager::getSingleton().addFromImageFile(tileName, tileName, "Game");
@@ -78,7 +79,7 @@ void CMapEditor::init(CMap *pMap, const CMapInfoConstPtr pMapInfo) {
   
   CInputListenerManager::getSingleton().addInputListener(this);
   m_pMap = pMap;
-  m_pMapInfo = std::shared_ptr<CMapInfo>(new CMapInfo(pMapInfo));
+  m_pMapPack = shared_ptr<CMapPack>(new CMapPack(shared_ptr<CMapInfo>(new CMapInfo(pMapPack->getMapInfo()))));
   
 
   m_uiMapSizeX = m_pMap->getTilesGrid().getSizeX();
@@ -507,7 +508,7 @@ Window* CMapEditor::createEditButton(Window *pParent,
     pButton->setText("Map description");
     break;
   case EB_MAP_DIFFICULTY:
-    pButton->setText(m_pMapInfo->getDifficultyAsString().c_str());
+    pButton->setText(m_pMapPack->getMapInfo()->getDifficultyAsString().c_str());
     break;
   case EB_MAP_NAME:
     pButton->setText("Map name");
@@ -643,7 +644,7 @@ void CMapEditor::start() {
   
   //reset map, but store camera pos
   Ogre::Vector2 vCamPos(m_pMap->getCameraTargetPos());
-  m_pMap->loadMap(m_pMapInfo);
+  m_pMap->loadMap(m_pMapPack);
   m_pMap->setCameraPos(vCamPos);
 
   // init links
@@ -669,7 +670,7 @@ void CMapEditor::stop() {
 
   m_pMap->prepareMap();
   if (m_bVisible) {
-    m_pMap->writeToXMLElement(m_pMapInfo->getEmptyRootNode(), OS_FULL);
+    m_pMap->writeToXMLElement(m_pMapPack->getMapInfo()->getEmptyRootNode(), OS_FULL);
     m_bVisible = false;
   }
 }
@@ -1040,14 +1041,14 @@ bool CMapEditor::onSaveMap(const EventArgs &args) {
   selectedEntity(NULL);
 
   // write file to map info
-  tinyxml2::XMLElement *pElem = m_pMapInfo->getEmptyRootNode();
+  tinyxml2::XMLElement *pElem = m_pMapPack->getMapInfo()->getEmptyRootNode();
   m_pMap->writeToXMLElement(pElem, OS_MINIMAL);
-  m_pMapInfo->writeToXMLElement(pElem, OS_MINIMAL);
+  m_pMapPack->getMapInfo()->writeToXMLElement(pElem, OS_MINIMAL);
   tinyxml2::XMLPrinter printer;
-  m_pMapInfo->getDocument().Accept(&printer);
+  m_pMapPack->getMapInfo()->getDocument().Accept(&printer);
 
   fstream stream;
-  if (!CFileManager::openFile(stream, CFileManager::DIRECTORY_LEVEL + m_pMapInfo->getFileName(), std::ofstream::out | std::ofstream::trunc, CFileManager::SL_EXTERNAL)) {
+  if (!CFileManager::openFile(stream, CFileManager::DIRECTORY_LEVEL + m_pMapPack->getMapInfo()->getFileName(), std::ofstream::out | std::ofstream::trunc, CFileManager::SL_EXTERNAL)) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Could not open stream for saving the map!");
     return true;
   }
@@ -1079,12 +1080,12 @@ bool CMapEditor::onEditEnumSweep(const CEGUI::EventArgs&args) {
   switch(id) {
   case EB_MAP_DIFFICULTY:
     {
-      int diff = m_pMapInfo->getDifficulty() + 1;
+      int diff = m_pMapPack->getMapInfo()->getDifficulty() + 1;
       if (diff >= D_COUNT || diff < 0) {
 	diff = 0;
       }
-      m_pMapInfo->setDifficulty(static_cast<EMapDifficulty>(diff));
-      wndArgs.window->setText(m_pMapInfo->getDifficultyAsString().c_str());
+      m_pMapPack->getMapInfo()->setDifficulty(static_cast<EMapDifficulty>(diff));
+      wndArgs.window->setText(m_pMapPack->getMapInfo()->getDifficultyAsString().c_str());
     }
     break;
   }
@@ -1099,7 +1100,7 @@ bool CMapEditor::onEditText(const CEGUI::EventArgs &args) {
 					  m_pRoot,
 					  m_fButtonSize,
 					  wndArgs.window->getText(),
-					  m_pMapInfo->getDescription());
+					  m_pMapPack->getMapInfo()->getDescription());
     break;
   }
   return true;  
@@ -1113,14 +1114,14 @@ bool CMapEditor::onEditString(const CEGUI::EventArgs &args) {
 					    m_pRoot,
 					    m_fButtonSize,
 					    wndArgs.window->getText(),
-					    m_pMapInfo->getName());
+					    m_pMapPack->getMapInfo()->getName());
     break;
   case EB_MAP_FILENAME:
     m_pEditValueWindow = new CEditBoxString(id,
 					    m_pRoot,
 					    m_fButtonSize,
 					    wndArgs.window->getText(),
-					    m_pMapInfo->getFileName());
+					    m_pMapPack->getMapInfo()->getFileName());
     break;
   case EB_ID:
     if (m_pSelectedEntity) {

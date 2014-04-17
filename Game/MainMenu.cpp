@@ -371,8 +371,7 @@ void CMainMenu::changeState(MainMenu::EState eState) {
     if (eState == MMS_RESULT_LOAD_GAME ||
 	eState == MMS_RESULT_NEW_GAME)  {
       assert(m_pLevelInfo);
-      m_pMapInfo = shared_ptr<CMapInfo>(new CMapInfo(m_pLevelInfo->sLevelFileName,
-						     "level_user"));
+      m_pMapPack = shared_ptr<CMapPack>(new CMapPack(m_pLevelInfo->sLevelFileName));
     }
     m_pLevelInfo = NULL;
     break;
@@ -405,8 +404,9 @@ void CMainMenu::changeState(MainMenu::EState eState) {
     if (m_pStateToLoad) {
       CGameState::getSingleton().changeGameState(CGameState::GS_GAME, m_pStateToLoad);
     }
-    else if (m_pMapInfo) {
-      CGameState::getSingleton().changeGameState(CGameState::GS_GAME, m_pMapInfo);
+    else if (m_pMapPack) {
+      CGameState::getSingleton().changeGameState(CGameState::GS_GAME, m_pMapPack);
+      m_pMapPack.reset();
     }
     else {
       CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
@@ -423,7 +423,7 @@ void CMainMenu::changeState(MainMenu::EState eState) {
     break;
 #if ENABLE_MAP_EDITOR
   case MMS_RESULT_NEW_MAP:
-    CGameState::getSingleton().changeGameState(CGameState::GS_GAME, std::shared_ptr<CMapInfo>(new CMapInfo()));
+    CGameState::getSingleton().changeGameState(CGameState::GS_GAME, std::shared_ptr<CMapPack>(new CMapPack("new_map")));
     break;
 #endif
   default:
@@ -621,8 +621,8 @@ void CMainMenu::selectedSaveStateChanged() {
       m_pMapInfoWindow->setText("");
       return;
     }
-    m_pMapInfo = std::shared_ptr<CMapInfo>(new CMapInfo(m_vUserFiles[m_iSelectedLoadState], "level_user"));
-    m_pMapInfoWindow->setText(m_pMapInfo->generateInfoText());
+    m_pMapPack = std::shared_ptr<CMapPack>(new CMapPack(m_vUserFiles[m_iSelectedLoadState]));
+    m_pMapInfoWindow->setText(m_pMapPack->getMapInfo()->generateInfoText());
   }
   m_pSaveStatesWindow->ensureItemIsVisible(m_iSelectedLoadState);
   m_pSaveStatesWindow->setItemSelectState(m_iSelectedLoadState, true);
@@ -679,7 +679,7 @@ void CMainMenu::activateLoadState() {
     if (m_eCurrentState == MMS_LOAD_GAME) {
       m_pStateToLoad
 	= static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
-      m_pMapInfo.reset();
+      m_pMapPack.reset();
     }
     else if (m_eCurrentState == MMS_USER_GAME) {
       m_pStateToLoad = NULL;

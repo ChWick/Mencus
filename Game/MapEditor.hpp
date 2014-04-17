@@ -7,7 +7,7 @@
 #include "PauseCaller.hpp"
 #include "PauseListener.hpp"
 #include "PauseListener.hpp"
-#include "MapInfo.hpp"
+#include "MapPack.hpp"
 #include "EditBoxes/EditBoxListener.hpp"
 
 class CEntity;
@@ -88,7 +88,7 @@ private:
   EBrushes m_eSelectedBrush;
   CEntity *m_pSelectedEntity;
   bool m_bSnapToGrid;
-  CMapInfoPtr m_pMapInfo;
+  CMapPackPtr m_pMapPack;
   bool m_bInitialized;
   
   bool m_bGrabbedSprite;
@@ -106,7 +106,7 @@ public:
 
 
   void toggle();
-  void init(CMap *pMap, const CMapInfoConstPtr pMapInfo);
+  void init(CMap *pMap, const CMapPackConstPtr pMapPack);
   void start();
   void stop();
   void exit();

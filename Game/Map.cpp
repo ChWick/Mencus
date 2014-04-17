@@ -22,6 +22,7 @@
 #include "MessageHandler.hpp"
 #include "Region.hpp"
 #include "Events/Event.hpp"
+#include "MapInfo.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -34,7 +35,7 @@ const Ogre::Real CAMERA_MAX_MOVE_SPEED(10);
 CMap::CMap(Ogre::SceneManager *pSceneManager,
 	   CScreenplayListener *pScreenplayListener,
 	   SStatistics &statistics,
-	   const CMapInfoConstPtr pMapInfo)
+	   const CMapPackConstPtr pMapPack)
   : CEntity(*this, "Map", NULL), 
     m_pTutorialManager(new CTutorialManager(*this)), 
     m_p2dManagerMap(NULL),
@@ -48,7 +49,7 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_bRenderPause(false),
     m_fPlayingTime(0),
     m_Statistics(statistics),
-    m_pMapInfo(pMapInfo) {
+    m_pMapPack(pMapPack) {
 
   CMessageHandler::getSingleton().addInjector(this);
   CInputListenerManager::getSingleton().addInputListener(this);
@@ -62,14 +63,14 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
   m_pObjectsEntity = new CEntity(*this, "Objects", this);
   m_pOthersEntity = new CEntity(*this, "Others", this);
 
-  m_Statistics.sLevelFileName = pMapInfo->getFileName();
+  m_Statistics.sLevelFileName = pMapPack->getMapName();
 
   resizeTilesPerScreen(Ogre::Vector2(16, 12));
   CGame::getSingleton().showLoadingBar(0, 1);
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
   Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Game");
 #if ENABLE_MAP_EDITOR
-  CMapEditor::getSingleton().init(this, pMapInfo);
+  CMapEditor::getSingleton().init(this, pMapPack);
 #endif
   CGame::getSingleton().hideLoadingBar();
 
@@ -242,10 +243,10 @@ void CMap::resizeTilesPerScreen(const Ogre::Vector2 &tps) {
     t->setVisible(false);
   }
 }
-void CMap::loadMap(const CMapInfoConstPtr pMapInfo) {
+void CMap::loadMap(const CMapPackConstPtr pMapPack) {
   clearMap();
 
-  const XMLElement *pRoot = pMapInfo->getDocument().FirstChildElement("map");
+  const XMLElement *pRoot = pMapPack->getMapInfo()->getDocument().FirstChildElement("map");
   readFromXMLElement(pRoot);
 
   prepareMap();
@@ -879,7 +880,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
   pMapElem->InsertEndChild(pPlayer);
   m_pPlayer->writeToXMLElement(pPlayer, eStyle);
 
-  m_pMapInfo->writeToXMLElement(pMapElem, eStyle);
+  m_pMapPack->getMapInfo()->writeToXMLElement(pMapElem, eStyle);
   
   if (m_pBackground) {
     pMapElem->SetAttribute("background", m_pBackground->getName().c_str());

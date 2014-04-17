@@ -9,7 +9,7 @@ using namespace XMLHelper;
 
 
 CMapInfo::CMapInfo() 
-  : m_sFileName("Newmap.xml"),
+  : m_sFileName("Newmap"),
     m_eDifficulty(D_EASY), 
     m_sName("New map"),
     m_sDescription("A newly created map."),
@@ -48,7 +48,7 @@ CMapInfo::CMapInfo(const std::string &sFileName, const std::string &sResourceGro
     m_eDifficulty(D_EASY) {
 
   Ogre::DataStreamPtr dataStream = Ogre::ResourceGroupManager::getSingleton().
-    openResource(sFileName, sResourceGroup);
+    openResource(sFileName + ".xml", sResourceGroup);
   if (dataStream.isNull()) {
     m_bValid = false;
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "File " + sFileName + " not found!");

@@ -3,6 +3,7 @@
 #include "Screenplay.hpp"
 #include "GUIGameOver.hpp"
 #include "AdDisplayManager.hpp"
+#include "MapPack.hpp"
 #include "MapInfo.hpp"
 #include "GUIStatistics.hpp"
 #include "GUICredits.hpp"
@@ -34,12 +35,12 @@ CGameState::CGameState()
 : m_eCurrentGameState(GS_COUNT),
   m_eNextGameState(GS_COUNT),
   m_pMainMenu(NULL),
+  m_eMainMenuState(MainMenu::MMS_START),
   m_pScreenplay(NULL),
   m_pSaveState(NULL),
   m_bForce(true),
   m_bAdShown(false),
-  m_pCredits(NULL),
-  m_eMainMenuState(MainMenu::MMS_START) {
+  m_pCredits(NULL) {
 }
 CGameState::~CGameState() {
   if (m_pScreenplay) {
@@ -62,19 +63,19 @@ void CGameState::changeGameState(EGameStates eNewGameState, bool bNow, bool bFor
 }
 void CGameState::changeGameState(EGameStates eNewGameState, const CSaveState *pState) {
   m_eNextGameState = eNewGameState;
-  m_pMapInfo.reset();
+  m_pMapPack.reset();
   m_pSaveState = pState;
   m_eMainMenuState = MainMenu::MMS_START;
 }
-void CGameState::changeGameState(EGameStates eNewGameState, std::shared_ptr<const CMapInfo> pInfo) {
+void CGameState::changeGameState(EGameStates eNewGameState, std::shared_ptr<const CMapPack> pMapPack) {
   m_eNextGameState = eNewGameState;
-  m_pMapInfo = pInfo;
+  m_pMapPack = pMapPack;
   m_pSaveState = NULL;
   m_eMainMenuState = MainMenu::MMS_START;
 }
 void CGameState::changeGameState(EGameStates eNewGameState, MainMenu::EState eMainMenuState, bool bNow) {
   m_eNextGameState = eNewGameState;
-  m_pMapInfo.reset();
+  m_pMapPack.reset();
   m_pSaveState = NULL;
   m_eMainMenuState = eMainMenuState;
 
@@ -87,13 +88,14 @@ void CGameState::changeGameStateImpl() {
     return;
   }
   auto ePreviousGameState = m_eCurrentGameState;
-  if (!(m_pMapInfo && m_pMapInfo->isTutorial())) {
+  if (!(m_pMapPack && m_pMapPack->getMapInfo()->isTutorial())) {
     if (m_eNextGameState == GS_GAME && !m_bAdShown) {
       m_eNextGameState = GS_AD;
     }
   }
   switch (m_eCurrentGameState) {
   case GS_GAME:
+    m_pMapPack.reset();
     m_bAdShown = false;
     delete m_pScreenplay;
     m_pScreenplay = NULL;
@@ -123,8 +125,8 @@ void CGameState::changeGameStateImpl() {
     case GS_GAME:
       Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("PreloadGame");
       m_pScreenplay = new CScreenplay();
-      if (m_pMapInfo) {
-	m_pScreenplay->loadSingleMap(m_pMapInfo);
+      if (m_pMapPack) {
+	m_pScreenplay->loadSingleMap(m_pMapPack);
       }
       break;
     case GS_MAIN_MENU:

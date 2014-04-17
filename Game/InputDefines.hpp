@@ -16,13 +16,13 @@
 
 #else
 
-#  if ENABLE_MAP_EDITOR
+//#  if ENABLE_MAP_EDITOR
 #    define INPUT_MOUSE
 #    define INPUT_KEYBOARD
-#  else
-#    define INPUT_KEYBOARD
-#    define INPUT_KEYBOARD_ONLY
-#  endif
+//#  else
+//#    define INPUT_KEYBOARD
+//#    define INPUT_KEYBOARD_ONLY
+//#  endif
 
 #endif
 

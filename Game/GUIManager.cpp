@@ -215,7 +215,6 @@ bool CGUIManager::mouseReleased( const OIS::MouseEvent &arg, OIS::MouseButtonID 
   return true;
 }
 bool CGUIManager::touchMoved(const OIS::MultiTouchEvent& arg) {
-  CEGUI::System &sys = CEGUI::System::getSingleton();
   //sys.getDefaultGUIContext().injectMouseMove(evt.state.X.rel, evt.state.Y.rel);
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(arg.state.X.abs, arg.state.Y.abs);
   CEGUI::MouseEventArgs args(NULL);

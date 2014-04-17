@@ -34,7 +34,7 @@ CLevel::~CLevel() {
   }
 }
 void CLevel::start() {
-  m_pMap->loadMap(m_pMapInfo);
+  m_pMap->loadMap(m_pMapPack);
 }
 void CLevel::stop() {
   
@@ -44,7 +44,7 @@ void CLevel::init() {
     m_pMap = new CMap(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"),
 		      m_pScreenplayListener,
 		      m_Statistics,
-		      m_pMapInfo);
+		      m_pMapPack);
   }
 }
 void CLevel::exit() {
@@ -117,15 +117,15 @@ CScreenplay::~CScreenplay() {
   clear();
   CInputListenerManager::getSingleton().removeInputListener(this);
 }
-void CScreenplay::loadSingleMap(std::shared_ptr<const CMapInfo> pMapInfo) {
-  assert(pMapInfo);
+void CScreenplay::loadSingleMap(std::shared_ptr<const CMapPack> pMapPack) {
+  assert(pMapPack);
   m_eScreenplayType = SCREENPLAY_SINGLE_MAP;
-  m_pMapInfo = pMapInfo;
+  m_pMapPack = pMapPack;
 
   clear();
   // create dummy act and dummy scene
   CAct *pAct = new CAct(*this, 1, "");
-  CScene *pScene = new CLevel(*pAct, 1, pMapInfo, this);
+  CScene *pScene = new CLevel(*pAct, 1, pMapPack, this);
   pAct->addScene(pScene);
   m_mapActs[1] = pAct;
 
@@ -135,6 +135,7 @@ void CScreenplay::loadSingleMap(std::shared_ptr<const CMapInfo> pMapInfo) {
   m_uiNextScene = 1;
 }
 void CScreenplay::clear() {
+  Ogre::LogManager::getSingleton().logMessage("Clearing screenplay");
   for (auto &p : m_mapActs) {
     delete p.second;
   }
@@ -148,7 +149,7 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
     if (pLevel) {
       pLevel->getStatistics().eMissionState = MS_ACCOMPLISHED;
       CGUIStatistics::getSingleton().showStatistics(pLevel->getStatistics());
-      CGameState::getSingleton().changeGameState(CGameState::GS_STATISTICS, pLevel->getMapInfo());
+      CGameState::getSingleton().changeGameState(CGameState::GS_STATISTICS, pLevel->getMapPack());
     }
     else {
       CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);
@@ -222,7 +223,7 @@ void CScreenplay::parse(const Ogre::String &sFilename, const Ogre::String &sReso
       if (type == "level") {
         XMLElement *pLevelElem = pSceneElem->FirstChildElement("level");
         Ogre::String file = pLevelElem->Attribute("file");
-        pScene = new CLevel(*pAct, id, shared_ptr<CMapInfo>(new CMapInfo(dir + "/" + file, sResourceGroup)), this);
+        pScene = new CLevel(*pAct, id, shared_ptr<CMapPack>(new CMapPack(std::shared_ptr<CMapInfo>(new CMapInfo(dir + "/" + file, sResourceGroup)))), this);
       }
       else if (type == "instructions") {
         XMLElement *pInstructionsElem = pSceneElem->FirstChildElement("instructions");
@@ -392,7 +393,7 @@ void CScreenplay::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eS
   pElem->SetAttribute("nextScene", m_uiNextScene);
  
   if (m_eScreenplayType == SCREENPLAY_SINGLE_MAP) {
-    pElem->SetAttribute("map_filename", m_pMapInfo->getFileName().c_str());
+    pElem->SetAttribute("map_filename", m_pMapPack->getMapInfo()->getFileName().c_str());
     tinyxml2::XMLElement *pMapElem = pElem->GetDocument()->NewElement("map");
     pElem->InsertEndChild(pMapElem);
     m_mapActs.at(m_uiCurrentAct)->getScene(m_uiCurrentScene)->writeToXMLElement(pMapElem, eStyle);
@@ -413,8 +414,8 @@ void CScreenplay::readFromXMLElement(const tinyxml2::XMLElement *pElem) {
   m_uiNextScene = pElem->IntAttribute("nextScene");
 
   if (m_eScreenplayType == SCREENPLAY_SINGLE_MAP) {
-    loadSingleMap(std::shared_ptr<CMapInfo>(new CMapInfo(Attribute(pElem, "map_filename"), "level_user")));
-    CGameState::getSingleton().setMapInfo(m_pMapInfo);
+    loadSingleMap(std::shared_ptr<CMapPack>(new CMapPack(std::shared_ptr<CMapInfo>(new CMapInfo(Attribute(pElem, "map_filename"), "level_user")))));
+    CGameState::getSingleton().setMapPack(m_pMapPack);
     m_Fader.setVisible(false);
     loadAct(m_uiNextAct, m_uiNextScene);
     m_Fader.setVisible(true);

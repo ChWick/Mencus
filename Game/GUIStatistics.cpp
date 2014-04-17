@@ -121,7 +121,7 @@ void CGUIStatistics::activateButton(int iBtn) {
   switch (iBtn) {
   case BT_RETRY:
     CGameState::getSingleton().
-      changeGameState(CGameState::GS_GAME, CGameState::getSingleton().getMapInfo());
+      changeGameState(CGameState::GS_GAME, CGameState::getSingleton().getMapPack());
     break;
   case BT_TO_MENU:
     CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU, MainMenu::MMS_USER_GAME);
