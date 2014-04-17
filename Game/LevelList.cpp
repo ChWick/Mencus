@@ -55,7 +55,12 @@ void CLevelList::load() {
     }
     catch (...) {
       Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Error while parsing the level: " + info.sLevelFileName);
-      continue;
+
+      info.sLevelName = "unset name";
+      info.sDifficulty = "unknown difficulty";
+      info.sLevelDescription = "unknown description";
+      info.sFullInfoText = "full info text";
+      info.bTutorial = false;
     }
     
     m_lLevelInfoList.push_back(info);

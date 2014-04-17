@@ -414,7 +414,7 @@ void CScreenplay::readFromXMLElement(const tinyxml2::XMLElement *pElem) {
   m_uiNextScene = pElem->IntAttribute("nextScene");
 
   if (m_eScreenplayType == SCREENPLAY_SINGLE_MAP) {
-    loadSingleMap(std::shared_ptr<CMapPack>(new CMapPack(std::shared_ptr<CMapInfo>(new CMapInfo(Attribute(pElem, "map_filename"), "level_user")))));
+    loadSingleMap(std::shared_ptr<CMapPack>(new CMapPack(Attribute(pElem, "map_filename"))));
     CGameState::getSingleton().setMapPack(m_pMapPack);
     m_Fader.setVisible(false);
     loadAct(m_uiNextAct, m_uiNextScene);
