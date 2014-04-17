@@ -11,6 +11,7 @@
 #include "MapInfo.hpp"
 #include "MapEditor.hpp"
 #include "LevelState.hpp"
+#include "XMLResources/Manager.hpp"
 
 using namespace std;
 using namespace CEGUI;
@@ -50,7 +51,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_iTargetState[MMS_START][START_OPTIONS] = MMS_OPTIONS;
   m_iTargetState[MMS_START][START_CREDITS] = MMS_RESULT_CREDITS;
   m_iTargetState[MMS_START][START_EXIT] = MMS_RESULT_EXIT;
-  m_sButtonLabels[MMS_START][START_START_GAME] = "Start game";
+  m_sButtonLabels[MMS_START][START_START_GAME] = XMLResources::CManager::getString("start_game");
   m_sButtonLabels[MMS_START][START_OPTIONS] = "Options";
   m_sButtonLabels[MMS_START][START_CREDITS] = "Credits";
   m_sButtonLabels[MMS_START][START_EXIT] = "Exit";
