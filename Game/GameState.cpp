@@ -95,7 +95,9 @@ void CGameState::changeGameStateImpl() {
   }
   switch (m_eCurrentGameState) {
   case GS_GAME:
-    m_pMapPack.reset();
+    if (!(m_eNextGameState == GS_STATISTICS || m_eNextGameState == GS_GAME_OVER)) {
+      m_pMapPack.reset();
+    }
     m_bAdShown = false;
     delete m_pScreenplay;
     m_pScreenplay = NULL;
@@ -107,9 +109,15 @@ void CGameState::changeGameStateImpl() {
     m_pMainMenu->hide();
     break;
   case GS_GAME_OVER:
+    if (!(m_eNextGameState == GS_STATISTICS || m_eNextGameState == GS_GAME)) {
+      m_pMapPack.reset();
+    }
     CGUIGameOver::getSingleton().hide();
     break;
   case GS_STATISTICS:
+    if (!(m_eNextGameState == GS_GAME || m_eNextGameState == GS_GAME_OVER)) {
+      m_pMapPack.reset();
+    }
     CGUIStatistics::getSingleton().hide();
     break;
   case GS_CREDITS:
