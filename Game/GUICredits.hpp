@@ -23,7 +23,7 @@ public:
     m_pRoot = pGlobalRoot->createChild("OgreTray/Group", "Credits");
     m_pRoot->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
     m_pRoot->setSize(USize(UDim(1, 0), UDim(1, 0)));
-    m_pRoot->setText(XMLResources::CManager::getCEGUIString("credits"));
+    m_pRoot->setText(XMLResources::GLOBAL.getCEGUIString("credits"));
     
     MultiLineEditbox *pText = dynamic_cast<MultiLineEditbox*>(m_pRoot->createChild("OgreTray/MultiLineEditbox", "Text"));
     pText->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
@@ -35,7 +35,7 @@ public:
     Window *pButton = m_pRoot->createChild("OgreTray/Button", "CloseButton");
     pButton->setPosition(UVector2(UDim(0.25f, 0), UDim(1 - fButtonSize, 0)));
     pButton->setSize(USize(UDim(0.5, 0), UDim(fButtonSize, 0)));
-    pButton->setText(XMLResources::CManager::getCEGUIString("close"));
+    pButton->setText(XMLResources::GLOBAL.getCEGUIString("close"));
     pButton->subscribeEvent(PushButton::EventClicked,
 			    Event::Subscriber(&CGUICredits::onClose, this));
 

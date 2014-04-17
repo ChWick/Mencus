@@ -1,5 +1,6 @@
 #include "Manager.hpp"
 
 namespace XMLResources {
-  std::map<std::string, std::string> CManager::m_lStringResources;
+  std::string CManager::LANGUAGE_CODE;
+  CManager GLOBAL("", false);
 };

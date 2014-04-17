@@ -48,7 +48,8 @@ int main(int argc, char *argv[])
 
   try {
     LOGI("loading language");
-    XMLResources::CManager::loadLanguage("de");
+    XMLResources::CManager::LANGUAGE_CODE = "de";
+    XMLResources::GLOBAL.loadLanguage();
   }
   catch (const Ogre::Exception& e) {
     LOGW("An exception has occured: ");
@@ -68,7 +69,8 @@ int main(int argc, char *argv[])
   LOGI("End");
 #else
   try {
-    XMLResources::CManager::loadLanguage("de");
+    XMLResources::CManager::LANGUAGE_CODE = "de";
+    XMLResources::GLOBAL.loadLanguage();
   }
   catch (const Ogre::Exception& e) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
