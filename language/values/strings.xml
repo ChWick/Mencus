@@ -1,4 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="start_game">Start game</string>
+  <string name="options">Options</string>
+  <string name="credits">Credits</string>
+  <string name="exit">Exit</string>
+  <string name="map_editor">Map editor</string>
+  <string name="new_game">New game</string>
+  <string name="load_game">Load game</string>
+  <string name="select_map">Select map</string>
+  <string name="back">Back</string>
+  <string name="new_map">New map</string>
+  <string name="load_map">Load map</string>
+  <string name="video">Video</string>
+  <string name="input">Input</string>
+  <string name="back_to_game">Back to game</string>
+  <string name="exit_game">Exit game</string>
+  <string name="select_level">Select level</string>
+  <string name="close">Close</string>
 </resources>

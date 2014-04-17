@@ -72,11 +72,15 @@ void CGameState::changeGameState(EGameStates eNewGameState, std::shared_ptr<cons
   m_pSaveState = NULL;
   m_eMainMenuState = MainMenu::MMS_START;
 }
-void CGameState::changeGameState(EGameStates eNewGameState, MainMenu::EState eMainMenuState) {
+void CGameState::changeGameState(EGameStates eNewGameState, MainMenu::EState eMainMenuState, bool bNow) {
   m_eNextGameState = eNewGameState;
   m_pMapInfo.reset();
   m_pSaveState = NULL;
   m_eMainMenuState = eMainMenuState;
+
+  if (bNow) {
+    changeGameStateImpl();
+  }
 }
 void CGameState::changeGameStateImpl() {
   if (!m_bForce && m_eCurrentGameState == m_eNextGameState) {

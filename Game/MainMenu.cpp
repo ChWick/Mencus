@@ -51,60 +51,60 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_iTargetState[MMS_START][START_OPTIONS] = MMS_OPTIONS;
   m_iTargetState[MMS_START][START_CREDITS] = MMS_RESULT_CREDITS;
   m_iTargetState[MMS_START][START_EXIT] = MMS_RESULT_EXIT;
-  m_sButtonLabels[MMS_START][START_START_GAME] = XMLResources::CManager::getString("start_game");
-  m_sButtonLabels[MMS_START][START_OPTIONS] = "Options";
-  m_sButtonLabels[MMS_START][START_CREDITS] = "Credits";
-  m_sButtonLabels[MMS_START][START_EXIT] = "Exit";
+  m_sButtonLabels[MMS_START][START_START_GAME] = XMLResources::CManager::getCEGUIString("start_game");
+  m_sButtonLabels[MMS_START][START_OPTIONS] = XMLResources::CManager::getCEGUIString("options");
+  m_sButtonLabels[MMS_START][START_CREDITS] = XMLResources::CManager::getCEGUIString("credits");
+  m_sButtonLabels[MMS_START][START_EXIT] = XMLResources::CManager::getCEGUIString("exit");
 
   m_iTargetState[MMS_GAME][GAME_USER_GAME] = MMS_USER_GAME;
   m_iTargetState[MMS_GAME][GAME_BACK] = MMS_START;
 #if ENABLE_MAP_EDITOR
   m_iTargetState[MMS_GAME][GAME_MAP_EDITOR] = MMS_MAP_EDITOR;
-  m_sButtonLabels[MMS_GAME][GAME_MAP_EDITOR] = "Map editor";
+  m_sButtonLabels[MMS_GAME][GAME_MAP_EDITOR] = XMLResources::CManager::getCEGUIString("map_editor");
 #endif
 #if ENABLE_CAMPAIGN
   m_iTargetState[MMS_GAME][GAME_NEW_GAME] = MMS_RESULT_NEW_GAME;
-  m_sButtonLabels[MMS_GAME][GAME_NEW_GAME] = "New game";
+  m_sButtonLabels[MMS_GAME][GAME_NEW_GAME] = XMLResources::CManager::getCEGUIString("new_game");
   m_iTargetState[MMS_GAME][GAME_LOAD_GAME] = MMS_LOAD_GAME;
-  m_sButtonLabels[MMS_GAME][GAME_LOAD_GAME] = "Load game";
+  m_sButtonLabels[MMS_GAME][GAME_LOAD_GAME] = XMLResources::CManager::getCEGUIString("load_game");
 #endif
-  m_sButtonLabels[MMS_GAME][GAME_USER_GAME] = "Select map";
-  m_sButtonLabels[MMS_GAME][GAME_BACK] = "Back";
+  m_sButtonLabels[MMS_GAME][GAME_USER_GAME] = XMLResources::CManager::getCEGUIString("select_map");
+  m_sButtonLabels[MMS_GAME][GAME_BACK] = XMLResources::CManager::getCEGUIString("back");
 
   // map editor
-  setupButton(MMS_MAP_EDITOR, MAP_EDITOR_NEW_MAP, "New map", MMS_RESULT_NEW_MAP);
-  setupButton(MMS_MAP_EDITOR, MAP_EDITOR_LOAD_MAP, "Load map", MMS_MAP_EDITOR_SELECT_MAP);
-  setupButton(MMS_MAP_EDITOR, MAP_EDITOR_BACK, "Back", MMS_GAME);
+  setupButton(MMS_MAP_EDITOR, MAP_EDITOR_NEW_MAP, XMLResources::CManager::getCEGUIString("new_map"), MMS_RESULT_NEW_MAP);
+  setupButton(MMS_MAP_EDITOR, MAP_EDITOR_LOAD_MAP, XMLResources::CManager::getCEGUIString("load_map"), MMS_MAP_EDITOR_SELECT_MAP);
+  setupButton(MMS_MAP_EDITOR, MAP_EDITOR_BACK, XMLResources::CManager::getCEGUIString("back"), MMS_GAME);
 
-  setupButton(MMS_MAP_EDITOR_SELECT_MAP, MAP_EDITOR_LOAD_BACK, "Back", MMS_MAP_EDITOR);
+  setupButton(MMS_MAP_EDITOR_SELECT_MAP, MAP_EDITOR_LOAD_BACK, XMLResources::CManager::getCEGUIString("back"), MMS_MAP_EDITOR);
 
   // load
-  setupButton(MMS_LOAD_GAME, LOAD_GAME_BACK, "Back", MMS_GAME);
+  setupButton(MMS_LOAD_GAME, LOAD_GAME_BACK, XMLResources::CManager::getCEGUIString("back"), MMS_GAME);
 
   // options
   m_iTargetState[MMS_OPTIONS][OPTIONS_VIDEO] = MMS_OPTIONS_VIDEO;
   m_iTargetState[MMS_OPTIONS][OPTIONS_INPUT] = MMS_OPTIONS_INPUT;
   m_iTargetState[MMS_OPTIONS][OPTIONS_BACK] = MMS_START;
-  m_sButtonLabels[MMS_OPTIONS][OPTIONS_VIDEO] = "Video";
-  m_sButtonLabels[MMS_OPTIONS][OPTIONS_INPUT] = "Input";
-  m_sButtonLabels[MMS_OPTIONS][OPTIONS_BACK] = "Back";
+  m_sButtonLabels[MMS_OPTIONS][OPTIONS_VIDEO] = XMLResources::CManager::getCEGUIString("video");
+  m_sButtonLabels[MMS_OPTIONS][OPTIONS_INPUT] = XMLResources::CManager::getCEGUIString("input");
+  m_sButtonLabels[MMS_OPTIONS][OPTIONS_BACK] = XMLResources::CManager::getCEGUIString("back");
 
 
   m_iTargetState[MMS_OPTIONS_VIDEO][OPTIONS_VIDEO_BACK] = MMS_OPTIONS;
-  m_sButtonLabels[MMS_OPTIONS_VIDEO][OPTIONS_VIDEO_BACK] = "Back";
+  m_sButtonLabels[MMS_OPTIONS_VIDEO][OPTIONS_VIDEO_BACK] = XMLResources::CManager::getCEGUIString("back");
 
   m_iTargetState[MMS_OPTIONS_INPUT][OPTIONS_INPUT_BACK] = MMS_OPTIONS;
-  m_sButtonLabels[MMS_OPTIONS_INPUT][OPTIONS_INPUT_BACK] = "Back";
+  m_sButtonLabels[MMS_OPTIONS_INPUT][OPTIONS_INPUT_BACK] = XMLResources::CManager::getCEGUIString("back");
 
   m_iTargetState[MMS_GAME_ESCAPE][GAMES_ESCAPE_BACK_TO_GAME] = MMS_RESULT_BACK_TO_GAME;
-  m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_BACK_TO_GAME] = "Back to game";
+  m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_BACK_TO_GAME] = XMLResources::CManager::getCEGUIString("back_to_game");
   m_iTargetState[MMS_GAME_ESCAPE][GAMES_ESCAPE_OPTIONS] = MMS_OPTIONS;
-  m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_OPTIONS] = "Options";
+  m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_OPTIONS] = XMLResources::CManager::getCEGUIString("options");
   m_iTargetState[MMS_GAME_ESCAPE][GAMES_ESCAPE_EXIT_GAME] = MMS_START;
-  m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_EXIT_GAME] = "Exit game";
+  m_sButtonLabels[MMS_GAME_ESCAPE][GAMES_ESCAPE_EXIT_GAME] = XMLResources::CManager::getCEGUIString("exit_game");
 
   m_iTargetState[MMS_USER_GAME][USER_GAME_BACK] = MMS_GAME;
-  m_sButtonLabels[MMS_USER_GAME][USER_GAME_BACK] = "Back";
+  m_sButtonLabels[MMS_USER_GAME][USER_GAME_BACK] = XMLResources::CManager::getCEGUIString("back");
 
   // create cegui windows/buttons
   m_pMMRoot = pGUIRoot->createChild("DefaultWindow", "MainMenuRoot");
@@ -193,7 +193,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   // input
   float fHeight = 0;
   m_pOptionPages[OPTIONS_INPUT] = pButtonContainer->createChild("OgreTray/Group", "InputOptionsContainer");
-  m_pOptionPages[OPTIONS_INPUT]->setText("Input");
+  m_pOptionPages[OPTIONS_INPUT]->setText(XMLResources::CManager::getCEGUIString("input"));
   m_pOptionPages[OPTIONS_INPUT]->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
 
 
@@ -238,7 +238,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 
   // video
   m_pOptionPages[OPTIONS_VIDEO] = pButtonContainer->createChild("OgreTray/Group", "VideoOptionsContainer");
-  m_pOptionPages[OPTIONS_VIDEO]->setText("Input");
+  m_pOptionPages[OPTIONS_VIDEO]->setText(XMLResources::CManager::getCEGUIString("video"));
   m_pOptionPages[OPTIONS_VIDEO]->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
   Window *pMenuSizeText = m_pOptionPages[OPTIONS_VIDEO]->createChild("OgreTray/StaticText", "MenuSizeText");
   pMenuSizeText->setPosition(UVector2(UDim(0, 0), UDim(0.00, 0)));
@@ -265,7 +265,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pLevelSelection = m_pButtonContainer->createChild("OgreTray/Group",
 						      "LevelSelection");
   m_pLevelSelection->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
-  m_pLevelSelection->setText("Select level");
+  m_pLevelSelection->setText(XMLResources::CManager::getCEGUIString("select_level"));
 
   ScrollablePane *pLevelPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->createChild("OgreTray/ScrollablePane", "Pane"));
   pLevelPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));

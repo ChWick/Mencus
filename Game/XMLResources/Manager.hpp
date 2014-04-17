@@ -5,6 +5,7 @@
 #include <tinyxml2.h>
 #include <OgrePlatform.h>
 #include <OgreException.h>
+#include <CEGUI/String.h>
 
 namespace XMLResources {
   class CManager {
@@ -13,6 +14,9 @@ namespace XMLResources {
 
   public:
     static const std::string &getString(const std::string &id) {return m_lStringResources.at(id);}
+    static const CEGUI::String getCEGUIString(const std::string &id) {
+      return reinterpret_cast<const CEGUI::utf8*>(m_lStringResources.at(id).c_str());
+    }
     static void loadLanguage(const Ogre::String &sCode) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
       parse("language/values/strings.xml");

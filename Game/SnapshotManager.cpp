@@ -131,7 +131,9 @@ void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
       //eGameStateToChangeTo = CGameState::GS_GAME;
     }
 
+    cout << "asd" << endl;
     CGameState::getSingleton().changeGameState(eGameStateToChangeTo, true, false);
+    cout << "asdasd" << endl;
     
     switch (CGameState::getSingleton().getCurrentGameState()) {
     case CGameState::GS_AD:
@@ -159,17 +161,17 @@ void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
   catch (const Ogre::Exception &e) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Error on loading a snapshot.");
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, e.getFullDescription());
-    CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);
+    CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU, MainMenu::MMS_START);
   }
   catch (...) {
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Unknown error on loading a snapshot.");
-    CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);
+    CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU, MainMenu::MMS_START);
   }
 
 
   // this is a very dirty hack, that prevent on android jittering!
   // appearing when no input has been done, and goming to game (from ad or game, not userinput needed)
-  CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(200, 200);
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(1, 1);
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonDown(CEGUI::LeftButton);
   CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseButtonUp(CEGUI::LeftButton);
 

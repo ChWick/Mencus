@@ -50,7 +50,7 @@ public:
   void changeGameState(EGameStates eNewGameState, bool bNow = false, bool bForce = true);
   void changeGameState(EGameStates eNewGameState, const CSaveState *pState);
   void changeGameState(EGameStates eNewGameState, std::shared_ptr<const CMapInfo> pInfo);
-  void changeGameState(EGameStates eNewGameState, MainMenu::EState eMainMenuState);
+  void changeGameState(EGameStates eNewGameState, MainMenu::EState eMainMenuState, bool bNow = false);
 
   const CSaveState *getSaveState() const {return m_pSaveState;}
   std::shared_ptr<const CMapInfo> getMapInfo() const {return m_pMapInfo;}
