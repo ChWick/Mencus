@@ -25,11 +25,9 @@
 	</object>
     </objects>
     <events>
-      <event type="message" emitter="create" title="Tutorial 1" id="InitialMessageBox">
-	<page text="Welcome to the Mencus Tutorial! Here you will learn how to control Mencus and how to interact with the game. Of-course you will also learn to use magic to defeat your enemies."/>
-	<page text="In this first tutorial you will learn how to move Mencus.
-
-Touch the two arrow-buttons on the left side to stir Mencus left or right."/>
+      <event type="message" emitter="create" title="msg_default_title" id="InitialMessageBox">
+	<page text="msg_start"/>
+	<page text="msg_move"/>
       </event>
       <event type="inject_message" emitter="message_page_chagned" src_id="InitialMessageBox" src_page="1" msg_type="toggle_touch_input_blink" msg_button="left" msg_enabled="true"/>
       <event type="inject_message" emitter="message_page_chagned" src_id="InitialMessageBox" src_page="1" msg_type="toggle_touch_input_blink" msg_button="right" msg_enabled="true"/>
