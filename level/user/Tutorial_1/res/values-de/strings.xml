@@ -5,4 +5,6 @@
   <string name="msg_move">In diesem ersten Tutorial wirst du lernen wie du Mencus bewegst.
 
 Berühre die beiden Pfeil-Knöpfe auf der linken Seite um Mencus nach links oder rechts zu steuern.</string>
+  <string name="msg_obstacle">Vor dir ist ein Hindernis. Benutze den Springen-Knopf auf der rechten Seite!</string>
+  <string name="msg_end">Herzlichen Glückwunsch! Du hast gelernt wie man Mencus steuert! Erreiche die Fahne um das Tutorial zu beenden.</string>
 </resources>

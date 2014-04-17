@@ -5,4 +5,6 @@
   <string name="msg_move">In this first tutorial you will learn how to move Mencus.
 
 Touch the two arrow-buttons on the left side to stir Mencus left or right.</string>
+  <string name="msg_obstacle">There is a obstacle next to you. Use the jump button on the right side!</string>
+  <string name="msg_end">Congratulations you learned how to move Mencus! Reach the flag to finish this tutorial</string>
 </resources>
