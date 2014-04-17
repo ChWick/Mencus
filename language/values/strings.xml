@@ -17,4 +17,5 @@
   <string name="exit_game">Exit game</string>
   <string name="select_level">Select level</string>
   <string name="close">Close</string>
+  <string name="next">Next</string>
 </resources>

@@ -17,4 +17,5 @@
   <string name="exit_game">Spiel verlassen</string>
   <string name="select_level">Karte auswählen</string>
   <string name="close">Schließen</string>
+  <string name="next">Weiter</string>
 </resources>
