@@ -4,6 +4,7 @@
 #include <OIS.h>
 #include "FileManager.hpp"
 #include "Settings.hpp"
+#include "XMLResources/Manager.hpp"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_DEFAULT_LIBS
@@ -40,10 +41,20 @@ int main(int argc, char *argv[])
 #endif
 {
   new CSnapshotManager();
-#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
 
+#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
   LOGI("Starting");
   app_dummy();
+
+  try {
+    LOGI("loading language");
+    XMLResources::CManager::loadLanguage("de");
+  }
+  catch (const Ogre::Exception& e) {
+    LOGW("An exception has occured: ");
+    LOGW(e.getFullDescription().c_str());
+    // dont quit, use default language
+  }
 
   LOGI("Init FileManager");
   CFileManager::init(state->activity);
@@ -56,6 +67,20 @@ int main(int argc, char *argv[])
   OgreAndroidBridge::go(state);
   LOGI("End");
 #else
+  try {
+    XMLResources::CManager::loadLanguage("de");
+  }
+  catch (const Ogre::Exception& e) {
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+    MessageBox( NULL, e.getFullDescription().c_str(), "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
+#else
+    std::cerr << "An exception has occured: " <<
+      e.getFullDescription().c_str() << std::endl;
+    std::cout << "An exception hat occured: " <<
+      e.getFullDescription().c_str() << std::endl;
+#endif
+  }
+
   CFileManager::init();
   new CSettings();
   // Create application object
