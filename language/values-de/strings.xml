@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="Name">Name</string>
+  <string name="Difficulty">Schwierigkeitsgrad</string>
+  <string name="Description">Beschreibung</string>
+  <string name="easy">leicht</string>
+  <string name="medium">mittel</string>
+  <string name="hard">schwer</string>
+  <string name="unknown">unbekannt</string>
   <string name="start_game">Spiel starten</string>
   <string name="options">Optionen</string>
   <string name="credits">Credits</string>

@@ -880,7 +880,10 @@ void CMainMenu::selectLevel(unsigned int id) {
   Window *pBut = pPane->getChild(PropertyHelper<unsigned int>::toString(id));
 
   SLevelInfo *pLevelInfo = static_cast<SLevelInfo*>(pBut->getUserData());
-  pText->setText(pLevelInfo->sFullInfoText.c_str());
+
+  // load map pack for receiving info
+  CMapPack pack(pLevelInfo->sLevelFileName);
+  pText->setText(reinterpret_cast<const utf8*>(pack.generateInfoText().c_str()));
   
   pInfoPane->getVertScrollbar()->setScrollPosition(0);
   pInfoPane->getHorzScrollbar()->setVisible(false);

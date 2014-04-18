@@ -51,3 +51,27 @@ void CMapPack::setMapInfo(shared_ptr<CMapInfo> pMapInfo) {
 
   m_sMapName = pMapInfo->getFileName();
 }
+std::string CMapPack::generateInfoText() const {
+  std::string sMapName("unset");
+  std::string sMapDescription("unset");
+  try {
+    sMapName = getString("map_name");
+  }
+  catch (...) {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL,
+						"Map name not set");
+  }
+  try {
+    sMapDescription = getString("map_description");
+  }
+  catch (...) {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL,
+						"Map description not set");
+  }
+  // load name, difficulty, description from language files
+  return XMLResources::GLOBAL.getString("Name") + ": "
+    + sMapName + "\n" + XMLResources::GLOBAL.getString("Difficulty")
+    + ": " + XMLResources::GLOBAL.getString(m_pMapInfo->getDifficultyAsString())
+    + "\n" + XMLResources::GLOBAL.getString("Description") + ": "
+    + sMapDescription;
+}

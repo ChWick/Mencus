@@ -24,6 +24,7 @@ public:
   void setMapInfo(std::shared_ptr<CMapInfo> pInfo);
 
   const std::string &getMapName() const {return m_sMapName;}
+  std::string generateInfoText() const;
 
   const std::shared_ptr<const CMapInfo> getMapInfo() const {return m_pMapInfo;}
   std::shared_ptr<CMapInfo> getMapInfo() {return m_pMapInfo;}

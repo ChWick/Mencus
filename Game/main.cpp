@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
     MessageBox( NULL, "Unknown Error", "An exception has occured!", MB_OK | MB_ICONERROR | MB_TASKMODAL);
 #else
     std::cerr << "An exception has occured: " <<
-      "Unknown Error" << std::endl;
+      "Unknown Error" << std::endl << "at file: " << __FILE__ << std::endl;
 #endif
   }
 #endif
