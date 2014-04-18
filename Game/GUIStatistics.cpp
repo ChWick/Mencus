@@ -172,17 +172,18 @@ void CGUIStatistics::showStatistics(const SStatistics &stats) {
 	       + Ogre::StringConverter::toString(iMinutes, 2, '0') + ":"
 	       + Ogre::StringConverter::toString(iSeconds, 2, '0')).c_str());
 
+  // round all values
   group->getChild("Data" + PropertyHelper<int>::toString(L_HITPOINTS))
-    ->setText(PropertyHelper<int>::toString(stats.fHitpoints));
+    ->setText(PropertyHelper<int>::toString(stats.fHitpoints + 0.5));
   
   group->getChild("Data" + PropertyHelper<int>::toString(L_MANAPOINTS))
-    ->setText(PropertyHelper<int>::toString(stats.fManapoints));
+    ->setText(PropertyHelper<int>::toString(stats.fManapoints + 0.5));
 
   group->getChild("Data" + PropertyHelper<int>::toString(L_LOST_HITPOINTS))
-    ->setText(PropertyHelper<int>::toString(stats.fLostHitpoints));
+    ->setText(PropertyHelper<int>::toString(stats.fLostHitpoints + 0.5));
 
   group->getChild("Data" + PropertyHelper<int>::toString(L_USED_MANAPOINTS))
-    ->setText(PropertyHelper<int>::toString(stats.fUsedManapoints));
+    ->setText(PropertyHelper<int>::toString(stats.fUsedManapoints + 0.5));
 }
 void CGUIStatistics::createLabel(int iLabel, CEGUI::Window *pParent, bool bData) {
   Window *pLabel = pParent->createChild("OgreTray/Label", ((!bData) ? "Label" : "Data") + PropertyHelper<int>::toString(iLabel));

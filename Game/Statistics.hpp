@@ -46,17 +46,22 @@ struct SStatistics {
       ic = 0;
     }
   }
-  SStatistics(const tinyxml2::XMLElement *pElem) 
-    : sLevelFileName(XMLHelper::Attribute(pElem, "level", "unknown level file name")),
-      eMissionState(parseMissionState(XMLHelper::Attribute(pElem, "mission_state", "failed"))),
-      fTime(XMLHelper::RealAttribute(pElem, "time", 0)),
-      fHitpoints(XMLHelper::RealAttribute(pElem, "hitpoints", 0)),
-      fManapoints(XMLHelper::RealAttribute(pElem, "manapoints", 0)),
-      fLostHitpoints(XMLHelper::RealAttribute(pElem, "lost_hitpoints", 0)),
-      fUsedManapoints(XMLHelper::RealAttribute(pElem, "used_manapoints", 0)) {
+  SStatistics(const tinyxml2::XMLElement *pElem) {
+    readFromXMLElement(pElem);
+  }
+
+  void readFromXMLElement(const tinyxml2::XMLElement *pElem) {
+    using namespace XMLHelper;
+    sLevelFileName = Attribute(pElem, "level", "unknown level file name");
+    eMissionState = parseMissionState(Attribute(pElem, "mission_state", "failed"));
+    fTime = RealAttribute(pElem, "time", 0);
+    fHitpoints = RealAttribute(pElem, "hitpoints", 0);
+    fManapoints = RealAttribute(pElem, "manapoints", 0);
+    fLostHitpoints = RealAttribute(pElem, "lost_hitpoints", 0);
+    fUsedManapoints = RealAttribute(pElem, "used_manapoints", 0);
 
     for (unsigned int i = 0; i < Weapon::I_COUNT; i++) {
-      uiUsedItems[i] = XMLHelper::IntAttribute(pElem, ("used_" + Weapon::toString(i)).c_str(), 0);
+      uiUsedItems[i] = IntAttribute(pElem, ("used_" + Weapon::toString(i)).c_str(), 0);
     }
   }
 

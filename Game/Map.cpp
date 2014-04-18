@@ -984,6 +984,12 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
       pEnt->writeToXMLElement(pOther, eStyle);
     }
   }
+  if (eStyle == OS_FULL) {
+    XMLElement *pStatistics(doc.NewElement("statistics"));
+    pMapElem->InsertEndChild(pStatistics);
+    m_Statistics.writeToXML(pStatistics);
+    SetAttribute(pStatistics, "playing_time", m_fPlayingTime);
+  }
 }
 void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
   clearMap();
@@ -1058,6 +1064,10 @@ void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
     }
     else if (std::string(pElement->Value()) == "region") {
       new CRegion(*this, m_pOthersEntity, pElement);
+    }
+    else if (strcmp(pElement->Value(), "statistics") == 0) {
+      m_Statistics.readFromXMLElement(pElement);
+      m_fPlayingTime = RealAttribute(pElement, "playing_time", 0);
     }
   }
 
