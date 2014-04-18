@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="msg_default_title">Tutorial 5</string>
+  <string name="msg_start">Dies ist das fünft Tutorial. Hier wirst du lernen wie du mit Schaltern interagierst.</string>
+  <string name="msg_first_switch">Wie du sehen kannst, ist der Wall zu hoch, als dass du darüber springen könntest. Aber es gibt einen Schalter der dir dabei helfen wird. Laufe zu ihm!</string>
+  <string name="msg_button">Drücke den Knopf auf der rechten Seite um den Schalter zu aktivieren. Das wird Effekte auf der Karte haben, wie das Erzeugen oder Löschen von Blöcken oder Objekten.</string>
+  <string name="msg_timed_switch">Dies ist ein Zeitschalter. Nach der Aktivierung hast du nur eine begrenzte Zeit ehe sich der Schalter automatisch deaktiviert. Natürlich kannst du den Schalter öfters betätigen, falls du beim ersten Versuch nicht schnell genug warst.</string>
+  <string name="msg_switch_deactivable">Diester Schlater kann wieder deaktiviert werden, das wird dir helfen fortzufahren.</string>
+</resources>

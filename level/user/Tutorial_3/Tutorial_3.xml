@@ -14,9 +14,9 @@
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
     </tiles>
     <events>
-      <event type="message" emitter="create" title="Tutorial 3" id="InitialMessageBox">
-	<page text="This is the third tutorial. Here you will learn how to use keys to open locked doors."/>
-	<page text="Next to you you see locked bars. Search and pickup a key to unlock it."/>
+      <event type="message" emitter="create" title="msg_default_title" id="InitialMessageBox">
+	<page text="msg_start"/>
+	<page text="msg_pickup"/>
       </event>
     </events>
     <switches/>
@@ -33,7 +33,7 @@
 	</object>
         <object x="10.5" y="1" id="Object_685118022" type="3">
 	  <events>
-	    <event type="message" emitter="destroy" title="Tutorial 3" text="You found the key! Now open that door and reach the flag!"/>
+	    <event type="message" emitter="destroy" title="msg_default_title" text="msg_key_found"/>
 	  </events>
 	</object>
         <object x="2.25" y="6" id="Object_-1952636240" type="5"/>

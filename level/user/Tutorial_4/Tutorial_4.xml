@@ -16,9 +16,9 @@
         <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
     </tiles>
     <events>
-      <event type="message" emitter="create" title="Tutorial 4" id="InitialMessageBox">
-	<page text="This is the fourth tutorial. Here you will learn how to access links and move trough doors."/>
-	<page text="Walk to the door on the right side"/>
+      <event type="message" emitter="create" title="msg_default_title" id="InitialMessageBox">
+	<page text="msg_start"/>
+	<page text="msg_door"/>
       </event>
     </events>
     <switches/>
@@ -42,8 +42,8 @@
     <camera/>
     <region x="13" y="1" id="832633819" type="0">
         <events>
-            <event type="message" id="Event316824710" emitter="collision" repeat="none" src_id="Player" title="Tutorial 4">
-                <page text="Press the upper button on the right side to enter the door. You will emerge at another door."/>
+            <event type="message" id="Event316824710" emitter="collision" repeat="none" src_id="Player" title="msg_default_title">
+                <page text="msg_door_reached"/>
             </event>
             <event type="inject_message" id="Event1815859899" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="enter_link" msg_enabled="true"/>
         </events>

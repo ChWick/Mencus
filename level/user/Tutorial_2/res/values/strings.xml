@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="msg_default_title">Tutorial 2</string>
+  <string name="msg_start">This is the second tutorial. Here you will learn how to fight your enemies.</string>
+  <string name="msg_attack">On the right side is a knight who wants to stop you. HOLD (do not tap!) the button on the right side to release a magic bolt. You will need two hits to kill him.</string>
+  <string name="msg_killed">Congratulations you learned how to use your bolt</string>
+  <string name="msg_end">Now reach the flag to finish this tutorial</string>
+</resources>
