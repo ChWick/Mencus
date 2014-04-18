@@ -308,16 +308,18 @@ void CScreenplay::update(Ogre::Real tpf) {
     return;
   }
   
-  if (m_lLastFrames.size() == 0) {
-    for (int i = 1; i < TPF_AVERAGE_COUNT; i++) {
+  if (m_lLastFrames.size() != TPF_AVERAGE_COUNT) {
+    m_lLastFrames.clear();
+    for (int i = 0; i < TPF_AVERAGE_COUNT; i++) {
       m_lLastFrames.push_back(tpf);
     }
     m_fAveragedTpf = tpf;
   }
-
-  m_lLastFrames.push_back(tpf);
-  m_fAveragedTpf = (m_fAveragedTpf * TPF_AVERAGE_COUNT - m_lLastFrames.front() + tpf) / TPF_AVERAGE_COUNT;
-  m_lLastFrames.pop_front();
+  else {
+    m_lLastFrames.push_back(tpf);
+    m_fAveragedTpf = (m_fAveragedTpf * TPF_AVERAGE_COUNT - m_lLastFrames.front() + tpf) / TPF_AVERAGE_COUNT;
+    m_lLastFrames.pop_front();
+  }
 
   if (m_Fader.isFading()) {
     m_Fader.fade(m_fAveragedTpf);
