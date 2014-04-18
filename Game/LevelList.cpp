@@ -60,7 +60,7 @@ void CLevelList::load() {
       info.sDifficulty = "unknown difficulty";
       info.sLevelDescription = "unknown description";
       info.sFullInfoText = "full info text";
-      info.bTutorial = false;
+      info.bTutorial = true;
     }
     
     m_lLevelInfoList.push_back(info);
