@@ -52,8 +52,7 @@ int main(int argc, char *argv[])
     XMLResources::GLOBAL.loadLanguage();
   }
   catch (const Ogre::Exception& e) {
-    LOGW("An exception has occured: ");
-    LOGW(e.getFullDescription().c_str());
+    LOGW("An exception has occured: %s", e.getFullDescription().c_str());
     // dont quit, use default language
   }
 

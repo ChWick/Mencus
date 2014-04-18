@@ -3,6 +3,7 @@
 
 #include <string>
 #include "XMLResources/Manager.hpp"
+#include <memory>
 
 class CMapInfo;
 class CMapPack;
