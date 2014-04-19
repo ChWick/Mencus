@@ -73,6 +73,8 @@
 #include "AndroidInput.hpp"
 #include "SnapshotManager.hpp"
 #include "FileManager.hpp"
+#include <CEGUI/Exceptions.h>
+#include <exception>
 
 class OgreAndroidBridge;
     
@@ -285,8 +287,14 @@ public:
 	  LOGW("Error in rendering loop");
 	  LOGW("%s", e.getFullDescription().c_str());
 	}
+	catch (const CEGUI::Exception &e) {
+	  LOGW("Exception: %s", e.getMessage().c_str());
+	}
+	catch (const std::exception &e) {
+	  LOGW("Exception: %s", e.what());
+	}
 	catch (...) {
-	  LOGW("Unknown Exception");
+	  LOGW("Unknown Exception in %s", __FILE__);
 	}
       }
                 
@@ -303,8 +311,15 @@ public:
 	  LOGW("%s", e.getFullDescription().c_str());
 	  ANativeActivity_finish(state->activity);
 	}
+	catch (const CEGUI::Exception &e) {
+	  LOGW("Exception: %s", e.getMessage().c_str());
+	  ANativeActivity_finish(state->activity);
+	}
+	catch (const std::exception &e) {
+	  LOGW("Exception: %s", e.what());
+	}
 	catch (...) {
-	  LOGW("Unknown Exception");
+	  LOGW("Unknown Exception in %s", __FILE__);
 	  ANativeActivity_finish(state->activity);
 	}
       }

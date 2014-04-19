@@ -5,6 +5,7 @@
 #include <string>
 #include <OgrePlatform.h>
 #include <OgreLogManager.h>
+#include <OgreDataStream.h>
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
 #include <android_native_app_glue.h>
@@ -19,6 +20,7 @@ private:
 public:
   static const std::string DIRECTORY_LEVEL;
   enum EStorageLocation {
+    SL_PACKET,
     SL_INTERNAL,
     SL_EXTERNAL
   };
@@ -41,6 +43,7 @@ public:
 			 EStorageLocation eLocation);
   static std::string getValidPath(const std::string &sFileName,
 				  EStorageLocation eLocation = SL_INTERNAL);
+  static Ogre::DataStreamPtr openDataStream(const std::string& fileName);
 };
 
 #endif

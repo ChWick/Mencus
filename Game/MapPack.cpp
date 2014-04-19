@@ -25,7 +25,11 @@ void CMapPack::init() {
 
   Ogre::LogManager::getSingleton().logMessage("Creating map pack for " + m_sMapName);
   Ogre::ResourceGroupManager::getSingleton().createResourceGroup(m_sMapName);
+#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation("level/user/" + m_sMapName + ".zip", "APKZip", m_sMapName, true);
+#else
   Ogre::ResourceGroupManager::getSingleton().addResourceLocation("../level/user/" + m_sMapName + ".zip", "Zip", m_sMapName, true);
+#endif
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(m_sMapName);
 
   m_bInitialised = true;
