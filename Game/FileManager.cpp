@@ -183,7 +183,8 @@ Ogre::DataStreamPtr CFileManager::openDataStream(const std::string& fileName) {
     stream = Ogre::DataStreamPtr(new Ogre::MemoryDataStream(membuf, length, true, true));
   }
 #else
-  stream = Ogre::DataStreamPtr(new Ogre::FileStreamDataStream(new std::fstream(fileName)));
+  //stream = Ogre::DataStreamPtr(new Ogre::FileStreamDataStream(new std::fstream(fileName)));
+  stream = Ogre::DataStreamPtr(new Ogre::FileStreamDataStream(OGRE_NEW_T( std::fstream, Ogre::MEMCATEGORY_GENERAL )( fileName.c_str(), std::fstream::in ) ));
 #endif
   return stream;
 }
