@@ -169,3 +169,21 @@ void CFileManager::deleteFile(const std::string &sFileName,
     Ogre::LogManager::getSingleton().logMessage("File " + sFileName + " has been deleted");
   }
 }
+
+Ogre::DataStreamPtr CFileManager::openDataStream(const std::string& fileName) {
+  Ogre::DataStreamPtr stream;
+#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+  AAsset* asset = AAssetManager_open(mNativeActivity->assetManager, fileName.c_str(), AASSET_MODE_BUFFER);
+  if(asset) {
+    off_t length = AAsset_getLength(asset);
+    void* membuf = OGRE_MALLOC(length, Ogre::MEMCATEGORY_GENERAL);
+    memcpy(membuf, AAsset_getBuffer(asset), length);
+    AAsset_close(asset);
+      
+    stream = Ogre::DataStreamPtr(new Ogre::MemoryDataStream(membuf, length, true, true));
+  }
+#else
+  stream = Ogre::DataStreamPtr(new Ogre::FileStreamDataStream(new std::fstream(fileName)));
+#endif
+  return stream;
+}

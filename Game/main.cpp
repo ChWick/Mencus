@@ -46,6 +46,10 @@ int main(int argc, char *argv[])
   LOGI("Starting");
   app_dummy();
 
+  LOGI("Init FileManager");
+  CFileManager::init(state->activity);
+
+
   try {
     LOGI("loading language");
     XMLResources::CManager::LANGUAGE_CODE = "de";
@@ -56,8 +60,6 @@ int main(int argc, char *argv[])
     // dont quit, use default language
   }
 
-  LOGI("Init FileManager");
-  CFileManager::init(state->activity);
   LOGI("Init Settings");
   new CSettings();
 
@@ -67,6 +69,8 @@ int main(int argc, char *argv[])
   OgreAndroidBridge::go(state);
   LOGI("End");
 #else
+  CFileManager::init();
+
   try {
     XMLResources::CManager::LANGUAGE_CODE = "de";
     XMLResources::GLOBAL.loadLanguage();
@@ -82,7 +86,6 @@ int main(int argc, char *argv[])
 #endif
   }
 
-  CFileManager::init();
   new CSettings();
   // Create application object
   CGame *app = new CGame();

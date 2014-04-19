@@ -74,6 +74,9 @@ if (ANDROID)
   file(COPY "${CMAKE_SOURCE_DIR}/packs/SdkTraysMinimal.zip" DESTINATION "${NDKOUT}/assets/packs")
   file(COPY "${CMAKE_SOURCE_DIR}/RTShaderLib" DESTINATION "${NDKOUT}/assets")
 
+  # copy language files
+  file(COPY "${CMAKE_SOURCE_DIR}/language" DESTINATION "${NDKOUT}/assets")
+
   # copy resource files (icons e.g.)
   file(COPY "${CMAKE_SOURCE_DIR}/android/res" DESTINATION "${NDKOUT}")
 
