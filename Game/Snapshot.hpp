@@ -99,7 +99,11 @@ private:
 					      pElem,
 					      "game_state",
 					      CGameState::GS_MAIN_MENU);
-
+    
+    if (m_eCurrentGameState >= CGameState::EGameStates::GS_COUNT) {
+      throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS,
+			    "Game state " + Ogre::StringConverter::toString(m_eCurrentGameState) + " is not valid!", __FILE__);
+    }
     m_iVersion = XMLHelper::IntAttribute(pElem, "version", -1);
 
     if (m_iVersion != SNAPSHOT_VERSION) {
