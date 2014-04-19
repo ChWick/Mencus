@@ -3,7 +3,9 @@
 #include "OgreResourceGroupManager.h"
 #include "MapInfo.hpp"
 #include "OgreStringConverter.h"
+#include "XMLHelper.hpp"
 
+using namespace XMLHelper;
 using namespace tinyxml2;
 
 CLevelList::CLevelList() {
@@ -44,24 +46,7 @@ void CLevelList::load() {
 
     SLevelInfo info;
     info.sLevelFileName = pLevel->Attribute("file");
-
-    try {
-      CMapInfo mapInfo(info.sLevelFileName, "level_user");
-      info.sLevelName = mapInfo.getName();
-      info.sDifficulty = mapInfo.getDifficultyAsString();
-      info.sLevelDescription = mapInfo.getDescription();
-      info.sFullInfoText = mapInfo.generateInfoText();
-      info.bTutorial = mapInfo.isTutorial();
-    }
-    catch (...) {
-      Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "Error while parsing the level: " + info.sLevelFileName);
-
-      info.sLevelName = "unset name";
-      info.sDifficulty = "unknown difficulty";
-      info.sLevelDescription = "unknown description";
-      info.sFullInfoText = "full info text";
-      info.bTutorial = true;
-    }
+    info.bTutorial = BoolAttribute(pLevel, "tutorial", false);
     
     m_lLevelInfoList.push_back(info);
   }

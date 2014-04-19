@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <levels>
-  <level file="Tutorial_1" />
-  <level file="Tutorial_2" />
-  <level file="Tutorial_3" />
-  <level file="Tutorial_4" />
-  <level file="Tutorial_5" />
+  <level file="Tutorial_1" tutorial="true"/>
+  <level file="Tutorial_2" tutorial="true"/>
+  <level file="Tutorial_3" tutorial="true"/>
+  <level file="Tutorial_4" tutorial="true"/>
+  <level file="Tutorial_5" tutorial="true"/>
   <level file="Simple_Pathway" />
   <level file="Adventure"/>
   <level file="Labyrinth"/>
