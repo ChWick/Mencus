@@ -70,9 +70,7 @@ tinyxml2::XMLElement *CLevelState::getXMLElement(const std::string &sFileName) {
   assert(pRoot);
 
   for (XMLElement *pLevel = pRoot->FirstChildElement(); pLevel; pLevel = pLevel->NextSiblingElement()) {
-    // second line is for compability
-    if (pLevel->Attribute("level") == sFileName ||
-	pLevel->Attribute("level") == sFileName + ".xml") {
+    if (pLevel->Attribute("level") == sFileName) {
       return pLevel;
     }
   }
@@ -102,9 +100,10 @@ void CLevelState::read() {
   for (XMLElement *pLevel = pRoot->FirstChildElement(); pLevel; pLevel = pLevel->NextSiblingElement()) {
     SStatistics stats(pLevel);
     // this is for compability issue
-    if (stats.sLevelFileName.rfind(".xml")) {
+    if (stats.sLevelFileName.rfind(".xml") != std::string::npos) {
       // cut
       stats.sLevelFileName = stats.sLevelFileName.substr(0, stats.sLevelFileName.size() - 4);
+      pLevel->SetAttribute("level", stats.sLevelFileName.c_str());
     }
 
     m_vLevelStatistics.push_back(stats);
