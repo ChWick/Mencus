@@ -20,4 +20,7 @@
 // Flag to enable debug output
 #define ENABLE_DEBUG_DEFINES  @MENCUS_ENABLE_DEBUG_DEFINES@
 
+// Enable Shader manager (required for GLESES, optional for OpenGL/DirectX)
+#define MENCUS_ENABLE_SHADER  @MENCUS_ENABLE_SHADER@
+
 #endif

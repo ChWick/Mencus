@@ -1,7 +1,11 @@
 #ifndef _SHADER_MANAGER_HPP_
 #define _SHADER_MANAGER_HPP_
 
+#include "GlobalBuildDefines.hpp"
+
+#if MENCUS_ENABLE_SHADER == 1
 #define USE_SPRITE_SHADER
+#endif
 
 #include <OgreSingleton.h>
 #include <OgreHighLevelGpuProgramManager.h>

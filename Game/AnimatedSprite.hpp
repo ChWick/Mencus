@@ -38,6 +38,8 @@ public:
 		  const tinyxml2::XMLElement *pElem,
 		  const Ogre::Vector2 &vSize = Ogre::Vector2::UNIT_SCALE);
 
+  ~CAnimatedSprite();
+
   void init(Ogre::Real fAnimationSpeed, unsigned int uiNumberOfAnimation = 1);
 
   unsigned int getCurrentAnimationSequence() const {return m_uiCurrentAnimationSequence;}

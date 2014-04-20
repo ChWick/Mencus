@@ -73,6 +73,7 @@ Ogre2dManager::Ogre2dManager()
 
 Ogre2dManager::~Ogre2dManager()
 {
+  end();
 }
 
 void Ogre2dManager::init(Ogre::SceneManager* sceneMan, Ogre::uint8 targetQueue, bool afterQueue)

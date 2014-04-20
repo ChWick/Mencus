@@ -33,6 +33,7 @@ CMainMenu &CMainMenu::getSingleton() {
 CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   : m_pLevelInfo(NULL),
     m_vSlots(NUM_SLOTS),
+    m_eCurrentState(MMS_COUNT),
     m_bSaveListSelected(false),
     m_iSelectedLoadState(0),
     m_pStateToLoad(NULL) {

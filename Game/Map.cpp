@@ -100,6 +100,8 @@ CMap::~CMap() {
   CHUD::getSingleton().hide();
   clearMap();
 
+  destroyChildren();
+
   if (CDebugDrawer::getSingletonPtr()) {delete CDebugDrawer::getSingletonPtr();}
 
   CInputListenerManager::getSingleton().removeInputListener(this);

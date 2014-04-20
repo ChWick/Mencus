@@ -2,6 +2,7 @@ if (ANDROID)
   # create the GlobalBuildDefines file
   set (MENCUS_CONFIG_OUT "@CMAKE_BINARY_DIR@/include")
   set(MENCUS_ENABLE_MAP_EDITOR 0)
+  set(MENCUS_ENABLE_SHADER 1)
   include(toolchain/CreateGlobalDefines)
 
   if(APPLE OR WIN32)

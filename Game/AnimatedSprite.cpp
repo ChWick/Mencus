@@ -32,6 +32,9 @@ CAnimatedSprite::CAnimatedSprite(CMap &map,
     m_fAnimationTimer(RealAttribute(pElem, "as_timer", 0)),
     m_fAnimationSpeed(1.0 / 20) {
 }
+CAnimatedSprite::~CAnimatedSprite() {
+  m_AnimationSequences.clear();
+}
 
 void CAnimatedSprite::init(Ogre::Real fAnimationSpeed, unsigned int uiNumberOfAnimation) {
   m_AnimationSequences.resize(uiNumberOfAnimation);
