@@ -183,8 +183,12 @@ Ogre::DataStreamPtr CFileManager::openDataStream(const std::string& fileName) {
     stream = Ogre::DataStreamPtr(new Ogre::MemoryDataStream(membuf, length, true, true));
   }
 #else
+  // first one gives a memory leak
   //stream = Ogre::DataStreamPtr(new Ogre::FileStreamDataStream(new std::fstream(fileName)));
-  stream = Ogre::DataStreamPtr(new Ogre::FileStreamDataStream(OGRE_NEW_T( std::fstream, Ogre::MEMCATEGORY_GENERAL )( fileName.c_str(), std::fstream::in ) ));
+  // second one results in strange crash (segmentation fault on closing)
+  //stream = Ogre::DataStreamPtr(new Ogre::FileStreamDataStream(OGRE_NEW_T( std::fstream, Ogre::MEMCATEGORY_GENERAL )( fileName.c_str(), std::fstream::in ) ));
+  // this one works
+  stream = Ogre::DataStreamPtr(new Ogre::FileHandleDataStream(fopen(fileName.c_str(), "r")));
 #endif
   return stream;
 }
