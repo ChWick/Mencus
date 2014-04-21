@@ -211,6 +211,9 @@ void CGame::locateResources() {
 #endif
 }
 void CGame::loadResources() {
+#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+  OgreAndroidBridge::callJavaVoid("closeLoadDialog");
+#endif
   // only load required resources for the game menu (cegui resources)
   Ogre::LogManager::getSingleton().logMessage("Loading resources start");
   //Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
