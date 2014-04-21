@@ -40,9 +40,13 @@ void android_main(struct android_app* state)
 int main(int argc, char *argv[])
 #endif
 {
+
   new CSnapshotManager();
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+  OgreAndroidBridge::init(state);
+
+
   LOGI("Starting");
   app_dummy();
 
@@ -62,15 +66,15 @@ int main(int argc, char *argv[])
 
   LOGI("Init Settings");
   new CSettings();
-
+  
   LOGI("Initialize");
-  OgreAndroidBridge::init(state);
+  OgreAndroidBridge::start();
+  OgreAndroidBridge::callJavaVoid("setLoadText", "Go");
   LOGI("Go");
   OgreAndroidBridge::go(state);
   LOGI("End");
 #else
   CFileManager::init();
-
   try {
     XMLResources::CManager::LANGUAGE_CODE = "de";
     XMLResources::GLOBAL.loadLanguage();
