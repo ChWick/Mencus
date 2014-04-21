@@ -392,6 +392,29 @@ public:
     (env)->CallVoidMethod(activity->clazz, methodID);
     (jvm)->DetachCurrentThread();
   }
+
+  static void callJavaVoid(const char *func, const std::string &str) {
+    // Get the android application's activity.
+    ANativeActivity* activity = mActivity;
+    JavaVM* jvm = mActivity->vm;
+    JNIEnv* env = NULL;
+    (jvm)->GetEnv((void **)&env, JNI_VERSION_1_6);
+    jint res = (jvm)->AttachCurrentThread(&env, NULL);
+    if (res == JNI_ERR) {
+      LOGI("Failed to retrieve JVM environment");
+      // Failed to retrieve JVM environment
+      return; 
+    }
+    jclass clazz = (env)->GetObjectClass(activity->clazz);
+    jmethodID methodID = (env)->GetMethodID(clazz, func, "(Ljava/lang/String;)V");
+    if(!methodID) {
+      LOGI("method %s does not exist", func);
+      return;
+    }
+    jstring jString = (env)->NewStringUTF( str.c_str() );
+    (env)->CallVoidMethod(activity->clazz, methodID, jString);
+    (jvm)->DetachCurrentThread();
+  }
             
 private:
   static ANativeActivity *mActivity;
