@@ -19,7 +19,7 @@ if (NOT DEFINED MENCUS_ENABLE_DEBUG_DEFINES)
   set(MENCUS_ENABLE_DEBUG_DEFINES 0 CACHE INTEGER "Enable debug defines, for displaying debug output")
 endif()
 
-if (NOT DEFINED MECUS_ENABLE_SHADER)
+if (NOT DEFINED MENCUS_ENABLE_SHADER)
   set(MENCUS_ENABLE_SHADER 0 CACHE INTEGER "Use shaders (required for GLSLES)")
 endif()
 
