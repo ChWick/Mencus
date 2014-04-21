@@ -31,21 +31,25 @@ public class MencusNativeActivity extends NativeActivity {
 		//showAdPopup();
         //Toast.makeText(this, "popup done", Toast.LENGTH_SHORT).show();
 
-        mLoadDialog = new Dialog(this);
+        mLoadDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
         mLoadDialog.setContentView(R.layout.activity_mencus);
         mLoadDialog.show();
 	}
 
 	// Our popup window, you will call it from your C/C++ code later
 	public void showAdPopup() {
-		mAddClosed = false;
-		if (mInterstitial != null && mInterstitial.isLoaded()) {
-			mInterstitial.show();
-		}
-		else {
-			closeAd();
-		    loadAd(true);
-		}
+		_activity.runOnUiThread(new Runnable() {
+			public void run() {
+				mAddClosed = false;
+				if (mInterstitial != null && mInterstitial.isLoaded()) {
+					mInterstitial.show();
+				}
+				else {
+					closeAd();
+					loadAd(true);
+				}
+			}
+		});
 	}
 	
 	public boolean adPopupClosed() {
