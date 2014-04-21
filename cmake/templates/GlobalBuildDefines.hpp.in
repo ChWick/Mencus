@@ -23,4 +23,9 @@
 // Enable Shader manager (required for GLESES, optional for OpenGL/DirectX)
 #define MENCUS_ENABLE_SHADER  @MENCUS_ENABLE_SHADER@
 
+// Assert mode
+// 0: not asserting (release)
+// 1: asserts (debug)
+#define MENCUS_ASSERT_MODE    @MENCUS_ASSERT_MODE@
+
 #endif

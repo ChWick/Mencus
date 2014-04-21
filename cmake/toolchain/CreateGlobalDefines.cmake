@@ -23,6 +23,10 @@ if (NOT DEFINED MENCUS_ENABLE_SHADER)
   set(MENCUS_ENABLE_SHADER 0 CACHE INTEGER "Use shaders (required for GLSLES)")
 endif()
 
+if (NOT DEFINED MENCUS_ASSERT_MODE)
+  set(MENCUS_ASSERT_MODE 1 CACHE INTEGER "0: no asserts, 1: use asserts")
+endif()
+
 if (NOT DEFINED MENCUS_CONFIG_OUT) 
   Message("Please set the MENCUS_CONFIG_OUT variable to an apropriate path and add it to the include path")
 else()
