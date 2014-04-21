@@ -1,6 +1,5 @@
 package org.mencus.game;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
@@ -84,7 +83,7 @@ public class MencusNativeActivity extends NativeActivity {
 	}
 	
 	public void setLoadText(String text) {
-		TextView tv;
+		TextView tv = (TextView)mLoadDialog.findViewById(R.id.mencus_load_text);
 		tv.setText(text);
 	}
 	public void closeLoadDialog() {
