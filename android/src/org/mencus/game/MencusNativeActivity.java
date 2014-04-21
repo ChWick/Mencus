@@ -4,10 +4,11 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
+import android.app.Dialog;
 import android.app.NativeActivity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MencusNativeActivity extends NativeActivity {
@@ -18,6 +19,7 @@ public class MencusNativeActivity extends NativeActivity {
 	private Runnable mThread;
 	private boolean mAddClosed = false;
 	private boolean mShowAdWhenLoaded = true;
+	private Dialog mLoadDialog = null;
 	
 	InterstitialAd getInterstitialAd() {return mInterstitial;}
 	void setAdClosed(boolean addClosed) {mAddClosed = addClosed;}
@@ -26,17 +28,44 @@ public class MencusNativeActivity extends NativeActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		_activity = this;
 		super.onCreate(savedInstanceState);
-        Toast.makeText(this, "Loading, please wait...", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "Loading, please wait...", Toast.LENGTH_LONG).show();
 		//showAdPopup();
         //Toast.makeText(this, "popup done", Toast.LENGTH_SHORT).show();
 
-
+        mLoadDialog = new Dialog(this);
+        mLoadDialog.setContentView(R.layout.activity_mencus);
+        mLoadDialog.show();
 	}
 
 	// Our popup window, you will call it from your C/C++ code later
 	public void showAdPopup() {
 		mAddClosed = false;
-		mShowAdWhenLoaded = true;
+		if (mInterstitial != null && mInterstitial.isLoaded()) {
+			mInterstitial.show();
+		}
+		else {
+			closeAd();
+		    loadAd(true);
+		}
+	}
+	
+	public boolean adPopupClosed() {
+		return mAddClosed;
+	}
+	
+	public void closeAd() {
+		mShowAdWhenLoaded = false;
+		mInterstitial = null;
+		mThread = null;
+		mAddClosed = true;
+	}
+	
+	public void preloadAd() {
+		loadAd(false);
+	}
+	private void loadAd(boolean showWhenLoaded) {
+		mAddClosed = false;
+		mShowAdWhenLoaded = showWhenLoaded;
 		mThread = new Runnable()  {
 			 @Override
 			 public void run()  {
@@ -54,14 +83,12 @@ public class MencusNativeActivity extends NativeActivity {
 		 _activity.runOnUiThread(mThread);
 	}
 	
-	public boolean adPopupClosed() {
-		return mAddClosed;
+	public void setLoadText(String text) {
+		TextView tv;
+		tv.setText(text);
 	}
-	
-	public void closeAd() {
-		mShowAdWhenLoaded = false;
-		mInterstitial = null;
-		mThread = null;
-		mAddClosed = true;
+	public void closeLoadDialog() {
+		mLoadDialog.dismiss();
+		mLoadDialog = null;
 	}
 }

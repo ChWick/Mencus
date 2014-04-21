@@ -52,7 +52,7 @@ public class MencusAdListener extends AdListener {
     @Override
     public void onAdClosed() {
         //Toast.makeText(mContext, "onAdClosed()", Toast.LENGTH_SHORT).show();
-    	mContext.setAdClosed(true);
+    	mContext.closeAd();
     }
 
     @Override
