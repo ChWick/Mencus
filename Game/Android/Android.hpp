@@ -75,6 +75,7 @@
 #include "FileManager.hpp"
 #include <CEGUI/Exceptions.h>
 #include <exception>
+#include "Assert.hpp"
 
 class OgreAndroidBridge;
     
@@ -91,6 +92,9 @@ public:
     mActivity = state->activity;
     state->onAppCmd = &OgreAndroidBridge::handleCmd;
     state->onInputEvent = &OgreAndroidBridge::handleInput;
+  }
+  static void start() {
+    MENCUS_ASSERT(mActivity);
             
     if(mInit)
       return;
