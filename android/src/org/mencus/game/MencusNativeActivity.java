@@ -87,10 +87,12 @@ public class MencusNativeActivity extends NativeActivity {
 	}
 	
 	public void setLoadText(String text) {
+		if (mLoadDialog == null) {return;}
 		TextView tv = (TextView)mLoadDialog.findViewById(R.id.mencus_load_text);
 		tv.setText(text);
 	}
 	public void closeLoadDialog() {
+		if (mLoadDialog == null) {return;}
 		mLoadDialog.dismiss();
 		mLoadDialog = null;
 	}
