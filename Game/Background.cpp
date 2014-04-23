@@ -42,7 +42,7 @@ CBackground::CBackground(CMap &map,
     m_vTilesPerScreen(vTilesPerScreen),
     m_fScreenRatio(fScreenRatio){
 
-  setTexture(getBackgroundTexturePath(sName));
+  setTexture(getBackgroundTexture(sName));
   
 }
 void CBackground::render(Ogre::Real tpf) {
@@ -60,13 +60,13 @@ void CBackground::render(Ogre::Real tpf) {
     for (; vPos.y < 1; vPos.y += m_vSize.y) {
       if (m_eBackgroundType == BT_FOREST) {
         if (iCurrentRow < 0) {
-          setTexture(getTileTexturePath(28));
+          setTexture(getTileTexture(28));
         }
         else if (iCurrentRow == 0) {
-          setTexture(getBackgroundTexturePath("forest"));
+          setTexture(getBackgroundTexture("forest"));
         }
         else {
-          setTexture(getBackgroundTexturePath("clouds"));
+          setTexture(getBackgroundTexture("clouds"));
         }
       }
       setPosition(vPos);

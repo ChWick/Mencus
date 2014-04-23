@@ -26,7 +26,7 @@ public:
   };
   static const Ogre::Vector2 DEFAULT_TILE_SIZE;
 private:
-  static const string DEFAULT_TILE_TEXTURE_NAME;
+  //static const string DEFAULT_TILE_TEXTURE_NAME;
 
   const unsigned int m_uiMapPosX;
   const unsigned int m_uiMapPosY;

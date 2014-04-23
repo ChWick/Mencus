@@ -1,7 +1,11 @@
 #include "Tile.hpp"
+#include "Util.hpp"
 #include "ogre2d-main.hpp"
 #include "DebugDrawer.hpp"
 #include "Map.hpp"
+
+const Ogre::Vector2 CTile::DEFAULT_TILE_SIZE(1, 1);
+//const string CTile::DEFAULT_TILE_TEXTURE_NAME = "tiles/Tile";
 
 CTile::CTile(CMap &map, const Ogre::Vector2 &vPosition, TileType ttTileType)
   : CSprite(map,
@@ -13,7 +17,8 @@ CTile::CTile(CMap &map, const Ogre::Vector2 &vPosition, TileType ttTileType)
     m_uiTileFlags(getTileFlags(ttTileType)),
     m_ttEndangeredTileType(TT_NONE) {
   setType(ttTileType);
-  setTexture(DEFAULT_TILE_TEXTURE_NAME + Ogre::StringConverter::toString(ttTileType) + ".png");
+  //setTexture(DEFAULT_TILE_TEXTURE_NAME + Ogre::StringConverter::toString(ttTileType) + ".png");
+  m_Texture = getTileTexture(ttTileType);
 }
 
 CTile::CTile(const CTile &src)

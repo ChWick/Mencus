@@ -43,6 +43,7 @@ public:
   CSprite(const CSprite &src);
   virtual ~CSprite();
 
+  void setTexture(const CSpriteTexture &texture) {m_Texture = texture;}
   void setTexture(Ogre::TexturePtr pTexture) {m_Texture.setTexture(pTexture);}
   void setTexture(const string &sName);
   void setTextureToDraw(const CSpriteTexture *pTexture) {m_pTextureToDraw = pTexture;}

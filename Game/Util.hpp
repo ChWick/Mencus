@@ -3,6 +3,7 @@
 
 #include <string>
 #include <Ogre.h>
+#include "SpriteTexture.hpp"
 
 template <unsigned int id>
 std::string getEnemyTexturePath(std::string sName, int index = -1) {
@@ -21,7 +22,8 @@ std::string getSwitchTexture(unsigned int uiSwitchID, bool on);
 std::string getTextureInGfx(std::string sTextureName);
 std::string getPlayerTexturePath(std::string sName, int index = -1);
 std::string getTileTexturePath(unsigned int uiTileID);
-std::string getBackgroundTexturePath(std::string sName);
+CSpriteTexture getTileTexture(unsigned int uiTileID);
+CSpriteTexture getBackgroundTexture(std::string sName);
 std::string getOtherObjectsTexturePath(std::string sName);
 std::string getTorchTexturePath(std::string sName, int index = -1);
 std::string getFlagTexturePath(std::string sName, int index = -1);

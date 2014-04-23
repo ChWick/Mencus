@@ -27,8 +27,6 @@
 using namespace tinyxml2;
 using namespace XMLHelper;
 
-const Ogre::Vector2 CTile::DEFAULT_TILE_SIZE(1, 1);
-const string CTile::DEFAULT_TILE_TEXTURE_NAME = "tiles/Tile";
 
 const Ogre::Real CAMERA_MAX_MOVE_SPEED(10);
 
@@ -69,6 +67,9 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
   CGame::getSingleton().showLoadingBar(0, 1);
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("Game");
   Ogre::ResourceGroupManager::getSingleton().loadResourceGroup("Game");
+  Ogre::TextureManager::getSingleton().load("tiles/Atlas.png", "Game");
+  Ogre::TextureManager::getSingleton().load("background/forest.jpg", "Game");
+  Ogre::TextureManager::getSingleton().load("background/clouds.jpg", "Game");
 #if ENABLE_MAP_EDITOR
   CMapEditor::getSingleton().init(this, pMapPack);
 #endif

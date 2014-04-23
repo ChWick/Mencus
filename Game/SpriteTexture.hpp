@@ -1,6 +1,7 @@
 #ifndef SPRITE_TEXTURE_HPP
 #define SPRITE_TEXTURE_HPP
 
+#include <utility>
 #include <Ogre.h>
 
 class CSpriteTexture {
@@ -68,14 +69,14 @@ public:
   void mirror(EMirrorTypes mt) {
     switch (mt) {
     case MIRROR_Y:
-      swap(m_vTexturePosTopLeft.x, m_vTexturePosBottomRight.x);
+      std::swap(m_vTexturePosTopLeft.x, m_vTexturePosBottomRight.x);
       break;
     case MIRROR_X:
-      swap(m_vTexturePosTopLeft.y, m_vTexturePosBottomRight.y);
+      std::swap(m_vTexturePosTopLeft.y, m_vTexturePosBottomRight.y);
       break;
     case MIRROR_XY:
-      swap(m_vTexturePosTopLeft.x, m_vTexturePosBottomRight.x);
-      swap(m_vTexturePosTopLeft.y, m_vTexturePosBottomRight.y);
+      std::swap(m_vTexturePosTopLeft.x, m_vTexturePosBottomRight.x);
+      std::swap(m_vTexturePosTopLeft.y, m_vTexturePosBottomRight.y);
       break;
     default:
       break;

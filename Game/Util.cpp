@@ -39,8 +39,19 @@ std::string getPlayerTexturePath(std::string sName, int index) {
 std::string getTileTexturePath(unsigned int uiTileID) {
   return "tiles/Tile" + Ogre::StringConverter::toString(uiTileID) + ".png";
 }
-std::string getBackgroundTexturePath(std::string sName) {
-  return "background/" + sName + ".jpg";
+CSpriteTexture getTileTexture(unsigned int uiTileID) {
+  Ogre::Vector2 vTopLeft(static_cast<int>(uiTileID % 16) / 16.f,
+			 static_cast<int>(uiTileID / 16) / 16.f + 0.0625f);
+  Ogre::Vector2 vSize(0.0625f, -0.0625f);
+  return CSpriteTexture(Ogre::TextureManager::getSingleton().
+			getByName("tiles/Atlas.png", "Game"),
+			vTopLeft,
+			vTopLeft + vSize);
+}
+CSpriteTexture getBackgroundTexture(std::string sName) {
+  std::string path("background/" + sName + ".jpg");
+  return CSpriteTexture(Ogre::TextureManager::getSingleton().
+			getByName(path));
 }
 std::string getOtherObjectsTexturePath(std::string sName) {
   return "objects/other/" + sName + ".png";
