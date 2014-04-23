@@ -40,13 +40,15 @@ std::string getTileTexturePath(unsigned int uiTileID) {
   return "tiles/Tile" + Ogre::StringConverter::toString(uiTileID) + ".png";
 }
 CSpriteTexture getTileTexture(unsigned int uiTileID) {
+  // slightly smaller swaped size, since elsewise stripes on android occur
   Ogre::Vector2 vTopLeft(static_cast<int>(uiTileID % 16) / 16.f,
-			 static_cast<int>(uiTileID / 16) / 16.f + 0.0625f);
-  Ogre::Vector2 vSize(0.0625f, -0.0625f);
+			 static_cast<int>(uiTileID / 16) / 16.0 + 0.062449);
+  Ogre::Vector2 vSize(0.0625, -0.062448);
   return CSpriteTexture(Ogre::TextureManager::getSingleton().
 			getByName("tiles/Atlas.png", "Game"),
 			vTopLeft,
-			vTopLeft + vSize);
+			vTopLeft + vSize,
+			Ogre::Vector2(1, -1));
 }
 CSpriteTexture getBackgroundTexture(std::string sName) {
   std::string path("background/" + sName + ".jpg");

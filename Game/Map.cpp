@@ -70,6 +70,8 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
   Ogre::TextureManager::getSingleton().load("tiles/Atlas.png", "Game");
   Ogre::TextureManager::getSingleton().load("background/forest.jpg", "Game");
   Ogre::TextureManager::getSingleton().load("background/clouds.jpg", "Game");
+  Ogre::TextureManager::getSingleton().load("background/fog.jpg", "Game");
+  Ogre::TextureManager::getSingleton().load("background/stars.jpg", "Game");
 #if ENABLE_MAP_EDITOR
   CMapEditor::getSingleton().init(this, pMapPack);
 #endif

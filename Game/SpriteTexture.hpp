@@ -18,6 +18,7 @@ public:
 private:
   Ogre::Vector2 m_vTexturePosTopLeft;
   Ogre::Vector2 m_vTexturePosBottomRight;
+  Ogre::Vector2 m_vTextureScale;
   Ogre::Vector2 m_vSpriteOffset;
   Ogre::Vector2 m_vSpriteScale;
   Ogre::TexturePtr m_pTexture;
@@ -25,27 +26,30 @@ public:
   CSpriteTexture(Ogre::TexturePtr pTexture = Ogre::TexturePtr(),
 		 const Ogre::Vector2 &vTexturePosTopLeft = DEFAULT_TEXTURE_TOP_LEFT,
 		 const Ogre::Vector2 &vTexturePosBottomRight = DEFAULT_TEXTURE_BOTTOM_RIGHT,
+		 const Ogre::Vector2 &vTextureScale = Ogre::Vector2::UNIT_SCALE,
 		 const Ogre::Vector2 &vSpriteOffset = Ogre::Vector2::ZERO,
 		 const Ogre::Vector2 &vSpriteScale = Ogre::Vector2::UNIT_SCALE)
     :
     m_vTexturePosTopLeft(vTexturePosTopLeft),
     m_vTexturePosBottomRight(vTexturePosBottomRight),
+    m_vTextureScale(vTextureScale),
     m_vSpriteOffset(vSpriteOffset),
     m_vSpriteScale(vSpriteScale),
     m_pTexture(pTexture) {
   }
   CSpriteTexture(const CSpriteTexture &src)
-  :
-  m_vTexturePosTopLeft(src.m_vTexturePosTopLeft),
-  m_vTexturePosBottomRight(src.m_vTexturePosBottomRight),
-  m_vSpriteOffset(src.m_vSpriteOffset),
-  m_vSpriteScale(src.m_vSpriteScale),
-  m_pTexture(src.m_pTexture) {
+    : m_vTexturePosTopLeft(src.m_vTexturePosTopLeft),
+      m_vTexturePosBottomRight(src.m_vTexturePosBottomRight),
+      m_vTextureScale(src.m_vTextureScale),
+      m_vSpriteOffset(src.m_vSpriteOffset),
+      m_vSpriteScale(src.m_vSpriteScale),
+      m_pTexture(src.m_pTexture) {
   }
 
   const CSpriteTexture &operator=(const CSpriteTexture &src) {
     m_vTexturePosTopLeft = src.m_vTexturePosTopLeft;
     m_vTexturePosBottomRight = src.m_vTexturePosBottomRight;
+    m_vTextureScale = src.m_vTextureScale;
     m_pTexture = src.m_pTexture;
     m_vSpriteOffset = src.m_vSpriteOffset;
     m_vSpriteScale = src.m_vSpriteScale;
@@ -56,6 +60,8 @@ public:
   const Ogre::Vector2 &getTexturePosTopLeft() const {return m_vTexturePosTopLeft;}
   const Ogre::Vector2 &getTexturePosBottomRight() const {return m_vTexturePosBottomRight;}
   Ogre::TexturePtr getTexture() const {return m_pTexture;}
+  const Ogre::Vector2 &getTextureScale() const {return m_vTextureScale;}
+  void setTextureScale(const Ogre::Vector2 &vScale) {m_vTextureScale = vScale;}
   const Ogre::Vector2 &getSpriteOffset() const {return m_vSpriteOffset;}
   const Ogre::Vector2 &getSpriteScale() const {return m_vSpriteScale;}
 

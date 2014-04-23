@@ -218,6 +218,7 @@ void Ogre2dManager::renderBuffer()
    alphaBlendMode.source1=Ogre::LBS_TEXTURE;
    alphaBlendMode.operation=Ogre::LBX_BLEND_MANUAL;
    alphaBlendMode.factor = 1;
+   Ogre::Matrix4 textMat(Ogre::Matrix4::IDENTITY);
 
    for (currChunk=chunks.begin(); currChunk!=endChunk; currChunk++)
    {
