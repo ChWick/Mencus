@@ -55,8 +55,8 @@ int main(int argc, char *argv[])
 
 
   try {
-    LOGI("loading language");
-    XMLResources::CManager::LANGUAGE_CODE = "de";
+    XMLResources::CManager::LANGUAGE_CODE = OgreAndroidBridge::callJavaString("getLanguage");
+    LOGI("loading language: %s", XMLResources::CManager::LANGUAGE_CODE.c_str());
     XMLResources::GLOBAL.loadLanguage();
   }
   catch (const Ogre::Exception& e) {
