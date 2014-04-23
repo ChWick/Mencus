@@ -1,11 +1,15 @@
 package org.mencus.game;
 
+import java.util.Locale;
+
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
 import android.app.Dialog;
 import android.app.NativeActivity;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +28,7 @@ public class MencusNativeActivity extends NativeActivity {
 	void setAdClosed(boolean addClosed) {mAddClosed = addClosed;}
 	boolean showAdWhenLoaded() {return mShowAdWhenLoaded;}
 
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		_activity = this;
 		super.onCreate(savedInstanceState);
@@ -31,9 +36,27 @@ public class MencusNativeActivity extends NativeActivity {
 		//showAdPopup();
         //Toast.makeText(this, "popup done", Toast.LENGTH_SHORT).show();
 
-        mLoadDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        mLoadDialog = new Dialog(this, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+        	@Override
+        	public void onStop() {
+        		Log.i("Ogre", "onStop dialog");
+        		_activity.mLoadDialog = null;
+        	}
+        };
         mLoadDialog.setContentView(R.layout.activity_mencus);
         mLoadDialog.show();
+	}
+	public void onStop() {
+		super.onStop();
+		mLoadDialog = null;
+	}
+	public void onPause() {
+		super.onPause();
+		mLoadDialog = null;
+	}
+	public void onDestroy() {
+		super.onDestroy();
+		mLoadDialog = null;
 	}
 
 	// Our popup window, you will call it from your C/C++ code later
@@ -89,6 +112,7 @@ public class MencusNativeActivity extends NativeActivity {
 	public void setLoadText(String text) {
 		if (mLoadDialog == null) {return;}
 		TextView tv = (TextView)mLoadDialog.findViewById(R.id.mencus_load_text);
+		if (tv == null) {return;}
 		tv.setText(text);
 	}
 	public void closeLoadDialog() {
@@ -96,4 +120,8 @@ public class MencusNativeActivity extends NativeActivity {
 		mLoadDialog.dismiss();
 		mLoadDialog = null;
 	}
+	public String getLanguage() {
+		return Locale.getDefault().getLanguage();
+	}
 }
+
