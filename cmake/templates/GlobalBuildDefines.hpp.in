@@ -28,4 +28,7 @@
 // 1: asserts (debug)
 #define MENCUS_ASSERT_MODE    @MENCUS_ASSERT_MODE@
 
+// Ads enabled
+#define MENCUS_ENABLE_ADS     @MENCUS_ENABLE_ADS@
+
 #endif

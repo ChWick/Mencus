@@ -2,8 +2,9 @@
 #define _AD_DISPLAY_MANAGER_HPP_
 
 #include <OgrePlatform.h>
+#include "GlobalBuildDefines.hpp"
 
-#ifndef NO_ADDS
+#if MENCUS_ENABLE_ADS == 1
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
 #define ADDS_ANDROID
