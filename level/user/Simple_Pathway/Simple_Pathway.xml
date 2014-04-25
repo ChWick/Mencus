@@ -1,5 +1,4 @@
-<map difficulty="easy" name="Simple pathway" description="This is a very easy map. Take only case of the bears.
-" tutorial="false" background="forest" sizex="141" sizey="15">
+<map difficulty="easy" background="forest" sizex="141" sizey="15">
     <player x="0" y="1" id="Player" type="0" hp="10" direction="1"/>
     <tiles invert="0">
         <row tiles="24 26 26 24 26 24 24 24 26 26 24 26 24 26 24 24 26 24 26 26 26 26 26 24 24 24 26 24 24 26 26 24 24 26 24 24 26 24 26 24 24 24 24 24 24 24 26 26 26 24 26 24 26 24 24 26 26 24 26 24 26 26 24 26 26 24 24 24 24 24 26 24 24 24 24 26 24 26 24 24 26 26 26 24 26 24 24 26 26 26 26 26 24 26 26 26 26 26 26 24 26 24 26 24 26 26 26 26 24 26 26 26 26 26 24 26 24 24 26 26 24 26 24 26 24 24 26 26 24 24 26 24 24 26 24 26 26 26 24 24 26 "/>
