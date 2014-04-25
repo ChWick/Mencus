@@ -1,5 +1,4 @@
-<map difficulty="easy" name="Escape" description="Escape from the castle
-" background="forest" sizex="20" sizey="75">
+<map difficulty="easy" background="forest" sizex="20" sizey="75">
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
         <row tiles="5 5 5 5 5 8 52 52 52 9 52 52 52 9 52 52 52 3 1 1 "/>

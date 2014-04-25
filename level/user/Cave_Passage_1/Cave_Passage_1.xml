@@ -1,5 +1,4 @@
-<map difficulty="easy" name="Small cave passage" description="There are many many passages in the underground. Find a way out!
-" background="clouds" sizex="60" sizey="24">
+<map difficulty="easy" background="clouds" sizex="60" sizey="24">
     <tiles invert="0">
         <row tiles="53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 "/>
         <row tiles="53 53 53 53 53 53 53 53 53 53 53 53 53 53 18 17 17 17 17 17 17 17 19 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 "/>

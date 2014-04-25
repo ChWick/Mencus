@@ -1,5 +1,4 @@
-<map difficulty="hard" name="Long cave passage" description="In the underground there are many passes that lead to different locations. Find your wait out, but stay calme!
-" background="clouds" sizex="78" sizey="30">
+<map difficulty="hard" background="clouds" sizex="78" sizey="30">
     <tiles invert="0">
         <row tiles="53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 "/>
         <row tiles="53 53 53 55 55 53 53 53 56 54 66 55 53 53 53 53 53 53 53 53 53 66 56 56 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 54 66 54 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 "/>

@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="msg_default_title">Tutorial 1</string>
-  <string name="msg_start">Welcome to the Mencus Tutorial! Here you will learn how to control Mencus and how to interact with the game. Of-course you will also learn to use magic to defeat your enemies.</string>
-  <string name="msg_move">In this first tutorial you will learn how to move Mencus.
-
-Touch the two arrow-buttons on the left side to stir Mencus left or right.</string>
-  <string name="msg_obstacle">There is a obstacle next to you. Use the jump button on the right side!</string>
-  <string name="msg_end">Congratulations you learned how to move Mencus! Reach the flag to finish this tutorial</string>
+  <string name="name">Escape</string>
+  <string name="description">Escape from the castle!</string>
 </resources>
