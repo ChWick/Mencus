@@ -1,4 +1,4 @@
-<map difficulty="easy" name="Adventure" description="This is an easy adventure." tutorial="false" background="forest" sizex="40" sizey="60">
+<map difficulty="easy" tutorial="false" background="forest" sizex="40" sizey="60">
     <player x="1" y="1" id="Player" type="0" hp="10" direction="1"/>
     <tiles invert="0">
         <row tiles="71 71 71 71 71 71 71 71 71 71 53 53 53 53 53 53 53 71 71 71 71 53 53 53 3 1 1 1 4 53 53 53 53 53 53 53 53 53 53 53 "/>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="description">Im ersten Tutorial lernst du, wie du Mencus bewegst: Laufen und Springen!</string>
+  <string name="name">Tutorial 1</string>
   <string name="msg_default_title">Tutorial 1</string>
   <string name="msg_start">Herzlich willkommen zum Tutorial von Mencus! Hier wirst du lernen Mencus zu steuern und wie du mit dem Spiel interagieren kannst. Natürlich wirst du auch erfahren, wie du Magie zum Besiegen deiner Feinde nutzen kannst.</string>
   <string name="msg_move">In diesem ersten Tutorial wirst du lernen wie du Mencus bewegst.

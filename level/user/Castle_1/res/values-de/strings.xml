@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="msg_default_title">Tutorial 1</string>
-  <string name="msg_start">Herzlich willkommen zum Tutorial von Mencus! Hier wirst du lernen Mencus zu steuern und wie du mit dem Spiel interagieren kannst. Natürlich wirst du auch erfahren, wie du Magie zum Besiegen deiner Feinde nutzen kannst.</string>
-  <string name="msg_move">In diesem ersten Tutorial wirst du lernen wie du Mencus bewegst.
-
-Berühre die beiden Pfeil-Knöpfe auf der linken Seite um Mencus nach links oder rechts zu steuern.</string>
-  <string name="msg_obstacle">Vor dir ist ein Hindernis. Benutze den Springen-Knopf auf der rechten Seite!</string>
-  <string name="msg_end">Herzlichen Glückwunsch! Du hast gelernt wie man Mencus steuert! Erreiche die Fahne um das Tutorial zu beenden.</string>
+  <string name="name">Burg 1</string>
+  <string name="description">Ein leichtes Level, wenn du herausfindest, warum es Bomben am Anfang gibt.</string>
 </resources>

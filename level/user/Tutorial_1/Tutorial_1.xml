@@ -1,4 +1,4 @@
-<map difficulty="easy" name="Tutorial 1" description="In the first tutorial you learn how to move Menucs: Walking and jumping!" tutorial="true" background="forest" sizex="16" sizey="12">
+<map difficulty="easy" background="forest" sizex="16" sizey="12">
     <tiles invert="0">
         <row tiles="24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 "/>
         <row tiles="27 27 27 27 27 27 31 27 27 31 27 31 31 27 27 27 "/>

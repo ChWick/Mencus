@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="description">This tutorial shall introduce doors</string>
+  <string name="name">Tutorial 4</string>
   <string name="msg_default_title">Tutorial 1</string>
   <string name="msg_start">This is the fourth tutorial. Here you will learn how to access links and move trough doors.</string>
   <string name="msg_door">Walk to the door on the right side</string>

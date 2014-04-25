@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="description">In the first tutorial you learn how to move Menucs: Walking and jumping!</string>
+  <string name="name">Tutorial 1</string>
   <string name="msg_default_title">Tutorial 1</string>
   <string name="msg_start">Welcome to the Mencus Tutorial! Here you will learn how to control Mencus and how to interact with the game. Of-course you will also learn to use magic to defeat your enemies.</string>
   <string name="msg_move">In this first tutorial you will learn how to move Mencus.

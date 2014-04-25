@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="description">In diesem Tutorial lerns du, wie du Schlüssel nutzt und verschlossene Türen öffnest.</string>
+  <string name="name">Tutorial 3</string>
   <string name="msg_default_title">Tutorial 3</string>
   <string name="msg_start">Dies ist das dritte Tutorial. Hier wirst du lernen wie du Schlüssel nutzen kannst, um verschlossene Türen zu öffnen.</string>
   <string name="msg_pickup">Neben dir siehst du ein verschlossenes Gitter. Finde und nehme einen Schlüssel um es aufzusperren.</string>
