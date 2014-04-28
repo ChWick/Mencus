@@ -46,6 +46,13 @@ if (ANDROID)
   file(MAKE_DIRECTORY "${NDKOUT}/level")
   file(MAKE_DIRECTORY "${NDKOUT}/level/user")
   
+  if (MENCUS_ENABLE_ADS) 
+    SET(MENCUS_ANDROID_PERMISSIONS
+      "<uses-permission android:name=\"android.permission.INTERNET\" /> 
+  <!-- Used to avoid sending an ad request if there is no connectivity. -->
+  <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />")
+  endif()
+
   file(WRITE "${NDKOUT}/default.properties" "target=${ANDROID_TARGET}")
   file(WRITE "${NDKOUT}/jni/Application.mk" "APP_ABI := ${ANDROID_ABI}\nAPP_STL := gnustl_static ")
   configure_file("${MENCUS_TEMPLATES_DIR}/AndroidManifest.xml.in" "${NDKOUT}/AndroidManifest.xml" @ONLY)
