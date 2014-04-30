@@ -1,3 +1,6 @@
+echo "Removing temporary files"
+find . -type f \( -name '*.swp' -o -name '*~' -o -name '*.bak' -o -name '.netrwhist' \) -delete
+
 for i in $(ls -d */); 
 do
 echo "Generate pack for: " ${i%%/};
