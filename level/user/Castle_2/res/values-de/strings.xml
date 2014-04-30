@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="name">Abenteuer</string>
-  <string name="description">Dies wird ein einfaches Abenteuer</string>
+  <string name="map_name">Abenteuer</string>
+  <string name="map_description">Dies wird ein einfaches Abenteuer</string>
 </resources>

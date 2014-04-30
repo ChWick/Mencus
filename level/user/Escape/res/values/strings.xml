@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="name">Escape</string>
-  <string name="description">Escape from the castle!</string>
+  <string name="map_name">Escape</string>
+  <string name="map_description">Escape from the castle!</string>
 </resources>

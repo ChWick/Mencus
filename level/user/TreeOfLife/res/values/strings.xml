@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="name">Tree of life</string>
-  <string name="description">A long map with a big tree.</string>
+  <string name="map_name">Tree of life</string>
+  <string name="map_description">A long map with a big tree.</string>
 </resources>

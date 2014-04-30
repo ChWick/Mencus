@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="description">In this tutorial you lern how to use keys and handle locked doors.</string>
-  <string name="name">Tutorial 3</string>
+  <string name="map_description">In this tutorial you lern how to use keys and handle locked doors.</string>
+  <string name="map_name">Tutorial 3</string>
   <string name="msg_default_title">Tutorial 3</string>
   <string name="msg_start">This is the third tutorial. Here you will learn how to use keys to open locked doors.</string>
   <string name="msg_pickup">Next to you you see locked bars. Search and pick up a key to unlock it.</string>

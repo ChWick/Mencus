@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="name">Burg 2</string>
-  <string name="description">Dies ist eine lange Karte, in welcher ihr euch die Effekte mehrerer Schalter merken müsst. Viel Glück!</string>
+  <string name="map_name">Burg 2</string>
+  <string name="map_description">Dies ist eine lange Karte, in welcher ihr euch die Effekte mehrerer Schalter merken müsst. Viel Glück!</string>
 </resources>

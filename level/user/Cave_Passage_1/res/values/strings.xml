@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="name">Long cave passage</string>
-  <string name="description">There are many many passages in the underground. Find a way!</string>
+  <string name="map_name">Long cave passage</string>
+  <string name="map_description">There are many many passages in the underground. Find a way!</string>
 </resources>

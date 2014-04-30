@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="name">Simple pathway</string>
-  <string name="description">This is a very easy map. Take only care of the bears!</string>
+  <string name="map_name">Simple pathway</string>
+  <string name="map_description">This is a very easy map. Take only care of the bears!</string>
 </resources>

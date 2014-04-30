@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="description">In diesem Tutorial wirst du die Basics über Schalter lernen</string>
-  <string name="name">Tutorial 5</string>
+  <string name="map_description">In diesem Tutorial wirst du die Basics über Schalter lernen</string>
+  <string name="map_name">Tutorial 5</string>
   <string name="msg_default_title">Tutorial 5</string>
   <string name="msg_start">Dies ist das fünft Tutorial. Hier wirst du lernen wie du mit Schaltern interagierst.</string>
   <string name="msg_first_switch">Wie du sehen kannst, ist der Wall zu hoch, als dass du darüber springen könntest. Aber es gibt einen Schalter der dir dabei helfen wird. Laufe zu ihm!</string>

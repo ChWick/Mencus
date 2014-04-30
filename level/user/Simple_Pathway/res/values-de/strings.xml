@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="name">Einfacher Weg</string>
-  <string name="description">Dies ist eine sehr leichte Karte. Passe jedoch auf die Bären auf!</string>
+  <string name="map_name">Einfacher Weg</string>
+  <string name="map_description">Dies ist eine sehr leichte Karte. Passe jedoch auf die Bären auf!</string>
 </resources>

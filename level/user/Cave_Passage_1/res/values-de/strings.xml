@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="name">Kleiner Höhlendurchgänge</string>
-  <string name="description">Hier gibt es sehr viele Durchgänge im Untergrund. Finde einen Ausgang!</string>
+  <string name="map_name">Kleiner Höhlendurchgänge</string>
+  <string name="map_description">Hier gibt es sehr viele Durchgänge im Untergrund. Finde einen Ausgang!</string>
 </resources>

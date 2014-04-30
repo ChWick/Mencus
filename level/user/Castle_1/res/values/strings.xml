@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="name">Castle 2</string>
-  <string name="description">This is a long level in which you have to remember the effects of several switches. Good luck!</string>
+  <string name="map_name">Castle 2</string>
+  <string name="map_description">This is a long level in which you have to remember the effects of several switches. Good luck!</string>
 </resources>

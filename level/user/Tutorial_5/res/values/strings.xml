@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="description">In this tutorial you will learn the basics about switches</string>
-  <string name="name">Tutorial 5</string>
+  <string name="map_description">In this tutorial you will learn the basics about switches</string>
+  <string name="map_name">Tutorial 5</string>
   <string name="msg_default_title">Tutorial 5</string>
   <string name="msg_start">This is the fifth tutorial. Here you will learn how to interact with switches.</string>
   <string name="msg_first_switch">As you can see, the wall is too high for jumping over it. But there is a switch that will help you. Walk to it!</string>
