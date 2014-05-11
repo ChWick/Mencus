@@ -40,7 +40,6 @@ void android_main(struct android_app* state)
 int main(int argc, char *argv[])
 #endif
 {
-
   new CSnapshotManager();
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
@@ -93,6 +92,14 @@ int main(int argc, char *argv[])
   new CSettings();
   // Create application object
   CGame *app = new CGame();
+
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#else
+  if (argc == 2) {
+    // add additional level dir path
+    app->getAdditionalLevelDirPaths().push_back(argv[1]);
+  }
+#endif
 
   try {
     app->go();

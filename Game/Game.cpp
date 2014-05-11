@@ -209,6 +209,10 @@ void CGame::locateResources() {
 						   CFileManager::SL_EXTERNAL),
 			"FileSystem", "level_user");
 #endif
+  for (const std::string &path : m_vAdditionalLevelDirPaths) {
+    Ogre::ResourceGroupManager::getSingleton().
+      addResourceLocation(path, "FileSystem", "level_user");
+  }
 }
 void CGame::loadResources() {
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID

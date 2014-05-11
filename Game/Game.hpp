@@ -25,6 +25,7 @@ class CGame : public CInputListener,
               public Ogre::Singleton<CGame> {
 private:
   CGameState *m_pGameState;
+  std::vector<std::string> m_vAdditionalLevelDirPaths;
 
 #ifdef INCLUDE_RTSHADER_SYSTEM
   Ogre::RTShader::ShaderGenerator*	    mShaderGenerator;	  //!< The Shader generator instance.
@@ -36,6 +37,8 @@ public:
 
   static CGame &getSingleton();
   static CGame *getSingletonPtr();
+
+  std::vector<std::string> &getAdditionalLevelDirPaths() {return m_vAdditionalLevelDirPaths;}
 
   OIS::Keyboard* getKeyboard() {return mInputContext.mKeyboard;}
   OIS::Mouse *getMouse() {return mInputContext.mMouse;}
