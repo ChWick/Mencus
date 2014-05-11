@@ -25,10 +25,16 @@ void CMapPack::init() {
 
   Ogre::LogManager::getSingleton().logMessage("Creating map pack for " + m_sMapName);
   Ogre::ResourceGroupManager::getSingleton().createResourceGroup(m_sMapName);
+  Ogre::FileInfoListPtr files = Ogre::ResourceGroupManager::getSingleton().findResourceFileInfo("level_user", m_sMapName + ".zip");
+  if (files->size() == 0) {
+    throw Ogre::Exception(0, "Map zip file not found", __FILE__);
+  }
+  Ogre::String sZipFile = files->front().archive->getName() + "/" + files->front().filename;
+  Ogre::LogManager::getSingleton().logMessage("  adding zip from  " + sZipFile);
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-  Ogre::ResourceGroupManager::getSingleton().addResourceLocation("level/user/" + m_sMapName + ".zip", "APKZip", m_sMapName, true);
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(sZipFile, "APKZip", m_sMapName, true);
 #else
-  Ogre::ResourceGroupManager::getSingleton().addResourceLocation("../level/user/" + m_sMapName + ".zip", "Zip", m_sMapName, true);
+  Ogre::ResourceGroupManager::getSingleton().addResourceLocation(sZipFile, "Zip", m_sMapName, true);
 #endif
   Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup(m_sMapName);
 
