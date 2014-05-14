@@ -109,13 +109,13 @@ void CGameState::changeGameStateImpl() {
     m_pMainMenu->hide();
     break;
   case GS_GAME_OVER:
-    if (!(m_eNextGameState == GS_STATISTICS || m_eNextGameState == GS_GAME)) {
+    if (!(m_eNextGameState == GS_STATISTICS || m_eNextGameState == GS_GAME || m_eNextGameState == GS_AD)) {
       m_pMapPack.reset();
     }
     CGUIGameOver::getSingleton().hide();
     break;
   case GS_STATISTICS:
-    if (!(m_eNextGameState == GS_GAME || m_eNextGameState == GS_GAME_OVER)) {
+    if (!(m_eNextGameState == GS_GAME || m_eNextGameState == GS_GAME_OVER || m_eNextGameState == GS_AD)) {
       m_pMapPack.reset();
     }
     CGUIStatistics::getSingleton().hide();
@@ -134,7 +134,12 @@ void CGameState::changeGameStateImpl() {
       Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("PreloadGame");
       m_pScreenplay = new CScreenplay();
       if (m_pMapPack) {
+	Ogre::LogManager::getSingleton().logMessage("Creating screenplay from mappack");
 	m_pScreenplay->loadSingleMap(m_pMapPack);
+      }
+      else {
+	Ogre::LogManager::getSingleton().logMessage("No map pack set");
+	changeGameState(GS_MAIN_MENU);
       }
       break;
     case GS_MAIN_MENU:
