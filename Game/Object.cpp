@@ -10,7 +10,7 @@ const Ogre::Vector2 OBJECT_SIZES[CObject::OT_COUNT] = {
   Ogre::Vector2(0.5, 0.5),     // Bomb
   Ogre::Vector2(0.5, 0.5),     // Health potion
   Ogre::Vector2(0.5, 0.5),     // Mana potion
-  Ogre::Vector2(0.7, 0.35),    // Key
+  Ogre::Vector2(0.9, 0.45),    // Key
   Ogre::Vector2(1, 1),	       // Scratch
   Ogre::Vector2(0.5, 1),       // Torch 
   Ogre::Vector2(1, 2)	       // Flag
