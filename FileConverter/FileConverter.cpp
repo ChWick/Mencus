@@ -100,6 +100,13 @@ void readLine(ifstream &stream, string &out) {
   }
 }
 int main(int argc, const char* argv[]) {
+  // print licence
+  cout <<
+    "FileConverter  Copyright (C) 2014 Christoph Wick" << endl <<
+    "This program comes with ABSOLUTELY NO WARRANTY." << endl <<
+    "This is free software, and you are welcome to redistribute it" << endl <<
+    "under certain conditions. See license!" << endl;
+
   // Prints each argument on the command line.
 	for( int i = 0; i < argc; i++ )
 	{
