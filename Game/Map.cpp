@@ -472,6 +472,7 @@ void CMap::explodeTile(size_t x, size_t y, bool bExplodeNeighbours) {
 
   // remove all scratches that collides with this tile
   for (CEntity* pObject : getObjects()) {
+    if (pObject->getType() != CObject::OT_SCRATCH) {continue;}
     if (pObject->getWorldBoundingBox().collidesWith(tile->getWorldBoundingBox()) != CCD_NONE) {
       destroy(pObject, true);
     }
