@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0"?>
 <resources>
-  <string name="map_name">Burg 2</string>
-  <string name="map_description">Dies ist eine lange Karte, in welcher ihr euch die Effekte mehrerer Schalter merken müsst. Viel Glück!</string>
+    <string name="map_name">Burg 1</string>
+    <string name="map_description">Dies ist eine sehr kurze Karte, aber du musst viele Bomben verwenden. Erinnere dich daran, dass du durch Verwenden des Pull-Down-Menüs deine Waffe ändern kannst.</string>
 </resources>
