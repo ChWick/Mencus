@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="msg_kill_enemy">Töte den Gegner auf der rechten Seite um fortzufahren.</string>
+    <string name="msg_title_info">Information</string>
+    <string name="msg_title_proceed">Jetzt kannst du fortfahren.</string>
+</resources>
