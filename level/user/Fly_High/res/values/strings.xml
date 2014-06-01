@@ -3,4 +3,6 @@
     <string name="msg_kill_enemy">Kill the enemy on the right side to proceed.</string>
     <string name="msg_title_info">Information</string>
     <string name="msg_title_proceed">Now you can proceed.</string>
+    <string name="map_name">Fly hight</string>
+    <string name="map_description">This map has no big puzzles. You should handle it!</string>
 </resources>
