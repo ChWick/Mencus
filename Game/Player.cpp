@@ -239,8 +239,11 @@ void CPlayer::update(Ogre::Real tpf) {
       if (pTile && (pTile->getTileFlags() & CTile::TF_DAMAGES)) {
         // last hope check if the tile right of the damage tile hits the player 2 and is not damaging him
         CTile *pRightTile = m_Map.getTile(static_cast<int>(getWorldBoundingBox().getRight() - 0.01), pTile->getMapPosY());
-        if (pRightTile && pRightTile->getWorldBoundingBox().collidesWith(getWorldBoundingBox()) != CCD_NONE && (pRightTile->getTileFlags() & CTile::TF_DAMAGES) == 0) {
-
+        if (pRightTile
+	    && pRightTile->getWorldBoundingBox().collidesWith(getWorldBoundingBox()) != CCD_NONE
+	    && (pRightTile->getTileFlags() & CTile::TF_DAMAGES) == 0
+	    && (pRightTile->getTileFlags() & CTile::TF_UNPASSABLE)) {
+	  // player can stand on the right tile, luck for him
         }
         else {
           takeDamage(SPIKES_DAMANGE_PER_HIT);
