@@ -73,6 +73,9 @@ private:
   // for making buttons blink
   float m_fTimer;
   std::list<CEGUI::Window *> m_lBlinkingButtons;
+
+  // arrow to indicate draging of the pull down menu
+  CEGUI::Window *m_pDragArrow;
 public:
   CGUIInput(CEGUI::Window *pGUIRoot);
   ~CGUIInput();

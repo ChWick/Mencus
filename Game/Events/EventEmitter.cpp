@@ -49,7 +49,7 @@ EEmitter parseEmitter(const std::string &sString) {
   else if (sString == "destroy") {return EMIT_ON_DESTROY;}
   else if (sString == "user") {return EMIT_ON_USER;}
   else if (sString == "collision") {return EMIT_ON_COLLISION;}
-  else if (sString == "message_page_chagned") {return EMIT_ON_MESSAGE_BOX_PAGE_CHANGE;}
+  else if (sString == "message_page_changed") {return EMIT_ON_MESSAGE_BOX_PAGE_CHANGE;}
 
   throw Ogre::Exception(0, "Emitter type " + sString + " could not be converted to a string", __FILE__);
 }
@@ -74,7 +74,7 @@ ERepeatType parseRepeatType(const std::string &sString) {
   }
 
 
-  throw Ogre::Exception(0, "Repeat type " + sString + " could not be converted to a string", __FILE__);
+  throw Ogre::Exception(0, "Repeat type '" + sString + "' could not be converted to a string", __FILE__);
 }
 
 void COnCollision::init(const CMap &map) {
