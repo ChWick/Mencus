@@ -45,6 +45,7 @@ namespace Weapon {
   CEGUI::String getPicture(unsigned int uiWeapon);
 
   std::string toString(unsigned int uiWeapon);
+  EItems parseItem(const std::string &s);
 };
 
 #endif

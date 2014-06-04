@@ -40,6 +40,8 @@ std::string toString(EEmitter eEmitter) {
     return "collision";
   case EMIT_ON_MESSAGE_BOX_PAGE_CHANGE:
     return "message_page_chagned";
+  case EMIT_ON_MESSAGE:
+    return "message";
   }
   
   throw Ogre::Exception(0, "Emitter type " + Ogre::StringConverter::toString(eEmitter) + " could not be converted to a string", __FILE__);
@@ -50,6 +52,7 @@ EEmitter parseEmitter(const std::string &sString) {
   else if (sString == "user") {return EMIT_ON_USER;}
   else if (sString == "collision") {return EMIT_ON_COLLISION;}
   else if (sString == "message_page_changed") {return EMIT_ON_MESSAGE_BOX_PAGE_CHANGE;}
+  else if (sString == "message") {return EMIT_ON_MESSAGE;}
 
   throw Ogre::Exception(0, "Emitter type " + sString + " could not be converted to a string", __FILE__);
 }
@@ -99,6 +102,8 @@ CEmitter *CCreator::create(const tinyxml2::XMLElement *pElem) {
     return new COnCollision(pElem);
   case EMIT_ON_MESSAGE_BOX_PAGE_CHANGE:
     return new COnMessageBoxPageChange(pElem);
+  case EMIT_ON_MESSAGE:
+    return new COnMessage(pElem);
   default:
     throw Ogre::Exception(0, "Emitter could not be created", __FILE__);
   }

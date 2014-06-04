@@ -280,12 +280,14 @@ void CGUIInput::update(float tpf) {
     m_pDragButton->setPosition(UVector2(UDim(0, 0), UDim(0, m_pDragWindow->getSize().d_height.d_offset)));
     if (m_eDragState == DS_OPENING) {
       m_eDragState = DS_OPEN;
+      CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_DROP_DOWN_MENU).setBool(true));
     }
   }
   else if (m_pDragButton->getPosition().d_y.d_offset < 0) {
     m_pDragButton->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
     if (m_eDragState == DS_CLOSING) {
       m_eDragState = DS_SLEEPING;
+      CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_DROP_DOWN_MENU).setBool(false));
     }
   }
 
@@ -479,13 +481,23 @@ void CGUIInput::sendMessageToAll(const CMessage &message) {
 	m_fTimer = 0;
       }
       else {
+	CEGUI::Window *pButton = nullptr;
 	EButtonTypes bt = parseButtonType(message.getID());
 	if (bt != BT_COUNT) {
+	  pButton = m_pButtons[bt];
+	}
+	else {
+	  Weapon::EItems item = Weapon::parseItem(message.getID());
+	  if (item != Weapon::I_COUNT) {
+	    pButton = m_pWeapons[item];
+	  }
+	}
+	if (pButton) {
 	  bool bEnable = message.getBool();
-	  if (bEnable) {m_lBlinkingButtons.push_back(m_pButtons[bt]);}
+	  if (bEnable) {m_lBlinkingButtons.push_back(pButton);}
 	  else {
-	    m_pButtons[bt]->setProperty("ImageColours", "FFFFFFFF");
-	  m_lBlinkingButtons.remove(m_pButtons[bt]);
+	    pButton->setProperty("ImageColours", "FFFFFFFF");
+	    m_lBlinkingButtons.remove(pButton);
 	  }
 	}
 	if (m_lBlinkingButtons.size() == 0) {

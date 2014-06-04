@@ -33,6 +33,7 @@
 #include "XMLHelper.hpp"
 #include "Statistics.hpp"
 #include "GUIStatistics.hpp"
+#include "MessageHandler.hpp"
 
 using namespace XMLHelper;
 using namespace Weapon;
@@ -575,6 +576,7 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
   case GIC_CHANGE_WEAPON:
     m_uiCurrentWeapon = min(W_COUNT - 1, max(0, cmd.getIntValue()));
     CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
+    CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_WEAPON_CHANGED).setInt(m_uiCurrentWeapon));
     break;
   default:
     break;

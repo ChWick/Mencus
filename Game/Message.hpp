@@ -35,6 +35,8 @@ public:
     MT_TOGGLE_TOUCH_INPUT_BLINK,
     MT_MESSAGE_BOX_PAGE_CHANGED,
     MT_EXIT_REACHED,
+    MT_DROP_DOWN_MENU,
+    MT_WEAPON_CHANGED,
   };
   
   static std::string toString(EMessageTypes eMT) {
@@ -51,6 +53,10 @@ public:
       return "message_box_page_changed";
     case MT_EXIT_REACHED:
       return "exit_reached";
+    case MT_DROP_DOWN_MENU:
+      return "drop_down_menu";
+    case MT_WEAPON_CHANGED:
+      return "weapon_changed";
     }
 
     throw Ogre::Exception(0, "Message type could not be converted to string", __FILE__);
@@ -62,6 +68,8 @@ public:
     else if (s == "message_box_page_changed") {return MT_MESSAGE_BOX_PAGE_CHANGED;}
     else if (s == "exit_reached") {return MT_EXIT_REACHED;}
     else if (s == "entity_destroyed") {return MT_ENTITY_DESTROYED;}
+    else if (s == "drop_down_menu") {return MT_DROP_DOWN_MENU;}
+    else if (s == "weapon_changed") {return MT_WEAPON_CHANGED;}
 
     throw Ogre::Exception(0, "Message type could not be parsed: " + s, __FILE__);
   }

@@ -48,6 +48,8 @@ CInjectMessageEvent::CInjectMessageEvent(CMap &map, const tinyxml2::XMLElement *
 }
 void CInjectMessageEvent::start_impl() {
   CMessageHandler::getSingleton().addMessage(m_Message);
+  // and stop again, that it can be repeated
+  stop();
 }
 void CInjectMessageEvent::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
   CEvent::writeToXMLElement(pElem, eStyle);
