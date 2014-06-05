@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="map_description">In the sixth tutorial you learn how to use bombs.</string>
+    <string name="map_name">Tutorial 6</string>
+    <string name="msg_default_title">Tutorial 6</string>
+    <string name="msg_start">This is the sixth tutorial. Here you will learn how to use bombs to destroy walls or to harm enemies.</string>
+    <string name="msg_attack">On the right side is a knight who wants to stop you. HOLD (do not tap!) the button on the right side to release a magic bolt. You will need two hits to kill him.</string>
+    <string name="msg_killed">Congratulations you learned how to use your bolt</string>
+    <string name="msg_end">Now reach the flag to finish this tutorial</string>
+    <string name="msg_change_weapon">Use the pull down menu to change the weapon.</string>
+    <string name="msg_plant_bomb">Now plant a bomb next to the damaged bricks.
+Tap the attack button to place the bomb in front of you, hold the button to throw the bomb.</string>
+</resources>

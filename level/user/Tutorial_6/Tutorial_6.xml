@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<map difficulty="easy" background="forest" sizex="16" sizey="12">
+    <tiles invert="0">
+        <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
+        <row tiles="5 5 5 5 5 5 5 1 5 5 5 1 5 5 5 5 "/>
+        <row tiles="2 2 2 2 2 2 2 10 2 2 2 10 2 2 2 2 "/>
+        <row tiles="2 2 2 2 2 2 2 10 2 2 2 10 2 2 2 2 "/>
+        <row tiles="2 2 2 2 2 2 2 10 2 2 2 10 2 2 2 2 "/>
+        <row tiles="2 2 2 2 2 2 2 7 17 17 17 8 2 2 2 2 "/>
+        <row tiles="44 44 44 2 2 2 2 2 2 2 44 44 2 2 2 44 "/>
+        <row tiles="23 23 23 2 44 44 2 44 44 2 23 23 44 44 44 23 "/>
+        <row tiles="23 23 23 2 23 23 2 23 23 2 23 23 23 23 23 23 "/>
+        <row tiles="23 23 23 2 69 70 2 69 70 2 23 23 23 23 23 23 "/>
+        <row tiles="23 23 23 2 2 2 2 2 2 2 23 23 23 23 23 23 "/>
+        <row tiles="23 23 23 44 44 44 44 44 44 44 23 23 23 23 23 23 "/>
+    </tiles>
+    <player x="0.5" y="2" hp="10" direction="1"/>
+    <switches/>
+    <endangeredTiles>
+        <tile targetTile="2" x="11" y="3"/>
+        <tile targetTile="2" x="11" y="2"/>
+        <tile targetTile="15" x="11" y="4"/>
+        <tile targetTile="5" x="11" y="1"/>
+    </endangeredTiles>
+    <links/>
+    <enemies/>
+    <objects>
+        <object type="6" id="Flag" x="9" y="2">
+            <events>
+                <event emitter="collision" id="" msg_type="exit_reached" repeat="none" src_id="Player" type="inject_message"/>
+            </events>
+        </object>
+        <object type="5" id="Object_685118022" x="10" y="3.6875"/>
+        <object type="5" id="Object_-1952636240" x="3.75" y="4.5"/>
+        <object type="5" id="Object_824938979" x="8.5625" y="3.625"/>
+        <object type="5" id="Object_-185075635" x="0.75" y="4.5"/>
+        <object type="5" id="Object_997389812" x="13.75" y="4.5"/>
+        <object type="4" id="object" x="11" y="3.094"/>
+        <object type="4" id="object" x="11.0623" y="2.21875"/>
+        <object type="4" id="object" x="11.0943" y="2.6875"/>
+        <object type="0" id="object" x="4.5" y="2"/>
+        <object type="0" id="object" x="5" y="2"/>
+        <object type="0" id="object" x="3.5" y="2"/>
+        <object type="0" id="object" x="5.5" y="2"/>
+        <object type="0" id="object" x="4" y="2"/>
+    </objects>
+    <camera/>
+    <events>
+        <event emitter="create" id="InitialMessageBox" repeat="infinite" text="" title="msg_default_title" type="message">
+            <page text="msg_start"/>
+            <page text="msg_change_weapon"/>
+        </event>
+        <event emitter="message_page_changed" id="add drag arrow" msg_button="drag" msg_enabled="true" msg_type="toggle_touch_input_blink" repeat="infinite" src_id="InitialMessageBox" src_page="1" type="inject_message"/>
+        <event emit_msg_type="drop_down_menu" emitter="message" id="remove drag arrow" msg_button="drag" msg_enabled="false" msg_type="toggle_touch_input_blink" repeat="infinite" type="inject_message"/>
+        <event emitter="message_page_changed" id="blink bomb" msg_button="bomb" msg_enabled="true" msg_type="toggle_touch_input_blink" repeat="infinite" src_id="InitialMessageBox" src_page="1" type="inject_message"/>
+        <event emit_msg_type="weapon_changed" emitter="message" id="unblink bomb" msg_button="bomb" msg_enabled="false" msg_type="toggle_touch_input_blink" repeat="infinite" type="inject_message"/>
+        <event emit_msg_type="weapon_changed" emitter="message" id="plant bomb msg" repeat="infinite" title="msg_default_title" type="message">
+            <page text="msg_plant_bomb"/>
+        </event>
+    </events>
+</map>
