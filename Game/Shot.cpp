@@ -85,7 +85,7 @@ CShot::CShot(CMap &map,
   constructor_impl();
 }
 CShot::CShot(CMap &map,
-	     const tinyxml2::XMLElement *pElement) 
+	     const tinyxml2::XMLElement *pElement)
   : CAnimatedSprite(map,
 		    map.getShotsEntity(),
 		    &map,
@@ -218,7 +218,7 @@ void CShot::update(Ogre::Real tpf) {
         }
 
         if (bOnGround) {
-          m_vSpeed.x -= m_vSpeed.x * 2 * tpf;
+          m_vSpeed.x -= m_vSpeed.x * 10 * tpf;
         }
       }
     }
@@ -285,7 +285,7 @@ void CShot::writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eStyl
   pElement->SetAttribute("type", m_uiType);
   pElement->SetAttribute("direction", m_eShotDirection);
   pElement->SetAttribute("damages", m_uiDamages);
-  
+
   if (eStyle == OS_FULL) {
     pElement->SetAttribute("affected_by_gravity", m_bAffectedByGravity);
     SetAttribute(pElement, "speed", m_vSpeed);
