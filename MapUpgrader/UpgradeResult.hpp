@@ -1,0 +1,10 @@
+#ifndef UPGRADE_RESULT_HPP
+#define UPGRADE_RESULT_HPP
+
+enum EUpgradeResult {
+  UPGRADE_SUCCESSFULL,
+  UPGRADE_FINISHED,
+  UPGRADE_ERROR
+};
+
+#endif
