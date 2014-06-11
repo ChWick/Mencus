@@ -103,7 +103,12 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
   m_pControlButtonContainer->setAlwaysOnTop(true);
   m_pDragButton->setAlwaysOnTop(true);
   m_pDragWindow->setAlwaysOnTop(true);
+  m_pDragWindow->moveToFront();
+  m_pDragButton->moveToFront();
   m_pDragButton->setAlpha(0);
+  //m_pDragButton->setRiseOnClickEnabled(false);
+  m_pDragWindow->setRiseOnClickEnabled(false);
+  //m_pDragWindow->setZOrderingEnabled(false);
 
   setCurrentWeapon(0);
 
@@ -123,7 +128,7 @@ CGUIInput::EButtonTypes CGUIInput::parseButtonType(const std::string &s) {
   else if (s == "activate") {return BT_ACTIVATE;}
   else if (s == "jump") {return BT_JUMP;}
   else if (s == "attack") {return BT_ATTACK;}
- 
+
   return BT_COUNT;
 }
 void CGUIInput::windowResized() {
@@ -176,7 +181,7 @@ void CGUIInput::buttonSizeChanged(float fSize) {
   // resize pull menu
   m_pDragWindow->setSize(USize(UDim(1, 0), UDim(0, 1.5 * fSize)));
   m_pDragButton->setSize(USize(UDim(1, 0), UDim(0, 0.5 * fSize)));
-  
+
 }
 CEGUI::Window *CGUIInput::createButton(int bt) {
   Window *pParent = m_pControlButtonContainer;
@@ -184,7 +189,7 @@ CEGUI::Window *CGUIInput::createButton(int bt) {
   Window *pButton = pParent->createChild("OgreTray/StaticImage", "Button" + PropertyHelper<int>::toString(bt));
   pButton->setSize(USize(UDim(0, 100), UDim(0, 100)));
   pButton->setAlpha(0.7);
-  
+
   // this is default for control buttons
   pButton->setPosition(UVector2(UDim(0, 0), UDim(0, (bt - BT_ENTER_LINK) * 100)));
   switch (bt) {
@@ -204,14 +209,14 @@ CEGUI::Window *CGUIInput::createButton(int bt) {
     pButton->setProperty("Image", "hud_weapons/switch");
     break;
   }
-  
+
   return pButton;
 }
 CEGUI::Window *CGUIInput::createWeaponButton(unsigned int uiWeapon) {
   Window *pButton = m_pDragWindow->createChild("OgreTray/StaticImage", "WeaponButton" + PropertyHelper<int>::toString(uiWeapon));
   pButton->setSize(USize(UDim(0, 100), UDim(0, 100)));
   pButton->setAlpha(1);
-  
+
   // this is default for control buttons
   pButton->setPosition(UVector2(UDim(0, uiWeapon * 100), UDim(0, 0)));
   pButton->setProperty("Image", Weapon::getPicture(uiWeapon));
@@ -236,7 +241,7 @@ CEGUI::Window *CGUIInput::createWeaponButtonLabel(unsigned int uiWeapon) {
   pButton->
     subscribeEvent(Window::EventMouseButtonDown,
 		   Event::Subscriber(&CGUIInput::onWeaponClick, this));
-  
+
   m_pWeaponLabels[uiWeapon] = pButton;
 
   return pButton;
@@ -426,7 +431,7 @@ bool CGUIInput::onWeaponClick(const CEGUI::EventArgs& args) {
       return true;
     }
   }
-  
+
   return true;
 }
 void CGUIInput::pressReleased() {

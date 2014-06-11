@@ -26,17 +26,18 @@
 using namespace tinyxml2;
 using namespace XMLHelper;
 
+const unsigned int MAP_FILE_VERSION = 1;
 
-CMapInfo::CMapInfo() 
+CMapInfo::CMapInfo()
   : m_sFileName("Newmap"),
-    m_eDifficulty(D_EASY), 
+    m_eDifficulty(D_EASY),
     m_sName("New map"),
     m_sDescription("A newly created map."),
     m_bValid(true),
     m_bIsTutorial(false) {
   m_Document.Parse(
 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-"<map background=\"forest\" sizex=\"20\" sizey=\"20\">"
+"<map background=\"forest\" sizex=\"20\" sizey=\"20\" version=\"MAP_FILE_VERSION\">"
 "<player x=\"0\" y=\"0\" direction=\"1\" hp=\"10\"/>"
 "<tiles>"
 "  <row tiles=\"1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1\" />"
@@ -74,10 +75,10 @@ CMapInfo::CMapInfo(const std::string &sFileName, const std::string &sResourceGro
     return;
   }
   m_Document.Parse(dataStream->getAsString().c_str());
-  
+
   constructor_impl();
 }
-CMapInfo::CMapInfo(const CMapInfoConstPtr src) 
+CMapInfo::CMapInfo(const CMapInfoConstPtr src)
   : m_bValid(src->m_bValid),
     m_sName(src->m_sName),
     m_sDescription(src->m_sDescription),
@@ -100,6 +101,10 @@ void CMapInfo::constructor_impl() {
   if (!pRoot) {
     m_bValid = false;
     Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "File has no root node");
+    return;
+  }
+  if (IntAttribute(pRoot, "version") != MAP_FILE_VERSION) {
+    Ogre::LogManager::getSingleton().logMessage(Ogre::LML_CRITICAL, "File has wrong version code");
     return;
   }
   m_eDifficulty = parseMapDifficlty(Attribute(pRoot, "difficulty", "unknown"));

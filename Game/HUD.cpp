@@ -40,7 +40,7 @@ CHUD &CHUD::getSingleton() {
 }
 
 CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
-  : m_bShotToolIndicators(pGUIInput == NULL), 
+  : m_bShotToolIndicators(pGUIInput == NULL),
     m_pGUIInput(pGUIInput),
     m_fTimer(0),
     m_fHP(1),
@@ -123,8 +123,8 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
     pWeaponContainer->setProperty("Image", "hud/weapon_indicator");
     pWeaponContainer->setPosition(UVector2(UDim(0, 0), UDim(0.908854, 0)));
     pWeaponContainer->setSize(USize(UDim(0.0683594, 0), UDim(0.091145833, 0)));
-    
-    
+
+
     m_pWeapon = pMain->createChild("OgreTray/StaticImage", "weapon");
     m_pWeapon->setProperty("FrameEnabled", "False");
     m_pWeapon->setProperty("BackgroundEnabled", "True");

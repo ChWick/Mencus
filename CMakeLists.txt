@@ -25,6 +25,6 @@ if(ANDROID)
 else()
   add_subdirectory(Game)
   add_subdirectory(FileConverter)
-  #add_subdirectory(MapEditor)
+  add_subdirectory(MapUpgrader)
 endif()
 
