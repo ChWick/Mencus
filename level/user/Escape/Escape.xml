@@ -1,4 +1,4 @@
-<map difficulty="easy" background="forest" sizex="20" sizey="75">
+<map difficulty="easy" background="forest" sizex="20" sizey="75" version="1">
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
         <row tiles="5 5 5 5 5 8 52 52 52 9 52 52 52 9 52 52 52 3 1 1 "/>
@@ -79,20 +79,20 @@
     <switches>
         <switch x="16" y="13" id="-995297964" type="0" flags="0" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="19" x="3" y="10"/>
-                <event type="change_tile" emitter="user" id="12" x="2" y="10"/>
+                <event type="change_tile" emitter="user" id="unset" x="3" y="10" tile="19"/>
+                <event type="change_tile" emitter="user" id="unset" x="2" y="10" tile="12"/>
             </events>
         </switch>
         <switch x="11" y="39" id="866683782" type="1" flags="2" activeTime="6">
             <events>
-                <event type="change_tile" emitter="user" id="2" x="14" y="45"/>
-                <event type="change_tile" emitter="user" id="51" x="14" y="46"/>
+                <event type="change_tile" emitter="user" id="unset" x="14" y="45" tile="2"/>
+                <event type="change_tile" emitter="user" id="unset" x="14" y="46" tile="51"/>
             </events>
         </switch>
         <switch x="11.5" y="63" id="-1828817672" type="0" flags="0" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="2" x="14" y="63"/>
-                <event type="change_tile" emitter="user" id="51" x="14" y="64"/>
+                <event type="change_tile" emitter="user" id="unset" x="14" y="63" tile="2"/>
+                <event type="change_tile" emitter="user" id="unset" x="14" y="64" tile="51"/>
             </events>
         </switch>
     </switches>

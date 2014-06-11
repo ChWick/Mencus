@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<map difficulty="easy" background="forest" sizex="16" sizey="12">
+<map difficulty="easy" background="forest" sizex="16" sizey="12" version="1">
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
         <row tiles="5 5 5 5 5 5 5 1 5 5 5 1 5 5 5 5 "/>

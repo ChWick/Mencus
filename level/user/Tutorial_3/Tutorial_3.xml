@@ -1,4 +1,4 @@
-<map difficulty="easy" name="Tutorial 3" description="In this tutorial you learn how to use keys and handle locked doors." tutorial="true" background="forest" sizex="16" sizey="12">
+<map difficulty="easy" name="Tutorial 3" description="In this tutorial you learn how to use keys and handle locked doors." tutorial="true" background="forest" sizex="16" sizey="12" version="1">
     <tiles invert="0">
         <row tiles="1 5 5 5 5 5 5 5 5 5 5 5 5 5 5 1 "/>
         <row tiles="4 2 2 2 2 49 2 2 2 43 2 2 2 2 2 3 "/>
@@ -14,10 +14,10 @@
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
     </tiles>
     <events>
-      <event type="message" emitter="create" title="msg_default_title" id="InitialMessageBox">
-	<page text="msg_start"/>
-	<page text="msg_pickup"/>
-      </event>
+        <event type="message" emitter="create" title="msg_default_title" id="InitialMessageBox">
+            <page text="msg_start"/>
+            <page text="msg_pickup"/>
+        </event>
     </events>
     <switches/>
     <endangeredTiles/>
@@ -27,15 +27,15 @@
     </enemies>
     <objects>
         <object x="8" y="1" id="Flag" type="6">
-	  <events>
-	    <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
-	  </events>
-	</object>
+            <events>
+                <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
+            </events>
+        </object>
         <object x="10.5" y="1" id="Object_685118022" type="3">
-	  <events>
-	    <event type="message" emitter="destroy" title="msg_default_title" text="msg_key_found"/>
-	  </events>
-	</object>
+            <events>
+                <event type="message" emitter="destroy" title="msg_default_title" text="msg_key_found"/>
+            </events>
+        </object>
         <object x="2.25" y="6" id="Object_-1952636240" type="5"/>
         <object x="8.5" y="6" id="Object_824938979" type="5"/>
         <object x="7.5" y="2" id="Object_-185075635" type="5"/>

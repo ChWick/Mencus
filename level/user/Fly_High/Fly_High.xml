@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<map difficulty="easy" background="" sizex="32" sizey="256">
+<map difficulty="easy" background="" sizex="32" sizey="256" version="1">
     <tiles invert="0">
         <row tiles="71 71 71 71 71 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 3 5 5 5 5 5 5 "/>
         <row tiles="23 23 23 23 23 71 71 71 71 71 71 53 53 53 62 55 55 55 55 61 71 71 71 71 71 10 2 2 2 2 22 2 "/>
@@ -262,28 +262,28 @@
     <switches>
         <switch type="1" id="switch_0" x="28.438" y="21.031" flags="0">
             <events>
-                <event emitter="user" id="75" repeat="infinite" type="change_tile" x="20" y="20"/>
+                <event emitter="user" id="unset" repeat="infinite" type="change_tile" x="20" y="20" tile="75"/>
             </events>
         </switch>
         <switch type="0" id="switch_1" x="15.813" y="46" flags="0">
             <events>
-                <event emitter="user" id="23" repeat="infinite" type="change_tile" x="11" y="47"/>
+                <event emitter="user" id="unset" repeat="infinite" type="change_tile" x="11" y="47" tile="23"/>
             </events>
         </switch>
         <switch type="1" id="switch_94" x="10.094" y="94" flags="0">
             <events>
-                <event emitter="user" id="2" repeat="infinite" type="change_tile" x="12" y="91"/>
+                <event emitter="user" id="unset" repeat="infinite" type="change_tile" x="12" y="91" tile="2"/>
             </events>
         </switch>
         <switch type="1" id="switch_106" x="15" y="106" flags="0">
             <events>
-                <event emitter="user" id="23" repeat="infinite" type="change_tile" x="27" y="109"/>
+                <event emitter="user" id="unset" repeat="infinite" type="change_tile" x="27" y="109" tile="23"/>
             </events>
         </switch>
         <switch type="1" id="switch_143" x="1" y="143" flags="0">
             <events>
-                <event emitter="user" id="2" repeat="infinite" type="change_tile" x="6" y="156"/>
-                <event emitter="user" id="51" repeat="infinite" type="change_tile" x="6" y="157"/>
+                <event emitter="user" id="unset" repeat="infinite" type="change_tile" x="6" y="156" tile="2"/>
+                <event emitter="user" id="unset" repeat="infinite" type="change_tile" x="6" y="157" tile="51"/>
             </events>
         </switch>
     </switches>
@@ -300,7 +300,7 @@
     <enemies>
         <enemy type="0" id="enemy_0" x="15" y="32" hp="1" direction="1" jumps="false">
             <events>
-                <event emitter="destroy" id="75" repeat="none" type="change_tile" x="24" y="31"/>
+                <event emitter="destroy" id="unset" repeat="none" type="change_tile" x="24" y="31" tile="75"/>
                 <event emitter="destroy" id="" repeat="none" title="msg_title_info" type="message">
                     <page text="msg_title_proceed"/>
                 </event>

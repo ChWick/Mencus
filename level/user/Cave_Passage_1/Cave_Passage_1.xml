@@ -1,4 +1,4 @@
-<map difficulty="easy" background="clouds" sizex="60" sizey="24">
+<map difficulty="easy" background="clouds" sizex="60" sizey="24" version="1">
     <tiles invert="0">
         <row tiles="53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 "/>
         <row tiles="53 53 53 53 53 53 53 53 53 53 53 53 53 53 18 17 17 17 17 17 17 17 19 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 "/>
@@ -29,10 +29,10 @@
         <switch x="2.21875" y="10" id="-1974926719" type="1" flags="5" activeTime="0"/>
         <switch x="52.5" y="12" id="1652354187" type="0" flags="0" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="15" x="55" y="19"/>
-                <event type="change_tile" emitter="user" id="2" x="55" y="18"/>
-                <event type="change_tile" emitter="user" id="2" x="55" y="17"/>
-                <event type="change_tile" emitter="user" id="8" x="55" y="16"/>
+                <event type="change_tile" emitter="user" id="unset" x="55" y="19" tile="15"/>
+                <event type="change_tile" emitter="user" id="unset" x="55" y="18" tile="2"/>
+                <event type="change_tile" emitter="user" id="unset" x="55" y="17" tile="2"/>
+                <event type="change_tile" emitter="user" id="unset" x="55" y="16" tile="8"/>
             </events>
         </switch>
         <switch x="49.96875" y="3" id="1651659858" type="0" flags="4" activeTime="0"/>

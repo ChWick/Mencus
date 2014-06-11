@@ -1,4 +1,4 @@
-<map difficulty="easy" background="forest" sizex="16" sizey="12">
+<map difficulty="easy" background="forest" sizex="16" sizey="12" version="1">
     <tiles invert="0">
         <row tiles="24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 "/>
         <row tiles="27 27 27 27 27 27 31 27 27 31 27 31 31 27 27 27 "/>
@@ -19,37 +19,37 @@
     <enemies/>
     <objects>
         <object x="14" y="1" id="Flag" type="6">
-	  <events>
-	    <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
-	  </events>
-	</object>
+            <events>
+                <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
+            </events>
+        </object>
     </objects>
     <events>
-      <event type="message" emitter="create" title="msg_default_title" id="InitialMessageBox">
-	<page text="msg_start"/>
-	<page text="msg_move"/>
-      </event>
-      <event type="inject_message" emitter="message_page_chagned" src_id="InitialMessageBox" src_page="1" msg_type="toggle_touch_input_blink" msg_button="left" msg_enabled="true"/>
-      <event type="inject_message" emitter="message_page_chagned" src_id="InitialMessageBox" src_page="1" msg_type="toggle_touch_input_blink" msg_button="right" msg_enabled="true"/>
+        <event type="message" emitter="create" title="msg_default_title" id="InitialMessageBox">
+            <page text="msg_start"/>
+            <page text="msg_move"/>
+        </event>
+        <event type="inject_message" emitter="message_page_chagned" src_id="InitialMessageBox" src_page="1" msg_type="toggle_touch_input_blink" msg_button="left" msg_enabled="true"/>
+        <event type="inject_message" emitter="message_page_chagned" src_id="InitialMessageBox" src_page="1" msg_type="toggle_touch_input_blink" msg_button="right" msg_enabled="true"/>
     </events>
     <player x="0.5" y="1" hp="10" direction="1"/>
     <camera posx="-10.165659" posy="-12"/>
     <region x="5" y="1" sizex="2" sizey="14">
-      <events>
-	<event type="message" emitter="collision" repeat="none" src_id="Player" title="msg_default_title">
-	  <page text="msg_obstacle"/>
-	</event>
-	<event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="jump" msg_enabled="true"/>
-	<event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="left" msg_enabled="false"/>
-	<event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="right" msg_enabled="false"/>
-      </events>
+        <events>
+            <event type="message" emitter="collision" repeat="none" src_id="Player" title="msg_default_title">
+                <page text="msg_obstacle"/>
+            </event>
+            <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="jump" msg_enabled="true"/>
+            <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="left" msg_enabled="false"/>
+            <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="right" msg_enabled="false"/>
+        </events>
     </region>
     <region x="12" y="1" sizex="2" sizey="14">
-      <events>
-	<event type="message" emitter="collision" repeat="none" src_id="Player" title="msg_default_title">
-	  <page text="msg_end"/>
-	</event>
-	<event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="jump" msg_enabled="false"/>
-      </events>
+        <events>
+            <event type="message" emitter="collision" repeat="none" src_id="Player" title="msg_default_title">
+                <page text="msg_end"/>
+            </event>
+            <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="jump" msg_enabled="false"/>
+        </events>
     </region>
 </map>

@@ -1,4 +1,4 @@
-<map difficulty="hard" background="fog" sizex="54" sizey="100">
+<map difficulty="hard" background="fog" sizex="54" sizey="100" version="1">
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 5 5 5 5 5 5 1 1 1 1 1 1 1 4 52 52 52 52 52 52 52 52 52 52 3 4 2 2 "/>
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 4 2 2 2 2 2 31 3 1 1 1 1 1 1 4 2 2 2 2 2 2 2 2 2 2 3 4 2 2 "/>
@@ -104,63 +104,63 @@
     <switches>
         <switch x="11.15625" y="13" id="925238586" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="22" x="4" y="17"/>
-                <event type="change_tile" emitter="user" id="21" x="4" y="18"/>
+                <event type="change_tile" emitter="user" id="unset" x="4" y="17" tile="22"/>
+                <event type="change_tile" emitter="user" id="unset" x="4" y="18" tile="21"/>
                 <event type="toggle" emitter="user" id="0" initial="false"/>
                 <event type="toggle" emitter="user" id="1" initial="true"/>
             </events>
         </switch>
         <switch x="34.03125" y="20" id="-1352428775" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="16" x="3" y="28"/>
-                <event type="change_tile" emitter="user" id="16" x="6" y="28"/>
-                <event type="change_tile" emitter="user" id="16" x="9" y="28"/>
-                <event type="change_tile" emitter="user" id="16" x="12" y="30"/>
-                <event type="change_tile" emitter="user" id="16" x="16" y="29"/>
-                <event type="change_tile" emitter="user" id="16" x="18" y="28"/>
-                <event type="change_tile" emitter="user" id="16" x="21" y="28"/>
-                <event type="change_tile" emitter="user" id="16" x="24" y="29"/>
+                <event type="change_tile" emitter="user" id="unset" x="3" y="28" tile="16"/>
+                <event type="change_tile" emitter="user" id="unset" x="6" y="28" tile="16"/>
+                <event type="change_tile" emitter="user" id="unset" x="9" y="28" tile="16"/>
+                <event type="change_tile" emitter="user" id="unset" x="12" y="30" tile="16"/>
+                <event type="change_tile" emitter="user" id="unset" x="16" y="29" tile="16"/>
+                <event type="change_tile" emitter="user" id="unset" x="18" y="28" tile="16"/>
+                <event type="change_tile" emitter="user" id="unset" x="21" y="28" tile="16"/>
+                <event type="change_tile" emitter="user" id="unset" x="24" y="29" tile="16"/>
             </events>
         </switch>
         <switch x="26.75" y="1" id="959637302" type="0" flags="0" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="2" x="33" y="5"/>
-                <event type="change_tile" emitter="user" id="51" x="33" y="6"/>
+                <event type="change_tile" emitter="user" id="unset" x="33" y="5" tile="2"/>
+                <event type="change_tile" emitter="user" id="unset" x="33" y="6" tile="51"/>
             </events>
         </switch>
         <switch x="38.34375" y="29" id="832861198" type="0" flags="0" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="22" x="22" y="36"/>
-                <event type="change_tile" emitter="user" id="21" x="22" y="37"/>
+                <event type="change_tile" emitter="user" id="unset" x="22" y="36" tile="22"/>
+                <event type="change_tile" emitter="user" id="unset" x="22" y="37" tile="21"/>
             </events>
         </switch>
         <switch x="21.59375" y="42" id="-1979414688" type="0" flags="0" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="49" x="20" y="36"/>
-                <event type="change_tile" emitter="user" id="50" x="20" y="37"/>
+                <event type="change_tile" emitter="user" id="unset" x="20" y="36" tile="49"/>
+                <event type="change_tile" emitter="user" id="unset" x="20" y="37" tile="50"/>
             </events>
         </switch>
         <switch x="7.5625" y="47" id="545293945" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="51" x="13" y="48"/>
-                <event type="change_tile" emitter="user" id="2" x="13" y="47"/>
+                <event type="change_tile" emitter="user" id="unset" x="13" y="48" tile="51"/>
+                <event type="change_tile" emitter="user" id="unset" x="13" y="47" tile="2"/>
             </events>
         </switch>
         <switch x="36.53125" y="55" id="1564674544" type="0" flags="4" activeTime="0"/>
         <switch x="34.65625" y="14" id="2018984924" type="1" flags="5" activeTime="0"/>
         <switch x="12.34375" y="36" id="-1158708791" type="0" flags="0" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="16" x="5" y="40"/>
+                <event type="change_tile" emitter="user" id="unset" x="5" y="40" tile="16"/>
             </events>
         </switch>
         <switch x="1.34375" y="36" id="1420250112" type="0" flags="0" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="2" x="3" y="42"/>
+                <event type="change_tile" emitter="user" id="unset" x="3" y="42" tile="2"/>
             </events>
         </switch>
         <switch x="27.40625" y="72" id="1300601358" type="0" flags="0" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="2" x="34" y="73"/>
+                <event type="change_tile" emitter="user" id="unset" x="34" y="73" tile="2"/>
             </events>
         </switch>
         <switch x="31.3125" y="76" id="1122721013" type="1" flags="5" activeTime="0"/>
@@ -168,16 +168,16 @@
         <switch x="26.96875" y="85" id="1971062965" type="1" flags="5" activeTime="0"/>
         <switch x="41.40625" y="55" id="-64238379" type="0" flags="0" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="22" x="37" y="59"/>
-                <event type="change_tile" emitter="user" id="21" x="37" y="60"/>
+                <event type="change_tile" emitter="user" id="unset" x="37" y="59" tile="22"/>
+                <event type="change_tile" emitter="user" id="unset" x="37" y="60" tile="21"/>
             </events>
         </switch>
         <switch x="49.25" y="91" id="-335060345" type="0" flags="0" activeTime="0">
             <events>
-                <event type="change_tile" emitter="user" id="2" x="47" y="91"/>
-                <event type="change_tile" emitter="user" id="51" x="47" y="92"/>
-                <event type="change_tile" emitter="user" id="2" x="48" y="91"/>
-                <event type="change_tile" emitter="user" id="2" x="48" y="92"/>
+                <event type="change_tile" emitter="user" id="unset" x="47" y="91" tile="2"/>
+                <event type="change_tile" emitter="user" id="unset" x="47" y="92" tile="51"/>
+                <event type="change_tile" emitter="user" id="unset" x="48" y="91" tile="2"/>
+                <event type="change_tile" emitter="user" id="unset" x="48" y="92" tile="2"/>
             </events>
         </switch>
     </switches>

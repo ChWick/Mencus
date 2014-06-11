@@ -1,4 +1,4 @@
-<map difficulty="medium" tutorial="false" background="fog" sizex="17" sizey="24">
+<map difficulty="medium" tutorial="false" background="fog" sizex="17" sizey="24" version="1">
     <player x="1" y="14" id="Player" type="0" hp="10" direction="1"/>
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>

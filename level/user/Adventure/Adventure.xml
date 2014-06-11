@@ -1,4 +1,4 @@
-<map difficulty="easy" tutorial="false" background="forest" sizex="40" sizey="60">
+<map difficulty="easy" tutorial="false" background="forest" sizex="40" sizey="60" version="1">
     <player x="1" y="1" id="Player" type="0" hp="10" direction="1"/>
     <tiles invert="0">
         <row tiles="71 71 71 71 71 71 71 71 71 71 53 53 53 53 53 53 53 71 71 71 71 53 53 53 3 1 1 1 4 53 53 53 53 53 53 53 53 53 53 53 "/>
@@ -65,22 +65,22 @@
     <switches>
         <switch x="26" y="4" id="Switch_357571488" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" id="23" emitter="user" repeat="infinite" x="18" y="4"/>
-                <event type="change_tile" id="23" emitter="user" repeat="infinite" x="19" y="4"/>
-                <event type="change_tile" id="107" emitter="user" repeat="infinite" x="14" y="22"/>
-                <event type="change_tile" id="107" emitter="user" repeat="infinite" x="14" y="23"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="18" y="4" tile="23"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="19" y="4" tile="23"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="14" y="22" tile="107"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="14" y="23" tile="107"/>
             </events>
         </switch>
         <switch x="12.5" y="1" id="Switch_1927702194" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" id="23" emitter="user" repeat="infinite" x="32" y="10"/>
-                <event type="change_tile" id="50" emitter="user" repeat="infinite" x="27" y="5"/>
-                <event type="change_tile" id="49" emitter="user" repeat="infinite" x="27" y="4"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="32" y="10" tile="23"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="27" y="5" tile="50"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="27" y="4" tile="49"/>
             </events>
         </switch>
         <switch x="2.5" y="22" id="Switch_-520504638" type="0" flags="0" activeTime="0">
             <events>
-                <event type="change_tile" id="119" emitter="user" repeat="infinite" x="3" y="28"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="3" y="28" tile="119"/>
             </events>
         </switch>
     </switches>

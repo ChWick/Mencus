@@ -1,4 +1,4 @@
-<map difficulty="easy" tutorial="true" background="forest" sizex="16" sizey="12">
+<map difficulty="easy" tutorial="true" background="forest" sizex="16" sizey="12" version="1">
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
         <row tiles="5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 "/>
@@ -14,32 +14,32 @@
         <row tiles="23 23 23 44 44 44 44 44 44 44 23 23 23 23 23 23 "/>
     </tiles>
     <events>
-      <event type="message" emitter="create" title="msg_default_title" id="InitialMessageBox">
-	<page text="msg_start"/>
-	<page text="msg_attack"/>
-      </event>
-      <event type="inject_message" emitter="message_page_chagned" src_id="InitialMessageBox" src_page="1" msg_type="toggle_touch_input_blink" msg_button="attack" msg_enabled="true"/>
+        <event type="message" emitter="create" title="msg_default_title" id="InitialMessageBox">
+            <page text="msg_start"/>
+            <page text="msg_attack"/>
+        </event>
+        <event type="inject_message" emitter="message_page_chagned" src_id="InitialMessageBox" src_page="1" msg_type="toggle_touch_input_blink" msg_button="attack" msg_enabled="true"/>
     </events>
     <switches/>
     <endangeredTiles/>
     <links/>
     <enemies>
         <enemy direction="1" jumps="0" hp="2" x="12" y="2" id="SingleEnemy" type="1">
-	  <events>
-	    <event type="message" emitter="destroy" title="msg_default_title">
-	      <page text="msg_killed"/>
-	      <page text="msg_end"/>
-	    </event>
-<event type="inject_message" emitter="destroy" msg_type="toggle_touch_input_blink" msg_button="attack" msg_enabled="false"/>
-	  </events>
-	</enemy>
+            <events>
+                <event type="message" emitter="destroy" title="msg_default_title">
+                    <page text="msg_killed"/>
+                    <page text="msg_end"/>
+                </event>
+                <event type="inject_message" emitter="destroy" msg_type="toggle_touch_input_blink" msg_button="attack" msg_enabled="false"/>
+            </events>
+        </enemy>
     </enemies>
     <objects>
         <object x="15" y="2" id="Flag" type="6">
-	  <events>
-	    <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
-	  </events>
-	</object>
+            <events>
+                <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
+            </events>
+        </object>
         <object x="10.75" y="4.5" id="Object_685118022" type="5"/>
         <object x="3.75" y="4.5" id="Object_-1952636240" type="5"/>
         <object x="7.25" y="4.5" id="Object_824938979" type="5"/>
