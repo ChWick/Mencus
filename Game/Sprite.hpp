@@ -21,7 +21,7 @@
 #define SPRITE_H
 
 #include <Ogre.h>
-#include "Entity.hpp"
+#include "PhysicsEntity.hpp"
 #include "ogre2d-main.hpp"
 #include <vector>
 #include "SpriteTexture.hpp"
@@ -33,7 +33,7 @@ class CSpriteTransformPipeline;
 class CMap;
 
 
-class CSprite : public CEntity {
+class CSprite : public CPhysicsEntity {
 protected:
   const CSpriteTransformPipeline *m_pTransformPipeline; //!<
   Ogre2dManager *m_pSpriteManager;			//
