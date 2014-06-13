@@ -83,6 +83,8 @@ void CObject::constructor_impl() {
   case OT_KEY:
     addTextureToAnimationSequence(0, getOtherObjectsTexturePath("key"));
     m_bIsPickable = true;
+    m_bbRelativeBoundingBox.setSize(m_vSize * 0.7);
+    m_bbRelativeBoundingBox.setPosition(m_vSize * 0.15);
     break;
   case OT_SCRATCH:
     addTextureToAnimationSequence(0, getOtherObjectsTexturePath("scratch"));
@@ -99,6 +101,8 @@ void CObject::constructor_impl() {
     throw Ogre::Exception(Ogre::Exception::ERR_INVALIDPARAMS, "Object type '" + Ogre::StringConverter::toString(m_uiType) + "' is unknown!", __FILE__);
     break;
   }
+
+  setSleeping(getGravity() == 0);
 }
 Ogre::String CObject::getPreviewImageName(int iObjectType) {
   switch (iObjectType) {
