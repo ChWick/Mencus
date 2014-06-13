@@ -165,67 +165,15 @@ void CShot::launch(const Ogre::Vector2 &vInitialSpeed, unsigned int uiNewAnimati
   changeCurrentAnimationSequence(uiNewAnimationSequence);
 }
 void CShot::update(Ogre::Real tpf) {
-  //setSleeping(m_eState == SS_LAUNCHED);
   if (m_eState == SS_LAUNCHED) {
     // change the position and speed
-    //if (m_bAffectedByGravity) {
-    //  m_vSpeed.y += c_fGravity * tpf;
-    //}
-
     if (m_uiType == ST_BOLT || m_uiType == ST_SKULL || m_uiType == ST_COLUMN) {
-      //m_vPosition += m_vSpeed * tpf;
-
-      // check for collisions
-      //if (m_Map.hitsTile(CTile::TF_UNPASSABLE, getWorldBoundingBox())) {
-        // create
-        //if (m_uiType == ST_BOLT) new CExplosion(m_Map, getCenter(), CExplosion::ET_BOLT);
-        //else if (m_uiType == ST_SKULL) new CExplosion(m_Map, getCenter(), CExplosion::ET_SKULL);
-
-        //destroy();
-      //}
-      //if (m_Map.outOfMap(getWorldBoundingBox())) {
-        // just destroy it
-        //destroy();
-      //}
-
       hit();
     } else if (m_uiType == ST_BOMB) {
       m_fTimer += tpf;
       if (m_fTimer > BOMB_EXPLOSION_TIME) {
         m_Map.createExplosion(getCenter(), BOMB_EXPLOSION_RADIUS);
         destroy();
-      } else {
-	/*  bool bOnGround = false;
-        CBoundingBox2d bbOverlap;
-        m_vPosition.x += m_vSpeed.x * tpf;
-        unsigned int uiCCD = m_Map.hitsTile(CTile::TF_UNPASSABLE,
-                                              getWorldBoundingBox(),
-                                              &bbOverlap);
-
-        if (uiCCD & CCD_RIGHT && m_vSpeed.x > 0) {
-          m_vPosition.x -= m_vSpeed.x * tpf;
-          m_vSpeed.x *= -0.5;
-        } else if (uiCCD & CCD_LEFT && m_vSpeed.x < 0) {
-          m_vPosition.x -= m_vSpeed.x * tpf;
-          m_vSpeed.x *= -0.5;
-        }
-
-        m_vPosition.y += m_vSpeed.y * tpf;
-        uiCCD = m_Map.hitsTile(CTile::TF_UNPASSABLE,
-                                 getWorldBoundingBox(),
-                                 &bbOverlap);
-        if (uiCCD & CCD_BOTTOM && m_vSpeed.y < 0) {
-          m_vPosition.y -= m_vSpeed.y * tpf;
-          m_vSpeed.y *= -0.5;
-          bOnGround = true;
-        } else if (uiCCD & CCD_TOP && m_vSpeed.y > 0) {
-          m_vPosition.y -= m_vSpeed.y * tpf;
-          m_vSpeed.y *= -0.5;
-        }
-
-        if (bOnGround) {
-          m_vSpeed.x -= m_vSpeed.x * 10 * tpf;
-	  }*/
       }
     }
   }
