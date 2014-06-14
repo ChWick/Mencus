@@ -1,4 +1,4 @@
-<map difficulty="easy" tutorial="false" background="forest" sizex="120" sizey="30" version="1">
+<map difficulty="easy" tutorial="false" background="forest" sizex="120" sizey="30" version="2">
     <player x="26" y="12" id="Player" type="0" hp="10" direction="1"/>
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
@@ -130,18 +130,18 @@
     </links>
     <enemies/>
     <objects>
-        <object x="31" y="12" id="Flag" type="6">
+        <object x="31" y="12" id="Flag" type="6" phy_gravity="0">
             <events>
                 <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
             </events>
         </object>
-        <object x="1.5" y="25" id="Object_685118022" type="3"/>
-        <object x="44" y="10" id="Object_824938979" type="3"/>
-        <object x="44" y="6" id="Object_-185075635" type="3"/>
-        <object x="44" y="2" id="Object_997389812" type="3"/>
-        <object x="111" y="21" id="Object_1807130335" type="3"/>
-        <object x="91" y="12" id="Object_-1255430504" type="3"/>
-        <object x="66" y="12" id="Object_1004844895" type="3"/>
+        <object x="1.5" y="25" id="Object_685118022" type="3" phy_gravity="0"/>
+        <object x="44" y="10" id="Object_824938979" type="3" phy_gravity="0"/>
+        <object x="44" y="6" id="Object_-185075635" type="3" phy_gravity="0"/>
+        <object x="44" y="2" id="Object_997389812" type="3" phy_gravity="0"/>
+        <object x="111" y="21" id="Object_1807130335" type="3" phy_gravity="0"/>
+        <object x="91" y="12" id="Object_-1255430504" type="3" phy_gravity="0"/>
+        <object x="66" y="12" id="Object_1004844895" type="3" phy_gravity="0"/>
     </objects>
     <exit type="region" posx="0" posy="0" sizex="0" sizey="0" id=""/>
     <camera/>

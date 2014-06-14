@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<map difficulty="easy" background="forest" sizex="16" sizey="12" version="1">
+<map difficulty="easy" background="forest" sizex="16" sizey="12" version="2">
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
         <row tiles="5 5 5 5 5 5 5 1 5 5 5 1 5 5 5 5 "/>
@@ -25,24 +25,24 @@
     <links/>
     <enemies/>
     <objects>
-        <object type="6" id="Flag" x="9" y="2">
+        <object type="6" id="Flag" x="9" y="2" phy_gravity="0">
             <events>
                 <event emitter="collision" id="" msg_type="exit_reached" repeat="none" src_id="Player" type="inject_message"/>
             </events>
         </object>
-        <object type="5" id="Object_685118022" x="10" y="3.6875"/>
-        <object type="5" id="Object_-1952636240" x="3.75" y="4.5"/>
-        <object type="5" id="Object_824938979" x="8.5625" y="3.625"/>
-        <object type="5" id="Object_-185075635" x="0.75" y="4.5"/>
-        <object type="5" id="Object_997389812" x="13.75" y="4.5"/>
-        <object type="4" id="object" x="11" y="3.094"/>
-        <object type="4" id="object" x="11.0623" y="2.21875"/>
-        <object type="4" id="object" x="11.0943" y="2.6875"/>
-        <object type="0" id="object" x="4.5" y="2"/>
-        <object type="0" id="object" x="5" y="2"/>
-        <object type="0" id="object" x="3.5" y="2"/>
-        <object type="0" id="object" x="5.5" y="2"/>
-        <object type="0" id="object" x="4" y="2"/>
+        <object type="5" id="Object_685118022" x="10" y="3.6875" phy_gravity="0"/>
+        <object type="5" id="Object_-1952636240" x="3.75" y="4.5" phy_gravity="0"/>
+        <object type="5" id="Object_824938979" x="8.5625" y="3.625" phy_gravity="0"/>
+        <object type="5" id="Object_-185075635" x="0.75" y="4.5" phy_gravity="0"/>
+        <object type="5" id="Object_997389812" x="13.75" y="4.5" phy_gravity="0"/>
+        <object type="4" id="object" x="11" y="3.094" phy_gravity="0"/>
+        <object type="4" id="object" x="11.0623" y="2.21875" phy_gravity="0"/>
+        <object type="4" id="object" x="11.0943" y="2.6875" phy_gravity="0"/>
+        <object type="0" id="object" x="4.5" y="2" phy_gravity="0"/>
+        <object type="0" id="object" x="5" y="2" phy_gravity="0"/>
+        <object type="0" id="object" x="3.5" y="2" phy_gravity="0"/>
+        <object type="0" id="object" x="5.5" y="2" phy_gravity="0"/>
+        <object type="0" id="object" x="4" y="2" phy_gravity="0"/>
     </objects>
     <camera/>
     <events>

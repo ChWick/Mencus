@@ -1,4 +1,4 @@
-<map difficulty="easy" background="clouds" sizex="60" sizey="24" version="1">
+<map difficulty="easy" background="clouds" sizex="60" sizey="24" version="2">
     <tiles invert="0">
         <row tiles="53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 "/>
         <row tiles="53 53 53 53 53 53 53 53 53 53 53 53 53 53 18 17 17 17 17 17 17 17 19 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 "/>
@@ -57,9 +57,9 @@
         <enemy direction="-1" jumps="0" hp="1" x="12" y="17" id="357571488" type="0"/>
     </enemies>
     <objects>
-        <object x="24.59375" y="9" id="Object" type="3"/>
-        <object x="39" y="14" id="Object" type="3"/>
-        <object x="42.4375" y="18" id="Object" type="3"/>
+        <object x="24.59375" y="9" id="Object" type="3" phy_gravity="0"/>
+        <object x="39" y="14" id="Object" type="3" phy_gravity="0"/>
+        <object x="42.4375" y="18" id="Object" type="3" phy_gravity="0"/>
     </objects>
     <exit type="region" posx="59" posy="0" sizex="1" sizey="15" id=""/>
     <player x="3.0625" y="18" id="1401494899" type="0" hp="10" direction="1"/>

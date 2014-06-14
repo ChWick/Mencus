@@ -1,4 +1,4 @@
-<map difficulty="easy" tutorial="false" background="forest" sizex="40" sizey="60" version="1">
+<map difficulty="easy" tutorial="false" background="forest" sizex="40" sizey="60" version="2">
     <player x="1" y="1" id="Player" type="0" hp="10" direction="1"/>
     <tiles invert="0">
         <row tiles="71 71 71 71 71 71 71 71 71 71 53 53 53 53 53 53 53 71 71 71 71 53 53 53 3 1 1 1 4 53 53 53 53 53 53 53 53 53 53 53 "/>
@@ -94,12 +94,12 @@
         <enemy direction="1" jumps="0" hp="2" x="7.5" y="46" id="Enemy_-2145596010" type="1"/>
     </enemies>
     <objects>
-        <object x="36" y="5" id="Object_-1210297291" type="3"/>
-        <object x="17" y="1" id="Object_-1557125704" type="3"/>
-        <object x="23" y="18" id="Object_-1979414688" type="3"/>
-        <object x="38" y="43" id="Object_2124639787" type="3"/>
-        <object x="36" y="52" id="Object_454233500" type="3"/>
-        <object x="4" y="46" id="Object_1323602329" type="6">
+        <object x="36" y="5" id="Object_-1210297291" type="3" phy_gravity="0"/>
+        <object x="17" y="1" id="Object_-1557125704" type="3" phy_gravity="0"/>
+        <object x="23" y="18" id="Object_-1979414688" type="3" phy_gravity="0"/>
+        <object x="38" y="43" id="Object_2124639787" type="3" phy_gravity="0"/>
+        <object x="36" y="52" id="Object_454233500" type="3" phy_gravity="0"/>
+        <object x="4" y="46" id="Object_1323602329" type="6" phy_gravity="0">
             <events>
                 <event type="inject_message" id="Event1847320612" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
             </events>

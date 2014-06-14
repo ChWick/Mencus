@@ -1,4 +1,4 @@
-<map difficulty="hard" background="forest" sizex="40" sizey="130" version="1">
+<map difficulty="hard" background="forest" sizex="40" sizey="130" version="2">
     <tiles invert="0">
         <row tiles="53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 1 1 1 53 53 53 53 53 53 53 13 6 6 6 6 6 6 6 14 53 "/>
         <row tiles="53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 5 5 5 53 53 53 53 53 53 53 3 1 5 5 5 5 5 5 4 53 "/>
@@ -202,34 +202,34 @@
         <enemy direction="1" jumps="0" hp="4" x="19" y="78" id="-1257795640" type="1"/>
     </enemies>
     <objects>
-        <object x="12" y="13" id="Object" type="3"/>
-        <object x="20.5" y="2" id="Object" type="3"/>
-        <object x="33.75" y="33" id="Object" type="5"/>
-        <object x="34.75" y="23" id="Object" type="5"/>
-        <object x="29.75" y="35" id="Object" type="5"/>
-        <object x="33.75" y="3" id="Object" type="5"/>
-        <object x="36.75" y="3" id="Object" type="5"/>
-        <object x="20.75" y="2.5" id="Object" type="5"/>
-        <object x="36.75" y="11.5" id="Object" type="5"/>
-        <object x="8.5" y="34" id="Object" type="3"/>
-        <object x="5.1500001" y="43.325001" id="Object" type="3"/>
-        <object x="31" y="41" id="Object" type="1"/>
-        <object x="36.5" y="73" id="Object" type="3"/>
-        <object x="22.15" y="72.324997" id="Object" type="3"/>
-        <object x="24.25" y="71.5" id="Object" type="5"/>
-        <object x="21.25" y="66" id="Object" type="5"/>
-        <object x="22.25" y="70.5" id="Object" type="5"/>
-        <object x="17.25" y="67.5" id="Object" type="5"/>
-        <object x="16" y="71" id="Object" type="0"/>
-        <object x="17" y="71" id="Object" type="0"/>
-        <object x="16.5" y="71" id="Object" type="0"/>
-        <object x="21" y="74" id="Object" type="4"/>
-        <object x="21" y="75" id="Object" type="4"/>
-        <object x="21" y="74.5" id="Object" type="4"/>
-        <object x="17.5" y="71" id="Object" type="0"/>
-        <object x="18" y="71" id="Object" type="0"/>
-        <object x="19" y="71" id="Object" type="0"/>
-        <object x="18.5" y="71" id="Object" type="0"/>
+        <object x="12" y="13" id="Object" type="3" phy_gravity="0"/>
+        <object x="20.5" y="2" id="Object" type="3" phy_gravity="0"/>
+        <object x="33.75" y="33" id="Object" type="5" phy_gravity="0"/>
+        <object x="34.75" y="23" id="Object" type="5" phy_gravity="0"/>
+        <object x="29.75" y="35" id="Object" type="5" phy_gravity="0"/>
+        <object x="33.75" y="3" id="Object" type="5" phy_gravity="0"/>
+        <object x="36.75" y="3" id="Object" type="5" phy_gravity="0"/>
+        <object x="20.75" y="2.5" id="Object" type="5" phy_gravity="0"/>
+        <object x="36.75" y="11.5" id="Object" type="5" phy_gravity="0"/>
+        <object x="8.5" y="34" id="Object" type="3" phy_gravity="0"/>
+        <object x="5.1500001" y="43.325001" id="Object" type="3" phy_gravity="0"/>
+        <object x="31" y="41" id="Object" type="1" phy_gravity="0"/>
+        <object x="36.5" y="73" id="Object" type="3" phy_gravity="0"/>
+        <object x="22.15" y="72.324997" id="Object" type="3" phy_gravity="0"/>
+        <object x="24.25" y="71.5" id="Object" type="5" phy_gravity="0"/>
+        <object x="21.25" y="66" id="Object" type="5" phy_gravity="0"/>
+        <object x="22.25" y="70.5" id="Object" type="5" phy_gravity="0"/>
+        <object x="17.25" y="67.5" id="Object" type="5" phy_gravity="0"/>
+        <object x="16" y="71" id="Object" type="0" phy_gravity="0"/>
+        <object x="17" y="71" id="Object" type="0" phy_gravity="0"/>
+        <object x="16.5" y="71" id="Object" type="0" phy_gravity="0"/>
+        <object x="21" y="74" id="Object" type="4" phy_gravity="0"/>
+        <object x="21" y="75" id="Object" type="4" phy_gravity="0"/>
+        <object x="21" y="74.5" id="Object" type="4" phy_gravity="0"/>
+        <object x="17.5" y="71" id="Object" type="0" phy_gravity="0"/>
+        <object x="18" y="71" id="Object" type="0" phy_gravity="0"/>
+        <object x="19" y="71" id="Object" type="0" phy_gravity="0"/>
+        <object x="18.5" y="71" id="Object" type="0" phy_gravity="0"/>
     </objects>
     <exit type="region" posx="17" posy="123" sizex="1" sizey="8" id=""/>
     <player x="0.5" y="25" id="-1401250973" type="0" hp="10" direction="1"/>

@@ -1,4 +1,4 @@
-<map difficulty="easy" tutorial="true" background="forest" sizex="16" sizey="12" version="1">
+<map difficulty="easy" tutorial="true" background="forest" sizex="16" sizey="12" version="2">
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
         <row tiles="5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 "/>
@@ -35,16 +35,16 @@
         </enemy>
     </enemies>
     <objects>
-        <object x="15" y="2" id="Flag" type="6">
+        <object x="15" y="2" id="Flag" type="6" phy_gravity="0">
             <events>
                 <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
             </events>
         </object>
-        <object x="10.75" y="4.5" id="Object_685118022" type="5"/>
-        <object x="3.75" y="4.5" id="Object_-1952636240" type="5"/>
-        <object x="7.25" y="4.5" id="Object_824938979" type="5"/>
-        <object x="0.75" y="4.5" id="Object_-185075635" type="5"/>
-        <object x="13.75" y="4.5" id="Object_997389812" type="5"/>
+        <object x="10.75" y="4.5" id="Object_685118022" type="5" phy_gravity="0"/>
+        <object x="3.75" y="4.5" id="Object_-1952636240" type="5" phy_gravity="0"/>
+        <object x="7.25" y="4.5" id="Object_824938979" type="5" phy_gravity="0"/>
+        <object x="0.75" y="4.5" id="Object_-185075635" type="5" phy_gravity="0"/>
+        <object x="13.75" y="4.5" id="Object_997389812" type="5" phy_gravity="0"/>
     </objects>
     <player x="0.5" y="2" id="Player" type="0" hp="10" direction="1"/>
     <camera posx="-2.5889721" posy="-6.5466638"/>

@@ -1,4 +1,4 @@
-<map difficulty="easy" background="forest" sizex="16" sizey="12" version="1">
+<map difficulty="easy" background="forest" sizex="16" sizey="12" version="2">
     <tiles invert="0">
         <row tiles="24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 "/>
         <row tiles="27 27 27 27 27 27 31 27 27 31 27 31 31 27 27 27 "/>
@@ -18,7 +18,7 @@
     <links/>
     <enemies/>
     <objects>
-        <object x="14" y="1" id="Flag" type="6">
+        <object x="14" y="1" id="Flag" type="6" phy_gravity="0">
             <events>
                 <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
             </events>

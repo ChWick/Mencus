@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<map difficulty="easy" background="" sizex="32" sizey="256" version="1">
+<map difficulty="easy" background="" sizex="32" sizey="256" version="2">
     <tiles invert="0">
         <row tiles="71 71 71 71 71 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 53 3 5 5 5 5 5 5 "/>
         <row tiles="23 23 23 23 23 71 71 71 71 71 71 53 53 53 62 55 55 55 55 61 71 71 71 71 71 10 2 2 2 2 22 2 "/>
@@ -315,33 +315,33 @@
         <enemy type="1" id="enemy_146" x="2.094" y="146" hp="2" direction="1" jumps="false"/>
     </enemies>
     <objects>
-        <object type="3" id="key_0" x="14.344" y="1.031"/>
-        <object type="3" id="key_1" x="26.031" y="1"/>
-        <object type="3" id="key_2" x="4.688" y="25.406"/>
-        <object type="3" id="key_3" x="29" y="42.9375"/>
-        <object type="3" id="key_63" x="28.25" y="63"/>
-        <object type="3" id="object" x="26.375" y="71.938"/>
-        <object type="3" id="key_91" x="11" y="91"/>
-        <object type="3" id="key_147" x="28" y="150"/>
-        <object type="3" id="switch_156" x="0.469" y="156"/>
-        <object type="3" id="key_165" x="26.969" y="165"/>
-        <object type="3" id="key_243" x="30" y="243"/>
-        <object type="6" id="flag" x="13.062" y="244">
+        <object type="3" id="key_0" x="14.344" y="1.031" phy_gravity="0"/>
+        <object type="3" id="key_1" x="26.031" y="1" phy_gravity="0"/>
+        <object type="3" id="key_2" x="4.688" y="25.406" phy_gravity="0"/>
+        <object type="3" id="key_3" x="29" y="42.9375" phy_gravity="0"/>
+        <object type="3" id="key_63" x="28.25" y="63" phy_gravity="0"/>
+        <object type="3" id="object" x="26.375" y="71.938" phy_gravity="0"/>
+        <object type="3" id="key_91" x="11" y="91" phy_gravity="0"/>
+        <object type="3" id="key_147" x="28" y="150" phy_gravity="0"/>
+        <object type="3" id="switch_156" x="0.469" y="156" phy_gravity="0"/>
+        <object type="3" id="key_165" x="26.969" y="165" phy_gravity="0"/>
+        <object type="3" id="key_243" x="30" y="243" phy_gravity="0"/>
+        <object type="6" id="flag" x="13.062" y="244" phy_gravity="0">
             <events>
                 <event emitter="collision" id="exit" msg_type="exit_reached" repeat="infinite" src_id="Player" type="inject_message"/>
             </events>
         </object>
-        <object type="5" id="torch" x="5" y="230"/>
-        <object type="5" id="torch" x="9" y="230"/>
-        <object type="5" id="torch" x="12" y="240"/>
-        <object type="5" id="torch" x="13" y="230"/>
-        <object type="5" id="torch" x="16" y="86"/>
-        <object type="5" id="torch" x="19" y="94"/>
-        <object type="5" id="torch" x="6" y="92"/>
-        <object type="5" id="torch" x="20" y="81"/>
-        <object type="5" id="torch" x="27" y="89"/>
-        <object type="5" id="torch" x="17" y="107"/>
-        <object type="5" id="torch" x="23" y="107"/>
+        <object type="5" id="torch" x="5" y="230" phy_gravity="0"/>
+        <object type="5" id="torch" x="9" y="230" phy_gravity="0"/>
+        <object type="5" id="torch" x="12" y="240" phy_gravity="0"/>
+        <object type="5" id="torch" x="13" y="230" phy_gravity="0"/>
+        <object type="5" id="torch" x="16" y="86" phy_gravity="0"/>
+        <object type="5" id="torch" x="19" y="94" phy_gravity="0"/>
+        <object type="5" id="torch" x="6" y="92" phy_gravity="0"/>
+        <object type="5" id="torch" x="20" y="81" phy_gravity="0"/>
+        <object type="5" id="torch" x="27" y="89" phy_gravity="0"/>
+        <object type="5" id="torch" x="17" y="107" phy_gravity="0"/>
+        <object type="5" id="torch" x="23" y="107" phy_gravity="0"/>
     </objects>
     <camera/>
     <region id="region_at_enemy_0" x="9.5" y="32" sizex="0.5" sizey="3">

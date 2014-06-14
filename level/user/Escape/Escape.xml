@@ -1,4 +1,4 @@
-<map difficulty="easy" background="forest" sizex="20" sizey="75" version="1">
+<map difficulty="easy" background="forest" sizex="20" sizey="75" version="2">
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
         <row tiles="5 5 5 5 5 8 52 52 52 9 52 52 52 9 52 52 52 3 1 1 "/>
@@ -112,18 +112,18 @@
         <enemy direction="1" jumps="0" hp="8" x="17" y="63" id="997389812" type="1"/>
     </enemies>
     <objects>
-        <object x="18" y="3" id="Object" type="3"/>
-        <object x="1" y="22" id="Object" type="3"/>
-        <object x="13" y="28" id="Object" type="3"/>
-        <object x="17" y="39" id="Object" type="3"/>
-        <object x="8.5" y="49.5" id="Object" type="0"/>
-        <object x="8" y="47.5" id="Object" type="0"/>
-        <object x="8.25" y="51.25" id="Object" type="0"/>
-        <object x="17.15" y="50.325001" id="Object" type="3"/>
-        <object x="11.15" y="50.325001" id="Object" type="3"/>
-        <object x="8.25" y="45.75" id="Object" type="0"/>
-        <object x="6" y="52" id="Object" type="1"/>
-        <object x="6.5" y="52" id="Object" type="2"/>
+        <object x="18" y="3" id="Object" type="3" phy_gravity="0"/>
+        <object x="1" y="22" id="Object" type="3" phy_gravity="0"/>
+        <object x="13" y="28" id="Object" type="3" phy_gravity="0"/>
+        <object x="17" y="39" id="Object" type="3" phy_gravity="0"/>
+        <object x="8.5" y="49.5" id="Object" type="0" phy_gravity="0"/>
+        <object x="8" y="47.5" id="Object" type="0" phy_gravity="0"/>
+        <object x="8.25" y="51.25" id="Object" type="0" phy_gravity="0"/>
+        <object x="17.15" y="50.325001" id="Object" type="3" phy_gravity="0"/>
+        <object x="11.15" y="50.325001" id="Object" type="3" phy_gravity="0"/>
+        <object x="8.25" y="45.75" id="Object" type="0" phy_gravity="0"/>
+        <object x="6" y="52" id="Object" type="1" phy_gravity="0"/>
+        <object x="6.5" y="52" id="Object" type="2" phy_gravity="0"/>
     </objects>
     <exit type="region" posx="19" posy="72" sizex="1" sizey="2" id=""/>
     <player x="0.5" y="2" id="1840127448" type="0" hp="10" direction="1"/>
