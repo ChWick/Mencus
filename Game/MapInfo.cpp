@@ -26,7 +26,7 @@
 using namespace tinyxml2;
 using namespace XMLHelper;
 
-const unsigned int MAP_FILE_VERSION = 1;
+const unsigned int MAP_FILE_VERSION = 2;
 
 CMapInfo::CMapInfo()
   : m_sFileName("Newmap"),
