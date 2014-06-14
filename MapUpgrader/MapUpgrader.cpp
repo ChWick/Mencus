@@ -3,6 +3,7 @@
 #include <string>
 #include <tinyxml2.h>
 #include "FromNothingToVersion1.hpp"
+#include "FromVersion1To2.hpp"
 #include "UpgradeResult.hpp"
 
 using namespace std;
@@ -27,6 +28,10 @@ EUpgradeResult upgradeStep(XMLDocument &doc) {
     return v.run(doc);
   }
   else if (s == "1") {
+    FromVersion1To2 v;
+    return v.run(doc);
+  }
+  else if (s == "2") {
     return UPGRADE_FINISHED; // done
   }
 
