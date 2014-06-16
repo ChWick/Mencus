@@ -30,6 +30,8 @@ namespace EventEmitter {
   class CEmitter;
 };
 
+class CEntity;
+
 class CEvent {
 public:
   enum ETypes {
@@ -37,6 +39,7 @@ public:
     EVENT_TOGGLE,
     EVENT_MESSAGE,
     EVENT_INJECT_MESSAGE,
+    EVENT_CREATE,
   };
   static std::string toString(ETypes eEventType);
   static ETypes parseEventType(const std::string &sString);
@@ -46,11 +49,12 @@ private:
   const std::string m_sID;
 protected:
   CMap &m_Map;
+  CEntity &m_Owner;
   bool m_bStarted;
 
 protected:
-  CEvent(CMap &map, ETypes eType);
-  CEvent(CMap &map, ETypes eType, const tinyxml2::XMLElement *pElement);
+  CEvent(CMap &map, CEntity &owner, ETypes eType);
+  CEvent(CMap &map, CEntity &owner, ETypes eType, const tinyxml2::XMLElement *pElement);
 public:
   virtual ~CEvent();
   

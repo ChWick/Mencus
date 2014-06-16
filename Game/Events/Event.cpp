@@ -35,6 +35,8 @@ std::string CEvent::toString(ETypes eEventType) {
     return "toggle";
   case EVENT_INJECT_MESSAGE:
     return "inject_message";
+  case EVENT_CREATE:
+    return "create";
   }
   
   throw Ogre::Exception(0, "Event type " + Ogre::StringConverter::toString(eEventType) + " could not be converted to a string", __FILE__);
@@ -44,24 +46,27 @@ CEvent::ETypes CEvent::parseEventType(const std::string &sString) {
   else if (sString == "message") {return EVENT_MESSAGE;}
   else if (sString == "toggle") {return EVENT_TOGGLE;}
   else if (sString == "inject_message") {return EVENT_INJECT_MESSAGE;}
+  else if (sString == "create") {return EVENT_CREATE;}
   
   throw Ogre::Exception(0, "Event type " + sString + " could not be converted to a string", __FILE__);
 }
 
 
 
-CEvent::CEvent(CMap &map, ETypes eType)
+CEvent::CEvent(CMap &map, CEntity &owner, ETypes eType)
   : m_eType(eType),
     m_pEmitter(new EventEmitter::COnUser(NULL)),
     m_sID(CIDGenerator::nextID("Event")),
     m_Map(map),
+    m_Owner(owner),
     m_bStarted(false) {
 }
-CEvent::CEvent(CMap &map, ETypes eType, const tinyxml2::XMLElement *pElement)
+CEvent::CEvent(CMap &map, CEntity &owner, ETypes eType, const tinyxml2::XMLElement *pElement)
   : m_eType(eType),
     m_pEmitter(EventEmitter::CCreator::create(pElement)),
     m_sID(Attribute(pElement, "id", CIDGenerator::nextID("Event"))),
     m_Map(map),
+    m_Owner(owner),
     m_bStarted(BoolAttribute(pElement, "started", false)) {
 }
 CEvent::~CEvent() {

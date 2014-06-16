@@ -17,26 +17,44 @@
  * Mencus. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef _TOGGLE_EVENT_HPP_
-#define _TOGGLE_EVENT_HPP_
+#ifndef _CREATE_EVENT_HPP_
+#define _CREATE_EVENT_HPP_
 
 #include "Event.hpp"
+#include "../Message.hpp"
 
-class CToggleEvent : public CEvent {
+class CCreateEvent : public CEvent {
 private:
-  Ogre::String m_sEntityID;
-  bool m_bInitialState;
-public:
-  CToggleEvent(CMap &map, CEntity &owner);
-  CToggleEvent(CMap &map, CEntity &owner, const tinyxml2::XMLElement *pElem);
+  enum EGroups {
+    GR_ENEMY,
+    GR_OBJECT,
+  };
 
-  void init();
+  static EGroups parseGroup(const std::string &s);
+  static std::string toString(EGroups eGroup);
+
+  enum EPosition {
+    POS_ABSOLUTE,
+    POS_RELATIVE,
+  };
+
+  static EPosition parsePosition(const std::string &s);
+  static std::string toString(EPosition ePosition);
+
+  std::string m_sObjID;
+  EGroups m_eGroup;
+  unsigned int m_uiType;
+  EPosition m_ePosition;
+  Ogre::Vector2 m_vPosition;
+  
+public:
+  CCreateEvent(CMap &map, CEntity &owner);
+  CCreateEvent(CMap &map, CEntity &owner, const tinyxml2::XMLElement *pElem);
 
   void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
 
 protected:
-  void start_impl();
-  void stop_impl();
+  void start_impl(); 
 };
 
 #endif

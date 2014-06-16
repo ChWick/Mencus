@@ -276,7 +276,7 @@ void CEntity::readFromXMLElement(const tinyxml2::XMLElement *pElem) {
     for (const XMLElement *pEventElement = pEventsElement->FirstChildElement();
 	 pEventElement;
 	 pEventElement = pEventElement->NextSiblingElement()) {
-      m_lEvents.push_back(CEventCreator::create(m_Map, pEventElement));
+      m_lEvents.push_back(CEventCreator::create(m_Map, *this, pEventElement));
     }
   }
 }

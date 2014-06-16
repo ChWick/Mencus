@@ -24,11 +24,11 @@
 using namespace XMLHelper;
 
 
-CInjectMessageEvent::CInjectMessageEvent(CMap &map) 
-  : CEvent(map, EVENT_INJECT_MESSAGE) {
+CInjectMessageEvent::CInjectMessageEvent(CMap &map, CEntity &owner) 
+  : CEvent(map, owner, EVENT_INJECT_MESSAGE) {
 }
-CInjectMessageEvent::CInjectMessageEvent(CMap &map, const tinyxml2::XMLElement *pElem) 
-  : CEvent(map, EVENT_INJECT_MESSAGE, pElem) {
+CInjectMessageEvent::CInjectMessageEvent(CMap &map, CEntity &owner, const tinyxml2::XMLElement *pElem) 
+  : CEvent(map, owner, EVENT_INJECT_MESSAGE, pElem) {
   m_Message.setType(CMessage::parseMessageType(Attribute(pElem, "msg_type")));
 
   switch (m_Message.getType()) {

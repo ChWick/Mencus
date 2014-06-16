@@ -23,11 +23,12 @@
 #include <tinyxml2.h>
 
 class CEvent;
+class CEntity;
 class CMap;
 
 class CEventCreator {
 public:
-  static CEvent *create(CMap &map, const tinyxml2::XMLElement *pElem);
+  static CEvent *create(CMap &map, CEntity &owner, const tinyxml2::XMLElement *pElem);
 };
 
 #endif

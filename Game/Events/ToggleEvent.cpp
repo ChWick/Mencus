@@ -24,13 +24,13 @@
 
 using namespace XMLHelper;
 
-CToggleEvent::CToggleEvent(CMap &map) 
-  : CEvent(map, EVENT_TOGGLE),
+CToggleEvent::CToggleEvent(CMap &map, CEntity &owner) 
+  : CEvent(map, owner, EVENT_TOGGLE),
     m_sEntityID(""),
     m_bInitialState(true) {
 }
-CToggleEvent::CToggleEvent(CMap &map, const tinyxml2::XMLElement *pElem) 
-  : CEvent(map, EVENT_TOGGLE, pElem),
+CToggleEvent::CToggleEvent(CMap &map, CEntity &owner, const tinyxml2::XMLElement *pElem) 
+  : CEvent(map, owner, EVENT_TOGGLE, pElem),
     m_sEntityID(Attribute(pElem, "id", "")),
     m_bInitialState(BoolAttribute(pElem, "initial", true)) {
 }

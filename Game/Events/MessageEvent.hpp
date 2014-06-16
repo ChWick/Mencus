@@ -33,8 +33,8 @@ private:
 
   CHUDMessageBox *m_pMessageBox;
 public:
-  CMessageEvent(CMap &map);
-  CMessageEvent(CMap &map, const tinyxml2::XMLElement *pElem);
+  CMessageEvent(CMap &map, CEntity &owner);
+  CMessageEvent(CMap &map, CEntity &owner, const tinyxml2::XMLElement *pElem);
   ~CMessageEvent();
 
   void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
