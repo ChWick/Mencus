@@ -133,6 +133,8 @@ unsigned int CTile::getTileFlags(TileType tt) {
   case 121:
   case 122:
   case 26: uiFlags += TF_UNPASSABLE; break;
+  case TT_LINK_DOOR_CASTLE_BOT_CLOSED:
+  case TT_LINK_DOOR_CASTLE_TOP_CLOSED: uiFlags+= TF_PASSABLE | TF_LOCK; break;
   case TT_DOOR_WOOD_TOP_CLOSED:
   case TT_DOOR_WOOD_BOT_CLOSED:
   case 49:

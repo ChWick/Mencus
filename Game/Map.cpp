@@ -588,6 +588,14 @@ void CMap::unlock(unsigned int x, unsigned int y) {
     m_gridTiles(x, y) = new CTile(*this, Ogre::Vector2(x, y), TT_DOOR_WOOD_TOP_OPEN);
     m_gridTiles(x, y - 1) = new CTile(*this, Ogre::Vector2(x, y - 1), TT_DOOR_WOOD_BOT_OPEN);
   }
+  else if (id == TT_LINK_DOOR_CASTLE_TOP_CLOSED) {
+    changeTileType(x, y, 21);
+    changeTileType(x, y, 22);
+  }
+  else if (id == TT_LINK_DOOR_CASTLE_BOT_CLOSED) {
+    changeTileType(x, y, 22);
+    changeTileType(x, y + 1, 23);
+  }
 }
 void CMap::swapBoxes() {
   for (int x = m_gridTiles.getSizeX() - 1; x >= 0; --x) {
