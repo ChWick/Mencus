@@ -590,11 +590,11 @@ void CMap::unlock(unsigned int x, unsigned int y) {
   }
   else if (id == TT_LINK_DOOR_CASTLE_TOP_CLOSED) {
     changeTileType(x, y, 21);
-    changeTileType(x, y, 22);
+    changeTileType(x, y - 1, 22);
   }
   else if (id == TT_LINK_DOOR_CASTLE_BOT_CLOSED) {
     changeTileType(x, y, 22);
-    changeTileType(x, y + 1, 23);
+    changeTileType(x, y + 1, 21);
   }
 }
 void CMap::swapBoxes() {

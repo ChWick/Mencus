@@ -278,26 +278,24 @@ void CPlayer::update(Ogre::Real tpf) {
       }
 #endif // DEBUG_PLAYER_NO_COLLISION
 
-      if (fPenetration != 0) {
-        // check if collision with door
-        if (m_uiKeyCount > 0) {
-          Ogre::Real fLockPenetration = 0;
-          CTile *pTile(NULL);
-          if (m_vCurrentSpeed.x < 0) {
-            fLockPenetration = m_Map.hitsTile(CCD_LEFT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
-          } else if (m_vCurrentSpeed.x > 0) {
-            fLockPenetration += m_Map.hitsTile(CCD_RIGHT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
-          }
-          if (fLockPenetration != 0) {
-            m_uiKeyCount--;
-	    CHUD::getSingleton().setKeysCount(m_uiKeyCount);
-	    m_Statistics.uiUsedItems[Weapon::I_KEY]++;
-            m_Map.unlock(pTile->getMapPosX(), pTile->getMapPosY());
-          }
-        }
-        m_vPosition.x -= fPenetration;
-        m_vCurrentSpeed.x = 0;
+      // check if collision with lock
+      if (m_uiKeyCount > 0) {
+	Ogre::Real fLockPenetration = 0;
+	CTile *pTile(NULL);
+	if (m_vCurrentSpeed.x < 0) {
+	  fLockPenetration = m_Map.hitsTile(CCD_LEFT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
+	} else if (m_vCurrentSpeed.x > 0) {
+	  fLockPenetration += m_Map.hitsTile(CCD_RIGHT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
+	}
+	if (fLockPenetration != 0) {
+	  m_uiKeyCount--;
+	  CHUD::getSingleton().setKeysCount(m_uiKeyCount);
+	  m_Statistics.uiUsedItems[Weapon::I_KEY]++;
+	  m_Map.unlock(pTile->getMapPosX(), pTile->getMapPosY());
+	}
       }
+      m_vPosition.x -= fPenetration;
+      m_vCurrentSpeed.x = 0;
 
       if (m_Map.collidesWithMapMargin(getWorldBoundingBox())) {
         m_vPosition.x -= m_vCurrentSpeed.x * tpf;
