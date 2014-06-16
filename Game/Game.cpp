@@ -196,6 +196,12 @@ void CGame::createRoot() {
   Ogre::LogManager::getSingletonPtr()->logMessage("*** Finished OverlaySystem***");
 }
 void CGame::locateResources() {
+  // this is first added, that we use these files first if existing 
+  for (const std::string &path : m_vAdditionalLevelDirPaths) {
+    Ogre::ResourceGroupManager::getSingleton().
+      addResourceLocation(path, "FileSystem", "level_user");
+  }
+
   // load resource paths from config file
   Ogre::ConfigFile cf;
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
@@ -228,10 +234,6 @@ void CGame::locateResources() {
 						   CFileManager::SL_EXTERNAL),
 			"FileSystem", "level_user");
 #endif
-  for (const std::string &path : m_vAdditionalLevelDirPaths) {
-    Ogre::ResourceGroupManager::getSingleton().
-      addResourceLocation(path, "FileSystem", "level_user");
-  }
 }
 void CGame::loadResources() {
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
