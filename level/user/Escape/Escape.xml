@@ -64,8 +64,8 @@
         <row tiles="23 23 23 23 23 23 23 23 23 2 2 2 43 2 2 43 43 2 3 1 "/>
         <row tiles="23 23 23 23 23 23 23 23 23 13 6 6 1 6 6 1 1 6 11 1 "/>
         <row tiles="23 23 23 23 23 23 23 23 23 3 1 5 5 5 5 5 5 5 1 1 "/>
-        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 22 43 22 2 2 3 1 "/>
-        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 21 43 21 2 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 22 43 130 2 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 21 43 129 2 2 3 1 "/>
         <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 2 43 2 2 2 3 1 "/>
         <row tiles="23 23 23 23 23 23 23 23 23 3 4 44 44 2 43 2 44 44 3 1 "/>
         <row tiles="23 23 23 23 23 23 23 23 23 3 4 23 23 2 43 2 23 23 3 1 "/>
@@ -111,7 +111,11 @@
         <enemy type="1" id="-1952636240" x="3" y="22" hp="4" direction="1" jumps="false" phy_gravity="0"/>
         <enemy type="1" id="824938979" x="16" y="50" hp="2" direction="1" jumps="false" phy_gravity="0"/>
         <enemy type="1" id="-185075635" x="12.5" y="50" hp="2" direction="1" jumps="false" phy_gravity="0"/>
-        <enemy type="1" id="997389812" x="17" y="63" hp="8" direction="1" jumps="false" phy_gravity="0"/>
+        <enemy type="1" id="997389812" x="17" y="63" hp="8" direction="1" jumps="false" phy_gravity="0">
+            <events>
+                <event emitter="destroy" id="0" obj_group="object" obj_pos="relative" obj_type="3" repeat="infinite" text="" type="create"/>
+            </events>
+        </enemy>
     </enemies>
     <objects>
         <object type="3" id="Object" x="18" y="3" phy_gravity="0"/>
@@ -126,7 +130,11 @@
         <object type="0" id="Object" x="8.25" y="45.75" phy_gravity="0"/>
         <object type="1" id="Object" x="6" y="52" phy_gravity="0"/>
         <object type="2" id="Object" x="6.5" y="52" phy_gravity="0"/>
-        <object type="6" id="object" x="19" y="72.125" phy_gravity="0"/>
+        <object type="6" id="flag" x="19" y="72" phy_gravity="0">
+            <events>
+                <event emitter="collision" id="flag_exit_reached" msg_type="exit_reached" repeat="infinite" src_id="Player" text="" type="inject_message"/>
+            </events>
+        </object>
     </objects>
     <camera/>
 </map>
