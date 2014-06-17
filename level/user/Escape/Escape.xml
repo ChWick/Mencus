@@ -85,7 +85,7 @@
                 <event emitter="user" id="unset" repeat="infinite" tile="12" type="change_tile" x="2" y="10"/>
             </events>
         </switch>
-        <switch type="1" id="866683782" x="11" y="39" flags="2" phy_gravity="0">
+        <switch type="1" id="866683782" x="11" y="39" flags="2" activeTime="6" phy_gravity="0">
             <events>
                 <event emitter="user" id="unset" repeat="infinite" tile="2" type="change_tile" x="14" y="45"/>
                 <event emitter="user" id="unset" repeat="infinite" tile="51" type="change_tile" x="14" y="46"/>
