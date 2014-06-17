@@ -206,10 +206,10 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pMapInfoWindow->setProperty("VertFormatting", "TopAligned");
 
   m_pMapInfoContainer->setVisible(false);
-  
+
   // option pages
   // ======================
-  
+
   // input
   float fHeight = 0;
   m_pOptionPages[OPTIONS_INPUT] = pButtonContainer->createChild("OgreTray/Group", "InputOptionsContainer");
@@ -276,7 +276,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 						      this));
   // initial value
   pMenuSizeSlider->setCurrentValue(CSettings::getSingleton().getVideoSettings().m_fHUDSize);
-  
+
   m_pOptionPages[OPTIONS_VIDEO]->setVisible(false);
 
 
@@ -290,7 +290,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   ScrollablePane *pLevelPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->createChild("OgreTray/ScrollablePane", "Pane"));
   pLevelPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pLevelPane->setSize(USize(UDim(0.7, 0), UDim(1, 0)));
- 
+
   Window *pLevelInfoWindow = m_pLevelSelection->createChild("OgreTray/ScrollablePane", "Info");
   pLevelInfoWindow->setPosition(UVector2(UDim(0.7, 0), UDim(0, 0)));
   pLevelInfoWindow->setSize(USize(UDim(0.3, 0), UDim(1, 0)));
@@ -308,7 +308,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   pChickenButton->setSize(USize(UDim(0.15, 0), UDim(0.2, 0)));
   pChickenButton->setText("0");
   pChickenButton->setProperty("Image", "hud_weapons/skip");
-  pChickenButton->subscribeEvent(PushButton::EventClicked, 
+  pChickenButton->subscribeEvent(PushButton::EventClicked,
 				 Event::Subscriber(&CMainMenu::onChickenPressed, this));
 
   m_pLevelSelection->setVisible(false);
@@ -404,7 +404,7 @@ void CMainMenu::changeState(MainMenu::EState eState) {
   m_iSelectedSlot = 0;
   m_iSelectedLoadState = 0;
 
-  
+
   switch (m_eCurrentState) {
  case MMS_OPTIONS_VIDEO:
    m_pOptionPages[OPTIONS_VIDEO]->setVisible(true);
@@ -722,7 +722,7 @@ void CMainMenu::resizeGUI(Ogre::Real fScaling) {
 					USize(UDim(0.8f, 0),
 					      UDim(0.8f, 0)),
 					fScaling));
-  
+
   CEGUI::String smallfont("dejavusans8");
   CEGUI::String bigfont("dejavusans12");
   if (fScaling > 0.667f) {
@@ -732,7 +732,7 @@ void CMainMenu::resizeGUI(Ogre::Real fScaling) {
     smallfont = "dejavusans12";
   }
 
-  if (fScaling > 0.5f) { 
+  if (fScaling > 0.5f) {
     bigfont = "dejavusans20";
   }
 
@@ -765,7 +765,7 @@ bool CMainMenu::mapEditorButtonSizeSliderValueChanged(const CEGUI::EventArgs& ar
   CSettings::getSingleton().getInputSettings().m_fMapEditorButtonSize = pSlider->getCurrentValue();
 
   return true;
-} 
+}
 bool CMainMenu::buttonSizeSliderValueChanged(const EventArgs &args) {
 #ifdef INPUT_TOUCH
   const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
@@ -776,7 +776,7 @@ bool CMainMenu::buttonSizeSliderValueChanged(const EventArgs &args) {
   CGUIManager::getSingleton().changeTouchButtonSize(pSlider->getCurrentValue());
   CSettings::getSingleton().getInputSettings().m_fTouchButtonSize = pSlider->getCurrentValue();
 #endif
-  
+
   return true;
 }
 bool CMainMenu::menuSizeSliderValueChanged(const EventArgs &args) {
@@ -787,7 +787,7 @@ bool CMainMenu::menuSizeSliderValueChanged(const EventArgs &args) {
 
   resizeGUI(pSlider->getCurrentValue());
   CSettings::getSingleton().getVideoSettings().m_fHUDSize = pSlider->getCurrentValue();
-  
+
   return true;
 }
 void CMainMenu::windowSizeChanged(const CEGUI::Sizef &vSize) {
@@ -817,7 +817,7 @@ void CMainMenu::hide() {
 }
 void CMainMenu::updateLevelsSelection() {
   int iLeftChickens = 3; // maximum number of chickens
-  
+
   ScrollablePane *pPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->getChild("Pane"));
   pPane->getHorzScrollbar()->setVisible(false);
   pPane->setShowHorzScrollbar(false);
@@ -839,7 +839,7 @@ void CMainMenu::updateLevelsSelection() {
     RadioButton *pBut = dynamic_cast<RadioButton*>(pPane->createChild("OgreTray/ToggleRadioButton", PropertyHelper<unsigned int>::toString(i + 1)));
     pBut->setText(pBut->getName());
     pBut->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
-    pBut->setPosition(UVector2(UDim(0, fButtonSize * (i % uiLevelsPerRow)), UDim(0, fButtonSize * (i / uiLevelsPerRow)))); 
+    pBut->setPosition(UVector2(UDim(0, fButtonSize * (i % uiLevelsPerRow)), UDim(0, fButtonSize * (i / uiLevelsPerRow))));
     pBut->setUserData(const_cast<SLevelInfo*>(&(*it)));
     //pBut->setProperty("HorzFormatting", "CenterAligned");
     pBut->subscribeEvent(RadioButton::EventSelectStateChanged,
@@ -860,7 +860,7 @@ void CMainMenu::updateLevelsSelection() {
 	  CLevelState::get(it->sLevelFileName, true);
 	  pBut->setEnabled(true);
 	}
-	else if ((CLevelState::has(sPreviousLevelFileName) && 
+	else if ((CLevelState::has(sPreviousLevelFileName) &&
 		 CLevelState::get(sPreviousLevelFileName).eMissionState
 		  != MS_FAILED) ||
 		 (pPreviousLevelInfo && pPreviousLevelInfo->bTutorial)) {
@@ -877,11 +877,15 @@ void CMainMenu::updateLevelsSelection() {
     else {
       pLastEnabled = pBut;
     }
+    if (it->bTutorial) {
+      // Own image for tutorial
+      pBut->setProperty("Image", "hud_weapons/tutorial");
+    }
     sPreviousLevelFileName = it->sLevelFileName;
     pPreviousLevelInfo = &(*it);
     it++;
   }
-  
+
   if (pLastEnabled) {
     pLastEnabled->setSelected(true);
   }
@@ -904,7 +908,7 @@ void CMainMenu::selectLevel(unsigned int id) {
   // load map pack for receiving info
   CMapPack pack(pLevelInfo->sLevelFileName);
   pText->setText(reinterpret_cast<const utf8*>(pack.generateInfoText().c_str()));
-  
+
   pInfoPane->getVertScrollbar()->setScrollPosition(0);
   pInfoPane->getHorzScrollbar()->setVisible(false);
   m_pLevelInfo = pLevelInfo;
@@ -935,7 +939,7 @@ bool CMainMenu::onChickenPressed(const CEGUI::EventArgs &args) {
   else {
     return true;
   }
- 
+
   // update levels
   updateLevelsSelection();
   try {

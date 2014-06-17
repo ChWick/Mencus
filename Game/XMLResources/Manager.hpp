@@ -47,10 +47,8 @@ namespace XMLResources {
       }
     }
     
-    const std::string &getString(const std::string &id) const {return m_lStringResources.at(id);}
-    const CEGUI::String getCEGUIString(const std::string &id) const {
-      return reinterpret_cast<const CEGUI::utf8*>(m_lStringResources.at(id).c_str());
-    }
+    const std::string &getString(const std::string &id) const;
+    const CEGUI::String getCEGUIString(const std::string &id) const;
     void loadLanguage() {
       parse(m_sPrefix + "values/strings.xml");
       if (LANGUAGE_CODE.length() > 0) {

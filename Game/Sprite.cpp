@@ -37,7 +37,7 @@ CSprite::CSprite(CMap &map,
 		 const Ogre::Vector2 &vSize,
 		 const Ogre::Vector2 &vScale,
 		 const Ogre::Radian radRotation)
-  : CEntity(map, sID, pParent),
+  : CPhysicsEntity(map, sID, pParent),
     m_pTransformPipeline(pTransformPipeline),
     m_pSpriteManager(pSpriteManager),
     m_radRotation(radRotation),
@@ -55,7 +55,7 @@ CSprite::CSprite(CMap &map,
 		 Ogre2dManager *pSpriteManager,
 		 const tinyxml2::XMLElement *pElem,
 		 const Ogre::Vector2 &vSize)
-  : CEntity(map, pParent, pElem, Ogre::Vector2::ZERO, vSize),
+  : CPhysicsEntity(map, pParent, pElem, Ogre::Vector2::ZERO, vSize),
     m_pTransformPipeline(pTransformPipeline),
     m_pSpriteManager(pSpriteManager),
     m_radRotation(RealAttribute(pElem, "sp_radRotation", 0)),
@@ -63,7 +63,7 @@ CSprite::CSprite(CMap &map,
     m_Colour(Ogre::StringConverter::parseColourValue(Attribute(pElem, "sp_colour", "1 1 1 1"), Ogre::ColourValue::White)) {
 }
 CSprite::CSprite(const CSprite &src)
-  : CEntity(src), 
+  : CPhysicsEntity(src), 
     m_pSpriteManager(src.m_pSpriteManager),
     m_radRotation(src.m_radRotation),
     m_Texture(src.m_Texture),
@@ -78,7 +78,7 @@ CSprite::CSprite(const CSprite &src)
 CSprite::~CSprite() {
 }
 void CSprite::update(Ogre::Real tpf) {
-  CEntity::update(tpf);
+  CPhysicsEntity::update(tpf);
 }
 void CSprite::render(Ogre::Real tpf) {
   if (!m_bVisible) {return;}
@@ -103,7 +103,7 @@ void CSprite::render(Ogre::Real tpf) {
 				  m_pTextureToDraw->getTexturePosBottomRight().y,
           m_Colour);
 
-  CEntity::render(tpf);
+  CPhysicsEntity::render(tpf);
 }
 void CSprite::setTexture(const string &sName) {
   m_Texture.setTexture(Ogre::TextureManager::getSingleton().getByName(sName));
@@ -113,7 +113,7 @@ void CSprite::setTexture(const string &sName) {
   }
 }
 void CSprite::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const {
-  CEntity::writeToXMLElement(pElem, eStyle);
+  CPhysicsEntity::writeToXMLElement(pElem, eStyle);
   
   using namespace XMLHelper;
 

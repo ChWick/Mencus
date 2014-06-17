@@ -1,4 +1,4 @@
-<map difficulty="easy" tutorial="true" background="forest" sizex="16" sizey="14">
+<map difficulty="easy" tutorial="true" background="forest" sizex="16" sizey="14" version="2">
     <tiles invert="0">
         <row tiles="71 71 71 71 71 71 71 71 71 7 5 5 5 5 1 4 "/>
         <row tiles="23 23 121 122 120 80 80 80 80 2 2 2 2 22 3 4 "/>
@@ -16,10 +16,10 @@
         <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
     </tiles>
     <events>
-      <event type="message" emitter="create" title="msg_default_title" id="InitialMessageBox">
-	<page text="msg_start"/>
-	<page text="msg_door"/>
-      </event>
+        <event type="message" emitter="create" title="msg_default_title" id="InitialMessageBox">
+            <page text="msg_start"/>
+            <page text="msg_door"/>
+        </event>
     </events>
     <switches/>
     <endangeredTiles/>
@@ -28,15 +28,15 @@
     </links>
     <enemies/>
     <objects>
-        <object x="3" y="6" id="Object_-684303796" type="6">
+        <object x="3" y="6" id="Object_-684303796" type="6" phy_gravity="0">
             <events>
                 <event type="inject_message" id="Event1912844173" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
             </events>
         </object>
-        <object x="12" y="2" id="Object_832633819" type="5"/>
-        <object x="9.5" y="2" id="Object_316824710" type="5"/>
-        <object x="9.5" y="7" id="Object_1815859899" type="5"/>
-        <object x="12" y="7" id="Object_2051724829" type="5"/>
+        <object x="12" y="2" id="Object_832633819" type="5" phy_gravity="0"/>
+        <object x="9.5" y="2" id="Object_316824710" type="5" phy_gravity="0"/>
+        <object x="9.5" y="7" id="Object_1815859899" type="5" phy_gravity="0"/>
+        <object x="12" y="7" id="Object_2051724829" type="5" phy_gravity="0"/>
     </objects>
     <player x="0.5" y="1" id="Player" type="0" hp="10" direction="1"/>
     <camera/>

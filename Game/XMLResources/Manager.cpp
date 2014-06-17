@@ -60,4 +60,12 @@ namespace XMLResources {
       }
     }
   }
+  const std::string &CManager::getString(const std::string &id) const {
+    assert(m_lStringResources.count(id) == 1);
+    return m_lStringResources.at(id);
+  }
+  const CEGUI::String CManager::getCEGUIString(const std::string &id) const {
+    assert(m_lStringResources.count(id) == 1);
+    return reinterpret_cast<const CEGUI::utf8*>(m_lStringResources.at(id).c_str());
+  }
 };

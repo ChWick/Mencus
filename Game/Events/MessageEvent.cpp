@@ -26,12 +26,12 @@
 
 using namespace XMLHelper;
 
-CMessageEvent::CMessageEvent(CMap &map) 
-  : CEvent(map, EVENT_MESSAGE),
+CMessageEvent::CMessageEvent(CMap &map, CEntity &owner) 
+  : CEvent(map, owner, EVENT_MESSAGE),
     m_pMessageBox(NULL) {
 }
-CMessageEvent::CMessageEvent(CMap &map, const tinyxml2::XMLElement *pElem) 
-  : CEvent(map, EVENT_MESSAGE, pElem),
+CMessageEvent::CMessageEvent(CMap &map, CEntity &owner, const tinyxml2::XMLElement *pElem) 
+  : CEvent(map, owner, EVENT_MESSAGE, pElem),
     m_sTitle(Attribute(pElem,"title")),
     m_sText(Attribute(pElem, "text", "")),
     m_pMessageBox(NULL) {

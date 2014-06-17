@@ -1312,7 +1312,7 @@ bool CMapEditor::onDeleteSwitchEntry(const CEGUI::EventArgs &args) {
 bool CMapEditor::onAddSwitchEntry(const CEGUI::EventArgs &args) {
   Listbox *pLB = dynamic_cast<Listbox*>(m_pEditSwitchPane->getChild("List"));
   CSwitch *pSwitch = dynamic_cast<CSwitch*>(m_pSelectedEntity);
-  CChangeTileEvent *pEvent = new CChangeTileEvent(*m_pMap);
+  CChangeTileEvent *pEvent = new CChangeTileEvent(*m_pMap, *pSwitch);
   pSwitch->addEvent(pEvent);
   pLB->addItem(createSwitchEntry(*pEvent));
   return true;

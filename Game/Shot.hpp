@@ -57,8 +57,6 @@ public:
 
   static const Ogre::Real SHOT_DAMAGE[ST_COUNT];
 private:
-  const bool m_bAffectedByGravity;
-  Ogre::Vector2 m_vSpeed;
   const EShotDirections m_eShotDirection;
   Ogre::Real m_fTimer;
   EShotStates m_eState;
@@ -87,9 +85,15 @@ public:
   void writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eStyle) const;
 protected:
   virtual void handleMessage(const CMessage &message);
+  
+  // physics entity virtual methods
+  void handleOutOfMap();
+  bool handleHorizontalTileCollision(unsigned int uiCCD, Ogre::Real tpf);
+  bool handleVerticalTileCollision(unsigned int uiCCD, Ogre::Real tpf);
 private:
   void constructor_impl();
   void hit();
+  void createExplosion();
 };
 
 #endif

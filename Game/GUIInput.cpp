@@ -29,11 +29,13 @@
 using namespace CEGUI;
 
 CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
-  : m_uiCurrentWeapon(1),
+  : m_pRoot(pGUIRoot),
+    m_uiCurrentWeapon(1),
     m_fTimeSinceLastTouchMoveEvent(0),
     m_eDragState(DS_SLEEPING),
     m_bPressed(false),
-    m_fTimer(0) {
+    m_fTimer(0),
+    m_pDragArrow(nullptr) {
   CInputListenerManager::getSingleton().addInputListener(this);
   CMessageHandler::getSingleton().addInjector(this);
 
@@ -101,7 +103,12 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
   m_pControlButtonContainer->setAlwaysOnTop(true);
   m_pDragButton->setAlwaysOnTop(true);
   m_pDragWindow->setAlwaysOnTop(true);
+  m_pDragWindow->moveToFront();
+  m_pDragButton->moveToFront();
   m_pDragButton->setAlpha(0);
+  //m_pDragButton->setRiseOnClickEnabled(false);
+  m_pDragWindow->setRiseOnClickEnabled(false);
+  //m_pDragWindow->setZOrderingEnabled(false);
 
   setCurrentWeapon(0);
 
@@ -121,7 +128,7 @@ CGUIInput::EButtonTypes CGUIInput::parseButtonType(const std::string &s) {
   else if (s == "activate") {return BT_ACTIVATE;}
   else if (s == "jump") {return BT_JUMP;}
   else if (s == "attack") {return BT_ATTACK;}
- 
+
   return BT_COUNT;
 }
 void CGUIInput::windowResized() {
@@ -129,6 +136,12 @@ void CGUIInput::windowResized() {
 }
 void CGUIInput::buttonSizeChanged(float fSize) {
   m_fButtonSize = fSize;
+
+  // resize drag arrow
+  if (m_pDragArrow) {
+    m_pDragArrow->setPosition(UVector2(UDim(0.5, -m_fButtonSize * 0.5), UDim(0, 0)));
+    m_pDragArrow->setSize(USize(UDim(0, m_fButtonSize), UDim(0, m_fButtonSize)));
+  }
 
   // resize direction button container
   m_pDirectionButtonContainer->setPosition(UVector2(UDim(0, 0), UDim(1, -fSize)));
@@ -168,7 +181,7 @@ void CGUIInput::buttonSizeChanged(float fSize) {
   // resize pull menu
   m_pDragWindow->setSize(USize(UDim(1, 0), UDim(0, 1.5 * fSize)));
   m_pDragButton->setSize(USize(UDim(1, 0), UDim(0, 0.5 * fSize)));
-  
+
 }
 CEGUI::Window *CGUIInput::createButton(int bt) {
   Window *pParent = m_pControlButtonContainer;
@@ -176,7 +189,7 @@ CEGUI::Window *CGUIInput::createButton(int bt) {
   Window *pButton = pParent->createChild("OgreTray/StaticImage", "Button" + PropertyHelper<int>::toString(bt));
   pButton->setSize(USize(UDim(0, 100), UDim(0, 100)));
   pButton->setAlpha(0.7);
-  
+
   // this is default for control buttons
   pButton->setPosition(UVector2(UDim(0, 0), UDim(0, (bt - BT_ENTER_LINK) * 100)));
   switch (bt) {
@@ -196,14 +209,14 @@ CEGUI::Window *CGUIInput::createButton(int bt) {
     pButton->setProperty("Image", "hud_weapons/switch");
     break;
   }
-  
+
   return pButton;
 }
 CEGUI::Window *CGUIInput::createWeaponButton(unsigned int uiWeapon) {
   Window *pButton = m_pDragWindow->createChild("OgreTray/StaticImage", "WeaponButton" + PropertyHelper<int>::toString(uiWeapon));
   pButton->setSize(USize(UDim(0, 100), UDim(0, 100)));
   pButton->setAlpha(1);
-  
+
   // this is default for control buttons
   pButton->setPosition(UVector2(UDim(0, uiWeapon * 100), UDim(0, 0)));
   pButton->setProperty("Image", Weapon::getPicture(uiWeapon));
@@ -228,18 +241,24 @@ CEGUI::Window *CGUIInput::createWeaponButtonLabel(unsigned int uiWeapon) {
   pButton->
     subscribeEvent(Window::EventMouseButtonDown,
 		   Event::Subscriber(&CGUIInput::onWeaponClick, this));
-  
+
   m_pWeaponLabels[uiWeapon] = pButton;
 
   return pButton;
 }
 void CGUIInput::update(float tpf) {
-  if (m_lBlinkingButtons.size() > 0) {
+  if (m_lBlinkingButtons.size() > 0 || m_pDragArrow) {
     m_fTimer += tpf;
+  }
+  if (m_lBlinkingButtons.size() > 0) {
     float fColValue = (cos(m_fTimer * 6) + 1) * 0.5;
     for (auto pButton : m_lBlinkingButtons) {
       pButton->setProperty("ImageColours", PropertyHelper<Colour>::toString(Colour(1, fColValue, fColValue)));
     }
+  }
+  if (m_pDragArrow) {
+    float fScaledTime = m_fTimer * 0.75f;
+    m_pDragArrow->setPosition(UVector2(UDim(0.5, -m_fButtonSize * 0.5), UDim(0, m_fButtonSize * (fScaledTime - floor(fScaledTime)) * 2)));
   }
 
 
@@ -266,12 +285,14 @@ void CGUIInput::update(float tpf) {
     m_pDragButton->setPosition(UVector2(UDim(0, 0), UDim(0, m_pDragWindow->getSize().d_height.d_offset)));
     if (m_eDragState == DS_OPENING) {
       m_eDragState = DS_OPEN;
+      CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_DROP_DOWN_MENU).setBool(true));
     }
   }
   else if (m_pDragButton->getPosition().d_y.d_offset < 0) {
     m_pDragButton->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
     if (m_eDragState == DS_CLOSING) {
       m_eDragState = DS_SLEEPING;
+      CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_DROP_DOWN_MENU).setBool(false));
     }
   }
 
@@ -410,7 +431,7 @@ bool CGUIInput::onWeaponClick(const CEGUI::EventArgs& args) {
       return true;
     }
   }
-  
+
   return true;
 }
 void CGUIInput::pressReleased() {
@@ -441,17 +462,52 @@ void CGUIInput::sendMessageToAll(const CMessage &message) {
   switch (message.getType()) {
   case CMessage::MT_TOGGLE_TOUCH_INPUT_BLINK:
     {
-      EButtonTypes bt = parseButtonType(message.getID());
-      if (bt != BT_COUNT) {
-	bool bEnable = message.getBool();
-	if (bEnable) {m_lBlinkingButtons.push_back(m_pButtons[bt]);}
-	else {
-	  m_pButtons[bt]->setProperty("ImageColours", "FFFFFFFF");
-	  m_lBlinkingButtons.remove(m_pButtons[bt]);
+      if (message.getID() == "drag") {
+	// create drag arrow
+	if (message.getBool()) {
+	  if (!m_pDragArrow) {
+	    m_pDragArrow = m_pRoot->createChild("OgreTray/StaticImage", "DragArrow");
+	    m_pDragArrow->setProperty("Image", "hud_weapons/down_arrow");
+	    m_pDragArrow->setProperty("BackgroundEnabled", "False");
+	    m_pDragArrow->setProperty("FrameEnabled", "False");
+	    m_pDragArrow->setSize(USize(UDim(0, m_fButtonSize), UDim(0, m_fButtonSize)));
+	    m_pDragArrow->setPosition(UVector2(UDim(0.5, -m_fButtonSize * 0.5), UDim(0, 0)));
+	    m_pDragArrow->setAlwaysOnTop(true);
+	    m_pDragArrow->setInheritsAlpha(false);
+	  }
 	}
-      }
-      if (m_lBlinkingButtons.size() == 0) {
+	else {
+	  if (m_pDragArrow) {
+	    m_pDragArrow->destroy();
+	    m_pDragArrow = nullptr;
+	  }
+	}
+
 	m_fTimer = 0;
+      }
+      else {
+	CEGUI::Window *pButton = nullptr;
+	EButtonTypes bt = parseButtonType(message.getID());
+	if (bt != BT_COUNT) {
+	  pButton = m_pButtons[bt];
+	}
+	else {
+	  Weapon::EItems item = Weapon::parseItem(message.getID());
+	  if (item != Weapon::I_COUNT) {
+	    pButton = m_pWeapons[item];
+	  }
+	}
+	if (pButton) {
+	  bool bEnable = message.getBool();
+	  if (bEnable) {m_lBlinkingButtons.push_back(pButton);}
+	  else {
+	    pButton->setProperty("ImageColours", "FFFFFFFF");
+	    m_lBlinkingButtons.remove(pButton);
+	  }
+	}
+	if (m_lBlinkingButtons.size() == 0) {
+	  m_fTimer = 0;
+	}
       }
     }
     break;
@@ -471,12 +527,14 @@ void CGUIInput::show() {
   m_pControlButtonContainer->setVisible(true);
   m_pDragButton->setVisible(true);
   m_pDragWindow->setVisible(true);
+  if (m_pDragArrow) {m_pDragArrow->setVisible(true);}
 }
 void CGUIInput::hide() {
   m_pDirectionButtonContainer->setVisible(false);
   m_pControlButtonContainer->setVisible(false);
   m_pDragButton->setVisible(false);
   m_pDragWindow->setVisible(false);
+  if (m_pDragArrow) {m_pDragArrow->setVisible(false);}
 }
 void CGUIInput::setItemCount(Weapon::EItems eItem, unsigned int uiCount) {
   if (m_pWeaponLabels[eItem]) {

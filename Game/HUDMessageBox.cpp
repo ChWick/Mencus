@@ -34,6 +34,8 @@ CHUDMessageBox::CHUDMessageBox(const std::string &sID, const CEGUI::String &sTit
   pWnd->setPosition(UVector2(UDim(0.2, 0), UDim(0.2, 0)));
   pWnd->setSize(USize(UDim(0.6, 0), UDim(0.6, 0)));
   pWnd->setText(sTitle);
+  pWnd->setAlwaysOnTop(true);
+  pWnd->moveToFront();
 
   Window *pCloseBtn = pWnd->createChild("OgreTray/Button", "CloseButton");
   pCloseBtn->setUserData(dynamic_cast<Window*>(pWnd)); // to be sure that is a Window * ptr
@@ -50,9 +52,9 @@ CHUDMessageBox::CHUDMessageBox(const std::string &sID, const CEGUI::String &sTit
   pTextContainter->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pTextContainter->setSize(USize(UDim(1, 0), UDim(1, 0)));
   pTextContainter->setReadOnly(true);
-  
+
   showPage(0);
-  
+
   pause(PAUSE_MAP_UPDATE);
 }
 CHUDMessageBox::~CHUDMessageBox() {

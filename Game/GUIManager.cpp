@@ -103,21 +103,21 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
 
   pTrayMgr->userUpdateLoadBar("Creating gui components", 0.2);
   //destroyResources();
+  new CGUIInstructions(guiRoot);
+  new CGUIGameOver(guiRoot);
+  new CGUIStatistics(guiRoot);
 #ifdef INPUT_TOUCH
   m_pGUIInput = new CGUIInput(guiRoot); // gui input before hud, since hud depends
 #endif
   new CHUD(guiRoot, m_pGUIInput);
-  new CGUIInstructions(guiRoot);
-  new CGUIGameOver(guiRoot);
   Ogre::LogManager::getSingleton().logMessage("Singleton for map editor");
 #if ENABLE_MAP_EDITOR
   new CMapEditor(guiRoot);
 #endif
-  new CMainMenu(guiRoot);
-  new CGUIStatistics(guiRoot);
   new CGUITutorial(guiRoot);
+  new CMainMenu(guiRoot);
 
- 
+
 
   pTrayMgr->userUpdateLoadBar("done...", 0.2);
   Ogre::LogManager::getSingleton().logMessage("GUIManager initialized...");
@@ -138,7 +138,7 @@ CGUIManager::~CGUIManager() {
 #if ENABLE_MAP_EDITOR
   delete CMapEditor::getSingletonPtr();
 #endif
-  
+
   if (CEGUI::System::getSingletonPtr()) {CEGUI::OgreRenderer::destroySystem();}
 }
 void CGUIManager::update(Ogre::Real tpf) {
@@ -269,12 +269,12 @@ bool CGUIManager::touchCancelled(const OIS::MultiTouchEvent& evt) {
 
 void CGUIManager::createFreeTypeFont(const CEGUI::String &name, int size, const CEGUI::String &ttfFile) {
   CEGUI::FontManager::getSingleton().createFreeTypeFont(name, size, true, ttfFile, "Fonts", CEGUI::ASM_Both, m_vNativeRes);
-  m_vFonts.push_back(name);  
+  m_vFonts.push_back(name);
 }
 void CGUIManager::createResources() {
   m_bRenderPause = false;
   CEGUI::SchemeManager::getSingleton().createFromFile("OgreTray.scheme");
-  
+
   CEGUI::ImageManager::getSingleton().loadImageset("main_menu_background.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("hud_weapons.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("save_pictures.imageset");
@@ -329,7 +329,7 @@ void CGUIManager::resize(const CEGUI::Sizef &vSize) {
     smallfont = "dejavusans12";
   }
 
-  if (vSize.d_height > 600) { 
+  if (vSize.d_height > 600) {
     bigfont = "dejavusans20";
   }
 

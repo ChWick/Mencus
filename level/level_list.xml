@@ -8,6 +8,8 @@
   <level file="Simple_Pathway" />
   <level file="Adventure"/>
   <level file="Labyrinth"/>
+  <level file="Fly_High"/>
+  <level file="Tutorial_6" tutorial="true"/>
   <level file="Castle_1" />
   <level file="Escape" />
   <level file="Cave_Passage_1" />

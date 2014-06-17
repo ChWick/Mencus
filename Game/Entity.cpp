@@ -276,7 +276,7 @@ void CEntity::readFromXMLElement(const tinyxml2::XMLElement *pElem) {
     for (const XMLElement *pEventElement = pEventsElement->FirstChildElement();
 	 pEventElement;
 	 pEventElement = pEventElement->NextSiblingElement()) {
-      m_lEvents.push_back(CEventCreator::create(m_Map, pEventElement));
+      m_lEvents.push_back(CEventCreator::create(m_Map, *this, pEventElement));
     }
   }
 }
@@ -322,4 +322,23 @@ void CEntity::handleMessage(const CMessage &message) {
   default:
     break;
   }
+
+  for (auto pEvent : m_lEvents) {
+    if (pEvent->getEmitter()->getType() == EventEmitter::EMIT_ON_MESSAGE) {
+      const EventEmitter::COnMessage *pEmitter(dynamic_cast<const EventEmitter::COnMessage*>(pEvent->getEmitter()));
+      if (pEmitter->getMessageType() == message.getType()) {
+	pEvent->start();
+      }
+    }
+  }
 }
+
+
+
+
+
+
+
+
+
+

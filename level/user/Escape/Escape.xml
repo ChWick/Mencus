@@ -1,4 +1,5 @@
-<map difficulty="easy" background="forest" sizex="20" sizey="75">
+<?xml version="1.0"?>
+<map version="2" difficulty="easy" background="forest" sizex="20" sizey="75">
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
         <row tiles="5 5 5 5 5 8 52 52 52 9 52 52 52 9 52 52 52 3 1 1 "/>
@@ -63,8 +64,8 @@
         <row tiles="23 23 23 23 23 23 23 23 23 2 2 2 43 2 2 43 43 2 3 1 "/>
         <row tiles="23 23 23 23 23 23 23 23 23 13 6 6 1 6 6 1 1 6 11 1 "/>
         <row tiles="23 23 23 23 23 23 23 23 23 3 1 5 5 5 5 5 5 5 1 1 "/>
-        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 22 43 22 2 2 3 1 "/>
-        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 21 43 21 2 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 22 43 130 2 2 3 1 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 21 43 129 2 2 3 1 "/>
         <row tiles="23 23 23 23 23 23 23 23 23 3 4 2 2 2 43 2 2 2 3 1 "/>
         <row tiles="23 23 23 23 23 23 23 23 23 3 4 44 44 2 43 2 44 44 3 1 "/>
         <row tiles="23 23 23 23 23 23 23 23 23 3 4 23 23 2 43 2 23 23 3 1 "/>
@@ -76,56 +77,64 @@
         <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 2 2 21 2 "/>
         <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 44 44 44 44 "/>
     </tiles>
+    <player x="0.5" y="2" hp="10" direction="1"/>
     <switches>
-        <switch x="16" y="13" id="-995297964" type="0" flags="0" activeTime="0">
+        <switch type="0" id="-995297964" x="16" y="13" flags="0" phy_gravity="0">
             <events>
-                <event type="change_tile" emitter="user" id="19" x="3" y="10"/>
-                <event type="change_tile" emitter="user" id="12" x="2" y="10"/>
+                <event emitter="user" id="unset" repeat="infinite" tile="19" type="change_tile" x="3" y="10"/>
+                <event emitter="user" id="unset" repeat="infinite" tile="12" type="change_tile" x="2" y="10"/>
             </events>
         </switch>
-        <switch x="11" y="39" id="866683782" type="1" flags="2" activeTime="6">
+        <switch type="1" id="866683782" x="11" y="39" flags="2" activeTime="6" phy_gravity="0">
             <events>
-                <event type="change_tile" emitter="user" id="2" x="14" y="45"/>
-                <event type="change_tile" emitter="user" id="51" x="14" y="46"/>
+                <event emitter="user" id="unset" repeat="infinite" tile="2" type="change_tile" x="14" y="45"/>
+                <event emitter="user" id="unset" repeat="infinite" tile="51" type="change_tile" x="14" y="46"/>
             </events>
         </switch>
-        <switch x="11.5" y="63" id="-1828817672" type="0" flags="0" activeTime="0">
+        <switch type="0" id="-1828817672" x="11.5" y="63" flags="0" phy_gravity="0">
             <events>
-                <event type="change_tile" emitter="user" id="2" x="14" y="63"/>
-                <event type="change_tile" emitter="user" id="51" x="14" y="64"/>
+                <event emitter="user" id="unset" repeat="infinite" tile="2" type="change_tile" x="14" y="63"/>
+                <event emitter="user" id="unset" repeat="infinite" tile="51" type="change_tile" x="14" y="64"/>
             </events>
         </switch>
     </switches>
     <endangeredTiles/>
     <links>
-        <link x="0" y="0" id="" type="0" fromx="18" fromy="13" tox="18" toy="8" activated="true" direction="both"/>
-        <link x="0" y="0" id="" type="0" fromx="11" fromy="39" tox="11" toy="32" activated="true" direction="both"/>
-        <link x="0" y="0" id="" type="0" fromx="13" fromy="63" tox="13" toy="57" activated="true" direction="both"/>
-        <link x="0" y="0" id="" type="0" fromx="18" fromy="72" tox="15" toy="63" activated="true" direction="both"/>
+        <link id="" fromx="18" tox="18" fromy="13" toy="8" activated="true" direction="both"/>
+        <link id="" fromx="11" tox="11" fromy="39" toy="32" activated="true" direction="both"/>
+        <link id="" fromx="13" tox="13" fromy="63" toy="57" activated="true" direction="both"/>
+        <link id="" fromx="18" tox="15" fromy="72" toy="63" activated="true" direction="both"/>
     </links>
     <enemies>
-        <enemy direction="1" jumps="0" hp="2" x="17.5" y="3" id="-1210297291" type="1"/>
-        <enemy direction="1" jumps="0" hp="2" x="16" y="24" id="685118022" type="1"/>
-        <enemy direction="1" jumps="1" hp="4" x="3" y="22" id="-1952636240" type="1"/>
-        <enemy direction="1" jumps="0" hp="2" x="16" y="50" id="824938979" type="1"/>
-        <enemy direction="1" jumps="0" hp="2" x="12.5" y="50" id="-185075635" type="1"/>
-        <enemy direction="1" jumps="0" hp="8" x="17" y="63" id="997389812" type="1"/>
+        <enemy type="1" id="-1210297291" x="17.5" y="3" hp="2" direction="1" jumps="false" phy_gravity="0"/>
+        <enemy type="1" id="685118022" x="16" y="24" hp="2" direction="1" jumps="false" phy_gravity="0"/>
+        <enemy type="1" id="-1952636240" x="3" y="22" hp="4" direction="1" jumps="false" phy_gravity="0"/>
+        <enemy type="1" id="824938979" x="16" y="50" hp="2" direction="1" jumps="false" phy_gravity="0"/>
+        <enemy type="1" id="-185075635" x="12.5" y="50" hp="2" direction="1" jumps="false" phy_gravity="0"/>
+        <enemy type="1" id="997389812" x="17" y="63" hp="8" direction="1" jumps="false" phy_gravity="0">
+            <events>
+                <event emitter="destroy" id="0" obj_group="object" obj_pos="relative" obj_type="3" repeat="infinite" text="" type="create"/>
+            </events>
+        </enemy>
     </enemies>
     <objects>
-        <object x="18" y="3" id="Object" type="3"/>
-        <object x="1" y="22" id="Object" type="3"/>
-        <object x="13" y="28" id="Object" type="3"/>
-        <object x="17" y="39" id="Object" type="3"/>
-        <object x="8.5" y="49.5" id="Object" type="0"/>
-        <object x="8" y="47.5" id="Object" type="0"/>
-        <object x="8.25" y="51.25" id="Object" type="0"/>
-        <object x="17.15" y="50.325001" id="Object" type="3"/>
-        <object x="11.15" y="50.325001" id="Object" type="3"/>
-        <object x="8.25" y="45.75" id="Object" type="0"/>
-        <object x="6" y="52" id="Object" type="1"/>
-        <object x="6.5" y="52" id="Object" type="2"/>
+        <object type="3" id="Object" x="18" y="3" phy_gravity="0"/>
+        <object type="3" id="Object" x="1" y="22" phy_gravity="0"/>
+        <object type="3" id="Object" x="13" y="28" phy_gravity="0"/>
+        <object type="3" id="Object" x="17" y="39" phy_gravity="0"/>
+        <object type="0" id="Object" x="8.5" y="49.5" phy_gravity="0"/>
+        <object type="0" id="Object" x="8" y="47.5" phy_gravity="0"/>
+        <object type="0" id="Object" x="8.25" y="51.25" phy_gravity="0"/>
+        <object type="3" id="Object" x="17.15" y="50.325" phy_gravity="0"/>
+        <object type="3" id="Object" x="11.15" y="50.325" phy_gravity="0"/>
+        <object type="0" id="Object" x="8.25" y="45.75" phy_gravity="0"/>
+        <object type="1" id="Object" x="6" y="52" phy_gravity="0"/>
+        <object type="2" id="Object" x="6.5" y="52" phy_gravity="0"/>
+        <object type="6" id="flag" x="19" y="72" phy_gravity="0">
+            <events>
+                <event emitter="collision" id="flag_exit_reached" msg_type="exit_reached" repeat="infinite" src_id="Player" text="" type="inject_message"/>
+            </events>
+        </object>
     </objects>
-    <exit type="region" posx="19" posy="72" sizex="1" sizey="2" id=""/>
-    <player x="0.5" y="2" id="1840127448" type="0" hp="10" direction="1"/>
-    <camera posx="4" posy="0"/>
+    <camera/>
 </map>

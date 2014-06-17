@@ -472,6 +472,7 @@ void CMap::explodeTile(size_t x, size_t y, bool bExplodeNeighbours) {
 
   // remove all scratches that collides with this tile
   for (CEntity* pObject : getObjects()) {
+    if (pObject->getType() != CObject::OT_SCRATCH) {continue;}
     if (pObject->getWorldBoundingBox().collidesWith(tile->getWorldBoundingBox()) != CCD_NONE) {
       destroy(pObject, true);
     }
@@ -586,6 +587,14 @@ void CMap::unlock(unsigned int x, unsigned int y) {
 
     m_gridTiles(x, y) = new CTile(*this, Ogre::Vector2(x, y), TT_DOOR_WOOD_TOP_OPEN);
     m_gridTiles(x, y - 1) = new CTile(*this, Ogre::Vector2(x, y - 1), TT_DOOR_WOOD_BOT_OPEN);
+  }
+  else if (id == TT_LINK_DOOR_CASTLE_TOP_CLOSED) {
+    changeTileType(x, y, 21);
+    changeTileType(x, y - 1, 22);
+  }
+  else if (id == TT_LINK_DOOR_CASTLE_BOT_CLOSED) {
+    changeTileType(x, y, 22);
+    changeTileType(x, y + 1, 21);
   }
 }
 void CMap::swapBoxes() {

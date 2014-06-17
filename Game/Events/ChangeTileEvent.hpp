@@ -30,8 +30,8 @@ private:
   unsigned int m_uiTilePosX;
   unsigned int m_uiTilePosY;
 public:
-  CChangeTileEvent(CMap &map);
-  CChangeTileEvent(CMap &map, const tinyxml2::XMLElement *pElem);
+  CChangeTileEvent(CMap &map, CEntity &owner);
+  CChangeTileEvent(CMap &map, CEntity &owner, const tinyxml2::XMLElement *pElem);
 
   void init();
 

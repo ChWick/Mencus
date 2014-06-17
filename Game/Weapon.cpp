@@ -64,4 +64,15 @@ namespace Weapon {
       return "unknwon";
     }
   }
+  EItems parseItem(const std::string &s) {
+    if (s == "bolt") {return I_BOLT;}
+    else if (s == "bomb") {return I_BOMB;}
+    else if (s == "shield") {return I_SHIELD;}
+    else if (s == "column") {return I_COLUMN;}
+    else if (s == "health_potion") {return I_HEALTH_POTION;}
+    else if (s == "mana_potion") {return I_MANA_POTION;}
+    else if (s == "keys") {return I_KEY;}
+
+    return I_COUNT;
+  }
 };

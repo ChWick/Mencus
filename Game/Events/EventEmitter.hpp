@@ -24,6 +24,7 @@
 #include <tinyxml2.h>
 #include <string>
 #include "XMLHelper.hpp"
+#include "Message.hpp"
 
 class CEntity;
 class CMap;
@@ -39,6 +40,7 @@ namespace EventEmitter {
     EMIT_ON_USER,
     EMIT_ON_COLLISION,
     EMIT_ON_MESSAGE_BOX_PAGE_CHANGE,
+    EMIT_ON_MESSAGE,
   };
   std::string toString(EEmitter eEmitter);
   EEmitter parseEmitter(const std::string &sString);
@@ -133,6 +135,28 @@ namespace EventEmitter {
 
     const std::string &getSrcID() const {return m_sSrcID;}
     const int getPageID() const {return m_iPageID;}
+  };
+
+  class COnMessage : public CEmitter {
+  private:
+    const CMessage::EMessageTypes m_eMessageType;
+    const bool m_bBoolValue;
+  public:
+    COnMessage(const tinyxml2::XMLElement *pElem)
+      : CEmitter(EMIT_ON_MESSAGE, pElem),
+	m_eMessageType(CMessage::parseMessageType(XMLHelper::Attribute(pElem, "emit_msg_type"))),
+	m_bBoolValue(XMLHelper::BoolAttribute(pElem, "emit_msg_bool")) {
+     }
+      
+    virtual void writeToXMLElement(tinyxml2::XMLElement *pElem) const {
+      CEmitter::writeToXMLElement(pElem);
+      
+      XMLHelper::SetAttribute(pElem, "emit_msg_type", CMessage::toString(m_eMessageType));
+      XMLHelper::SetAttribute(pElem, "emit_msg_bool", m_bBoolValue);
+    }
+    
+    const CMessage::EMessageTypes getMessageType() const {return m_eMessageType;}
+    const bool getBoolValue() const {return m_bBoolValue;}
   };
 
 

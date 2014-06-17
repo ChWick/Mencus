@@ -45,6 +45,7 @@ CGUIGameOver::CGUIGameOver(CEGUI::Window *pGUIRoot)
   m_pRoot->setProperty("Image", "game_over/full");
   m_pRoot->setProperty("FrameEnabled","False");
   m_pRoot->setProperty("BackgroundEnabled","False");
+  m_pRoot->moveToBack();
 
   m_pRetryText = m_pRoot->createChild("OgreTray/StaticText", "Retry");
   m_pRetryText->setSize(USize(UDim(0.2, 0), UDim(0.1,0)));

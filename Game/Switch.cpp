@@ -91,10 +91,10 @@ CSwitch::CSwitch(CMap &map,
   for (const XMLElement *pChange = pElem->FirstChildElement(); pChange; pChange = pChange->NextSiblingElement()) {
     // for supporting old maps
     if (strcmp(pChange->Value(), "togglesLink") == 0) {
-      addEvent(new CToggleEvent(m_Map, pChange));
+      addEvent(new CToggleEvent(m_Map, *this, pChange));
     }
     else if (strcmp(pChange->Value(), "changes") == 0) {
-      CChangeTileEvent *pEvent = new CChangeTileEvent(m_Map, pChange);
+      CChangeTileEvent *pEvent = new CChangeTileEvent(m_Map, *this, pChange);
       addEvent(pEvent);
     }
   }

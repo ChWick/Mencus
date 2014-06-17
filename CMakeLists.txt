@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 2.8)
 project(Mencus)
 
 # set version
-set (MENCUS_VERSION_CODE 10)
-set (MENCUS_VERSION_NAME 0.0.10)
+set (MENCUS_VERSION_CODE 11)
+set (MENCUS_VERSION_NAME 0.0.11)
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set (MENCUS_TEMPLATES_DIR "${CMAKE_MODULE_PATH}/templates")
 #include(cotire)
@@ -25,6 +25,6 @@ if(ANDROID)
 else()
   add_subdirectory(Game)
   add_subdirectory(FileConverter)
-  #add_subdirectory(MapEditor)
+  add_subdirectory(MapUpgrader)
 endif()
 

@@ -33,6 +33,7 @@
 #include "XMLHelper.hpp"
 #include "Statistics.hpp"
 #include "GUIStatistics.hpp"
+#include "MessageHandler.hpp"
 
 using namespace XMLHelper;
 using namespace Weapon;
@@ -239,8 +240,11 @@ void CPlayer::update(Ogre::Real tpf) {
       if (pTile && (pTile->getTileFlags() & CTile::TF_DAMAGES)) {
         // last hope check if the tile right of the damage tile hits the player 2 and is not damaging him
         CTile *pRightTile = m_Map.getTile(static_cast<int>(getWorldBoundingBox().getRight() - 0.01), pTile->getMapPosY());
-        if (pRightTile && pRightTile->getWorldBoundingBox().collidesWith(getWorldBoundingBox()) != CCD_NONE && (pRightTile->getTileFlags() & CTile::TF_DAMAGES) == 0) {
-
+        if (pRightTile
+	    && pRightTile->getWorldBoundingBox().collidesWith(getWorldBoundingBox()) != CCD_NONE
+	    && (pRightTile->getTileFlags() & CTile::TF_DAMAGES) == 0
+	    && (pRightTile->getTileFlags() & CTile::TF_UNPASSABLE)) {
+	  // player can stand on the right tile, luck for him
         }
         else {
           takeDamage(SPIKES_DAMANGE_PER_HIT);
@@ -274,26 +278,24 @@ void CPlayer::update(Ogre::Real tpf) {
       }
 #endif // DEBUG_PLAYER_NO_COLLISION
 
-      if (fPenetration != 0) {
-        // check if collision with door
-        if (m_uiKeyCount > 0) {
-          Ogre::Real fLockPenetration = 0;
-          CTile *pTile(NULL);
-          if (m_vCurrentSpeed.x < 0) {
-            fLockPenetration = m_Map.hitsTile(CCD_LEFT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
-          } else if (m_vCurrentSpeed.x > 0) {
-            fLockPenetration += m_Map.hitsTile(CCD_RIGHT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
-          }
-          if (fLockPenetration != 0) {
-            m_uiKeyCount--;
-	    CHUD::getSingleton().setKeysCount(m_uiKeyCount);
-	    m_Statistics.uiUsedItems[Weapon::I_KEY]++;
-            m_Map.unlock(pTile->getMapPosX(), pTile->getMapPosY());
-          }
-        }
-        m_vPosition.x -= fPenetration;
-        m_vCurrentSpeed.x = 0;
+      // check if collision with lock
+      if (m_uiKeyCount > 0) {
+	Ogre::Real fLockPenetration = 0;
+	CTile *pTile(NULL);
+	if (m_vCurrentSpeed.x < 0) {
+	  fLockPenetration = m_Map.hitsTile(CCD_LEFT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
+	} else if (m_vCurrentSpeed.x > 0) {
+	  fLockPenetration += m_Map.hitsTile(CCD_RIGHT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
+	}
+	if (fLockPenetration != 0) {
+	  m_uiKeyCount--;
+	  CHUD::getSingleton().setKeysCount(m_uiKeyCount);
+	  m_Statistics.uiUsedItems[Weapon::I_KEY]++;
+	  m_Map.unlock(pTile->getMapPosX(), pTile->getMapPosY());
+	}
       }
+      m_vPosition.x -= fPenetration;
+      m_vCurrentSpeed.x = 0;
 
       if (m_Map.collidesWithMapMargin(getWorldBoundingBox())) {
         m_vPosition.x -= m_vCurrentSpeed.x * tpf;
@@ -572,6 +574,7 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
   case GIC_CHANGE_WEAPON:
     m_uiCurrentWeapon = min(W_COUNT - 1, max(0, cmd.getIntValue()));
     CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
+    CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_WEAPON_CHANGED).setInt(m_uiCurrentWeapon));
     break;
   default:
     break;

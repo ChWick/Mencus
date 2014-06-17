@@ -1,4 +1,4 @@
-<map difficulty="easy" tutorial="false" background="forest" sizex="120" sizey="30">
+<map difficulty="easy" tutorial="false" background="forest" sizex="120" sizey="30" version="2">
     <player x="26" y="12" id="Player" type="0" hp="10" direction="1"/>
     <tiles invert="0">
         <row tiles="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 "/>
@@ -35,88 +35,88 @@
     <switches>
         <switch x="9.5" y="6" id="Switch_-1952636240" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="8" y="3"/>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="8" y="2"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="8" y="3" tile="51"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="8" y="2" tile="2"/>
             </events>
         </switch>
         <switch x="42" y="10" id="Switch_-669037147" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="35" y="3"/>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="35" y="2"/>
-                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="45" y="11"/>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="45" y="10"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="35" y="3" tile="51"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="35" y="2" tile="2"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="45" y="11" tile="51"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="45" y="10" tile="2"/>
             </events>
         </switch>
         <switch x="42" y="6" id="Switch_-1489662525" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="34" y="3"/>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="34" y="2"/>
-                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="45" y="7"/>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="45" y="6"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="34" y="3" tile="51"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="34" y="2" tile="2"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="45" y="7" tile="51"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="45" y="6" tile="2"/>
             </events>
         </switch>
         <switch x="42" y="2" id="Switch_1102246880" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="33" y="3"/>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="33" y="2"/>
-                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="45" y="3"/>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="45" y="2"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="33" y="3" tile="51"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="33" y="2" tile="2"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="45" y="3" tile="51"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="45" y="2" tile="2"/>
             </events>
         </switch>
         <switch x="29.5" y="21" id="Switch_1816731564" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="29" y="18"/>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="29" y="17"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="29" y="18" tile="51"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="29" y="17" tile="2"/>
             </events>
         </switch>
         <switch x="54" y="6" id="Switch_-748926888" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="59" y="7"/>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="59" y="6"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="59" y="7" tile="51"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="59" y="6" tile="2"/>
             </events>
         </switch>
         <switch x="15" y="8" id="Switch_1724586124" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="12" y="11"/>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="13" y="11"/>
-                <event type="change_tile" id="8" emitter="user" repeat="infinite" x="11" y="11"/>
-                <event type="change_tile" id="7" emitter="user" repeat="infinite" x="14" y="11"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="12" y="11" tile="2"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="13" y="11" tile="2"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="11" y="11" tile="8"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="14" y="11" tile="7"/>
             </events>
         </switch>
         <switch x="27.5" y="2" id="Switch_-1124354142" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="22" y="3"/>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="22" y="2"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="22" y="3" tile="51"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="22" y="2" tile="2"/>
             </events>
         </switch>
         <switch x="75" y="20" id="Switch_-1857338489" type="1" flags="3" activeTime="10">
             <events>
-                <event type="change_tile" id="5" emitter="user" repeat="infinite" x="77" y="19"/>
-                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="78" y="19"/>
-                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="79" y="19"/>
-                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="80" y="19"/>
-                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="81" y="19"/>
-                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="82" y="19"/>
-                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="83" y="19"/>
-                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="84" y="19"/>
-                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="85" y="19"/>
-                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="86" y="19"/>
-                <event type="change_tile" id="17" emitter="user" repeat="infinite" x="87" y="19"/>
-                <event type="change_tile" id="5" emitter="user" repeat="infinite" x="88" y="19"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="77" y="19" tile="5"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="78" y="19" tile="17"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="79" y="19" tile="17"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="80" y="19" tile="17"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="81" y="19" tile="17"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="82" y="19" tile="17"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="83" y="19" tile="17"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="84" y="19" tile="17"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="85" y="19" tile="17"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="86" y="19" tile="17"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="87" y="19" tile="17"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="88" y="19" tile="5"/>
             </events>
         </switch>
         <switch x="30" y="8" id="Switch_298918982" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="27" y="13"/>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="27" y="12"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="27" y="13" tile="51"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="27" y="12" tile="2"/>
             </events>
         </switch>
         <switch x="89" y="20" id="Switch_-1042260879" type="1" flags="1" activeTime="0">
             <events>
-                <event type="change_tile" id="43" emitter="user" repeat="infinite" x="74" y="27"/>
-                <event type="change_tile" id="43" emitter="user" repeat="infinite" x="74" y="26"/>
-                <event type="change_tile" id="51" emitter="user" repeat="infinite" x="78" y="27"/>
-                <event type="change_tile" id="2" emitter="user" repeat="infinite" x="78" y="26"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="74" y="27" tile="43"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="74" y="26" tile="43"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="78" y="27" tile="51"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="78" y="26" tile="2"/>
             </events>
         </switch>
     </switches>
@@ -130,18 +130,18 @@
     </links>
     <enemies/>
     <objects>
-        <object x="31" y="12" id="Flag" type="6">
-	  <events>
-	    <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
-	  </events>
-	</object>
-        <object x="1.5" y="25" id="Object_685118022" type="3"/>
-        <object x="44" y="10" id="Object_824938979" type="3"/>
-        <object x="44" y="6" id="Object_-185075635" type="3"/>
-        <object x="44" y="2" id="Object_997389812" type="3"/>
-        <object x="111" y="21" id="Object_1807130335" type="3"/>
-        <object x="91" y="12" id="Object_-1255430504" type="3"/>
-        <object x="66" y="12" id="Object_1004844895" type="3"/>
+        <object x="31" y="12" id="Flag" type="6" phy_gravity="0">
+            <events>
+                <event type="inject_message" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
+            </events>
+        </object>
+        <object x="1.5" y="25" id="Object_685118022" type="3" phy_gravity="0"/>
+        <object x="44" y="10" id="Object_824938979" type="3" phy_gravity="0"/>
+        <object x="44" y="6" id="Object_-185075635" type="3" phy_gravity="0"/>
+        <object x="44" y="2" id="Object_997389812" type="3" phy_gravity="0"/>
+        <object x="111" y="21" id="Object_1807130335" type="3" phy_gravity="0"/>
+        <object x="91" y="12" id="Object_-1255430504" type="3" phy_gravity="0"/>
+        <object x="66" y="12" id="Object_1004844895" type="3" phy_gravity="0"/>
     </objects>
     <exit type="region" posx="0" posy="0" sizex="0" sizey="0" id=""/>
     <camera/>

@@ -57,6 +57,12 @@ const Ogre::Real CShot::SHOT_DAMAGE[CShot::ST_COUNT] = {
   0.5,
   0.25
 };
+const Ogre::Real SHOT_DESTROY_ON_WALL_COLLISION[CShot::ST_COUNT] = {
+  true,
+  false,
+  true,
+  true,
+};
 const Ogre::Real BOMB_EXPLOSION_TIME = 5;
 const Ogre::Real BOMB_EXPLOSION_RADIUS = 1.75;
 
@@ -73,35 +79,33 @@ CShot::CShot(CMap &map,
                   map.get2dManager(),
                   vCenter - SHOT_SIZE[eShotType] * 0.5,
                   SHOT_SIZE[eShotType]),
-  m_bAffectedByGravity(SHOT_AFFECTED_BY_GRAVITY[eShotType]),
-  m_vSpeed(Ogre::Vector2::ZERO),
   m_eShotDirection(eShotDirection),
+        //if (m_uiType == ST_BOLT) new CExplosion(m_Map, getCenter(), CExplosion::ET_BOLT);
+        //else if (m_uiType == ST_SKULL) new CExplosion(m_Map, getCenter(), CExplosion::ET_SKULL);
   m_fTimer(0),
   m_eState(SS_NONE),
   m_uiDamages(uiDmg),
   m_pCatchedEnemy(NULL),
   m_sCatchedEnemyID("") {
   setType(eShotType);
+  setGravity(SHOT_AFFECTED_BY_GRAVITY[m_uiType] ? c_fGravity : 0);
   constructor_impl();
 }
 CShot::CShot(CMap &map,
-	     const tinyxml2::XMLElement *pElement) 
+	     const tinyxml2::XMLElement *pElement)
   : CAnimatedSprite(map,
 		    map.getShotsEntity(),
 		    &map,
 		    map.get2dManager(),
 		    pElement,
 		    SHOT_SIZE[EnumAttribute<EShotTypes>(pElement, "type", ST_COUNT, true)]),
-    m_bAffectedByGravity(BoolAttribute(pElement,
-				       "affected_by_gravity",
-				       SHOT_AFFECTED_BY_GRAVITY[EnumAttribute<EShotTypes>(pElement, "type", ST_COUNT, true)])),
-    m_vSpeed(Vector2Attribute(pElement, "speed", Ogre::Vector2::ZERO)),
     m_eShotDirection(EnumAttribute<EShotDirections>(pElement, "direction", SD_RIGHT, true)),
     m_fTimer(RealAttribute(pElement, "timer", 0)),
     m_eState(EnumAttribute<EShotStates>(pElement, "state", SS_NONE)),
     m_uiDamages(IntAttribute(pElement, "damages")),
     m_pCatchedEnemy(NULL),
     m_sCatchedEnemyID(Attribute(pElement, "catched_enemy", Ogre::StringUtil::BLANK)) {
+  setGravity(SHOT_AFFECTED_BY_GRAVITY[m_uiType] ? c_fGravity : 0);
   constructor_impl();
 }
 void CShot::init() {
@@ -142,7 +146,8 @@ void CShot::constructor_impl() {
 void CShot::launch(const Ogre::Vector2 &vInitialSpeed, unsigned int uiNewAnimationSequence) {
   m_fTimer = 0;
   m_eState = SS_LAUNCHED;
-  m_vSpeed = vInitialSpeed * SHOT_SPEED[m_uiType];
+  setSpeed(vInitialSpeed * SHOT_SPEED[m_uiType]);
+  setSleeping(false);
   if (uiNewAnimationSequence == SA_COUNT) {
     switch (m_uiType) {
     case ST_COLUMN:
@@ -162,64 +167,13 @@ void CShot::launch(const Ogre::Vector2 &vInitialSpeed, unsigned int uiNewAnimati
 void CShot::update(Ogre::Real tpf) {
   if (m_eState == SS_LAUNCHED) {
     // change the position and speed
-    if (m_bAffectedByGravity) {
-      m_vSpeed.y += c_fGravity * tpf;
-    }
-
     if (m_uiType == ST_BOLT || m_uiType == ST_SKULL || m_uiType == ST_COLUMN) {
-      m_vPosition += m_vSpeed * tpf;
-
-      // check for collisions
-      if (m_Map.hitsTile(CTile::TF_UNPASSABLE, getWorldBoundingBox())) {
-        // create
-        if (m_uiType == ST_BOLT) new CExplosion(m_Map, getCenter(), CExplosion::ET_BOLT);
-        else if (m_uiType == ST_SKULL) new CExplosion(m_Map, getCenter(), CExplosion::ET_SKULL);
-
-        destroy();
-      }
-      if (m_Map.outOfMap(getWorldBoundingBox())) {
-        // just destroy it
-        destroy();
-      }
-
       hit();
     } else if (m_uiType == ST_BOMB) {
       m_fTimer += tpf;
       if (m_fTimer > BOMB_EXPLOSION_TIME) {
         m_Map.createExplosion(getCenter(), BOMB_EXPLOSION_RADIUS);
         destroy();
-      } else {
-        bool bOnGround = false;
-        CBoundingBox2d bbOverlap;
-        unsigned int uiCCD = m_Map.hitsTile(CTile::TF_UNPASSABLE,
-                                              getWorldBoundingBox(),
-                                              &bbOverlap);
-
-        m_vPosition.x += m_vSpeed.x * tpf;
-        if (uiCCD & CCD_RIGHT && m_vSpeed.x > 0) {
-          m_vPosition.x -= m_vSpeed.x * tpf;
-          m_vSpeed.x *= -0.5;
-        } else if (uiCCD & CCD_LEFT && m_vSpeed.x < 0) {
-          m_vPosition.x -= m_vSpeed.x * tpf;
-          m_vSpeed.x *= -0.5;
-        }
-
-        m_vPosition.y += m_vSpeed.y * tpf;
-        uiCCD = m_Map.hitsTile(CTile::TF_UNPASSABLE,
-                                 getWorldBoundingBox(),
-                                 &bbOverlap);
-        if (uiCCD & CCD_BOTTOM && m_vSpeed.y < 0) {
-          m_vPosition.y -= m_vSpeed.y * tpf;
-          m_vSpeed.y *= -0.5;
-          bOnGround = true;
-        } else if (uiCCD & CCD_TOP && m_vSpeed.y > 0) {
-          m_vPosition.y -= m_vSpeed.y * tpf;
-          m_vSpeed.y *= -0.5;
-        }
-
-        if (bOnGround) {
-          m_vSpeed.x -= m_vSpeed.x * 2 * tpf;
-        }
       }
     }
   }
@@ -280,19 +234,52 @@ void CShot::hit() {
     }
   }
 }
+
 void CShot::writeToXMLElement(tinyxml2::XMLElement *pElement, EOutputStyle eStyle) const {
   CAnimatedSprite::writeToXMLElement(pElement, eStyle);
   pElement->SetAttribute("type", m_uiType);
   pElement->SetAttribute("direction", m_eShotDirection);
   pElement->SetAttribute("damages", m_uiDamages);
-  
+
   if (eStyle == OS_FULL) {
-    pElement->SetAttribute("affected_by_gravity", m_bAffectedByGravity);
-    SetAttribute(pElement, "speed", m_vSpeed);
     pElement->SetAttribute("timer", m_fTimer);
     pElement->SetAttribute("state", m_eState);
     if (m_pCatchedEnemy) {
       pElement->SetAttribute("catched_enemy", m_pCatchedEnemy->getID().c_str());
     }
   }
+}
+
+void CShot::handleOutOfMap() {
+  destroy();
+}
+
+
+bool CShot::handleHorizontalTileCollision(unsigned int uiCCD, Ogre::Real tpf) {
+  if (SHOT_DESTROY_ON_WALL_COLLISION[m_uiType]) {
+    createExplosion();
+    destroy();
+    return false;
+  }
+  else {
+    return CPhysicsEntity::handleHorizontalTileCollision(uiCCD, tpf);
+  }
+}
+
+bool CShot::handleVerticalTileCollision(unsigned int uiCCD, Ogre::Real tpf) {
+  if (SHOT_DESTROY_ON_WALL_COLLISION[m_uiType]) {
+    createExplosion();
+    destroy();
+    return false;
+  }
+  else {
+    return CPhysicsEntity::handleVerticalTileCollision(uiCCD, tpf);
+  }
+}
+
+void CShot::createExplosion() {
+  if (m_uiType == ST_BOLT)
+    new CExplosion(m_Map, getCenter(), CExplosion::ET_BOLT);
+  else if (m_uiType == ST_SKULL)
+    new CExplosion(m_Map, getCenter(), CExplosion::ET_SKULL);
 }

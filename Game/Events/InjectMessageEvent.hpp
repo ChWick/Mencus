@@ -27,8 +27,8 @@ class CInjectMessageEvent : public CEvent {
 private:
   CMessage m_Message;
 public:
-  CInjectMessageEvent(CMap &map);
-  CInjectMessageEvent(CMap &map, const tinyxml2::XMLElement *pElem);
+  CInjectMessageEvent(CMap &map, CEntity &owner);
+  CInjectMessageEvent(CMap &map, CEntity &owner, const tinyxml2::XMLElement *pElem);
 
   void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;
 

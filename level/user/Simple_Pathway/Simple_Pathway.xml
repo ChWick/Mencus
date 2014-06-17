@@ -1,4 +1,4 @@
-<map difficulty="easy" background="forest" sizex="141" sizey="15">
+<map difficulty="easy" background="forest" sizex="141" sizey="15" version="2">
     <player x="0" y="1" id="Player" type="0" hp="10" direction="1"/>
     <tiles invert="0">
         <row tiles="24 26 26 24 26 24 24 24 26 26 24 26 24 26 24 24 26 24 26 26 26 26 26 24 24 24 26 24 24 26 26 24 24 26 24 24 26 24 26 24 24 24 24 24 24 24 26 26 26 24 26 24 26 24 24 26 26 24 26 24 26 26 24 26 26 24 24 24 24 24 26 24 24 24 24 26 24 26 24 24 26 26 26 24 26 24 24 26 26 26 26 26 24 26 26 26 26 26 26 24 26 24 26 24 26 26 26 26 24 26 26 26 26 26 24 26 24 24 26 26 24 26 24 26 24 24 26 26 24 24 26 24 24 26 24 26 26 26 24 24 26 "/>
@@ -20,28 +20,28 @@
     <switches>
         <switch x="16.59375" y="1" id="1815859899" type="0" flags="4" activeTime="0">
             <events>
-                <event type="change_tile" id="31" emitter="user" repeat="none" x="1" y="2"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="none" x="1" y="2" tile="31"/>
             </events>
         </switch>
         <switch x="43.5625" y="1" id="2051724829" type="0" flags="4" activeTime="0">
             <events>
-                <event type="change_tile" id="31" emitter="user" repeat="none" x="42" y="6"/>
-                <event type="change_tile" id="31" emitter="user" repeat="infinite" x="39" y="5"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="none" x="42" y="6" tile="31"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="39" y="5" tile="31"/>
             </events>
         </switch>
         <switch x="107.53125" y="1" id="318153055" type="0" flags="4" activeTime="0">
             <events>
-                <event type="change_tile" id="23" emitter="user" repeat="none" x="117" y="7"/>
-                <event type="change_tile" id="23" emitter="user" repeat="none" x="117" y="6"/>
-                <event type="change_tile" id="31" emitter="user" repeat="none" x="111" y="1"/>
-                <event type="change_tile" id="31" emitter="user" repeat="none" x="111" y="2"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="none" x="117" y="7" tile="23"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="none" x="117" y="6" tile="23"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="none" x="111" y="1" tile="31"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="none" x="111" y="2" tile="31"/>
             </events>
         </switch>
         <switch x="113.46875" y="1" id="-934372969" type="0" flags="4" activeTime="0">
             <events>
-                <event type="change_tile" id="27" emitter="user" repeat="none" x="107" y="1"/>
-                <event type="change_tile" id="25" emitter="user" repeat="none" x="111" y="1"/>
-                <event type="change_tile" id="29" emitter="user" repeat="none" x="111" y="2"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="none" x="107" y="1" tile="27"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="none" x="111" y="1" tile="25"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="none" x="111" y="2" tile="29"/>
             </events>
         </switch>
     </switches>
@@ -55,7 +55,7 @@
         <enemy direction="1" jumps="0" hp="4" x="100.5" y="1" id="Enemy_-1236229296" type="2"/>
     </enemies>
     <objects>
-        <object x="130.5" y="1" id="Object_270438664" type="6"/>
+        <object x="130.5" y="1" id="Object_270438664" type="6" phy_gravity="0"/>
     </objects>
     <exit type="region" posx="130" posy="0" sizex="2" sizey="15" id=""/>
     <camera>

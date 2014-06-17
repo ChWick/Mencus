@@ -38,7 +38,7 @@ CGUIStatistics &CGUIStatistics::getSingleton() {
   return *msSingleton;
 }
 
-CGUIStatistics::CGUIStatistics(Window *pRoot) 
+CGUIStatistics::CGUIStatistics(Window *pRoot)
   : m_iSelectedSlot(0) {
   CInputListenerManager::getSingleton().addInputListener(this);
   // create cegui windows/buttons
@@ -48,6 +48,7 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
   pStatisticsRoot->setInheritsAlpha(false);
   pStatisticsRoot->setAlpha(1);
   pStatisticsRoot->setRiseOnClickEnabled(false);
+  pStatisticsRoot->moveToBack();
   m_pStatisticsRoot = pStatisticsRoot;
 
   CEGUI::Window *pBackground = pStatisticsRoot->
@@ -69,7 +70,7 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
   pFinishedText->setFont("dejavusans12");
   pFinishedText->setText("Mission accomplished");
   pFinishedText->setPosition(UVector2(UDim(0.05,0), UDim(0.05,0)));
-  pFinishedText->setSize(USize(UDim(0.9, 0), UDim(0.1, 0))); 
+  pFinishedText->setSize(USize(UDim(0.9, 0), UDim(0.1, 0)));
 
   CEGUI::Window *pStatisticsGroup = pButtonContainer->createChild("OgreTray/Group", "statisticsgroup");
   pStatisticsGroup->setFont("dejavusans12");
@@ -86,7 +87,7 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
   pRetryButton->subscribeEvent(
 			       CEGUI::PushButton::EventClicked,
 			       CEGUI::Event::Subscriber(&CGUIStatistics::onRetryClicked, this));
-  
+
 
   CEGUI::Window *pToMenuButton = pButtonContainer->createChild("OgreTray/Button", "ToMenu");
   pToMenuButton->setPosition(UVector2(UDim(0.6, 0), UDim(0.85, 0)));
@@ -194,7 +195,7 @@ void CGUIStatistics::showStatistics(const SStatistics &stats) {
   // round all values
   group->getChild("Data" + PropertyHelper<int>::toString(L_HITPOINTS))
     ->setText(PropertyHelper<int>::toString(stats.fHitpoints + 0.5));
-  
+
   group->getChild("Data" + PropertyHelper<int>::toString(L_MANAPOINTS))
     ->setText(PropertyHelper<int>::toString(stats.fManapoints + 0.5));
 

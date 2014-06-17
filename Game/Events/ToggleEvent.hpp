@@ -27,8 +27,8 @@ private:
   Ogre::String m_sEntityID;
   bool m_bInitialState;
 public:
-  CToggleEvent(CMap &map);
-  CToggleEvent(CMap &map, const tinyxml2::XMLElement *pElem);
+  CToggleEvent(CMap &map, CEntity &owner);
+  CToggleEvent(CMap &map, CEntity &owner, const tinyxml2::XMLElement *pElem);
 
   void init();
 
