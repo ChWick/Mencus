@@ -18,7 +18,7 @@
             <page text="msg_start"/>
             <page text="msg_attack"/>
         </event>
-        <event type="inject_message" emitter="message_page_chagned" src_id="InitialMessageBox" src_page="1" msg_type="toggle_touch_input_blink" msg_button="attack" msg_enabled="true"/>
+        <event type="inject_message" emitter="message_page_changed" src_id="InitialMessageBox" src_page="1" msg_type="toggle_touch_input_blink" msg_button="attack" msg_enabled="true"/>
     </events>
     <switches/>
     <endangeredTiles/>
