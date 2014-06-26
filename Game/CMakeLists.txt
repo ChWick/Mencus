@@ -1,10 +1,11 @@
 project(Game)
 
 
-file(GLOB Game_source_files *.cpp)
+file(GLOB_RECURSE Game_source_files *.cpp)
 file(GLOB Game_source_event_files Events/*.cpp)
 file(GLOB Game_source_xmlresources_files XMLResources/*.cpp)
-file(GLOB Game_include_files *.hpp)
+file(GLOB Game_source_xmlresources_files XMLResources/*.cpp)
+file(GLOB_RECURSE Game_include_files *.hpp)
 
 ADD_DEFINITIONS(-std=c++11 -Wall)
 

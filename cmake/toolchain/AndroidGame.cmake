@@ -16,10 +16,8 @@ if (ANDROID)
   SET(ANDROID_MOD_NAME "Mencus")
   SET(DEPENDENCIES_LDLIBS "")
   SET(SOURCE_DIR "@CMAKE_SOURCE_DIR@/Game")
-  FILE(GLOB GAME_SOURCE_FILES "Game/*.cpp")
-  FILE(GLOB GAME_SOURCE_FILES_EVENTS "Game/Events/*.cpp")
-  FILE(GLOB GAME_SOURCE_FILES_XMLRESOURCES "Game/XMLResources/*.cpp")
-  STRING (REPLACE ";" "\nLOCAL_SRC_FILES += " GAME_SOURCE_FILES "${GAME_SOURCE_FILES} ${GAME_SOURCE_FILES_EVENTS} ${GAME_SOURCE_FILES_XMLRESOURCES}")
+  FILE(GLOB_RECURSE GAME_SOURCE_FILES "Game/*.cpp")
+  STRING (REPLACE ";" "\nLOCAL_SRC_FILES += " GAME_SOURCE_FILES "${GAME_SOURCE_FILES}")
   SET(SOURCE_FILES ${GAME_SOURCE_FILES})
   SET(ANT_EXECUTABLE "ant")
   
@@ -46,7 +44,8 @@ if (ANDROID)
   file(MAKE_DIRECTORY "${NDKOUT}/level")
   file(MAKE_DIRECTORY "${NDKOUT}/level/user")
   
-  if (MENCUS_ENABLE_ADS) 
+  # we need network access if using the amazon game circle
+  if (MENCUS_ENABLE_ADS OR MENCUS_USE_AMAZON_GAME_CIRCLE) 
     SET(MENCUS_ANDROID_PERMISSIONS
       "<uses-permission android:name=\"android.permission.INTERNET\" /> 
   <!-- Used to avoid sending an ad request if there is no connectivity. -->
@@ -63,9 +62,11 @@ if (ANDROID)
   SET(RESOURCES_MINIMAL "Minimal")
   SET(RESOURCES_USING_APK "APK")
   SET(RESOURCES_PREFIX "")
+
   configure_file("${MENCUS_TEMPLATES_DIR}/resources.cfg.in" "${NDKOUT}/assets/resources.cfg" @ONLY)
 
   # copy assets files
+  file(COPY "${CMAKE_SOURCE_DIR}/android/assets" DESTINATION "${NDKOUT}")
   file(COPY "${CMAKE_SOURCE_DIR}/cegui" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/gfx/overlay" DESTINATION "${NDKOUT}/assets/gfx")
   file(GLOB gfxPacks "${CMAKE_SOURCE_DIR}/gfx/*.zip")
@@ -90,6 +91,11 @@ if (ANDROID)
 
   # copy the java src code files
   file(COPY "${CMAKE_SOURCE_DIR}/android/src" DESTINATION "${NDKOUT}")
+
+  # copy the amazon files if needed
+  if (MENCUS_USE_AMAZON_GAME_CIRCLE) 
+    file(COPY "${CMAKE_SOURCE_DIR}/android/jni" DESTINATION "${NDKOUT}")
+  endif()
 
   add_custom_command(
     TARGET Game

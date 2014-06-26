@@ -31,4 +31,7 @@
 // Ads enabled
 #define MENCUS_ENABLE_ADS     @MENCUS_ENABLE_ADS@
 
+// use amazon game circle
+#define MENCUS_USE_AMAZON_GAME_CIRCLE    @MENCUS_USE_AMAZON_GAME_CIRCLE@
+
 #endif
