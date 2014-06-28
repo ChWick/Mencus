@@ -38,7 +38,6 @@ public class AmazonGameCirclePlugin extends MencusPlugin {
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-	    System.loadLibrary("AmazonGamesJni");
 	    callback = new AmazonGamesCallback() {
 	        @Override
 	        public void onServiceNotReady(AmazonGamesStatus status) {
