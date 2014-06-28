@@ -43,7 +43,7 @@ public class AmazonGameCirclePlugin extends MencusPlugin {
 	        @Override
 	        public void onServiceNotReady(AmazonGamesStatus status) {
 	            //unable to use service
-	        	Toast.makeText(mActivity, "Unable to use GameCircle", Toast.LENGTH_LONG).show();
+	        	Toast.makeText(mActivity, "Unable to use GameCircle (" + status.toString() + ")", Toast.LENGTH_LONG).show();
 	        }
 	        @Override
 	        public void onServiceReady(AmazonGamesClient amazonGamesClient) {

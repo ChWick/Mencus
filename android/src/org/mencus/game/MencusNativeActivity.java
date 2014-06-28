@@ -27,6 +27,7 @@ import java.util.Locale;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.NativeActivity;
 import android.os.Bundle;
@@ -50,10 +51,16 @@ public class MencusNativeActivity extends NativeActivity {
 	void setAdClosed(boolean addClosed) {mAddClosed = addClosed;}
 	boolean showAdWhenLoaded() {return mShowAdWhenLoaded;}
 
+    static {
+        System.loadLibrary("AmazonGamesJni");
+    	//System.loadLibrary("Mencus");
+    }
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		_activity = this;
 		super.onCreate(savedInstanceState);
+
 		
 		mPlugins.add(new AmazonGameCirclePlugin(this));
 		for (Iterator<MencusPlugin> i = mPlugins.iterator(); i.hasNext();) {
