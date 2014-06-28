@@ -2,9 +2,10 @@
 #define __GAME_CIRCLE_HPP__
 
 #include "GlobalBuildDefines.hpp"
+#include "SocialGamingConnectionInterface.hpp"
+
 #if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
 
-#include "SocialGamingConnectionInterface.hpp"
 #include "includes/AchievementsClientInterface.h"
 
 namespace GameCircle {
@@ -14,7 +15,7 @@ public:
 void loadAchievements() {}
 };
 
-class GetAchCbImpl : public AmazonGames::IGetAchievementCb {
+  class GetAchCbImpl : public AmazonGames::IGetAchievementCb {
 public:
 GetAchCbImpl();
 ~GetAchCbImpl();
