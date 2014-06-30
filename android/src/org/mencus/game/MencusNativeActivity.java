@@ -100,6 +100,10 @@ public class MencusNativeActivity extends NativeActivity {
 		}
 	}
 	public void onDestroy() {
+		for (Iterator<MencusPlugin> i = mPlugins.iterator(); i.hasNext();) {
+			i.next().onDestroy();
+		}
+		
 		super.onDestroy();
 		mLoadDialog = null;
 	}

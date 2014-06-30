@@ -11,6 +11,7 @@ public abstract class MencusPlugin {
 	}
 	
 	public abstract void onCreate(Bundle savedInstanceState);
+	public abstract void onDestroy();
 	public abstract void onPause();
 	public abstract void onResume();
 }

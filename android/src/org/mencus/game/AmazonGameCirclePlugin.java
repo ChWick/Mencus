@@ -47,12 +47,20 @@ public class AmazonGameCirclePlugin extends MencusPlugin {
 	        @Override
 	        public void onServiceReady(AmazonGamesClient amazonGamesClient) {
 	            agsClient = amazonGamesClient;
+	            agsClient.initializeJni();
 	        	Toast.makeText(mActivity, "Ready to use GameCircle", Toast.LENGTH_LONG).show();
 	            //ready to use GameCircle
 	        }
 	    };
 	    myGameFeatures = EnumSet.of(
 	        AmazonGamesFeature.Achievements, AmazonGamesFeature.Leaderboards);
+	}
+
+	@Override
+	public void onDestroy() {
+	    if (agsClient != null) {
+	        AmazonGamesClient.shutdown();
+	    }
 	}
 
 }
