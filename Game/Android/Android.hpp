@@ -256,6 +256,9 @@ public:
       case APP_CMD_PAUSE:
 	m_bRenderPaused = true;
 	break;
+      case APP_CMD_RESUME:
+	m_bRenderPaused = false;
+	break;
       case APP_CMD_GAINED_FOCUS:
 	break;
       case APP_CMD_LOST_FOCUS:
