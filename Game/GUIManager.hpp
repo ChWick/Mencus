@@ -27,6 +27,7 @@
 #include <CEGUI/RendererModules/Ogre/Renderer.h>
 #include "InputListener.hpp"
 #include <vector>
+#include "Plugins/GUIOverlay.hpp"
 
 class CGUIInput;
 
@@ -50,6 +51,7 @@ private:
 
   CEGUI::Sizef m_vNativeRes;
   std::vector<CEGUI::String> m_vFonts;
+  std::list<CGUIOverlay *> m_lGUIOverlays;
 public:
   static CGUIManager& getSingleton(void);
   static CGUIManager* getSingletonPtr(void);
