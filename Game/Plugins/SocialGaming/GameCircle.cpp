@@ -1,25 +1,49 @@
 #include "GameCircle.hpp"
+#include "Sleep.hpp"
 
 #if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
-#include <android/log.h>
+#include "Log.hpp"
 
 using namespace AmazonGames;
 
 using namespace GameCircle;
-  
-GetAchCbImpl::GetAchCbImpl() {
+
+
+CConnectionInterface::CConnectionInterface() {
+  PlayerClientInterface::setSignedInStateChangedListener(this);
+  changeSignedIn(PlayerClientInterface::isSignedIn());
 }
-  
-GetAchCbImpl::~GetAchCbImpl() {
+
+void CConnectionInterface::updateAchievementsProgress(SocialGaming::EAchievements achievement,
+						      float fPercentComplete) {
+  LOGV("Before update achievements progress");
+  AchievementsClientInterface::updateProgress(getAchievementId(achievement).c_str(),
+					      fPercentComplete,
+					      this);
+  LOGV("After update achievements progress");
 }
- 
-void GetAchCbImpl::onGetAchievementCb(ErrorCode errorCode,
-				      const AchievementData* responseStruct,
-				      int developerTag) {
-  // Your callback action code
-  //
-  // Example struct access:
-  __android_log_write(ANDROID_LOG_DEBUG, "GetAchCbImpl", responseStruct->id);
+void CConnectionInterface::showSocalGamingOverlay() {
+  LOGV("Before show achievements overlay");
+  AchievementsClientInterface::showAchievementsOverlay();
+  //GameCircleClientInterface::showGameCircle();
+  LOGV("After");
+}
+
+
+void CConnectionInterface::onUpdateProgressCb(
+					      ErrorCode errorCode,
+					      const UpdateProgressResponse* responseStruct,
+					      int developerTag) {
+  LOGV("onUpdateProgressCb %d", errorCode);
+}
+
+std::string CConnectionInterface::getAchievementId(SocialGaming::EAchievements achievement) {
+  switch (achievement) {
+  case SocialGaming::DEBUG_ACHIEVEMENT:
+    return "boot_1";
+  default:
+    LOGW("Achievement not defined in %s", __FILE__);
+  }
 }
 
 

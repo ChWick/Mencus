@@ -2,22 +2,28 @@
 #define _SOCIAL_GAMING_HPP_
 
 #include "Achievements.hpp"
+#include <OgreSingleton.h>
+#include "Statistics.hpp"
+
 namespace SocialGaming {
   class CSocialGamingConnectionInterface;
-  class CSocialGaming {
+  class CSocialGaming : public Ogre::Singleton<CSocialGaming> {
   private:
-    static CSocialGaming m_Singleton;
 
-    bool m_abAchievements[ACHIEVEMENT_COUNT];
+    float m_afAchievements[ACHIEVEMENT_COUNT];
     CSocialGamingConnectionInterface *m_pConnection;
-  
-    
-  private:
-    CSocialGaming();
 
   public:
-    static CSocialGaming &getSingleton() {return m_Singleton;}
-    static CSocialGaming *getSingletonPtr() {return &m_Singleton;}
+    static CSocialGaming &getSingleton() {return *msSingleton;}
+    static CSocialGaming *getSingletonPtr() {return msSingleton;}
+
+    CSocialGaming();
+
+    CSocialGamingConnectionInterface *getConnection() {return m_pConnection;}
+
+    void update(const SStatistics &stats);
+
+    void updateAchievementsProgress(EAchievements achievement, float fPercentComplete);
   };
 };
 
