@@ -64,7 +64,7 @@ public class MencusNativeActivity extends NativeActivity {
 		
 		mPlugins.add(new AmazonGameCirclePlugin(this));
 		for (Iterator<MencusPlugin> i = mPlugins.iterator(); i.hasNext();) {
-			i.next().onCreate(savedInstanceState);
+			i.next().onCreate();
 		}
         //Toast.makeText(this, "Loading, please wait...", Toast.LENGTH_LONG).show();
 		//showAdPopup();
@@ -106,6 +106,12 @@ public class MencusNativeActivity extends NativeActivity {
 		
 		super.onDestroy();
 		mLoadDialog = null;
+	}
+	
+	public void startPlugins() {
+		for (Iterator<MencusPlugin> i = mPlugins.iterator(); i.hasNext();) {
+			i.next().start();
+		}
 	}
 
 	// Our popup window, you will call it from your C/C++ code later

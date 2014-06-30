@@ -21,23 +21,26 @@ public class AmazonGameCirclePlugin extends MencusPlugin {
 	 
 	AmazonGamesCallback callback;
 	 
-	//list of features your game uses (in this example, achievements and leaderboards)
+	//list of features the game uses
 	EnumSet<AmazonGamesFeature> myGameFeatures;
 		
 	@Override
-	public void onPause() {
+	protected void onPauseImpl() {
 	    if (agsClient != null) {
 	        AmazonGamesClient.release();
 	    }
 	}
 
 	@Override
-	public void onResume() {
+	protected void onResumeImpl() {
+		//mActivity.runOnUiThread(new Runnable() {
+		//	public void run() {
 	    AmazonGamesClient.initialize(mActivity, callback, myGameFeatures);
+		//	}});
 	}
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreateImpl() {
 	    callback = new AmazonGamesCallback() {
 	        @Override
 	        public void onServiceNotReady(AmazonGamesStatus status) {
@@ -47,20 +50,17 @@ public class AmazonGameCirclePlugin extends MencusPlugin {
 	        @Override
 	        public void onServiceReady(AmazonGamesClient amazonGamesClient) {
 	            agsClient = amazonGamesClient;
-	            agsClient.initializeJni();
 	        	Toast.makeText(mActivity, "Ready to use GameCircle", Toast.LENGTH_LONG).show();
 	            //ready to use GameCircle
 	        }
 	    };
-	    myGameFeatures = EnumSet.of(
-	        AmazonGamesFeature.Achievements, AmazonGamesFeature.Leaderboards);
+	    //myGameFeatures = EnumSet.of(AmazonGamesFeature.Achievements, AmazonGamesFeature.Leaderboards);
+	    myGameFeatures = AmazonGamesFeature.all();
 	}
 
 	@Override
-	public void onDestroy() {
-	    if (agsClient != null) {
-	        AmazonGamesClient.shutdown();
-	    }
+	protected void onDestroyImpl() {
+        AmazonGamesClient.shutdown();
 	}
 
 }
