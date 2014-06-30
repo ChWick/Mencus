@@ -42,6 +42,7 @@
 #include "Region.hpp"
 #include "Events/Event.hpp"
 #include "MapInfo.hpp"
+#include "Plugins/SocialGaming/SocialGaming.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -684,6 +685,9 @@ void CMap::update(Ogre::Real tpf) {
       delete m_lEntitiesToDestroy.front();
       m_lEntitiesToDestroy.pop_front();
     }
+    
+    // update social gaming statistics
+    SocialGaming::CSocialGaming::getSingleton().update(m_Statistics);
   }
   if (!m_bRenderPause) {
   // draw links if debug

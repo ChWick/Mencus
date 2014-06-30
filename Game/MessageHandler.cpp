@@ -19,6 +19,7 @@
 
 #include "MessageHandler.hpp"
 #include "MessageInjector.hpp"
+#include "Log.hpp"
 
 template<> CMessageHandler *Ogre::Singleton<CMessageHandler>::msSingleton = 0;
 
