@@ -38,7 +38,7 @@ COverlay::COverlay(CEGUI::Window *pRoot)
   Window *pRestart = m_pRoot->createChild("OgreTray/Button", "Restart");
   pRestart->setPosition(UVector2(UDim(0, 0), UDim(0, 150)));
   pRestart->setSize(USize(UDim(1, 0), UDim(0, 50)));
-  pRestart->setText("Restart");
+  pRestart->setText("Log in");
   pRestart->subscribeEvent(PushButton::EventClicked,
 			       Event::Subscriber(&COverlay::onRestart, this));
   
@@ -82,7 +82,7 @@ bool COverlay::onShowOverlay(const CEGUI::EventArgs &args) {
 bool COverlay::onRestart(const CEGUI::EventArgs &args) {
   LOGI("before restart");
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-  OgreAndroidBridge::callJavaVoid("restartPlugins");
+  OgreAndroidBridge::callJavaVoid("startPlugins");
 #else
   LOGW("Restart not implemented");
 #endif

@@ -41,6 +41,12 @@ std::string CConnectionInterface::getAchievementId(SocialGaming::EAchievements a
   switch (achievement) {
   case SocialGaming::DEBUG_ACHIEVEMENT:
     return "boot_1";
+  case SocialGaming::BOOTS_1:
+    return "boot_1";
+  case SocialGaming::BOOTS_2:
+    return "boot_2";
+  case SocialGaming::BOOTS_3:
+    return "boot_3";
   default:
     LOGW("Achievement not defined in %s", __FILE__);
   }

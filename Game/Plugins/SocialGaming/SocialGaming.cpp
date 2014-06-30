@@ -25,13 +25,13 @@ void CSocialGaming::update(const SStatistics &stats) {
   if (stats.eMissionState == MS_ACCOMPLISHED) {
     LOGV("Level finished in social gaming: %s", stats.sLevelFileName.c_str());
     if (stats.sLevelFileName == "Tutorial_1") {
-      updateAchievementsProgress(DEBUG_ACHIEVEMENT, 25);
+      updateAchievementsProgress(BOOTS_1, 100);
     }
     else if (stats.sLevelFileName == "Tutorial_2") {
-      updateAchievementsProgress(DEBUG_ACHIEVEMENT, 50);
+      updateAchievementsProgress(BOOTS_2, 100);
     }
     else if (stats.sLevelFileName == "Tutorial_3") {
-      updateAchievementsProgress(DEBUG_ACHIEVEMENT, 75);
+      updateAchievementsProgress(BOOTS_3, 100);
     }
     else if (stats.sLevelFileName == "Tutorial_4") {
       updateAchievementsProgress(DEBUG_ACHIEVEMENT, 100);
