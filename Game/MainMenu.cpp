@@ -133,6 +133,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pMMRoot->setInheritsAlpha(false);
   m_pMMRoot->setAlpha(1);
   m_pMMRoot->setRiseOnClickEnabled(false);
+  m_pMMRoot->moveToBack();
 
   CEGUI::Window *pBackground = m_pMMRoot->
     createChild("OgreTray/StaticImage", "Background");
