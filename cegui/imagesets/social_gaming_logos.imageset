@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Imageset version="2" name="social_gaming_logos" imagefile="social_gaming_logos.png" autoScaled="vertical" >
+    <Image name="AmazonGameCircle" xPos="128" yPos="0" width="128" height="128" />
+</Imageset>
