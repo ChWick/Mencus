@@ -19,6 +19,8 @@ namespace SocialGaming {
 
     CSocialGaming();
 
+    void init();
+
     CSocialGamingConnectionInterface *getConnection() {return m_pConnection;}
 
     void update(const SStatistics &stats);

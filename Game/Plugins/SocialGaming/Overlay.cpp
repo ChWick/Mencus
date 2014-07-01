@@ -4,11 +4,6 @@
 #include "MessageTypes.hpp"
 #include "MessageHandler.hpp"
 #include "Log.hpp"
-#include <OgrePlatform.h>
-
-#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-#include "Android/Android.hpp"
-#endif
 
 using namespace SocialGaming;
 using namespace CEGUI;
@@ -36,7 +31,7 @@ COverlay::COverlay(CEGUI::Window *pRoot)
 			       Event::Subscriber(&COverlay::onShowOverlay, this));
   
   Window *pRestart = m_pRoot->createChild("OgreTray/Button", "Restart");
-  pRestart->setPosition(UVector2(UDim(0, 0), UDim(0, 150)));
+  pRestart->setPosition(UVector2(UDim(0, 0), UDim(0, 100)));
   pRestart->setSize(USize(UDim(1, 0), UDim(0, 50)));
   pRestart->setText("Log in");
   pRestart->subscribeEvent(PushButton::EventClicked,
@@ -59,18 +54,20 @@ COverlay::~COverlay() {
 void COverlay::sendMessageToAll(const CMessage &message) {
   if (message.getType() == CMessage::MT_SOCIAL_GAMING) {
     if (message.getInt() == SIGNED_IN_STATE_CHANGED) {
-      //setSignedIn(message.getBool());
+      setSignedIn(message.getBool());
     }
   }
 }
 
 void COverlay::setSignedIn(bool bSignedIn) {
-  m_pSignedInState->setText("Waiting for log in");
-  
   if (bSignedIn) {
     m_pSignedInState->setText("Logged in!");
   }
+  else {
+    m_pSignedInState->setText("Not connected.");
+  }
   m_pRoot->getChild("Restart")->setVisible(!bSignedIn);
+  m_pRoot->getChild("ShowOverlay")->setVisible(bSignedIn);
 }
 
 bool COverlay::onShowOverlay(const CEGUI::EventArgs &args) {
@@ -81,11 +78,7 @@ bool COverlay::onShowOverlay(const CEGUI::EventArgs &args) {
 }
 bool COverlay::onRestart(const CEGUI::EventArgs &args) {
   LOGI("before restart");
-#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-  OgreAndroidBridge::callJavaVoid("startPlugins");
-#else
-  LOGW("Restart not implemented");
-#endif
+  CSocialGaming::getSingleton().init();
   LOGI("after restart");
   return true;
 }
