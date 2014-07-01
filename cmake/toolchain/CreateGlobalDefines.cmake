@@ -2,6 +2,10 @@ if (NOT DEFINED MENCUS_USE_AMAZON_GAME_CIRCLE)
   set(MENCUS_USE_AMAZON_GAME_CIRCLE 0 CACHE INTEGER "Use the amazon game circle")
 endif()
 
+if (NOT DEFINED MENCUS_DEFAULT_LOGIN_TO_SOCIAL_GAMING)
+  set(MENCUS_DEFAULT_LOGIN_TO_SOCIAL_GAMING 0 CACHE INTEGER "Login to the selected social gaming platform by default")
+endif()
+
 if (NOT DEFINED MENCUS_ENABLE_MAP_EDITOR)
   set(MENCUS_ENABLE_MAP_EDITOR 1 CACHE INTEGER "Enable the mapeditor")
 endif()
