@@ -9,17 +9,21 @@ namespace SocialGaming {
   private:
     bool m_bSignedIn;
     std::string m_sName;
+    std::string m_sLogoImagesetLabel;
     
   public:
-    CSocialGamingConnectionInterface(const std::string &sName = "Social Gaming") 
+    CSocialGamingConnectionInterface(const std::string &sName = "Social Gaming",
+				     const std::string &sLogo = "AmazonGameCircle") 
       : m_bSignedIn(false),
-	m_sName(sName) {
+	m_sName(sName),
+	m_sLogoImagesetLabel(sLogo) {
     }
 
     // access methods
     void changeSignedIn(bool isSignedIn);
     bool isSignedIn() const {return m_bSignedIn;}
     const std::string &getName() const {return m_sName;}
+    const std::string &getLogoImagesetLabel() const {return m_sLogoImagesetLabel;}
 
     // virutal methods
     // =================================================================

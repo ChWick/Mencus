@@ -31,6 +31,7 @@
 #include "FileManager.hpp"
 #include "MessageHandler.hpp"
 #include "Plugins/SocialGaming/SocialGaming.hpp"
+#include "Settings.hpp"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
 #include "Android/Android.hpp"
@@ -551,6 +552,9 @@ void CGame::createScene() {
     Ogre::LogManager::getSingletonPtr()->logMessage("    no snapshot set");
   }
 
+  if (CSettings::getSingleton().getSocialGamingSettings().m_bLoginOnStart) {
+    SocialGaming::CSocialGaming::getSingleton().init();
+  }
   // call window resized once to adjust settings
   windowResized(mWindow);
 }

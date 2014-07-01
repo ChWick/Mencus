@@ -10,7 +10,8 @@ using namespace GameCircle;
 
 
 CConnectionInterface::CConnectionInterface() 
-  : CSocialGamingConnectionInterface("Amazon GameCircle") {
+  : CSocialGamingConnectionInterface("Amazon GameCircle",
+				     "AmazonGameCircle") {
 }
 
 bool CConnectionInterface::init() {
