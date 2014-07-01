@@ -21,6 +21,7 @@
 #include "FileManager.hpp"
 #include "XMLHelper.hpp"
 #include <tinyxml2.h>
+#include "GlobalBuildDefines.hpp"
 
 using namespace XMLHelper;
 using namespace tinyxml2;
@@ -45,6 +46,15 @@ SVideoSettings::SVideoSettings()
 #endif
 {
 }
+
+SSocialGamingSettings::SSocialGamingSettings() {
+#if MENCUS_DEFAULT_LOGIN_TO_SOCIAL_GAMING == 1
+  m_bLoginOnStart = true;
+#else
+  m_bLoginOnStart = false;
+#endif
+}
+
 CSettings::CSettings() {
   readFromFile();
 }
@@ -85,6 +95,12 @@ void CSettings::readFromFile() {
   if (!pVideo) {return;}
 
   m_VideoSettings.m_fHUDSize = RealAttribute(pVideo, "hud_size", m_VideoSettings.m_fHUDSize);
+
+  // social gaming
+  XMLElement *pSocialGaming = pRoot->FirstChildElement("social_gaming");
+  if (!pSocialGaming) {return;}
+
+  m_SocialGamingSettings.m_bLoginOnStart = BoolAttribute(pSocialGaming, "login_on_start", m_SocialGamingSettings.m_bLoginOnStart);
 }
 void CSettings::writeToFile() {
   XMLDocument doc;
@@ -110,6 +126,12 @@ void CSettings::writeToFile() {
   pSettingsElem->InsertEndChild(pVideo);
   
   pVideo->SetAttribute("hud_size", m_VideoSettings.m_fHUDSize);
+
+  // social gaming
+  XMLElement *pSocialGaming = doc.NewElement("social_gaming");
+  pSettingsElem->InsertEndChild(pSocialGaming);
+  
+  pSocialGaming->SetAttribute("login_on_start", m_SocialGamingSettings.m_bLoginOnStart ? "true" : "false");
 
 
   // do the output
