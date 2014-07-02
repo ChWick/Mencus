@@ -100,7 +100,6 @@ void CSocialGaming::update(const SStatistics &stats) {
   }
 }
 
-void CSocialGaming::updateAchievementsProgress(EAchievements achievement, float fPercentComplete) {
-  m_afAchievements[achievement] = fPercentComplete;
+void CSocialGaming::updateAchievementsProgress(EAchievements achievement, float fPercentComplete) {  
   m_pConnection->updateAchievementsProgress(achievement, fPercentComplete);
 }

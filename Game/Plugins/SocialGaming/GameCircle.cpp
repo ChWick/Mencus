@@ -1,13 +1,26 @@
+
 #include "GameCircle.hpp"
 #include "Sleep.hpp"
 
 #if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
 #include "Log.hpp"
 
-using namespace AmazonGames;
 
+using namespace AmazonGames;
+using namespace SocialGaming;
 using namespace GameCircle;
 
+
+// setup achievements map
+std::string CConnectionInterface::GAME_CIRCLE_ACHIEVEMENTS_MAP[SocialGaming::ACHIEVEMENT_COUNT] = {
+  "boot_1",               // DEBUG_ACHIEVEMENT
+  "boot_1",		  // BOOTS_1
+  "boot_2",		  // BOOTS_2
+  "boot_3"		  // BOOTS_3
+};
+
+std::string CConnectionInterface::GAME_CIRCLE_LEADERBOARDS_MAP[] {
+};
 
 CConnectionInterface::CConnectionInterface() 
   : CSocialGamingConnectionInterface("Amazon GameCircle",
@@ -17,6 +30,19 @@ CConnectionInterface::CConnectionInterface()
 bool CConnectionInterface::init() {
   PlayerClientInterface::setSignedInStateChangedListener(this);
   return PlayerClientInterface::isSignedIn();
+}
+
+void CConnectionInterface::loadAchievements() {
+  LOGV("Before load achievements progress");
+  AchievementsClientInterface::getAchievements(this);
+  LOGV("After load achievements progress");
+}
+
+void CConnectionInterface::updateLeaderboardValue(SocialGaming::ELeaderboards leaderboard,
+						  long long llValue) {
+  LOGV("Before update leaderboard %s value %lld", getLeaderboardId(leaderboard).c_str(), llValue);
+  LeaderboardsClientInterface::submitScore(getLeaderboardId(leaderboard).c_str(), llValue);
+  LOGV("After update leaderboard value");
 }
 
 void CConnectionInterface::updateAchievementsProgress(SocialGaming::EAchievements achievement,
@@ -39,23 +65,60 @@ void CConnectionInterface::onUpdateProgressCb(
 					      ErrorCode errorCode,
 					      const UpdateProgressResponse* responseStruct,
 					      int developerTag) {
-  LOGV("onUpdateProgressCb %d", errorCode);
-}
-
-std::string CConnectionInterface::getAchievementId(SocialGaming::EAchievements achievement) {
-  switch (achievement) {
-  case SocialGaming::DEBUG_ACHIEVEMENT:
-    return "boot_1";
-  case SocialGaming::BOOTS_1:
-    return "boot_1";
-  case SocialGaming::BOOTS_2:
-    return "boot_2";
-  case SocialGaming::BOOTS_3:
-    return "boot_3";
-  default:
-    LOGW("Achievement not defined in %s", __FILE__);
+  if (errorCode == NO_ERROR) {
+    if (responseStruct->isNewlyUnlocked) {
+      LOGI("Newly unlocked Achievement");
+      onLeaderboadReasonUpdated(REASON_ACHIEVEMENT_UNLOCKED);
+    }
+  }
+  else {
+    LOGW("Error in onUpdateProgressCb %d", errorCode);
   }
 }
 
+void CConnectionInterface::onGetAchievementsCb(
+					       AmazonGames::ErrorCode errorCode,
+					       const AmazonGames::AchievementsData* responseStruct,
+					       int developerTag) {
+  if (errorCode == AmazonGames::NO_ERROR) {
+    for (int i = 0; i < responseStruct->numAchievements; i++) {
+      const AchievementData data = responseStruct->achievements[i];
+      SAchievementData &achievment = m_Achievements[getAchievementId(data.id)];
+      achievment.id = getAchievementId(data.id);
+      achievment.unlocked = data.isUnlocked;
+      achievment.pointValue = data.pointValue;
+      achievment.progress = data.progress;
+    }
+  }
+  else {
+    LOGW("error onGetAchievementsCb (%d)", errorCode);
+  }
+}
+
+std::string CConnectionInterface::getAchievementId(SocialGaming::EAchievements achievement) const {
+  return GAME_CIRCLE_ACHIEVEMENTS_MAP[achievement];
+}
+SocialGaming::EAchievements CConnectionInterface::getAchievementId(const std::string &name) const {
+  for (int i = 0; i < SocialGaming::ACHIEVEMENT_COUNT; i++) {
+    if (GAME_CIRCLE_ACHIEVEMENTS_MAP[i] == name) {
+      return static_cast<SocialGaming::EAchievements>(i);
+    }
+  }
+  LOGW("Achievement id %s not defined", name.c_str());
+  return SocialGaming::DEBUG_ACHIEVEMENT;
+}
+
+std::string CConnectionInterface::getLeaderboardId(SocialGaming::ELeaderboards leaderboard) const {
+  return GAME_CIRCLE_LEADERBOARDS_MAP[leaderboard];
+}
+SocialGaming::ELeaderboards CConnectionInterface::getLeaderboardId(const std::string &name) const {
+  for (int i = 0; i < SocialGaming::LEADERBOARDS_COUNT; i++) {
+    if (GAME_CIRCLE_LEADERBOARDS_MAP[i] == name) {
+      return static_cast<SocialGaming::ELeaderboards>(i);
+    }
+  }
+  LOGW("Achievement id %s not defined", name.c_str());
+  return SocialGaming::LEADERBOARDS_COUNT;
+}
 
 #endif // MENCUS_USE_AMAZON_GAME_CIRCLE

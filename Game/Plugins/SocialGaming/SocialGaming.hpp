@@ -9,8 +9,6 @@ namespace SocialGaming {
   class CSocialGamingConnectionInterface;
   class CSocialGaming : public Ogre::Singleton<CSocialGaming> {
   private:
-
-    float m_afAchievements[ACHIEVEMENT_COUNT];
     CSocialGamingConnectionInterface *m_pConnection;
 
   public:

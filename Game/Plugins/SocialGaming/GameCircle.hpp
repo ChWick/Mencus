@@ -10,19 +10,25 @@
 #include "includes/AchievementsClientInterface.h"
 #include "includes/PlayerClientInterface.h"
 #include "includes/GameCircleClientInterface.h"
+#include "includes/LeaderboardsClientInterface.h"
 
 namespace GameCircle {
 
   class CConnectionInterface
     : public SocialGaming::CSocialGamingConnectionInterface,
       public AmazonGames::ISignedInStateChangedListener,
-      public AmazonGames::IUpdateProgressCb {
+      public AmazonGames::IUpdateProgressCb,
+      public AmazonGames::IGetAchievementsCb {
+  private:
+    static std::string GAME_CIRCLE_ACHIEVEMENTS_MAP[SocialGaming::ACHIEVEMENT_COUNT];
+    static std::string GAME_CIRCLE_LEADERBOARDS_MAP[SocialGaming::LEADERBOARDS_COUNT];
   public:
     CConnectionInterface();
 
     bool init();
     
-    void loadAchievements() {}
+    void loadAchievements();
+    void updateLeaderboardValue(SocialGaming::ELeaderboards leaderboard, long long llValue);
     void updateAchievementsProgress(SocialGaming::EAchievements achievement,
 				    float fPercentComplete);
     void showSocalGamingOverlay();
@@ -35,8 +41,17 @@ namespace GameCircle {
 			    AmazonGames::ErrorCode errorCode,
 			    const AmazonGames::UpdateProgressResponse* responseStruct,
 			    int developerTag);
+
+    // IGetAchievementsCb
+    void onGetAchievementsCb(
+			     AmazonGames::ErrorCode errorCode,
+			     const AmazonGames::AchievementsData* responseStruct,
+			     int developerTag);
   private:
-    std::string getAchievementId(SocialGaming::EAchievements achievement);
+    std::string getAchievementId(SocialGaming::EAchievements achievement) const;
+    SocialGaming::EAchievements getAchievementId(const std::string &name) const;
+    std::string getLeaderboardId(SocialGaming::ELeaderboards leaderboard) const;
+    SocialGaming::ELeaderboards getLeaderboardId(const std::string &name) const;
   };  
 };
 
