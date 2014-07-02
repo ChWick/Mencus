@@ -1,11 +1,13 @@
 project(Game)
 
 
-file(GLOB_RECURSE Game_source_files *.cpp)
-file(GLOB Game_source_event_files Events/*.cpp)
-file(GLOB Game_source_xmlresources_files XMLResources/*.cpp)
-file(GLOB Game_source_xmlresources_files XMLResources/*.cpp)
-file(GLOB_RECURSE Game_include_files *.hpp)
+SET(SOURCE_DIR "@CMAKE_SOURCE_DIR@/Game")
+
+file(GLOB_RECURSE Game_source_files "@SOURCE_DIR@/*.cpp")
+#file(GLOB Game_source_event_files Events/*.cpp)
+#file(GLOB Game_source_xmlresources_files XMLResources/*.cpp)
+#file(GLOB Game_source_xmlresources_files XMLResources/*.cpp)
+file(GLOB_RECURSE Game_include_files "@SOURCE_DIR@/*.hpp")
 
 ADD_DEFINITIONS(-std=c++11 -Wall)
 
