@@ -8,6 +8,7 @@ public:
   virtual void update(float tfp) {}
 
   virtual void changeTouchButtonSize(float fSize) {}
+  virtual void onGUIScalingChanged(float fScaling) {}
 private:
 };
 

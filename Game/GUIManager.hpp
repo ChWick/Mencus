@@ -65,6 +65,9 @@ public:
 
   void update(Ogre::Real tpf);
 
+  void addGUIOverlay(CGUIOverlay *pOverlay) {m_lGUIOverlays.push_back(pOverlay);}
+  void destroyGUIOverlay(CGUIOverlay *pOverlay) {m_lGUIOverlays.remove(pOverlay); delete pOverlay;}
+
   CEGUI::OgreRenderer *getRenderer() const {return m_pCEGuiOgreRenderer;}
 
   // Ogre::RenderQueueListener
@@ -88,6 +91,7 @@ public:
 
   void resize(const CEGUI::Sizef &vSize);
   void changeTouchButtonSize(float fSize);
+  void onGUIScalingChanged(float fScaling);
 private:
   void createFreeTypeFont(const CEGUI::String &name, int size, const CEGUI::String &ttfFile);
 private:

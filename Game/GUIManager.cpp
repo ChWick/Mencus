@@ -353,9 +353,16 @@ void CGUIManager::resize(const CEGUI::Sizef &vSize) {
 }
 void CGUIManager::changeTouchButtonSize(float fSize) {
 #ifdef INPUT_TOUCH
-    m_pGUIInput->buttonSizeChanged(fSize);
+  m_pGUIInput->buttonSizeChanged(fSize);
 #endif
-    for (CGUIOverlay *pOverlay : m_lGUIOverlays) {
-      pOverlay->changeTouchButtonSize(fSize);
-    }
+  for (CGUIOverlay *pOverlay : m_lGUIOverlays) {
+    pOverlay->changeTouchButtonSize(fSize);
+  }
+}
+
+void CGUIManager::onGUIScalingChanged(float fScaling) {
+  for (CGUIOverlay *pOverlay : m_lGUIOverlays) {
+    pOverlay->onGUIScalingChanged(fScaling);
+  }
+  CMainMenu::getSingleton().resizeGUI(fScaling);
 }

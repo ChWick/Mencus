@@ -139,6 +139,7 @@ public:
   void hide();
 
   void windowSizeChanged(const CEGUI::Sizef &vSize);
+  void resizeGUI(Ogre::Real fScaling);
 private:
   // button setup
   void setupButton(MainMenu::EState eState, unsigned int uiButtonID, const CEGUI::String &sLabel, MainMenu::EState iTargetID);
@@ -159,13 +160,8 @@ private:
   bool saveStateListMouseMoved(const CEGUI::EventArgs&);
   bool onSelectionChanged(const CEGUI::EventArgs&);
 
-  bool buttonSizeSliderValueChanged(const CEGUI::EventArgs&);
-  bool mapEditorButtonSizeSliderValueChanged(const CEGUI::EventArgs&);
-  bool menuSizeSliderValueChanged(const CEGUI::EventArgs&);
-
   bool onSelectButtonClicked(const CEGUI::EventArgs&);
 
-  void resizeGUI(Ogre::Real fScaling);
 };
 
 #endif // MAIN_MENU_HPP

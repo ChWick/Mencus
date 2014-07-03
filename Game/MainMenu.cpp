@@ -31,6 +31,8 @@
 #include "MapEditor.hpp"
 #include "LevelState.hpp"
 #include "XMLResources/Manager.hpp"
+#include "Plugins/GUISettings/GUIInputSettings.hpp"
+#include "Plugins/GUISettings/GUIVideoSettings.hpp"
 
 using namespace std;
 using namespace CEGUI;
@@ -155,6 +157,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
     m_vSlots[i] = pButtonContainer->createChild("OgreTray/Button", "Slot" + CEGUI::PropertyHelper<int>::toString(i));
     m_vSlots[i]->setSize(USize(UDim(0.4f, 0), UDim(0.2f, 0)));
     m_vSlots[i]->setPosition(UVector2(UDim(0, 0), UDim(0.25f * i, 0)));
+    m_vSlots[i]->setRiseOnClickEnabled(false);
 #ifdef INPUT_KEYBOARD_ONLY
     m_vSlots[i]->setAlpha(BUTTON_MIN_ALPHA);
 #else
@@ -210,75 +213,6 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
 
   // option pages
   // ======================
-
-  // input
-  float fHeight = 0;
-  m_pOptionPages[OPTIONS_INPUT] = pButtonContainer->createChild("OgreTray/Group", "InputOptionsContainer");
-  m_pOptionPages[OPTIONS_INPUT]->setText(XMLResources::GLOBAL.getCEGUIString("input"));
-  m_pOptionPages[OPTIONS_INPUT]->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
-
-
-#if ENABLE_MAP_EDITOR
-  Window *pMapEditorButtonSizeText = m_pOptionPages[OPTIONS_INPUT]->createChild("OgreTray/StaticText", "MapEditorButtonSliderText");
-  pMapEditorButtonSizeText->setPosition(UVector2(UDim(0, 0), UDim(0.00, 0)));
-  pMapEditorButtonSizeText->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
-  pMapEditorButtonSizeText->setProperty("FrameEnabled", "False");
-  pMapEditorButtonSizeText->setProperty("BackgroundEnabled", "False");
-  Slider * pMapEditorButtonSizeSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->createChild("OgreTray/Slider", "MapEditorButtonSizeSlider"));
-  pMapEditorButtonSizeSlider->setPosition(UVector2(UDim(0, 0), UDim(0.12, 0)));
-  pMapEditorButtonSizeSlider->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
-  pMapEditorButtonSizeSlider->setMaxValue(300);
-  pMapEditorButtonSizeSlider->setClickStep(20);
-  pMapEditorButtonSizeSlider
-    ->subscribeEvent(Slider::EventValueChanged,
-		     Event::Subscriber(&CMainMenu::mapEditorButtonSizeSliderValueChanged, this));
-  // this will also set the initial value for the touch buttons
-  pMapEditorButtonSizeSlider->setCurrentValue(CSettings::getSingleton().getInputSettings().m_fMapEditorButtonSize);
-  fHeight += 0.25;
-#endif
-#ifdef INPUT_TOUCH
-  Window *pButtonSizeText = m_pOptionPages[OPTIONS_INPUT]->createChild("OgreTray/StaticText", "ButtonSliderText");
-  pButtonSizeText->setPosition(UVector2(UDim(0, 0), UDim(fHeight, 0)));
-  pButtonSizeText->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
-  pButtonSizeText->setProperty("FrameEnabled", "False");
-  pButtonSizeText->setProperty("BackgroundEnabled", "False");
-  Slider * pButtonSizeSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->createChild("OgreTray/Slider", "ButtonSizeSlider"));
-  pButtonSizeSlider->setPosition(UVector2(UDim(0, 0), UDim(fHeight + 0.12, 0)));
-  pButtonSizeSlider->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
-  pButtonSizeSlider->setMaxValue(300);
-  pButtonSizeSlider->setClickStep(20);
-  pButtonSizeSlider->subscribeEvent(Slider::EventValueChanged,
-				    Event::Subscriber(&CMainMenu::buttonSizeSliderValueChanged,
-						      this));
-  // this will also set the initial value for the touch buttons
-  pButtonSizeSlider->setCurrentValue(CSettings::getSingleton().getInputSettings().m_fTouchButtonSize);
-  fHeight += 0.25;
-#endif
-
-  m_pOptionPages[OPTIONS_INPUT]->setVisible(false);
-
-  // video
-  m_pOptionPages[OPTIONS_VIDEO] = pButtonContainer->createChild("OgreTray/Group", "VideoOptionsContainer");
-  m_pOptionPages[OPTIONS_VIDEO]->setText(XMLResources::GLOBAL.getCEGUIString("video"));
-  m_pOptionPages[OPTIONS_VIDEO]->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
-  Window *pMenuSizeText = m_pOptionPages[OPTIONS_VIDEO]->createChild("OgreTray/StaticText", "MenuSizeText");
-  pMenuSizeText->setPosition(UVector2(UDim(0, 0), UDim(0.00, 0)));
-  pMenuSizeText->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
-  pMenuSizeText->setProperty("FrameEnabled", "False");
-  pMenuSizeText->setProperty("BackgroundEnabled", "False");
-  Slider * pMenuSizeSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_VIDEO]->createChild("OgreTray/Slider", "MenuSizeSlider"));
-  pMenuSizeSlider->setPosition(UVector2(UDim(0, 0), UDim(0.12, 0)));
-  pMenuSizeSlider->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
-  pMenuSizeSlider->setMaxValue(1);
-  pMenuSizeSlider->setClickStep(0.1);
-  pMenuSizeSlider->setCurrentValue(0.24152342); // to force call of event
-  pMenuSizeSlider->subscribeEvent(Slider::EventValueChanged,
-				    Event::Subscriber(&CMainMenu::menuSizeSliderValueChanged,
-						      this));
-  // initial value
-  pMenuSizeSlider->setCurrentValue(CSettings::getSingleton().getVideoSettings().m_fHUDSize);
-
-  m_pOptionPages[OPTIONS_VIDEO]->setVisible(false);
 
 
   // level selection
@@ -405,18 +339,6 @@ void CMainMenu::changeState(MainMenu::EState eState) {
   m_iSelectedSlot = 0;
   m_iSelectedLoadState = 0;
 
-
-  switch (m_eCurrentState) {
- case MMS_OPTIONS_VIDEO:
-   m_pOptionPages[OPTIONS_VIDEO]->setVisible(true);
-   break;
- case MMS_OPTIONS_INPUT:
-   m_pOptionPages[OPTIONS_INPUT]->setVisible(true);
-   break;
-  default:
-    break;
-  }
-
   switch (eState) {
   case MMS_RESULT_NEW_GAME:
     CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
@@ -447,6 +369,14 @@ void CMainMenu::changeState(MainMenu::EState eState) {
     CGameState::getSingleton().changeGameState(CGameState::GS_GAME, std::shared_ptr<CMapPack>(new CMapPack("new_map")));
     break;
 #endif
+  case MMS_OPTIONS_INPUT:
+    CGUIManager::getSingleton().addGUIOverlay(new CGUIInputSettings(m_pMMRoot));
+    m_eCurrentState = MMS_OPTIONS;
+    break;
+  case MMS_OPTIONS_VIDEO:
+    CGUIManager::getSingleton().addGUIOverlay(new CGUIVideoSettings(m_pMMRoot));
+    m_eCurrentState = MMS_OPTIONS;
+    break;
   default:
     for (int i = 0; i < NUM_SLOTS; i++) {
       if (m_iTargetState[m_eCurrentState][i] != MMS_STATE_NONE) {
@@ -742,55 +672,12 @@ void CMainMenu::resizeGUI(Ogre::Real fScaling) {
   }
   m_pSaveStatesWindow->setFont(smallfont);
   m_pMapInfoWindow->setFont(smallfont);
-  m_pOptionPages[OPTIONS_INPUT]->setFont(bigfont);
-#ifdef INPUT_TOUCH
-  m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSliderText")->setFont(smallfont);
-#endif
-#if ENABLE_MAP_EDITOR
-  m_pOptionPages[OPTIONS_INPUT]->getChild("MapEditorButtonSliderText")->setFont(smallfont);
-#endif
-  m_pOptionPages[OPTIONS_VIDEO]->setFont(bigfont);
-  m_pOptionPages[OPTIONS_VIDEO]->getChild("MenuSizeText")->setFont(smallfont);
 
 #ifndef INPUT_KEYBOARD_ONLY
   m_pSelectButton->setFont(bigfont);
 #endif
 }
-bool CMainMenu::mapEditorButtonSizeSliderValueChanged(const CEGUI::EventArgs& args) {
-  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
-  const Slider *pSlider = dynamic_cast<const Slider*>(wndArgs.window);
 
-  m_pOptionPages[OPTIONS_INPUT]->getChild("MapEditorButtonSliderText")->setText("MapEditor touch button size: " + PropertyHelper<int>::toString(pSlider->getCurrentValue()) + " px");
-
-  CMapEditor::getSingleton().resize(pSlider->getCurrentValue());
-  CSettings::getSingleton().getInputSettings().m_fMapEditorButtonSize = pSlider->getCurrentValue();
-
-  return true;
-}
-bool CMainMenu::buttonSizeSliderValueChanged(const EventArgs &args) {
-#ifdef INPUT_TOUCH
-  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
-  const Slider *pSlider = dynamic_cast<const Slider*>(wndArgs.window);
-
-  m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSliderText")->setText("Input touch button size: " + PropertyHelper<int>::toString(pSlider->getCurrentValue()) + " px");
-
-  CGUIManager::getSingleton().changeTouchButtonSize(pSlider->getCurrentValue());
-  CSettings::getSingleton().getInputSettings().m_fTouchButtonSize = pSlider->getCurrentValue();
-#endif
-
-  return true;
-}
-bool CMainMenu::menuSizeSliderValueChanged(const EventArgs &args) {
-  const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
-  const Slider *pSlider = dynamic_cast<const Slider*>(wndArgs.window);
-
-  m_pOptionPages[OPTIONS_VIDEO]->getChild("MenuSizeText")->setText("Main menu size: " + PropertyHelper<int>::toString(pSlider->getCurrentValue() * 100) + " %");
-
-  resizeGUI(pSlider->getCurrentValue());
-  CSettings::getSingleton().getVideoSettings().m_fHUDSize = pSlider->getCurrentValue();
-
-  return true;
-}
 void CMainMenu::windowSizeChanged(const CEGUI::Sizef &vSize) {
   Slider *pSlider = NULL;
 #if ENABLE_MAP_EDITOR
