@@ -59,6 +59,8 @@ public:
   CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &target);
   ~CGUIManager();
 
+  const CEGUI::Sizef &getNativeRes() const {return m_vNativeRes;}
+
   void createResources();
   void destroyResources();
   void reloadResources();

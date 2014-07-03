@@ -591,10 +591,6 @@ void CMainMenu::windowSizeChanged(const CEGUI::Sizef &vSize) {
   pSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->getChild("MapEditorButtonSizeSlider"));
   pSlider->setMaxValue(min(vSize.d_height / 4.0, vSize.d_width / 8.0));
 #endif
-#ifdef INPUT_TOUCH
-  pSlider = dynamic_cast<Slider*>(m_pOptionPages[OPTIONS_INPUT]->getChild("ButtonSizeSlider"));
-  pSlider->setMaxValue(min(vSize.d_height / 4.0, vSize.d_width / 8.0));
-#endif
 }
 bool CMainMenu::onSelectButtonClicked(const CEGUI::EventArgs &args) {
   activateLoadState();

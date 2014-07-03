@@ -36,11 +36,13 @@ CGUIInputSettings::CGUIInputSettings(CEGUI::Window *pParent)
   Slider * pButtonSizeSlider = dynamic_cast<Slider*>(m_pContent->createChild("OgreTray/Slider", "ButtonSizeSlider"));
   pButtonSizeSlider->setPosition(UVector2(UDim(0, 0), UDim(fHeight + 0.12, 0)));
   pButtonSizeSlider->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
-  pButtonSizeSlider->setMaxValue(300);
   pButtonSizeSlider->setClickStep(20);
   pButtonSizeSlider->subscribeEvent(Slider::EventValueChanged,
 				    Event::Subscriber(&CGUIInputSettings::buttonSizeSliderValueChanged,
 						      this));
+
+  Sizef vSize = CGUIManager::getSingleton().getNativeRes();
+  pButtonSizeSlider->setMaxValue(std::min(vSize.d_height / 4.0, vSize.d_width / 8.0));
   // this will also set the initial value for the touch buttons
   pButtonSizeSlider->setCurrentValue(CSettings::getSingleton().getInputSettings().m_fTouchButtonSize);
   fHeight += 0.25;
