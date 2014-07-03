@@ -33,6 +33,7 @@
 #include "XMLResources/Manager.hpp"
 #include "Plugins/GUISettings/GUIInputSettings.hpp"
 #include "Plugins/GUISettings/GUIVideoSettings.hpp"
+#include "Plugins/GUILevelSelect.hpp"
 
 using namespace std;
 using namespace CEGUI;
@@ -52,8 +53,7 @@ CMainMenu &CMainMenu::getSingleton() {
 }
 
 CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
-  : m_pLevelInfo(NULL),
-    m_vSlots(NUM_SLOTS),
+  : m_vSlots(NUM_SLOTS),
     m_eCurrentState(MMS_COUNT),
     m_bSaveListSelected(false),
     m_iSelectedLoadState(0),
@@ -152,6 +152,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pButtonContainer = pButtonContainer;
   pButtonContainer->setPosition(UVector2(UDim(0.2f, 0), UDim(0.5f, 0)));
   pButtonContainer->setSize(USize(UDim(0.5f, 0), UDim(0.4f, 0)));
+  pButtonContainer->setRiseOnClickEnabled(false);
 
   for (int i = 0; i < NUM_SLOTS; i++) {
     m_vSlots[i] = pButtonContainer->createChild("OgreTray/Button", "Slot" + CEGUI::PropertyHelper<int>::toString(i));
@@ -188,6 +189,7 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pSaveStatesWindow->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   m_pSaveStatesWindow->setSize(USize(UDim(0.6f, 0), UDim(0.6f, 0)));
   m_pSaveStatesWindow->setFont("dejavusans8");
+  m_pSaveStatesWindow->setRiseOnClickEnabled(false);
 #ifndef INPUT_KEYBOARD_ONLY
   m_pSaveStatesWindow->subscribeEvent(Listbox::EventSelectionChanged, Event::Subscriber(&CMainMenu::onSelectionChanged, this));
 #endif
@@ -196,62 +198,9 @@ CMainMenu::CMainMenu(CEGUI::Window *pGUIRoot)
   m_pSaveStatePreviewWindow->setPosition(UVector2(UDim(0.65f, 0), UDim(0.1f, 0)));
   m_pSaveStatePreviewWindow->setSize(USize(UDim(0.35f, 0), UDim(0.4f, 0)));
   m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/none");
-
-  ScrollablePane *pMapInfoContainer = dynamic_cast<ScrollablePane*>(pButtonContainer->createChild("OgreTray/ScrollablePane", "MapInfoContainer"));
-  pMapInfoContainer->setShowHorzScrollbar(false);
-  pMapInfoContainer->setPosition(UVector2(UDim(0.6f, 0), UDim(0, 0)));
-  pMapInfoContainer->setSize(USize(UDim(0.4f, 0), UDim(0.6f, 0)));
-  m_pMapInfoContainer = pMapInfoContainer;
-
-  m_pMapInfoWindow = pMapInfoContainer->createChild("OgreTray/StaticText", "MapInfo");
-  m_pMapInfoWindow->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
-  m_pMapInfoWindow->setSize(USize(UDim(1, 0), UDim(2, 0)));
-  m_pMapInfoWindow->setText("Difficulty: easy");
-  m_pMapInfoWindow->setProperty("VertFormatting", "TopAligned");
-
-  m_pMapInfoContainer->setVisible(false);
-
-  // option pages
-  // ======================
-
-
-  // level selection
-  // ===============
-  m_pLevelSelection = m_pButtonContainer->createChild("OgreTray/Group",
-						      "LevelSelection");
-  m_pLevelSelection->setSize(USize(UDim(1, 0), UDim(0.7, 0)));
-  m_pLevelSelection->setText(XMLResources::GLOBAL.getCEGUIString("select_level"));
-
-  ScrollablePane *pLevelPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->createChild("OgreTray/ScrollablePane", "Pane"));
-  pLevelPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
-  pLevelPane->setSize(USize(UDim(0.7, 0), UDim(1, 0)));
-
-  Window *pLevelInfoWindow = m_pLevelSelection->createChild("OgreTray/ScrollablePane", "Info");
-  pLevelInfoWindow->setPosition(UVector2(UDim(0.7, 0), UDim(0, 0)));
-  pLevelInfoWindow->setSize(USize(UDim(0.3, 0), UDim(1, 0)));
-
-  Window *pLevelInfoText = pLevelInfoWindow->createChild("OgreTray/StaticText", "Text");
-  pLevelInfoText->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
-  pLevelInfoText->setSize(USize(UDim(1, 0), UDim(3, 0)));
-  pLevelInfoText->setProperty("VertFormatting", "TopAligned");
-  pLevelInfoText->setProperty("BackgroundEnabled", "False");
-  pLevelInfoText->setProperty("FrameEnabled", "False");
-
-  Window *pChickenButton = m_pButtonContainer->createChild("OgreTray/ImageButton",
-						     "ChickenButton");
-  pChickenButton->setPosition(UVector2(UDim(0.45, 0), UDim(0.75, 0)));
-  pChickenButton->setSize(USize(UDim(0.15, 0), UDim(0.2, 0)));
-  pChickenButton->setText("0");
-  pChickenButton->setProperty("Image", "hud_weapons/skip");
-  pChickenButton->subscribeEvent(PushButton::EventClicked,
-				 Event::Subscriber(&CMainMenu::onChickenPressed, this));
-
-  m_pLevelSelection->setVisible(false);
+  m_pSaveStatePreviewWindow->setRiseOnClickEnabled(false);
 
   // hide everything from start
-  m_pMapInfoContainer->setVisible(false);
-  m_pLevelSelection->setVisible(false);
-  m_pButtonContainer->getChild("ChickenButton")->setVisible(false);
   m_pSaveStatesWindow->setVisible(false);
   m_pSaveStatePreviewWindow->setVisible(false);
 
@@ -323,12 +272,6 @@ void CMainMenu::changeState(MainMenu::EState eState) {
     CSettings::getSingleton().writeToFile();
     break;
   case MMS_USER_GAME:
-    if (eState == MMS_RESULT_LOAD_GAME ||
-	eState == MMS_RESULT_NEW_GAME)  {
-      assert(m_pLevelInfo);
-      m_pMapPack = shared_ptr<CMapPack>(new CMapPack(m_pLevelInfo->sLevelFileName));
-    }
-    m_pLevelInfo = NULL;
     break;
   default:
     break;
@@ -341,19 +284,8 @@ void CMainMenu::changeState(MainMenu::EState eState) {
 
   switch (eState) {
   case MMS_RESULT_NEW_GAME:
-    CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
     break;
   case MMS_RESULT_LOAD_GAME:
-    if (m_pStateToLoad) {
-      CGameState::getSingleton().changeGameState(CGameState::GS_GAME, m_pStateToLoad);
-    }
-    else if (m_pMapPack) {
-      CGameState::getSingleton().changeGameState(CGameState::GS_GAME, m_pMapPack);
-      m_pMapPack.reset();
-    }
-    else {
-      CGameState::getSingleton().changeGameState(CGameState::GS_GAME);
-    }
     break;
   case MMS_RESULT_CREDITS:
     CGameState::getSingleton().changeGameState(CGameState::GS_CREDITS);
@@ -377,6 +309,9 @@ void CMainMenu::changeState(MainMenu::EState eState) {
     CGUIManager::getSingleton().addGUIOverlay(new CGUIVideoSettings(m_pMMRoot));
     m_eCurrentState = MMS_OPTIONS;
     break;
+  case MMS_USER_GAME:
+    CGUIManager::getSingleton().addGUIOverlay(new CGUILevelSelect(m_pMMRoot));
+    m_eCurrentState = MMS_START;
   default:
     for (int i = 0; i < NUM_SLOTS; i++) {
       if (m_iTargetState[m_eCurrentState][i] != MMS_STATE_NONE) {
@@ -399,9 +334,6 @@ void CMainMenu::changeState(MainMenu::EState eState) {
     break;
   }
 
-  m_pMapInfoContainer->setVisible(false);
-  m_pLevelSelection->setVisible(false);
-  m_pButtonContainer->getChild("ChickenButton")->setVisible(false);
   m_pSaveStatesWindow->setVisible(false);
   m_pSaveStatePreviewWindow->setVisible(false);
   if (eState == MMS_LOAD_GAME) {
@@ -435,7 +367,6 @@ void CMainMenu::changeState(MainMenu::EState eState) {
   else if (eState == MMS_MAP_EDITOR_SELECT_MAP) {
     m_pSaveStatesWindow->setVisible(true);
     m_pSaveStatePreviewWindow->setVisible(false);
-    m_pMapInfoContainer->setVisible(true);
 #ifndef INPUT_KEYBOARD_ONLY
     m_pSelectButton->setVisible(true);
 #endif
@@ -459,17 +390,6 @@ void CMainMenu::changeState(MainMenu::EState eState) {
     }
 
     selectedSaveStateChanged();
-  }
-  else if (eState == MMS_USER_GAME) {
-    m_pSaveStatesWindow->setVisible(false);
-    m_pSaveStatePreviewWindow->setVisible(false);
-    m_pLevelSelection->setVisible(true);
-    m_pButtonContainer->getChild("ChickenButton")->setVisible(true);
-#ifndef INPUT_KEYBOARD_ONLY
-    m_pSelectButton->setVisible(true);
-#endif
-
-    updateLevelsSelection();
   }
   else {
     m_pSaveStatesWindow->setVisible(false);
@@ -567,14 +487,6 @@ void CMainMenu::selectedSaveStateChanged() {
     m_pStateToLoad = static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
     m_pSaveStatePreviewWindow->setProperty("Image", "save_pictures/" + PropertyHelper<int>::toString(m_pStateToLoad->getActID()) + "-" + PropertyHelper<int>::toString(m_pStateToLoad->getSceneID()));
   }
-  else if (m_eCurrentState == MMS_USER_GAME || m_eCurrentState == MMS_MAP_EDITOR_SELECT_MAP) {
-    if (m_iSelectedLoadState < 0 || m_iSelectedLoadState >= static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
-      m_pMapInfoWindow->setText("");
-      return;
-    }
-    m_pMapPack = std::shared_ptr<CMapPack>(new CMapPack(m_vUserFiles[m_iSelectedLoadState]));
-    m_pMapInfoWindow->setText(m_pMapPack->getMapInfo()->generateInfoText());
-  }
   m_pSaveStatesWindow->ensureItemIsVisible(m_iSelectedLoadState);
   m_pSaveStatesWindow->setItemSelectState(m_iSelectedLoadState, true);
 }
@@ -622,15 +534,11 @@ bool CMainMenu::onSelectionChanged(const CEGUI::EventArgs& args) {
   return true;
 }
 void CMainMenu::activateLoadState() {
-  if (m_pLevelInfo) {
-    changeState(MMS_RESULT_LOAD_GAME);
-  }
-  else if (m_iSelectedLoadState >= 0
+if (m_iSelectedLoadState >= 0
       && m_iSelectedLoadState < static_cast<int>(m_pSaveStatesWindow->getItemCount())) {
     if (m_eCurrentState == MMS_LOAD_GAME) {
       m_pStateToLoad
 	= static_cast<const CSaveState*>(m_pSaveStatesWindow->getListboxItemFromIndex(m_iSelectedLoadState)->getUserData());
-      m_pMapPack.reset();
     }
     else if (m_eCurrentState == MMS_USER_GAME) {
       m_pStateToLoad = NULL;
@@ -671,7 +579,6 @@ void CMainMenu::resizeGUI(Ogre::Real fScaling) {
     m_vSlots[i]->setFont(bigfont);
   }
   m_pSaveStatesWindow->setFont(smallfont);
-  m_pMapInfoWindow->setFont(smallfont);
 
 #ifndef INPUT_KEYBOARD_ONLY
   m_pSelectButton->setFont(bigfont);
@@ -702,142 +609,4 @@ void CMainMenu::hide() {
   m_pMMRoot->setVisible(false);
   setInputListenerEnabled(false);
   unpause(PAUSE_ALL);
-}
-void CMainMenu::updateLevelsSelection() {
-  int iLeftChickens = 3; // maximum number of chickens
-
-  ScrollablePane *pPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->getChild("Pane"));
-  pPane->getHorzScrollbar()->setVisible(false);
-  pPane->setShowHorzScrollbar(false);
-  const Window *pContent = pPane->getContentPane();
-  for (int i = pContent->getChildCount() - 1; i >= 0; i--) {
-    pContent->getChildAtIdx(i)->destroy();
-  }
-
-  m_LevelList.load();
-  const std::list<SLevelInfo> &lList(m_LevelList.getLevelInfoList());
-
-  unsigned int uiLevelsPerRow = 5;
-  float fButtonSize = pContent->getPixelSize().d_width / uiLevelsPerRow;
-  std::list<SLevelInfo>::const_iterator it = lList.cbegin();
-  std::string sPreviousLevelFileName;
-  const SLevelInfo *pPreviousLevelInfo(NULL);
-  RadioButton *pLastEnabled = NULL;
-  for (unsigned int i = 0; i < lList.size(); i++) {
-    RadioButton *pBut = dynamic_cast<RadioButton*>(pPane->createChild("OgreTray/ToggleRadioButton", PropertyHelper<unsigned int>::toString(i + 1)));
-    pBut->setText(pBut->getName());
-    pBut->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
-    pBut->setPosition(UVector2(UDim(0, fButtonSize * (i % uiLevelsPerRow)), UDim(0, fButtonSize * (i / uiLevelsPerRow))));
-    pBut->setUserData(const_cast<SLevelInfo*>(&(*it)));
-    //pBut->setProperty("HorzFormatting", "CenterAligned");
-    pBut->subscribeEvent(RadioButton::EventSelectStateChanged,
-			 Event::Subscriber(&CMainMenu::onLevelButtonClicked,
-					   this));
-    pBut->setGroupID(1249845902);
-    pBut->setSelected(false);
-    if (i > 0) {
-      if (CLevelState::has(it->sLevelFileName) &&
-	  CLevelState::get(it->sLevelFileName).eMissionState == MS_SKIPPED) {
-	pBut->setEnabled(true);
-	pBut->setProperty("Image", "hud_weapons/skip");
-	--iLeftChickens;
-      }
-      else {
-	pBut->setProperty("Image", "");
-	if (it->bTutorial) {
-	  CLevelState::get(it->sLevelFileName, true);
-	  pBut->setEnabled(true);
-	}
-	else if ((CLevelState::has(sPreviousLevelFileName) &&
-		 CLevelState::get(sPreviousLevelFileName).eMissionState
-		  != MS_FAILED) ||
-		 (pPreviousLevelInfo && pPreviousLevelInfo->bTutorial)) {
-	  pLastEnabled = pBut;
-	  pBut->setEnabled(true);
-	}
-	else {
-	  pBut->setEnabled(false);
-	  pBut->setText("");
-	  pBut->setProperty("Image", "hud_weapons/lock");
-	}
-      }
-    }
-    else {
-      pLastEnabled = pBut;
-    }
-    if (it->bTutorial) {
-      // Own image for tutorial
-      pBut->setProperty("Image", "hud_weapons/tutorial");
-    }
-    sPreviousLevelFileName = it->sLevelFileName;
-    pPreviousLevelInfo = &(*it);
-    it++;
-  }
-
-  if (pLastEnabled) {
-    pLastEnabled->setSelected(true);
-  }
-
-
-  m_pButtonContainer->getChild("ChickenButton")->setText(PropertyHelper<int>::toString(iLeftChickens));
-  m_pButtonContainer->getChild("ChickenButton")->setEnabled(iLeftChickens > 0);
-  //selectLevel(1);
-}
-void CMainMenu::selectLevel(unsigned int id) {
-  m_uiSelectedLevelID = id;
-  ScrollablePane *pPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->getChild("Pane"));
-  ScrollablePane *pInfoPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->getChild("Info"));
-  pPane->setShowHorzScrollbar(false);
-  Window *pText = pInfoPane->getChild("Text");
-  Window *pBut = pPane->getChild(PropertyHelper<unsigned int>::toString(id));
-
-  SLevelInfo *pLevelInfo = static_cast<SLevelInfo*>(pBut->getUserData());
-
-  // load map pack for receiving info
-  CMapPack pack(pLevelInfo->sLevelFileName);
-  pText->setText(reinterpret_cast<const utf8*>(pack.generateInfoText().c_str()));
-
-  pInfoPane->getVertScrollbar()->setScrollPosition(0);
-  pInfoPane->getHorzScrollbar()->setVisible(false);
-  m_pLevelInfo = pLevelInfo;
-}
-bool CMainMenu::onLevelButtonClicked(const CEGUI::EventArgs &args) {
-  const WindowEventArgs &wndArgs(dynamic_cast<const WindowEventArgs &>(args));
-  Ogre::LogManager::getSingleton().logMessage(Ogre::String("Level ") + wndArgs.window->getName().c_str() + Ogre::String(" selected"));
-  selectLevel(PropertyHelper<unsigned int>::fromString(wndArgs.window->getName()));
-  return true;
-}
-bool CMainMenu::onChickenPressed(const CEGUI::EventArgs &args) {
-  const WindowEventArgs &wndArgs(dynamic_cast<const WindowEventArgs &>(args));
-  unsigned int uiSelectedLevelID = m_uiSelectedLevelID;
-  if (PropertyHelper<int>::fromString(wndArgs.window->getText()) <= 0) {
-    // no more chicken available
-    return true;
-  }
-
-  ScrollablePane *pPane = dynamic_cast<ScrollablePane*>(m_pLevelSelection->getChild("Pane"));
-  Window *pBut = pPane->getChild(PropertyHelper<unsigned int>::toString(m_uiSelectedLevelID));
-
-  SLevelInfo *pLevelInfo = static_cast<SLevelInfo*>(pBut->getUserData());
-  SStatistics &stats(CLevelState::get(pLevelInfo->sLevelFileName, true));
-  if (stats.eMissionState == MS_FAILED && !pLevelInfo->bTutorial) {
-    stats.eMissionState = MS_SKIPPED;
-    CLevelState::add(stats);
-  }
-  else {
-    return true;
-  }
-
-  // update levels
-  updateLevelsSelection();
-  try {
-    RadioButton *pRadio = dynamic_cast<RadioButton*>(pPane->getChild(PropertyHelper<unsigned int>::toString(uiSelectedLevelID + 1)));
-    if (pRadio) {
-      pRadio->setSelected(true);
-    }
-  }
-  catch (...) {
-    // child not found, end of map
-  }
-  return true;
 }

@@ -96,12 +96,6 @@ public:
     USER_GAME_BACK    = NUM_SLOTS - 1,
   };
 private:
-  // level selection windows
-  CLevelList m_LevelList;
-  CEGUI::Window *m_pLevelSelection;
-  unsigned int m_uiSelectedLevelID;
-  SLevelInfo *m_pLevelInfo;
-
   CEGUI::Window *m_pMMRoot;
   CEGUI::Window *m_pButtonContainer;
   CEGUI::Window *m_pOptionPages[OPTIONS_BACK];
@@ -113,13 +107,10 @@ private:
   int m_iSelectedSlot;
   CEGUI::Listbox *m_pSaveStatesWindow;
   CEGUI::Window *m_pSaveStatePreviewWindow;
-  CEGUI::Window *m_pMapInfoContainer;
-  CEGUI::Window *m_pMapInfoWindow;
   bool m_bSaveListSelected;
   int m_iSelectedLoadState;
   const CSaveState *m_pStateToLoad;
   std::vector<Ogre::String> m_vUserFiles;
-  std::shared_ptr<CMapPack> m_pMapPack;
 public:
   static CMainMenu &getSingleton();
   static CMainMenu *getSingletonPtr();
@@ -144,11 +135,6 @@ private:
   // button setup
   void setupButton(MainMenu::EState eState, unsigned int uiButtonID, const CEGUI::String &sLabel, MainMenu::EState iTargetID);
 
-  // level selection
-  void updateLevelsSelection();
-  void selectLevel(unsigned int id);
-  bool onLevelButtonClicked(const CEGUI::EventArgs &);
-  bool onChickenPressed(const CEGUI::EventArgs&);
 
   void selectedSaveStateChanged();
   void activateLoadState();

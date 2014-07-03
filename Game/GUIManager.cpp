@@ -30,6 +30,7 @@
 #include "MapEditor.hpp"
 #include "Game.hpp"
 #include <SdkTrays.h>
+#include "Settings.hpp"
 #include "Plugins/SocialGaming/Overlay.hpp"
 
 using namespace CEGUI;
@@ -123,6 +124,7 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   //#endif
 
   pTrayMgr->userUpdateLoadBar("done...", 0.2);
+  onGUIScalingChanged(CSettings::getSingleton().getVideoSettings().m_fHUDSize);
   Ogre::LogManager::getSingleton().logMessage("GUIManager initialized...");
   CGame::getSingleton().hideLoadingBar();
 }
