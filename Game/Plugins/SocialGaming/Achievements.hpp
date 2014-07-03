@@ -9,6 +9,9 @@ namespace SocialGaming {
     BOOTS_1,
     BOOTS_2,
     BOOTS_3,
+    BOOTS_4,
+    BOOTS_5,
+    BOOTS_6,
 
     ACHIEVEMENT_COUNT,
   };

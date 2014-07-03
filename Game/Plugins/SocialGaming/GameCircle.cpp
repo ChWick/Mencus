@@ -13,13 +13,17 @@ using namespace GameCircle;
 
 // setup achievements map
 std::string CConnectionInterface::GAME_CIRCLE_ACHIEVEMENTS_MAP[SocialGaming::ACHIEVEMENT_COUNT] = {
-  "boot_1",               // DEBUG_ACHIEVEMENT
-  "boot_1",		  // BOOTS_1
-  "boot_2",		  // BOOTS_2
-  "boot_3"		  // BOOTS_3
+  "debug",			// DEBUG_ACHIEVEMENT
+  "boot_1",			// BOOTS_1
+  "boot_2",			// BOOTS_2
+  "boot_3",			// BOOTS_3
+  "boot_4",			// BOOTS_4
+  "boot_5",			// BOOTS_5
+  "boot_6"			// BOOTS_6
 };
 
-std::string CConnectionInterface::GAME_CIRCLE_LEADERBOARDS_MAP[] {
+std::string CConnectionInterface::GAME_CIRCLE_LEADERBOARDS_MAP[SocialGaming::LEADERBOARDS_COUNT] {
+  "global_ranking"
 };
 
 CConnectionInterface::CConnectionInterface() 
@@ -40,7 +44,7 @@ void CConnectionInterface::loadAchievements() {
 
 void CConnectionInterface::updateLeaderboardValue(SocialGaming::ELeaderboards leaderboard,
 						  long long llValue) {
-  LOGV("Before update leaderboard %s value %lld", getLeaderboardId(leaderboard).c_str(), llValue);
+  LOGV("Before update leaderboard '%s' value '%lld'", getLeaderboardId(leaderboard).c_str(), llValue);
   LeaderboardsClientInterface::submitScore(getLeaderboardId(leaderboard).c_str(), llValue);
   LOGV("After update leaderboard value");
 }
@@ -60,6 +64,14 @@ void CConnectionInterface::showSocalGamingOverlay() {
   LOGV("After");
 }
 
+void CConnectionInterface::showSignInPage() {
+  GameCircleClientInterface::showSignInPage(this);
+}
+
+void CConnectionInterface::onShowSignInPageCb(AmazonGames::ErrorCode errorCode,
+					      int developerTag) {
+  
+}
 
 void CConnectionInterface::onUpdateProgressCb(
 					      ErrorCode errorCode,
@@ -68,7 +80,7 @@ void CConnectionInterface::onUpdateProgressCb(
   if (errorCode == NO_ERROR) {
     if (responseStruct->isNewlyUnlocked) {
       LOGI("Newly unlocked Achievement");
-      onLeaderboadReasonUpdated(REASON_ACHIEVEMENT_UNLOCKED);
+      updateLeaderboard(GLOAL_RANKING, REASON_ACHIEVEMENT_UNLOCKED);
     }
   }
   else {
@@ -89,6 +101,7 @@ void CConnectionInterface::onGetAchievementsCb(
       achievment.pointValue = data.pointValue;
       achievment.progress = data.progress;
     }
+    onLeaderboadReasonUpdated(REASON_ACHIEVEMENT_UNLOCKED);
   }
   else {
     LOGW("error onGetAchievementsCb (%d)", errorCode);

@@ -35,12 +35,14 @@ void CSocialGamingConnectionInterface::updateLeaderboard(ELeaderboards leaderboa
 void CSocialGamingConnectionInterface::updateLeaderboardsList() {
   if (m_WaitingForLeaderboardUpdates != 0) {
     // still waiting for updates
+    LOGV("Still waiting for updates (%d)", m_WaitingForLeaderboardUpdates);
     return;
   }
 
   for (ELeaderboards leaderboard : m_LeaderboardsToUpdate) {
     switch (leaderboard) {
     case GLOAL_RANKING:
+      LOGV("Updating globsl ranking");
       updateLeaderboardValue(GLOAL_RANKING, m_Achievements.getProgessedPointValueSum());
       break;
     case LEADERBOARDS_COUNT:
@@ -50,6 +52,7 @@ void CSocialGamingConnectionInterface::updateLeaderboardsList() {
 }
 
 void CSocialGamingConnectionInterface::onLeaderboadReasonUpdated(ELeaderboardUpdateReason eReason) {
+  LOGV("Leaderboard reason updated (%d)", eReason);
   // removing flag
   
   m_WaitingForLeaderboardUpdates -= m_WaitingForLeaderboardUpdates & eReason;

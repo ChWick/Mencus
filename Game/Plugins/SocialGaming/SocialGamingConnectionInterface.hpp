@@ -59,6 +59,7 @@ namespace SocialGaming {
     virtual void updateLeaderboardValue(ELeaderboards leaderboard, long long llValue) {}
     virtual void updateAchievementsProgress(EAchievements achievement, float fPercentComplete) {}
     virtual void showSocalGamingOverlay() {}
+    virtual void showSignInPage() {}
 
 
   protected:

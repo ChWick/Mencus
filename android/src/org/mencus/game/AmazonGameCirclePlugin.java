@@ -4,6 +4,7 @@ import java.util.EnumSet;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.amazon.ags.api.AmazonGamesCallback;
@@ -45,11 +46,13 @@ public class AmazonGameCirclePlugin extends MencusPlugin {
 	        @Override
 	        public void onServiceNotReady(AmazonGamesStatus status) {
 	            //unable to use service
-	        	//Toast.makeText(mActivity, "Unable to use GameCircle (" + status.toString() + ")", Toast.LENGTH_LONG).show();
+	        	Log.e("AmazonGamesCircle", "Unable to use GameCircle (" + status.toString() + ")");
+	        	AmazonGamesClient.shutdown();
 	        }
 	        @Override
 	        public void onServiceReady(AmazonGamesClient amazonGamesClient) {
 	            agsClient = amazonGamesClient;
+	        	Log.i("AmazonGamesCircle", "Ready to use GameCircle");
 	        	//Toast.makeText(mActivity, "Ready to use GameCircle", Toast.LENGTH_LONG).show();
 	            //ready to use GameCircle
 	        }
@@ -61,6 +64,10 @@ public class AmazonGameCirclePlugin extends MencusPlugin {
 	@Override
 	protected void onDestroyImpl() {
         AmazonGamesClient.shutdown();
+	}
+	@Override
+	protected void onStopImpl() {
+		AmazonGamesClient.shutdown();
 	}
 
 }

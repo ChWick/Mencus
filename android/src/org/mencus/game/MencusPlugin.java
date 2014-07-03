@@ -39,9 +39,15 @@ public abstract class MencusPlugin {
 			onResumeImpl();
 		}
 	}
+	public void onStop() {
+		if (mStarted) {
+			onStopImpl();
+		}
+	}
 	
 	protected abstract void onCreateImpl();
 	protected abstract void onDestroyImpl();
 	protected abstract void onPauseImpl();
 	protected abstract void onResumeImpl();
+	protected abstract void onStopImpl();
 }

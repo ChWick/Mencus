@@ -16,6 +16,7 @@ namespace GameCircle {
 
   class CConnectionInterface
     : public SocialGaming::CSocialGamingConnectionInterface,
+      public AmazonGames::IShowSignInPageCb,
       public AmazonGames::ISignedInStateChangedListener,
       public AmazonGames::IUpdateProgressCb,
       public AmazonGames::IGetAchievementsCb {
@@ -32,6 +33,11 @@ namespace GameCircle {
     void updateAchievementsProgress(SocialGaming::EAchievements achievement,
 				    float fPercentComplete);
     void showSocalGamingOverlay();
+    void showSignInPage();
+
+    // IShowSignInPageCb
+    void onShowSignInPageCb(AmazonGames::ErrorCode errorCode,
+			    int developerTag);
 
     // ISignedInStateChangedListener
     void onSignedInStateChanged(bool isSignedIn) {changeSignedIn(isSignedIn);}

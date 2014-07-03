@@ -10,6 +10,8 @@ namespace SocialGaming {
     : public CGUIOverlay,
       public CMessageInjector {
   private:
+    float m_fTimer;
+    int m_iConnectingDots;
     CEGUI::Window *m_pShowButton;
     CEGUI::Window *m_pRoot;
     CEGUI::Window *m_pSignedInState;
@@ -17,6 +19,7 @@ namespace SocialGaming {
     COverlay(CEGUI::Window *pRoot);
     ~COverlay();
 
+    void update(float tpf);
 
     void changeTouchButtonSize(float fSize);
 
