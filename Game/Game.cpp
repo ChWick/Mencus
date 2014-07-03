@@ -598,6 +598,7 @@ bool CGame::frameStarted(const Ogre::FrameEvent& evt) {
   
   // process messages
   CMessageHandler::getSingleton().process();
+  SocialGaming::CSocialGaming::getSingleton().update(evt.timeSinceLastFrame);
 
   if (CGUIManager::getSingletonPtr()) {
     CGUIManager::getSingleton().update(evt.timeSinceLastFrame);
