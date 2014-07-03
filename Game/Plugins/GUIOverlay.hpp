@@ -4,6 +4,8 @@
 class CGUIOverlay {
 public:
   virtual ~CGUIOverlay() {}
+  
+  virtual void update(float tfp) {}
 
   virtual void changeTouchButtonSize(float fSize) {}
 private:

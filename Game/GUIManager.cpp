@@ -161,6 +161,10 @@ void CGUIManager::update(Ogre::Real tpf) {
 #if ENABLE_MAP_EDITOR
   CMapEditor::getSingleton().render();
 #endif
+
+  for (CGUIOverlay *pOverlay : m_lGUIOverlays) {
+    pOverlay->update(tpf);
+  }
 }
 void CGUIManager::renderQueueStarted(Ogre::uint8 id, const Ogre::String& invocation, bool& skipThisQueue) {
    // make sure you check the invocation string, or you can end up rendering the GUI multiple times
