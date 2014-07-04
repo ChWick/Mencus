@@ -27,9 +27,10 @@
 #include <XMLHelper.hpp>
 
 enum EMissionState {
+  MS_NOT_PLAYED,	        //!< This mission has never been played 
+  MS_FAILED,			//!< This mission has been failed
+  MS_SKIPPED,			//!< This mission has been skipped
   MS_ACCOMPLISHED,		//!< This mission has been accomplished
-  MS_FAILED,			//!< This mission has been played, but failed
-  MS_SKIPPED			//!< This mission has been skipped
 };
 struct SStatistics {
   static EMissionState parseMissionState(const std::string &s) {
@@ -39,7 +40,10 @@ struct SStatistics {
     else if (s == "accomplished") {
       return MS_ACCOMPLISHED;
     }
-    return MS_FAILED;
+    else if (s == "failed") {
+      return MS_FAILED;
+    }
+    return MS_NOT_PLAYED;
   }
   static std::string toString(const EMissionState ms) {
     switch (ms) {
@@ -49,6 +53,8 @@ struct SStatistics {
       return "failed";
     case MS_SKIPPED:
       return "skipped";
+    case MS_NOT_PLAYED:
+      return "not_played";
     }
 
     throw Ogre::Exception(0, "Mission state could not be converted to string", __FILE__);
@@ -56,7 +62,7 @@ struct SStatistics {
 
   SStatistics(const std::string &name = "unknown level file name") 
     : sLevelFileName(name), 
-      eMissionState(MS_FAILED),
+      eMissionState(MS_NOT_PLAYED),
       fTime(0),
       fHitpoints(0),
       fLostHitpoints(0),

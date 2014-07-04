@@ -17,36 +17,22 @@
  * Mencus. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef _GUI_LEVEL_SELECT_HPP_
-#define _GUI_LEVEL_SELECT_HPP_
+#ifndef _WHISPERSYNC_GAME_DATA_HPP_
+#define _WHISPERSYNC_GAME_DATA_HPP_
 
-#include "GUIOverlay.hpp"
-#include <CEGUI/CEGUI.h>
-#include "LevelList.hpp"
+#include "GameData.hpp"
+#include "GlobalBuildDefines.hpp"
 
-class CGUILevelSelect : public CGUIOverlay {
-private:
-  CEGUI::Window *m_pRoot;
-  CEGUI::Window *m_pContent;
-  CEGUI::Window *m_pChickenButton;
+#if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
 
-  // level selection windows
-  CLevelList m_LevelList;
-  unsigned int m_uiSelectedLevelID;
-public:
-  CGUILevelSelect(CEGUI::Window *pParent);
-  virtual ~CGUILevelSelect();
-
-protected:
-  bool onBackButtonClicked(const CEGUI::EventArgs &args);
-  bool onPlayButtonClicked(const CEGUI::EventArgs &args);
-
-
-  // level selection
-  void updateLevelsSelection();
-  void selectLevel(unsigned int id);
-  bool onLevelButtonClicked(const CEGUI::EventArgs &);
-  bool onChickenPressed(const CEGUI::EventArgs&);
+namespace Whispersync {
+  class CGameData
+    : public SocialGaming::CGameData {
+  public:
+    SocialGaming::CLevelList getLevelList();
+  };
 };
+
+#endif
 
 #endif

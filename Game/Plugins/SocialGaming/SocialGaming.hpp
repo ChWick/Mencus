@@ -31,10 +31,12 @@ namespace SocialGaming {
     DISCONNECTED
   };
   class CSocialGamingConnectionInterface;
+  class CGameData;
 
   class CSocialGaming : public Ogre::Singleton<CSocialGaming> {
   private:
     CSocialGamingConnectionInterface *m_pConnection;
+    CGameData *m_pGameData;
 
     EConnectionStatus m_eConnectionStatus;
     float m_fConnectionCheckTimer;
@@ -48,6 +50,7 @@ namespace SocialGaming {
     void update(float tpf);
 
     CSocialGamingConnectionInterface *getConnection() {return m_pConnection;}
+    CGameData *getGameData() {return m_pGameData;}
     EConnectionStatus getConnectionStatus() {return m_eConnectionStatus;}
 
     void update(const SStatistics &stats);

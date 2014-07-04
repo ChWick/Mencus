@@ -32,8 +32,10 @@
 
 #if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
 #include "GameCircle.hpp"
+#include "WhispersyncGameData.hpp"
 #else
 #include "SocialGamingConnectionInterface.hpp"
+#include "DefaultGameData.hpp"
 #endif
 
 using namespace SocialGaming;
@@ -45,9 +47,11 @@ CSocialGaming::CSocialGaming()
     m_fConnectionCheckTimer(0) {
 #if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
   m_pConnection = new GameCircle::CConnectionInterface();
+  m_pGameData = new Whispersync::CGameData();
 #else
   // dummy to avoid nullptr checks
   m_pConnection = new CSocialGamingConnectionInterface();
+  m_pGameData = new CDefaultGameData();
 #endif
 }
 

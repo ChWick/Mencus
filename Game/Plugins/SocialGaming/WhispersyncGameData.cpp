@@ -17,36 +17,25 @@
  * Mencus. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef _GUI_LEVEL_SELECT_HPP_
-#define _GUI_LEVEL_SELECT_HPP_
+#include "WhispersyncGameData.hpp"
 
-#include "GUIOverlay.hpp"
-#include <CEGUI/CEGUI.h>
-#include "LevelList.hpp"
+#if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
+#include "WhispersyncClientInterface.h"
 
-class CGUILevelSelect : public CGUIOverlay {
-private:
-  CEGUI::Window *m_pRoot;
-  CEGUI::Window *m_pContent;
-  CEGUI::Window *m_pChickenButton;
+using namespace Whispersync;
 
-  // level selection windows
-  CLevelList m_LevelList;
-  unsigned int m_uiSelectedLevelID;
-public:
-  CGUILevelSelect(CEGUI::Window *pParent);
-  virtual ~CGUILevelSelect();
-
-protected:
-  bool onBackButtonClicked(const CEGUI::EventArgs &args);
-  bool onPlayButtonClicked(const CEGUI::EventArgs &args);
-
-
-  // level selection
-  void updateLevelsSelection();
-  void selectLevel(unsigned int id);
-  bool onLevelButtonClicked(const CEGUI::EventArgs &);
-  bool onChickenPressed(const CEGUI::EventArgs&);
-};
+SocialGaming::CLevelList CGameData::getLevelList() {
+SocialGaming::CLevelList out;
+AmazonGames::GameDataMap* pLevelList = AmazonGames::WhispersyncClient::getGameData()->getMap("level_list");
+AmazonGames::StringList *pLevelKeys = pLevelList->getMapKeys();
+for (int i = 0; i < pLevelKeys->getSize(); i++) {
+SocialGaming::SLevelData data;
+AmazonGames::GameDataMap *pLevel = pLevelList->getMap(pLevelKeys->get(i));
+data.sLevelName = pLevel->getLatestString("level_name")->getValue();
+data.eMissionState = static_cast<EMissionState>(pLevel->getHighestNumber("level_state")->asInt());
+out.push_back(data);
+}
+return out;
+}
 
 #endif

@@ -21,9 +21,10 @@
 #include "GUIManager.hpp"
 #include "XMLResources/Manager.hpp"
 #include "GameState.hpp"
-#include "LevelState.hpp"
 #include "MapPack.hpp"
 #include "OgreLogManager.h"
+#include "Plugins/SocialGaming/SocialGaming.hpp"
+#include "Plugins/SocialGaming/GameData.hpp"
 
 using namespace CEGUI;
 
@@ -120,6 +121,8 @@ void CGUILevelSelect::updateLevelsSelection() {
   std::string sPreviousLevelFileName;
   const SLevelInfo *pPreviousLevelInfo(NULL);
   RadioButton *pLastEnabled = NULL;
+  SocialGaming::CLevelList levelList = SocialGaming::CSocialGaming::getSingleton().getGameData()->getLevelList();
+
   for (unsigned int i = 0; i < lList.size(); i++) {
     RadioButton *pBut = dynamic_cast<RadioButton*>(pPane->createChild("OgreTray/ToggleRadioButton", PropertyHelper<unsigned int>::toString(i + 1)));
     pBut->setText(pBut->getName());
@@ -133,21 +136,18 @@ void CGUILevelSelect::updateLevelsSelection() {
     pBut->setGroupID(1249845902);
     pBut->setSelected(false);
     if (i > 0) {
-      if (CLevelState::has(it->sLevelFileName) &&
-	  CLevelState::get(it->sLevelFileName).eMissionState == MS_SKIPPED) {
+      if (levelList.getMissionState(it->sLevelFileName) == MS_SKIPPED) {
 	pBut->setEnabled(true);
 	pBut->setProperty("Image", "hud_weapons/skip");
 	--iLeftChickens;
       }
       else {
+	EMissionState previousMissionState = levelList.getMissionState(sPreviousLevelFileName);
 	pBut->setProperty("Image", "");
 	if (it->bTutorial) {
-	  CLevelState::get(it->sLevelFileName, true);
 	  pBut->setEnabled(true);
 	}
-	else if ((CLevelState::has(sPreviousLevelFileName) &&
-		 CLevelState::get(sPreviousLevelFileName).eMissionState
-		  != MS_FAILED) ||
+	else if ((previousMissionState == MS_SKIPPED || previousMissionState == MS_ACCOMPLISHED) ||
 		 (pPreviousLevelInfo && pPreviousLevelInfo->bTutorial)) {
 	  pLastEnabled = pBut;
 	  pBut->setEnabled(true);
@@ -214,11 +214,12 @@ bool CGUILevelSelect::onChickenPressed(const CEGUI::EventArgs &args) {
   ScrollablePane *pPane = dynamic_cast<ScrollablePane*>(m_pContent->getChild("Pane"));
   Window *pBut = pPane->getChild(PropertyHelper<unsigned int>::toString(m_uiSelectedLevelID));
 
+  SocialGaming::CLevelList levelList = SocialGaming::CSocialGaming::getSingleton().getGameData()->getLevelList();
   SLevelInfo *pLevelInfo = static_cast<SLevelInfo*>(pBut->getUserData());
-  SStatistics &stats(CLevelState::get(pLevelInfo->sLevelFileName, true));
-  if (stats.eMissionState == MS_FAILED && !pLevelInfo->bTutorial) {
-    stats.eMissionState = MS_SKIPPED;
-    CLevelState::add(stats);
+  EMissionState levelMissionState = levelList.getMissionState(pLevelInfo->sLevelFileName);
+  if ((levelMissionState == MS_FAILED || levelMissionState == MS_NOT_PLAYED)
+      && !pLevelInfo->bTutorial) {
+    SocialGaming::CSocialGaming::getSingleton().getGameData()->setMissionStateOfLevel(MS_SKIPPED, pLevelInfo->sLevelFileName);
   }
   else {
     return true;
