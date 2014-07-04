@@ -65,7 +65,7 @@ bool CLevelState::levelAccomplished(const std::string &sFileName) {
 
   for (auto &level : m_vLevelStatistics) {
     if (level.sLevelFileName == sFileName) {
-      return level.eMissionState == MS_ACCOMPLISHED;
+      return level.eMissionState == MissionState::MS_ACCOMPLISHED;
     }
   }
   return false;

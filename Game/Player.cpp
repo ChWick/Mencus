@@ -651,7 +651,7 @@ void CPlayer::damageTakenCallback(Ogre::Real fHitpoints) {
 }
 
 void CPlayer::killedByDamageCallback() {
-  m_Statistics.eMissionState = MS_FAILED;
+  m_Statistics.eMissionState = MissionState::MS_FAILED;
   CGUIStatistics::getSingleton().showStatistics(m_Statistics);
   CGameState::getSingleton().changeGameState(CGameState::GS_STATISTICS);
 }

@@ -45,6 +45,7 @@ namespace SocialGaming {
     static CSocialGaming *getSingletonPtr() {return msSingleton;}
 
     CSocialGaming();
+    ~CSocialGaming();
 
     void init();
     void update(float tpf);

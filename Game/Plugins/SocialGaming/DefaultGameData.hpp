@@ -6,12 +6,17 @@
 namespace SocialGaming {
   class CDefaultGameData : public CGameData {
   private:
+    const std::string m_sFileName;
     CLevelList m_LevelList;
   public:
     CDefaultGameData();
     ~CDefaultGameData();
     CLevelList getLevelList();
-    void setMissionStateOfLevel(EMissionState eMissionState, std::string sLevelName);
+    void setMissionStateOfLevel(MissionState::EMissionState eMissionState,
+				const std::string &sLevelName);
+
+    void read();
+    void save() const;
   };
 };
 

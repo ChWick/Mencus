@@ -20,6 +20,8 @@
 #ifndef _LOG_HPP_
 #define _LOG_HPP_
 
+#include <OgrePlatform.h>
+
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
 #include <android/log.h>
 #define LOGV(...) ((void)__android_log_print(ANDROID_LOG_VERBOSE, "Ogre", __VA_ARGS__))

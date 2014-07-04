@@ -22,12 +22,12 @@
 
 #include <vector>
 #include <string>
-#include "Statistics.hpp"
+#include "MissionState.hpp"
 
 namespace SocialGaming {
   struct SLevelData {
     std::string sLevelName;
-    EMissionState eMissionState;
+    MissionState::EMissionState eMissionState;
   };
 
   class CLevelList : public std::vector<SLevelData> {
@@ -37,13 +37,13 @@ namespace SocialGaming {
 	if (data.sLevelName == sLevelName) {
 	  return &data;
 	}
-	return nullptr;
       }
+      return nullptr;
     }
-    EMissionState getMissionState(const std::string &sLevelName) const {
+    MissionState::EMissionState getMissionState(const std::string &sLevelName) const {
       const SLevelData *pData = getData(sLevelName);
       if (!pData) {
-	return MS_NOT_PLAYED;
+	return MissionState::MS_NOT_PLAYED;
       }
       return pData->eMissionState;
     }
@@ -53,7 +53,9 @@ namespace SocialGaming {
   public:
     virtual ~CGameData() {};
     virtual CLevelList getLevelList() = 0;
-    virtual void setMissionStateOfLevel(EMissionState eMissionState, std::string sLevelName) = 0;
+    virtual void setMissionStateOfLevel(MissionState::EMissionState eMissionState,
+					const std::string &sLevelName) = 0;
+    virtual void save() const = 0;
   };
 };
 

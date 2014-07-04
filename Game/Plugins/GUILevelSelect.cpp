@@ -27,8 +27,10 @@
 #include "Plugins/SocialGaming/GameData.hpp"
 
 using namespace CEGUI;
+using namespace MissionState;
 
-CGUILevelSelect::CGUILevelSelect(CEGUI::Window *pParent) {
+CGUILevelSelect::CGUILevelSelect(CEGUI::Window *pParent) 
+  : m_pLevelInfo(nullptr) {
   Window *pPane = pParent->createChild("OgreTray/StaticImage");
   m_pRoot = pPane;
   pPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));

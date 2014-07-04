@@ -55,6 +55,11 @@ CSocialGaming::CSocialGaming()
 #endif
 }
 
+CSocialGaming::~CSocialGaming() {
+  delete m_pGameData;
+  delete m_pConnection;
+}
+
 void CSocialGaming::init() {
   if (m_pConnection->init()) {
     m_eConnectionStatus = CONNECTED;
@@ -90,7 +95,7 @@ void CSocialGaming::update(float tpf) {
   }
 }
 void CSocialGaming::update(const SStatistics &stats) {
-  if (stats.eMissionState == MS_ACCOMPLISHED) {
+  if (stats.eMissionState == MissionState::MS_ACCOMPLISHED) {
     LOGV("Level finished in social gaming: %s", stats.sLevelFileName.c_str());
     if (stats.sLevelFileName == "Tutorial_1") {
       updateAchievementsProgress(BOOTS_1, 100);

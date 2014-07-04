@@ -53,6 +53,7 @@ namespace SocialGaming {
 	m_sLogoImagesetLabel(sLogo),
 	m_WaitingForLeaderboardUpdates(REASON_NONE) {
     }
+    virtual ~CSocialGamingConnectionInterface() {}
 
     // syncing methods
     void updateLeaderboard(ELeaderboards leaderboard,
