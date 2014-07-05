@@ -87,8 +87,8 @@ CGame::~CGame(void) {
   if (CSaveStateManager::getSingletonPtr()) {delete CSaveStateManager::getSingletonPtr();}
 
   if (CShaderManager::getSingletonPtr()) {delete CShaderManager::getSingletonPtr();}
-  if (CMessageHandler::getSingletonPtr()) {delete CMessageHandler::getSingletonPtr();}
   if (SocialGaming::CSocialGaming::getSingletonPtr()) {delete SocialGaming::CSocialGaming::getSingletonPtr();}
+  if (CMessageHandler::getSingletonPtr()) {delete CMessageHandler::getSingletonPtr();}
 
   OGRE_DELETE_T(mFSLayer, FileSystemLayer, Ogre::MEMCATEGORY_GENERAL);
   //Remove ourself as a Window listener
