@@ -29,7 +29,6 @@
 #include "Settings.hpp"
 #include "MapInfo.hpp"
 #include "MapEditor.hpp"
-#include "LevelState.hpp"
 #include "XMLResources/Manager.hpp"
 #include "Plugins/GUISettings/GUIInputSettings.hpp"
 #include "Plugins/GUISettings/GUIVideoSettings.hpp"

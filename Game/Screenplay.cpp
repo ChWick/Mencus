@@ -32,6 +32,8 @@
 #include "MapInfo.hpp"
 #include "GUIStatistics.hpp"
 #include "Game.hpp"
+#include "MessageHandler.hpp"
+#include "Message.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -169,6 +171,9 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
       pLevel->getStatistics().eMissionState = MissionState::MS_ACCOMPLISHED;
       CGUIStatistics::getSingleton().showStatistics(pLevel->getStatistics());
       CGameState::getSingleton().changeGameState(CGameState::GS_STATISTICS, pLevel->getMapPack());
+      CMessageHandler::getSingleton()
+	.addMessage(CMessage(CMessage::MT_AT_LEVEL_END)
+		    .setStatistics(&pLevel->getStatistics()));
     }
     else {
       CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);

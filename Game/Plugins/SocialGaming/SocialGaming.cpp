@@ -23,6 +23,7 @@
 #include "Sleep.hpp"
 #include "Game.hpp"
 #include "HUDMessageBox.hpp"
+#include "MessageHandler.hpp"
 
 #include <OgrePlatform.h>
 
@@ -53,9 +54,12 @@ CSocialGaming::CSocialGaming()
   m_pConnection = new CSocialGamingConnectionInterface();
   m_pGameData = new CDefaultGameData();
 #endif
+
+  CMessageHandler::getSingleton().addInjector(this);
 }
 
 CSocialGaming::~CSocialGaming() {
+  CMessageHandler::getSingleton().removeInjector(this);
   delete m_pGameData;
   delete m_pConnection;
 }
@@ -114,4 +118,11 @@ void CSocialGaming::update(const SStatistics &stats) {
 
 void CSocialGaming::updateAchievementsProgress(EAchievements achievement, float fPercentComplete) {  
   m_pConnection->updateAchievementsProgress(achievement, fPercentComplete);
+}
+
+void CSocialGaming::sendMessageToAll(const CMessage &message) {
+  if (message.getType() == CMessage::MT_AT_LEVEL_END) {
+    m_pGameData->setMissionStateOfLevel(message.getStatistics()->eMissionState,
+					message.getStatistics()->sLevelFileName);
+  }
 }

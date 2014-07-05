@@ -44,6 +44,7 @@ void CDefaultGameData::setMissionStateOfLevel(EMissionState eMissionState,
   for (SLevelData &data : m_LevelList) {
     if (data.sLevelName == sLevelName) {
       data.eMissionState = eMissionState;
+      save();
       return;
     }
   }
@@ -53,6 +54,7 @@ void CDefaultGameData::setMissionStateOfLevel(EMissionState eMissionState,
   data.sLevelName = sLevelName;
   // add new
   m_LevelList.push_back(data);
+  save();
 }
 
 void CDefaultGameData::save() const {

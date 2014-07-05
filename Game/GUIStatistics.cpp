@@ -23,7 +23,6 @@
 #include "GameState.hpp"
 #include "SaveStateManager.hpp"
 #include "Statistics.hpp"
-#include "LevelState.hpp"
 #include <OgreStringConverter.h>
 
 using namespace CEGUI;
@@ -163,8 +162,6 @@ void CGUIStatistics::resize(const CEGUI::String &smallfont, const CEGUI::String 
   }
 }
 void CGUIStatistics::showStatistics(const SStatistics &stats) {
-  CLevelState::add(stats);
-
   Window *pButtonContainer = m_pStatisticsRoot->getChild("ButtonContainer");
   Window *group = pButtonContainer->getChild("statisticsgroup");
   Window *pTopText = pButtonContainer->getChild("text");

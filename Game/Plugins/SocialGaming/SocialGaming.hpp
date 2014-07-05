@@ -23,6 +23,7 @@
 #include "Achievements.hpp"
 #include <OgreSingleton.h>
 #include "Statistics.hpp"
+#include "MessageInjector.hpp"
 
 namespace SocialGaming {
   enum EConnectionStatus {
@@ -33,7 +34,9 @@ namespace SocialGaming {
   class CSocialGamingConnectionInterface;
   class CGameData;
 
-  class CSocialGaming : public Ogre::Singleton<CSocialGaming> {
+  class CSocialGaming
+    : public Ogre::Singleton<CSocialGaming>,
+      public CMessageInjector {
   private:
     CSocialGamingConnectionInterface *m_pConnection;
     CGameData *m_pGameData;
@@ -45,7 +48,7 @@ namespace SocialGaming {
     static CSocialGaming *getSingletonPtr() {return msSingleton;}
 
     CSocialGaming();
-    ~CSocialGaming();
+    virtual ~CSocialGaming();
 
     void init();
     void update(float tpf);
@@ -57,6 +60,8 @@ namespace SocialGaming {
     void update(const SStatistics &stats);
 
     void updateAchievementsProgress(EAchievements achievement, float fPercentComplete);
+
+    void sendMessageToAll(const CMessage &message);
   };
 };
 
