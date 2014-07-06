@@ -137,20 +137,23 @@ void CGUILevelSelect::updateLevelsSelection() {
 					   this));
     pBut->setGroupID(1249845902);
     pBut->setSelected(false);
+    EMissionState currentMissionState = levelList.getMissionState(it->sLevelFileName);
+    bool bCurrentSkipped = levelList.isSkipped(it->sLevelFileName);
     if (i > 0) {
-      if (levelList.getMissionState(it->sLevelFileName) == MS_SKIPPED) {
+      if (bCurrentSkipped && currentMissionState != MS_ACCOMPLISHED) {
 	pBut->setEnabled(true);
 	pBut->setProperty("Image", "hud_weapons/skip");
 	--iLeftChickens;
       }
       else {
 	EMissionState previousMissionState = levelList.getMissionState(sPreviousLevelFileName);
+	bool bPreviousSkipped = levelList.isSkipped(sPreviousLevelFileName);
 	pBut->setProperty("Image", "");
-	if (it->bTutorial) {
+	/*if (it->bTutorial) {
 	  pBut->setEnabled(true);
 	}
-	else if ((previousMissionState == MS_SKIPPED || previousMissionState == MS_ACCOMPLISHED) ||
-		 (pPreviousLevelInfo && pPreviousLevelInfo->bTutorial)) {
+	else*/ if ((bPreviousSkipped || previousMissionState == MS_ACCOMPLISHED) /*||
+												     (pPreviousLevelInfo && pPreviousLevelInfo->bTutorial)*/) {
 	  pLastEnabled = pBut;
 	  pBut->setEnabled(true);
 	}
@@ -164,9 +167,15 @@ void CGUILevelSelect::updateLevelsSelection() {
     else {
       pLastEnabled = pBut;
     }
-    if (it->bTutorial) {
+    if (it->bTutorial && pBut->isDisabled() == false) {
       // Own image for tutorial
       pBut->setProperty("Image", "hud_weapons/tutorial");
+    }
+    if (currentMissionState == MS_ACCOMPLISHED) {
+      pBut->setProperty("BackgroundColours", "FF77FF55");      
+    }
+    else if (currentMissionState == MS_FAILED) {
+      pBut->setProperty("BackgroundColours", "FFFF7755");      
     }
     sPreviousLevelFileName = it->sLevelFileName;
     pPreviousLevelInfo = &(*it);
@@ -221,7 +230,7 @@ bool CGUILevelSelect::onChickenPressed(const CEGUI::EventArgs &args) {
   EMissionState levelMissionState = levelList.getMissionState(pLevelInfo->sLevelFileName);
   if ((levelMissionState == MS_FAILED || levelMissionState == MS_NOT_PLAYED)
       && !pLevelInfo->bTutorial) {
-    SocialGaming::CSocialGaming::getSingleton().getGameData()->setMissionStateOfLevel(MS_SKIPPED, pLevelInfo->sLevelFileName);
+    SocialGaming::CSocialGaming::getSingleton().getGameData()->setMissionStateOfLevel(levelMissionState, pLevelInfo->sLevelFileName, true);
   }
   else {
     return true;
