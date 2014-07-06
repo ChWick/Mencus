@@ -25,6 +25,7 @@
 #include "OgreLogManager.h"
 #include "Plugins/SocialGaming/SocialGaming.hpp"
 #include "Plugins/SocialGaming/GameData.hpp"
+#include "Log.hpp"
 
 using namespace CEGUI;
 using namespace MissionState;
@@ -73,10 +74,12 @@ CGUILevelSelect::CGUILevelSelect(CEGUI::Window *pParent)
   pLevelInfoWindow->setSize(USize(UDim(0.3, 0), UDim(1, 0)));
   pLevelInfoWindow->setReadOnly(true);
 
+
+  float fButtonSize = pPlayBtn->getPixelSize().d_height;
   Window *pChickenButton = pWnd->createChild("OgreTray/ImageButton",
 						     "ChickenButton");
   pChickenButton->setPosition(UVector2(UDim(0.45, 0), UDim(0.80, 0)));
-  pChickenButton->setSize(USize(UDim(0.15, 0), UDim(0.2, 0)));
+  pChickenButton->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
   pChickenButton->setText("0");
   pChickenButton->setProperty("Image", "hud_weapons/skip");
   pChickenButton->subscribeEvent(PushButton::EventClicked,
