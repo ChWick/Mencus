@@ -32,7 +32,8 @@ namespace SocialGaming {
     ~CDefaultGameData();
     CLevelList getLevelList();
     void setMissionStateOfLevel(MissionState::EMissionState eMissionState,
-				const std::string &sLevelName);
+				const std::string &sLevelName,
+				bool bSkipped);
 
     void read();
     void save() const;

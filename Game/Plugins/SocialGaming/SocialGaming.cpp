@@ -72,7 +72,7 @@ void CSocialGaming::init() {
   else {
     m_eConnectionStatus = CONNECTING;
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-    OgreAndroidBridge::callJavaVoid("startPlugins");
+    OgreAndroidBridge::callJavaVoid("restartGameCircle");
 #else
     LOGW("Restart not implemented");
 #endif
@@ -123,6 +123,8 @@ void CSocialGaming::updateAchievementsProgress(EAchievements achievement, float 
 void CSocialGaming::sendMessageToAll(const CMessage &message) {
   if (message.getType() == CMessage::MT_AT_LEVEL_END) {
     m_pGameData->setMissionStateOfLevel(message.getStatistics()->eMissionState,
-					message.getStatistics()->sLevelFileName);
+					message.getStatistics()->sLevelFileName,
+					m_pGameData->getLevelList()
+					.isSkipped(message.getStatistics()->sLevelFileName));
   }
 }

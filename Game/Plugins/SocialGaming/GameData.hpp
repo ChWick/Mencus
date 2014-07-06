@@ -28,6 +28,15 @@ namespace SocialGaming {
   struct SLevelData {
     std::string sLevelName;
     MissionState::EMissionState eMissionState;
+    bool bSkipped;
+
+    SLevelData(const std::string &name,
+	       MissionState::EMissionState ms = MissionState::MS_NOT_PLAYED,
+	       bool skipped = false) 
+      : sLevelName(name),
+	eMissionState(ms),
+	bSkipped(skipped) {
+    }
   };
 
   class CLevelList : public std::vector<SLevelData> {
@@ -47,6 +56,13 @@ namespace SocialGaming {
       }
       return pData->eMissionState;
     }
+    bool isSkipped(const std::string &sLevelName) const {
+      const SLevelData *pData = getData(sLevelName);
+      if (!pData) {
+	return false;
+      }
+      return pData->bSkipped;
+    }
   };
 
   class CGameData {
@@ -54,7 +70,8 @@ namespace SocialGaming {
     virtual ~CGameData() {};
     virtual CLevelList getLevelList() = 0;
     virtual void setMissionStateOfLevel(MissionState::EMissionState eMissionState,
-					const std::string &sLevelName) = 0;
+					const std::string &sLevelName,
+					bool bSkipped) = 0;
     virtual void save() const = 0;
   };
 };

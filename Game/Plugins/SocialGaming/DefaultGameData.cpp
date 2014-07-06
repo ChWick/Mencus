@@ -40,18 +40,18 @@ CLevelList CDefaultGameData::getLevelList() {
   return m_LevelList;
 }
 void CDefaultGameData::setMissionStateOfLevel(EMissionState eMissionState,
-					      const std::string &sLevelName) {
+					      const std::string &sLevelName,
+					      bool bSkipped) {
   for (SLevelData &data : m_LevelList) {
     if (data.sLevelName == sLevelName) {
       data.eMissionState = eMissionState;
+      data.bSkipped = bSkipped;
       save();
       return;
     }
   }
 
-  SLevelData data;
-  data.eMissionState = eMissionState;
-  data.sLevelName = sLevelName;
+  SLevelData data(sLevelName, eMissionState, bSkipped);
   // add new
   m_LevelList.push_back(data);
   save();
@@ -72,6 +72,7 @@ void CDefaultGameData::save() const {
 
     SetAttribute(pSingleLevelData, "level", data.sLevelName);
     SetAttribute(pSingleLevelData, "mission_state", toString(data.eMissionState));
+    SetAttribute(pSingleLevelData, "skipped", data.bSkipped ? "true" : "false");
   }
 
   if (doc.SaveFile(m_sFileName.c_str())) {
@@ -99,12 +100,12 @@ void CDefaultGameData::read() {
   for (XMLElement *pData = pRoot->FirstChildElement(); pData; pData = pData->NextSiblingElement()) {
     if (strcmp(pData->Value(), "level_data") == 0) {
       for (XMLElement *pLevel = pData->FirstChildElement(); pLevel; pLevel = pLevel->NextSiblingElement()) {
-	SLevelData data;
-	data.sLevelName = Attribute(pLevel, "level");
+	SLevelData data(Attribute(pLevel, "level"));
 	if (data.sLevelName.size() == 0) {
 	  continue;
 	}
 	data.eMissionState = parseMissionState(Attribute(pLevel, "mission_state"));
+	data.bSkipped = Attribute(pLevel, "skipped", "false") == "true";
 	// this is for compability issue
 	if (data.sLevelName.rfind(".xml") != std::string::npos) {
 	  // cut

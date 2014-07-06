@@ -25,7 +25,6 @@ namespace MissionState {
   std::string MISSION_STATE_STRINGS[MS_COUNT] = {
     "not_played",
     "failed",
-    "skipped",
     "accomplished"
   };
 
