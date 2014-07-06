@@ -142,18 +142,28 @@ namespace XMLHelper {
 		    Ogre::Real value) {
     pElem->SetAttribute(pLabel, value);
   }
+
+  void SetAttribute(tinyxml2::XMLElement *pElem,
+		    const char *pLabel,
+		    const char *value) {
+    pElem->SetAttribute(pLabel, value);
+  }
+
   void SetAttribute(tinyxml2::XMLElement *pElem,
 		    const CBoundingBox2d &bb,
 		    const Ogre::String &prefix) {
     SetAttribute<Ogre::Vector2>(pElem, (prefix + "_pos").c_str(), bb.getPosition()); 
     SetAttribute<Ogre::Vector2>(pElem, (prefix + "_size").c_str(), bb.getSize());
   }
+
+
   template <>
   void SetAttribute<std::string>(tinyxml2::XMLElement *pElem,
 				 const char *pLabel,
 				 const std::string &value) {
     pElem->SetAttribute(pLabel, value.c_str());
   }
+
   template <>
   void SetAttribute<bool>(tinyxml2::XMLElement *pElem,
 				 const char *pLabel,
