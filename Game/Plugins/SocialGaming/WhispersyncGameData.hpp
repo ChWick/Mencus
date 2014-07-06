@@ -25,11 +25,32 @@
 
 #if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
 
+#include "includes/WhispersyncClientInterface.h"
+
+// Data structure
+/*
+ * level_data
+ *   level_name
+ *     level_state
+ *   ...
+ *   level_name
+ *     level_state
+ */
 namespace Whispersync {
   class CGameData
-    : public SocialGaming::CGameData {
+    : public SocialGaming::CGameData,
+      public AmazonGames::NewCloudDataListener {
   public:
+    CGameData();
+    ~CGameData();
+
     SocialGaming::CLevelList getLevelList();
+    void setMissionStateOfLevel(MissionState::EMissionState eMissionState,
+					const std::string &sLevelName);
+    void save() const;
+
+    // NewCloudDataListener
+    void onNewCloudData();
   };
 };
 

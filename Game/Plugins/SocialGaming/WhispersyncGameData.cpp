@@ -21,21 +21,55 @@
 
 #if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
 #include "WhispersyncClientInterface.h"
+#include "Log.hpp"
 
 using namespace Whispersync;
+using namespace AmazonGames;
+
+CGameData::CGameData() {
+  WhispersyncClient::setNewCloudDataListener(this);
+}
+
+CGameData::~CGameData() {
+  save();
+}
 
 SocialGaming::CLevelList CGameData::getLevelList() {
-SocialGaming::CLevelList out;
-AmazonGames::GameDataMap* pLevelList = AmazonGames::WhispersyncClient::getGameData()->getMap("level_list");
-AmazonGames::StringList *pLevelKeys = pLevelList->getMapKeys();
-for (int i = 0; i < pLevelKeys->getSize(); i++) {
-SocialGaming::SLevelData data;
-AmazonGames::GameDataMap *pLevel = pLevelList->getMap(pLevelKeys->get(i));
-data.sLevelName = pLevel->getLatestString("level_name")->getValue();
-data.eMissionState = static_cast<EMissionState>(pLevel->getHighestNumber("level_state")->asInt());
-out.push_back(data);
-}
-return out;
+  LOGI("Getting level list");
+  SocialGaming::CLevelList out;
+  AmazonGames::GameDataMap* pGameData = AmazonGames::WhispersyncClient::getGameData();
+  LOGV("Accessed game data");
+  if (!pGameData) {LOGW("Game data is null!"); return out;}
+
+  AmazonGames::GameDataMap* pLevelList = pGameData->getMap("level_list");
+  LOGV("Accessed level_list");
+  AmazonGames::StringList *pLevelKeys = pLevelList->getMapKeys();
+  for (int i = 0; i < pLevelKeys->getSize(); i++) {
+    LOGV("Reading level data for map '%s'", pLevelKeys->get(i));
+    SocialGaming::SLevelData data;
+    AmazonGames::GameDataMap *pLevel = pLevelList->getMap(pLevelKeys->get(i));
+    data.sLevelName = pLevelKeys->get(i);
+    data.eMissionState = static_cast<MissionState::EMissionState>(pLevel->getHighestNumber("level_state")->asInt());
+    out.push_back(data);
+  }
+  LOGI("Read %d levels", out.size());
+  return out;
 }
 
+void CGameData::setMissionStateOfLevel(MissionState::EMissionState eMissionState, const std::string &sLevelName) {
+  AmazonGames::GameDataMap* pLevelList = AmazonGames::WhispersyncClient::getGameData()->getMap("level_list");
+  AmazonGames::StringList *pLevelKeys = pLevelList->getMapKeys();
+  AmazonGames::GameDataMap *pLevel = pLevelList->getMap(sLevelName.c_str());
+  pLevel->getHighestNumber("level_state")->set(eMissionState);
+
+  save();
+}
+void CGameData::save() const {
+  LOGV("Flushing whispersync client");
+  WhispersyncClient::flush();
+}
+
+void CGameData::onNewCloudData() {
+  LOGI("new cloud data added");
+}
 #endif
