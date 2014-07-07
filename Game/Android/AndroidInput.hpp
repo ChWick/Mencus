@@ -124,7 +124,7 @@ public:
       key = OIS::KC_RMENU;
       break;
     case AKEYCODE_MENU:
-      key = OIS::KC_RWIN;
+      key = OIS::KC_APPS;
       break;
     case AKEYCODE_DPAD_LEFT:
       key = OIS::KC_LEFT;
@@ -140,6 +140,15 @@ public:
       break;
     case AKEYCODE_DPAD_CENTER:
       key = OIS::KC_RETURN;
+      break;
+    case AKEYCODE_MEDIA_PLAY_PAUSE:
+      key = OIS::KC_PLAY_PAUSE;
+      break;
+    case KEYCODE_MEDIA_REWIND:
+      key = OIS::KC_PREVTRACK;
+      break;
+    case KEYCODE_MEDIA_FAST_FORWARD:
+      key = OIS::KC_NEXTTRACK;
       break;
     }
 
