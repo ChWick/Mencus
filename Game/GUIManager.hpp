@@ -37,6 +37,14 @@ class CGUIManager :
   public Ogre::RenderQueueListener {
 
 private:
+  enum EMouseDirections {
+    MD_LEFT = 0,
+    MD_RIGHT,
+    MD_UP,
+    MD_DOWN,
+    MD_COUNT
+  };
+
   Ogre::SceneManager *m_pSceneManager;
 
   CEGUI::OgreRenderer* m_pCEGuiOgreRenderer;
@@ -52,6 +60,12 @@ private:
   CEGUI::Sizef m_vNativeRes;
   std::vector<CEGUI::String> m_vFonts;
   std::list<CGUIOverlay *> m_lGUIOverlays;
+
+  std::vector<bool> m_MouseMoving;
+  float m_fMouseSpeedX;
+  float m_fMouseSpeedY;
+  const float m_fMouseAcceleration;
+  const float m_fMouseInitialSpeed;
 public:
   static CGUIManager& getSingleton(void);
   static CGUIManager* getSingletonPtr(void);
