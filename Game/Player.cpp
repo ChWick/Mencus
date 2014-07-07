@@ -95,7 +95,7 @@ CPlayer::CPlayer(CMap &map, SStatistics &statistics)
   m_Statistics(statistics) {
   constructor_impl();
 }
-CPlayer::CPlayer(CMap &map, const tinyxml2::XMLElement *pElem, SStatistics &statistics) 
+CPlayer::CPlayer(CMap &map, const tinyxml2::XMLElement *pElem, SStatistics &statistics)
   : CAnimatedSprite(map, &map, &map, map.get2dManager(), pElem, Ogre::Vector2(1, 2)),
     CHitableObject(pElem),
     m_Fader(this),
@@ -280,22 +280,24 @@ void CPlayer::update(Ogre::Real tpf) {
 
       // check if collision with lock
       if (m_uiKeyCount > 0) {
-	Ogre::Real fLockPenetration = 0;
-	CTile *pTile(NULL);
-	if (m_vCurrentSpeed.x < 0) {
-	  fLockPenetration = m_Map.hitsTile(CCD_LEFT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
-	} else if (m_vCurrentSpeed.x > 0) {
-	  fLockPenetration += m_Map.hitsTile(CCD_RIGHT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
-	}
-	if (fLockPenetration != 0) {
-	  m_uiKeyCount--;
-	  CHUD::getSingleton().setKeysCount(m_uiKeyCount);
-	  m_Statistics.uiUsedItems[Weapon::I_KEY]++;
-	  m_Map.unlock(pTile->getMapPosX(), pTile->getMapPosY());
-	}
+        Ogre::Real fLockPenetration = 0;
+        CTile *pTile(NULL);
+        if (m_vCurrentSpeed.x < 0) {
+          fLockPenetration = m_Map.hitsTile(CCD_LEFT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
+        } else if (m_vCurrentSpeed.x > 0) {
+          fLockPenetration += m_Map.hitsTile(CCD_RIGHT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
+        }
+        if (fLockPenetration != 0) {
+          m_uiKeyCount--;
+          CHUD::getSingleton().setKeysCount(m_uiKeyCount);
+          m_Statistics.uiUsedItems[Weapon::I_KEY]++;
+          m_Map.unlock(pTile->getMapPosX(), pTile->getMapPosY());
+        }
       }
-      m_vPosition.x -= fPenetration;
-      m_vCurrentSpeed.x = 0;
+      if (fPenetration != 0) {
+        m_vPosition.x -= fPenetration;
+        m_vCurrentSpeed.x = 0;
+      }
 
       if (m_Map.collidesWithMapMargin(getWorldBoundingBox())) {
         m_vPosition.x -= m_vCurrentSpeed.x * tpf;
@@ -675,11 +677,11 @@ void CPlayer::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle
     pElem->SetAttribute("pl_cur_weapon", m_uiCurrentWeapon);
     pElem->SetAttribute("pl_bomb_throw_str", m_fBombThrowStrength);
     pElem->SetAttribute("pl_shield_active", m_bShieldActive);
-    
+
     pElem->SetAttribute("pl_gtl_status", m_eGoToLinkStatus);
     SetAttribute<Ogre::Vector2>(pElem, "pl_gtl_from", m_vLinkFromPos);
     SetAttribute<Ogre::Vector2>(pElem, "pl_gtl_to", m_vLinkToPos);
-    
+
     pElem->SetAttribute("pl_hud_mp", m_fManaPoints);
     pElem->SetAttribute("pl_hud_key", m_uiKeyCount);
     pElem->SetAttribute("pl_hud_hp_cnt", m_uiHealthPotionsCount);
