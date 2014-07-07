@@ -46,7 +46,7 @@ SocialGaming::CLevelList CGameData::getLevelList() {
   AmazonGames::StringList *pLevelKeys = pLevelList->getMapKeys();
   for (int i = 0; i < pLevelKeys->getSize(); i++) {
     LOGV("Reading level data for map '%s'", pLevelKeys->get(i));
-    SocialGaming::SLevelData data;
+    SocialGaming::SLevelData data(pLevelKeys->get(i));
     AmazonGames::GameDataMap *pLevel = pLevelList->getMap(pLevelKeys->get(i));
     data.sLevelName = pLevelKeys->get(i);
     data.eMissionState = static_cast<MissionState::EMissionState>(pLevel->getHighestNumber("level_state")->asInt());
@@ -56,7 +56,7 @@ SocialGaming::CLevelList CGameData::getLevelList() {
   return out;
 }
 
-void CGameData::setMissionStateOfLevel(MissionState::EMissionState eMissionState, const std::string &sLevelName) {
+void CGameData::setMissionStateOfLevel(MissionState::EMissionState eMissionState, const std::string &sLevelName, bool bSkipped) {
   AmazonGames::GameDataMap* pLevelList = AmazonGames::WhispersyncClient::getGameData()->getMap("level_list");
   AmazonGames::StringList *pLevelKeys = pLevelList->getMapKeys();
   AmazonGames::GameDataMap *pLevel = pLevelList->getMap(sLevelName.c_str());

@@ -46,7 +46,8 @@ namespace Whispersync {
 
     SocialGaming::CLevelList getLevelList();
     void setMissionStateOfLevel(MissionState::EMissionState eMissionState,
-					const std::string &sLevelName);
+				const std::string &sLevelName,
+				bool bSkipped);
     void save() const;
 
     // NewCloudDataListener
