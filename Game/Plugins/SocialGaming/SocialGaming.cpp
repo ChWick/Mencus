@@ -122,9 +122,12 @@ void CSocialGaming::updateAchievementsProgress(EAchievements achievement, float 
 
 void CSocialGaming::sendMessageToAll(const CMessage &message) {
   if (message.getType() == CMessage::MT_AT_LEVEL_END) {
+    CLevelList levelList = m_pGameData->getLevelList();
+    std::string levelName = message.getStatistics()->sLevelFileName;
+    if (levelList.getMissionState(levelName) < message.getStatistics()->eMissionState) {
     m_pGameData->setMissionStateOfLevel(message.getStatistics()->eMissionState,
-					message.getStatistics()->sLevelFileName,
-					m_pGameData->getLevelList()
-					.isSkipped(message.getStatistics()->sLevelFileName));
+				        levelName,
+					levelList.isSkipped(levelName));
+    }
   }
 }
