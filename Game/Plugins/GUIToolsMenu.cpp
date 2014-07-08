@@ -2,6 +2,7 @@
 #include "MessageHandler.hpp"
 #include "GameInputCommand.hpp"
 #include "GameInputManager.hpp"
+#include "XMLResources/Manager.hpp"
 
 using namespace CEGUI;
 
@@ -55,7 +56,7 @@ CGUIToolsMenu::CGUIToolsMenu(CEGUI::Window *pParent)
 
   // create drag frame
   m_pDragWindow = m_pRoot->createChild("OgreTray/Group", "DragWindow");
-  m_pDragWindow->setText("Tools");
+  m_pDragWindow->setText(XMLResources::GLOBAL.getCEGUIString("Tools"));
   m_pDragWindow->setFont("dejavusans12");
   //m_pDragWindow->setProperty("FrameEnabled", "False");
   m_pDragWindow->setAlpha(0.8);
