@@ -178,6 +178,8 @@
 		<Unit filename="../Game/Plugins/GUISettings/GUISettingsWindow.hpp" />
 		<Unit filename="../Game/Plugins/GUISettings/GUIVideoSettings.cpp" />
 		<Unit filename="../Game/Plugins/GUISettings/GUIVideoSettings.hpp" />
+		<Unit filename="../Game/Plugins/GUIToolsMenu.cpp" />
+		<Unit filename="../Game/Plugins/GUIToolsMenu.hpp" />
 		<Unit filename="../Game/Plugins/SocialGaming/Achievements.hpp" />
 		<Unit filename="../Game/Plugins/SocialGaming/DefaultGameData.cpp" />
 		<Unit filename="../Game/Plugins/SocialGaming/DefaultGameData.hpp" />
