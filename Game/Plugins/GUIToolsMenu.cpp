@@ -212,6 +212,7 @@ void CGUIToolsMenu::update(float tpf) {
 void CGUIToolsMenu::setCurrentWeapon(unsigned int uiWeapon) {
   if (m_uiCurrentWeapon == uiWeapon) {return;}
 
+  uiWeapon = std::max<int>(0, std::min<int>(Weapon::I_COUNT - 1, uiWeapon));
   m_pWeapons[m_uiCurrentWeapon]->setProperty("BackgroundEnabled", "False");
   m_pWeapons[m_uiCurrentWeapon]->setProperty("FrameEnabled", "False");
   m_pWeapons[uiWeapon]->setProperty("BackgroundEnabled", "True");

@@ -146,6 +146,9 @@ private:
   void constructor_impl();
   void setupAnimations();
 
+  void useHealthPotion();
+  void useManaPotion();
+
 protected:
   virtual void animationTextureChangedCallback(unsigned int uiOldText, unsigned int uiNewText);
   virtual void damageTakenCallback(Ogre::Real fHitpoints);

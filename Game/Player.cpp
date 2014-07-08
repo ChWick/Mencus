@@ -459,14 +459,14 @@ void CPlayer::pickobject(unsigned int uiObjectId) {
 bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
  if (arg.key == OIS::KC_COMMA) {
     if (m_uiCurrentWeapon == 0) {
-      m_uiCurrentWeapon = W_COUNT - 1;
+      m_uiCurrentWeapon = I_COUNT - 1;
     } else {
       --m_uiCurrentWeapon;
     }
     CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
   } else if (arg.key == OIS::KC_PERIOD) {
     ++m_uiCurrentWeapon;
-    if (m_uiCurrentWeapon >= W_COUNT) {
+    if (m_uiCurrentWeapon >= I_COUNT) {
       m_uiCurrentWeapon = 0;
     }
     CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
@@ -527,6 +527,12 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
     break;
   case GIC_ATTACK:
     if (cmd.getFloatValue() > 0.5) {
+      if (m_uiCurrentWeapon == I_MANA_POTION) {
+	useManaPotion();
+      }
+      else if (m_uiCurrentWeapon == I_HEALTH_POTION) {
+	useHealthPotion();
+      }
       if (m_eGoToLinkStatus == GTLS_NONE) {
 	if (m_uiCurrentWeapon == W_BOMB) {
 	  if (m_uiBombCount <= 0) {
@@ -556,25 +562,17 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
     }
     break;
   case GIC_USE_HEALTH_POTION:
-    if (m_uiHealthPotionsCount > 0 && (cmd.getState() == GIS_PRESSED || cmd.getState() == GIS_CLICKED)) {
-      --m_uiHealthPotionsCount;
-      addHitpoints(PLAYER_HEALTH_POTION_REGAIN_PERCENTAGE * getMaximumHitpoints());
-      CHUD::getSingleton().setHealthPotionCount(m_uiHealthPotionsCount);
-      CHUD::getSingleton().setHP(getHitpoints() / getMaximumHitpoints());
-      m_Statistics.uiUsedItems[Weapon::I_HEALTH_POTION]++;
+    if (cmd.getState() == GIS_PRESSED || cmd.getState() == GIS_CLICKED) {
+      useHealthPotion();
     }
     break;
   case GIC_USE_MANA_POTION:
-    if (m_uiManaPotionsCount > 0 && (cmd.getState() == GIS_PRESSED || cmd.getState() == GIS_CLICKED)) {
-      --m_uiManaPotionsCount;
-      m_fManaPoints = min(PLAYER_MAX_MANA_POINTS, m_fManaPoints + PLAYER_MANA_POTION_REGAIN_PERCENTAGE * PLAYER_MAX_MANA_POINTS);
-      CHUD::getSingleton().setManaPotionCount(m_uiManaPotionsCount);
-      CHUD::getSingleton().setMP(m_fManaPoints / PLAYER_MAX_MANA_POINTS);
-      m_Statistics.uiUsedItems[Weapon::I_MANA_POTION]++;
+    if (cmd.getState() == GIS_PRESSED || cmd.getState() == GIS_CLICKED) {
+      useManaPotion();
     }
     break;
   case GIC_CHANGE_WEAPON:
-    m_uiCurrentWeapon = min(W_COUNT - 1, max(0, cmd.getIntValue()));
+    m_uiCurrentWeapon = min(I_COUNT - 1, max(0, cmd.getIntValue()));
     CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
     CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_WEAPON_CHANGED).setInt(m_uiCurrentWeapon));
     break;
@@ -687,5 +685,25 @@ void CPlayer::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle
     pElem->SetAttribute("pl_hud_hp_cnt", m_uiHealthPotionsCount);
     pElem->SetAttribute("pl_hud_mp_cnt", m_uiManaPotionsCount);
     pElem->SetAttribute("pl_hud_bomb_cnt", m_uiBombCount);
+  }
+}
+
+void CPlayer::useHealthPotion() {
+  if (m_uiHealthPotionsCount > 0) {
+    --m_uiHealthPotionsCount;
+    addHitpoints(PLAYER_HEALTH_POTION_REGAIN_PERCENTAGE * getMaximumHitpoints());
+    CHUD::getSingleton().setHealthPotionCount(m_uiHealthPotionsCount);
+      CHUD::getSingleton().setHP(getHitpoints() / getMaximumHitpoints());
+      m_Statistics.uiUsedItems[Weapon::I_HEALTH_POTION]++;
+  }
+}
+
+void CPlayer::useManaPotion() {
+  if (m_uiManaPotionsCount > 0) {
+    --m_uiManaPotionsCount;
+    m_fManaPoints = min(PLAYER_MAX_MANA_POINTS, m_fManaPoints + PLAYER_MANA_POTION_REGAIN_PERCENTAGE * PLAYER_MAX_MANA_POINTS);
+    CHUD::getSingleton().setManaPotionCount(m_uiManaPotionsCount);
+    CHUD::getSingleton().setMP(m_fManaPoints / PLAYER_MAX_MANA_POINTS);
+    m_Statistics.uiUsedItems[Weapon::I_MANA_POTION]++;
   }
 }

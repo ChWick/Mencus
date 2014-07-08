@@ -116,21 +116,21 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIToolsMenu *pGUIToolsMenu)
   m_pManaBar->setPosition(UVector2(UDim(0.772460938, 0), UDim(0.026041667, 0)));
   m_pManaBar->setRiseOnClickEnabled(false);
 
+  Window *pWeaponContainer = pMain->createChild("OgreTray/StaticImage", "weaponContainer");
+  pWeaponContainer->setProperty("FrameEnabled", "False");
+  pWeaponContainer->setProperty("BackgroundEnabled", "False");
+  pWeaponContainer->setProperty("Image", "hud/weapon_indicator");
+  pWeaponContainer->setPosition(UVector2(UDim(0, 0), UDim(0.908854, 0)));
+  pWeaponContainer->setSize(USize(UDim(0.0683594, 0), UDim(0.091145833, 0)));
+
+
+  m_pWeapon = pMain->createChild("OgreTray/StaticImage", "weapon");
+  m_pWeapon->setProperty("FrameEnabled", "False");
+  m_pWeapon->setProperty("BackgroundEnabled", "True");
+  m_pWeapon->setPosition(UVector2(UDim(0.020507813, 0), UDim(0.936197917, 0)));
+  m_pWeapon->setSize(USize(UDim(0.028320313, 0), UDim(0.037760417, 0)));
+
   if (m_bShotToolIndicators) {
-    Window *pWeaponContainer = pMain->createChild("OgreTray/StaticImage", "weaponContainer");
-    pWeaponContainer->setProperty("FrameEnabled", "False");
-    pWeaponContainer->setProperty("BackgroundEnabled", "False");
-    pWeaponContainer->setProperty("Image", "hud/weapon_indicator");
-    pWeaponContainer->setPosition(UVector2(UDim(0, 0), UDim(0.908854, 0)));
-    pWeaponContainer->setSize(USize(UDim(0.0683594, 0), UDim(0.091145833, 0)));
-
-
-    m_pWeapon = pMain->createChild("OgreTray/StaticImage", "weapon");
-    m_pWeapon->setProperty("FrameEnabled", "False");
-    m_pWeapon->setProperty("BackgroundEnabled", "True");
-    m_pWeapon->setPosition(UVector2(UDim(0.020507813, 0), UDim(0.936197917, 0)));
-    m_pWeapon->setSize(USize(UDim(0.028320313, 0), UDim(0.037760417, 0)));
-
     Window *pImg = pMain->createChild("OgreTray/StaticImage", "HPImg");
     pImg->setProperty("FrameEnabled","False");
     pImg->setProperty("BackgroundEnabled","False");
@@ -265,9 +265,9 @@ void CHUD::setBombCount(unsigned int uiCount) {
   }
 }
 void CHUD::setCurrentWeapon(unsigned int uiWeapon) {
-  if (m_bShotToolIndicators) {
-    m_pWeapon->setProperty("Image", Weapon::getPicture(uiWeapon));
-  }
+  //if (m_bShotToolIndicators) {
+  m_pWeapon->setProperty("Image", Weapon::getPicture(uiWeapon));
+  //}
   if (m_pGUIToolsMenu) {
     m_pGUIToolsMenu->setCurrentWeapon(uiWeapon);
   }
