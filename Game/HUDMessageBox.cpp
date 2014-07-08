@@ -26,6 +26,8 @@ using namespace CEGUI;
 
 CHUDMessageBox::CHUDMessageBox(const std::string &sID, const CEGUI::String &sTitle, const std::vector<std::string> &vPages)
   : m_sID(sID), m_vPages(vPages) {
+  CInputListenerManager::getSingleton().addInputListener(this);
+
   assert(m_vPages.size() > 0);
   Window *pMainRoot = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
   Window *pPane = pMainRoot->createChild("OgreTray/StaticImage");
@@ -66,19 +68,34 @@ CHUDMessageBox::CHUDMessageBox(const std::string &sID, const CEGUI::String &sTit
   pause(PAUSE_MAP_UPDATE);
 }
 CHUDMessageBox::~CHUDMessageBox() {
+  CInputListenerManager::getSingleton().removeInputListener(this);
   unpause(PAUSE_MAP_UPDATE);
   m_pRootWindow->destroy();
 }
 bool CHUDMessageBox::onCloseButtonClicked(const CEGUI::EventArgs &args) {
-  ++m_uiCurrentPage;
-  if (m_uiCurrentPage >= m_vPages.size()) {
-    delete this;
-  }
-  else {
-    showPage(m_uiCurrentPage);
+  onButtonClicked();
+  return true;
+}
+
+bool CHUDMessageBox::keyPressed( const OIS::KeyEvent &arg ) {
+  if (arg.key == OIS::KC_RETURN) {
+    return !onButtonClicked();
   }
   return true;
 }
+
+bool CHUDMessageBox::onButtonClicked() {
+  ++m_uiCurrentPage;
+  if (m_uiCurrentPage >= m_vPages.size()) {
+    delete this;
+    return true;
+  }
+  else {
+    showPage(m_uiCurrentPage);
+    return false;
+  }
+}
+
 void CHUDMessageBox::showPage(unsigned int uiPage) {
   m_uiCurrentPage = uiPage;
 

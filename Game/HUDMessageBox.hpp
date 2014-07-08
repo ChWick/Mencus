@@ -23,10 +23,12 @@
 #include <CEGUI/CEGUI.h>
 #include "HUDElement.hpp"
 #include "PauseCaller.hpp"
+#include "InputListener.hpp"
 
 class CHUDMessageBox
   : public CHUDElement,
-    public CPauseCaller {
+    public CPauseCaller,
+    public CInputListener {
 private:
   const std::string m_sID;
   CEGUI::Window *m_pRootWindow;
@@ -39,7 +41,13 @@ public:
 
   bool onCloseButtonClicked(const CEGUI::EventArgs &args);
 
+  // Input listener
+  bool keyPressed( const OIS::KeyEvent &arg );
+
 private:
+
+  // return true on close
+  bool onButtonClicked();
   void showPage(unsigned int uiPage);
 };
 
