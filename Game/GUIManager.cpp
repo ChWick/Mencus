@@ -228,7 +228,9 @@ bool CGUIManager::keyPressed( const OIS::KeyEvent &arg ) {
     m_fMouseSpeedY = m_fMouseInitialSpeed;
     break;
   case OIS::KC_RETURN:
-    sys.getDefaultGUIContext().injectMouseButtonDown(CEGUI::LeftButton);
+    if (CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible()) {
+      sys.getDefaultGUIContext().injectMouseButtonDown(CEGUI::LeftButton);
+    }
     break;
   default:
     break;
@@ -259,7 +261,9 @@ bool CGUIManager::keyReleased( const OIS::KeyEvent &arg ) {
     m_fMouseSpeedY = 0;
     break;
   case OIS::KC_RETURN:
-    sys.getDefaultGUIContext().injectMouseButtonUp(CEGUI::LeftButton);
+    if (CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible()) {
+      sys.getDefaultGUIContext().injectMouseButtonUp(CEGUI::LeftButton);
+    }
     break;
   default:
     break;
