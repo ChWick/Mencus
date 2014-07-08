@@ -27,7 +27,6 @@ CGUIInputSettings::CGUIInputSettings(CEGUI::Window *pParent)
   : CGUISettingsWindow(pParent, "Input") {
   float fHeight = 0;
 
-#ifdef INPUT_TOUCH
   Window *pButtonSizeText = m_pContent->createChild("OgreTray/StaticText", "ButtonSliderText");
   pButtonSizeText->setPosition(UVector2(UDim(0, 0), UDim(fHeight, 0)));
   pButtonSizeText->setSize(USize(UDim(1, 0), UDim(0.1, 0)));
@@ -46,11 +45,9 @@ CGUIInputSettings::CGUIInputSettings(CEGUI::Window *pParent)
   // this will also set the initial value for the touch buttons
   pButtonSizeSlider->setCurrentValue(CSettings::getSingleton().getInputSettings().m_fTouchButtonSize);
   fHeight += 0.25;
-#endif
 }
 
 bool CGUIInputSettings::buttonSizeSliderValueChanged(const EventArgs &args) {
-#ifdef INPUT_TOUCH
   const WindowEventArgs &wndArgs = dynamic_cast<const WindowEventArgs&>(args);
   const Slider *pSlider = dynamic_cast<const Slider*>(wndArgs.window);
 
@@ -58,7 +55,6 @@ bool CGUIInputSettings::buttonSizeSliderValueChanged(const EventArgs &args) {
 
   CGUIManager::getSingleton().changeTouchButtonSize(pSlider->getCurrentValue());
   CSettings::getSingleton().getInputSettings().m_fTouchButtonSize = pSlider->getCurrentValue();
-#endif
 
   return true;
 }

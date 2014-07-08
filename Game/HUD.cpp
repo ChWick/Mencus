@@ -18,7 +18,7 @@
  *****************************************************************************/
 
 #include "HUD.hpp"
-#include "GUIInput.hpp"
+#include "Plugins/GUIToolsMenu.hpp"
 #include <OgreStringConverter.h>
 #include <iostream>
 #include "HUDElement.hpp"
@@ -39,9 +39,9 @@ CHUD &CHUD::getSingleton() {
   return *msSingleton;
 }
 
-CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput)
-  : m_bShotToolIndicators(pGUIInput == NULL),
-    m_pGUIInput(pGUIInput),
+CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIToolsMenu *pGUIToolsMenu)
+  : m_bShotToolIndicators(pGUIToolsMenu == NULL),
+    m_pGUIToolsMenu(pGUIToolsMenu),
     m_fTimer(0),
     m_fHP(1),
     m_fMP(1)
@@ -236,40 +236,40 @@ void CHUD::setHealthPotionCount(unsigned int uiCount) {
   if (m_bShotToolIndicators) {
     m_pHealthPotionsCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
   }
-  if (m_pGUIInput) {
-    m_pGUIInput->setItemCount(Weapon::I_HEALTH_POTION, uiCount);
+  if (m_pGUIToolsMenu) {
+    m_pGUIToolsMenu->setItemCount(Weapon::I_HEALTH_POTION, uiCount);
   }
 }
 void CHUD::setManaPotionCount(unsigned int uiCount) {
   if (m_bShotToolIndicators) {
     m_pManaPotionsCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
   }
-  if (m_pGUIInput) {
-    m_pGUIInput->setItemCount(Weapon::I_MANA_POTION, uiCount);
+  if (m_pGUIToolsMenu) {
+    m_pGUIToolsMenu->setItemCount(Weapon::I_MANA_POTION, uiCount);
   }
 }
 void CHUD::setKeysCount(unsigned int uiCount) {
   if (m_bShotToolIndicators) {
     m_pKeyCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
   }
-  if (m_pGUIInput) {
-    m_pGUIInput->setItemCount(Weapon::I_KEY, uiCount);
+  if (m_pGUIToolsMenu) {
+    m_pGUIToolsMenu->setItemCount(Weapon::I_KEY, uiCount);
   }
 }
 void CHUD::setBombCount(unsigned int uiCount) {
   if (m_bShotToolIndicators) {
     m_pBombCount->setText(CEGUI::PropertyHelper<unsigned int>::toString(uiCount));
   }
-  if (m_pGUIInput) {
-    m_pGUIInput->setItemCount(Weapon::I_BOMB, uiCount);
+  if (m_pGUIToolsMenu) {
+    m_pGUIToolsMenu->setItemCount(Weapon::I_BOMB, uiCount);
   }
 }
 void CHUD::setCurrentWeapon(unsigned int uiWeapon) {
   if (m_bShotToolIndicators) {
     m_pWeapon->setProperty("Image", Weapon::getPicture(uiWeapon));
   }
-  if (m_pGUIInput) {
-    m_pGUIInput->setCurrentWeapon(uiWeapon);
+  if (m_pGUIToolsMenu) {
+    m_pGUIToolsMenu->setCurrentWeapon(uiWeapon);
   }
 }
 Ogre::ColourValue CHUD::getHPColourmap() const {
@@ -309,13 +309,13 @@ void CHUD::setCurrentTime(Ogre::Real fTime) {
 }
 void CHUD::show() {
   m_pHudRoot->setVisible(true);
-  if (m_pGUIInput) {
-    m_pGUIInput->show();
+  if (m_pGUIToolsMenu) {
+    m_pGUIToolsMenu->show();
   }
 }
 void CHUD::hide() {
   m_pHudRoot->setVisible(false);
-  if (m_pGUIInput) {
-    m_pGUIInput->hide();
+  if (m_pGUIToolsMenu) {
+    m_pGUIToolsMenu->hide();
   }
 }

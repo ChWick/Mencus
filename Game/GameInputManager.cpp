@@ -66,7 +66,7 @@ bool CGameInputManager::keyPressed( const OIS::KeyEvent &arg ) {
     injectCommand(CGameInputCommand(GIC_USE_MANA_POTION, 1));
   }
   else if (arg.key == OIS::KC_APPS) {
-    injectCommand(CGameInputCommand(GIC_JUMP, 1));
+    injectCommand(CGameInputCommand(GIC_SHOW_MENU, 1));
   }
 
   return true;
@@ -89,6 +89,9 @@ bool CGameInputManager::keyReleased( const OIS::KeyEvent &arg ) {
   }
   else if (arg.key == OIS::KC_RETURN) {
     injectCommand(CGameInputCommand(GIC_ACTIVATE, 0));
+  }
+  else if (arg.key == OIS::KC_APPS) {
+    injectCommand(CGameInputCommand(GIC_SHOW_MENU, 0));
   }
 
   return true;

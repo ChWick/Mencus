@@ -32,6 +32,7 @@
 #include <SdkTrays.h>
 #include "Settings.hpp"
 #include "Plugins/SocialGaming/Overlay.hpp"
+#include "Plugins/GUIToolsMenu.hpp"
 
 using namespace CEGUI;
 
@@ -111,13 +112,14 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
 
   pTrayMgr->userUpdateLoadBar("Creating gui components", 0.2);
   //destroyResources();
+  CGUIToolsMenu *pToolsMenu = new CGUIToolsMenu(guiRoot);
   new CGUIInstructions(guiRoot);
   new CGUIGameOver(guiRoot);
   new CGUIStatistics(guiRoot);
 #ifdef INPUT_TOUCH
   m_pGUIInput = new CGUIInput(guiRoot); // gui input before hud, since hud depends
 #endif
-  new CHUD(guiRoot, m_pGUIInput);
+  new CHUD(guiRoot, pToolsMenu);
   Ogre::LogManager::getSingleton().logMessage("Singleton for map editor");
 #if ENABLE_MAP_EDITOR
   new CMapEditor(guiRoot);
@@ -127,10 +129,14 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
 
   //#if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
   m_lGUIOverlays.push_back(new SocialGaming::COverlay(guiRoot->getChild("MainMenuRoot")));
+  m_lGUIOverlays.push_back(pToolsMenu);
   //#endif
 
   pTrayMgr->userUpdateLoadBar("done...", 0.2);
   onGUIScalingChanged(CSettings::getSingleton().getVideoSettings().m_fHUDSize);
+  Sizef vSize = CGUIManager::getSingleton().getNativeRes();
+  float maxValue = std::min(vSize.d_height / 4.0, vSize.d_width / 8.0);
+  changeTouchButtonSize(std::min(CSettings::getSingleton().getInputSettings().m_fTouchButtonSize, maxValue));
   Ogre::LogManager::getSingleton().logMessage("GUIManager initialized...");
   CGame::getSingleton().hideLoadingBar();
 }

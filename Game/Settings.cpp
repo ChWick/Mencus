@@ -33,9 +33,7 @@ const std::string SETTINGS_FILE_PATH("settings.xml");
 // default values
 SInputSettings::SInputSettings() 
   : m_fMapEditorButtonSize(50) {
-#ifdef INPUT_TOUCH
   m_fTouchButtonSize = 10000; // very big number to force maximal button size as default
-#endif
 }
 SVideoSettings::SVideoSettings()
   : 
@@ -83,11 +81,9 @@ void CSettings::readFromFile() {
 		    m_InputSettings.m_fMapEditorButtonSize);
 
   for (XMLElement *pElem = pInput->FirstChildElement(); pElem; pElem = pElem->NextSiblingElement()) {
-#ifdef INPUT_TOUCH
     if (strcmp(pElem->Value(), "touch") == 0) {
       m_InputSettings.m_fTouchButtonSize = RealAttribute(pElem, "button_size", m_InputSettings.m_fTouchButtonSize);
     }
-#endif
   }
 
   // video
@@ -114,12 +110,10 @@ void CSettings::writeToFile() {
   pInput->SetAttribute("map_editor_button_size",
 		       m_InputSettings.m_fMapEditorButtonSize);
   
-#ifdef INPUT_TOUCH
   XMLElement *pInputTouch = doc.NewElement("touch");
   pInput->InsertEndChild(pInputTouch);
-  
+
   pInputTouch->SetAttribute("button_size", m_InputSettings.m_fTouchButtonSize);
-#endif
 
   // video
   XMLElement *pVideo = doc.NewElement("video");

@@ -30,6 +30,7 @@ enum EGameInputCommandTypes {
   GIC_USE_HEALTH_POTION,
   GIC_USE_MANA_POTION,
   GIC_CHANGE_WEAPON,
+  GIC_SHOW_MENU,
 
   GIC_COUNT,
 };
