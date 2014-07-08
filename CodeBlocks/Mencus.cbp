@@ -133,8 +133,6 @@
 		<Unit filename="../Game/InputListener.hpp" />
 		<Unit filename="../Game/LevelList.cpp" />
 		<Unit filename="../Game/LevelList.hpp" />
-		<Unit filename="../Game/LevelState.cpp" />
-		<Unit filename="../Game/LevelState.hpp" />
 		<Unit filename="../Game/Link.hpp" />
 		<Unit filename="../Game/Log.hpp" />
 		<Unit filename="../Game/MainMenu.cpp" />
