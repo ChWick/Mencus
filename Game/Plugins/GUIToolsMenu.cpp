@@ -387,6 +387,20 @@ void CGUIToolsMenu::receiveInputCommand(const CGameInputCommand &cmd) {
       }
     }
     break;
+  case GIC_RIGHT:
+    if (m_eDragState == DS_OPEN) {
+      if (cmd.getState() == GIS_PRESSED) {
+	setCurrentWeapon(m_uiCurrentWeapon + 1);
+      }
+    }
+    break;
+  case GIC_LEFT:
+    if (m_eDragState == DS_OPEN) {
+      if (cmd.getState() == GIS_PRESSED) {
+	setCurrentWeapon(m_uiCurrentWeapon - 1);
+      }
+    }
+    break;
   default:
     break;
   }
