@@ -26,14 +26,18 @@
 #include "PauseCaller.hpp"
 #include <OgreResourceGroupManager.h>
 #include "XMLResources/Manager.hpp"
+#include "InputListener.hpp"
 
 class CGUICredits
-  : public CPauseCaller {
+  : public CPauseCaller,
+    public CInputListener {
 private:
   CEGUI::Window *m_pRoot;
 
 public:
-  CGUICredits() {    
+  CGUICredits() {
+    CInputListenerManager::getSingleton().addInputListener(this);
+
     using namespace CEGUI;
     Window *pGlobalRoot = System::getSingleton().getDefaultGUIContext().getRootWindow();
 
@@ -43,7 +47,7 @@ public:
     m_pRoot->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
     m_pRoot->setSize(USize(UDim(1, 0), UDim(1, 0)));
     m_pRoot->setText(XMLResources::GLOBAL.getCEGUIString("credits"));
-    
+
     MultiLineEditbox *pText = dynamic_cast<MultiLineEditbox*>(m_pRoot->createChild("OgreTray/MultiLineEditbox", "Text"));
     pText->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
     pText->setSize(USize(UDim(1, 0), UDim(1 - fButtonSize, 0)));
@@ -61,8 +65,28 @@ public:
     pause(PAUSE_ALL);
   }
   ~CGUICredits() {
+    CInputListenerManager::getSingleton().removeInputListener(this);
     unpause(PAUSE_ALL);
     m_pRoot->destroy();
+  }
+
+  // Input listener
+  bool keyPressed( const OIS::KeyEvent &arg ) {
+    using namespace CEGUI;
+
+    if (arg.key == OIS::KC_RETURN) {
+      CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);
+      return false;
+    }
+    else if (arg.key == OIS::KC_UP) {
+      MultiLineEditbox *pText = dynamic_cast<MultiLineEditbox*>(m_pRoot->getChild("Text"));
+      pText->getVertScrollbar()->scrollBackwardsByStep();
+    }
+    else if (arg.key == OIS::KC_DOWN) {
+      MultiLineEditbox *pText = dynamic_cast<MultiLineEditbox*>(m_pRoot->getChild("Text"));
+      pText->getVertScrollbar()->scrollForwardsByStep();
+    }
+    return true;
   }
 
 private:
