@@ -123,10 +123,10 @@ void CGUIStatistics::update(Ogre::Real tpf) {
 bool CGUIStatistics::keyPressed(const OIS::KeyEvent &arg) {
   switch (arg.key) {
   case OIS::KC_LEFT:
-    m_iSelectedSlot = std::max<int>(m_iSelectedSlot - 1, 0);
+    changeSelectedSlot(m_iSelectedSlot - 1);
     break;
   case OIS::KC_RIGHT:
-    m_iSelectedSlot = std::min<int>(m_iSelectedSlot + 1, BT_COUNT - 1);
+    changeSelectedSlot(m_iSelectedSlot + 1);
     break;
   case OIS::KC_RETURN:
     activateButton(m_iSelectedSlot);
@@ -134,7 +134,17 @@ bool CGUIStatistics::keyPressed(const OIS::KeyEvent &arg) {
   default:
     break;
   }
+
   return true;
+}
+
+void CGUIStatistics::changeSelectedSlot(int i) {
+  m_iSelectedSlot = std::min<int>(std::max<int>(i, 0), BT_COUNT - 1);
+  
+  Vector2f pos = m_pButtons[m_iSelectedSlot]->getInnerRectClipper().getPosition();
+  Sizef size = m_pButtons[m_iSelectedSlot]->getInnerRectClipper().getSize();
+  // next line is to be shure that
+  CEGUI::System::getSingleton().getDefaultGUIContext().injectMousePosition(pos.d_x + size.d_width / 2, pos.d_y + size.d_height / 2);
 }
 void CGUIStatistics::activateButton(int iBtn) {
   switch (iBtn) {
@@ -174,13 +184,16 @@ void CGUIStatistics::showStatistics(const SStatistics &stats) {
   case MissionState::MS_ACCOMPLISHED:
     pTopText->setText("Mission accomplished");
     pTopText->setProperty("CaptionColour", "FF66FF66");
+    changeSelectedSlot(BT_TO_MENU);
     break;
   case MissionState::MS_FAILED:
     pTopText->setText("Mission failed");
     pTopText->setProperty("CaptionColour", "FF992222");
+    changeSelectedSlot(BT_RETRY);
     break;
   default:
     pTopText->setText("Unknown mission state");
+    changeSelectedSlot(0);
     break;
   }
 
@@ -243,4 +256,12 @@ bool CGUIStatistics::onRetryClicked(const CEGUI::EventArgs&) {
 bool CGUIStatistics::onToMenuClicked(const CEGUI::EventArgs&) {
   activateButton(BT_TO_MENU);
   return true;
+}
+void CGUIStatistics::show() {
+  m_pStatisticsRoot->setVisible(true);
+  setInputListenerEnabled(true);
+}
+void CGUIStatistics::hide() {
+  m_pStatisticsRoot->setVisible(false);
+  setInputListenerEnabled(false);
 }

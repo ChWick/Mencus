@@ -168,9 +168,11 @@ void CGUIManager::update(Ogre::Real tpf) {
   CEGUI::System::getSingleton().injectTimePulse(tpf);
 
   // move mouse cursor
-  m_fMouseSpeedX += m_fMouseSpeedX * m_fMouseAcceleration * tpf;
-  m_fMouseSpeedY += m_fMouseSpeedY * m_fMouseAcceleration * tpf;
-  CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(m_fMouseSpeedX * tpf, m_fMouseSpeedY * tpf);
+  if (CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible()) {
+    m_fMouseSpeedX += m_fMouseSpeedX * m_fMouseAcceleration * tpf;
+    m_fMouseSpeedY += m_fMouseSpeedY * m_fMouseAcceleration * tpf;
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(m_fMouseSpeedX * tpf, m_fMouseSpeedY * tpf);
+  }
   
   if (m_bRenderPause) {return;}
   CHUD::getSingleton().update(tpf);
