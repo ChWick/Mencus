@@ -143,12 +143,13 @@ void CGameState::changeGameStateImpl() {
       Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("PreloadGame");
       m_pScreenplay = new CScreenplay();
       if (m_pMapPack) {
-	Ogre::LogManager::getSingleton().logMessage("Creating screenplay from mappack");
-	m_pScreenplay->loadSingleMap(m_pMapPack);
+        Ogre::LogManager::getSingleton().logMessage("Creating screenplay from mappack");
+        m_pScreenplay->loadSingleMap(m_pMapPack);
       }
       else {
-	Ogre::LogManager::getSingleton().logMessage("No map pack set");
-	changeGameState(GS_MAIN_MENU);
+        // mappack has to be loaded afterwards explicitly: e.g. loading from snapshot
+        Ogre::LogManager::getSingleton().logMessage("No map pack set");
+        //changeGameState(GS_MAIN_MENU);
       }
       break;
     case GS_MAIN_MENU:
@@ -200,7 +201,7 @@ void CGameState::update(Ogre::Real tpf) {
       m_eNextGameState = GS_GAME;
       changeGameStateImpl();
     }
-    else {  
+    else {
       Ogre::LogManager::getSingleton().logMessage("Waiting for add finished");
       usleep(1000 * 500); // 0.5 secs  default:
     }
