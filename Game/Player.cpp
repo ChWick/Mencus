@@ -98,7 +98,7 @@ CPlayer::CPlayer(CMap &map, SStatistics &statistics)
 CPlayer::CPlayer(CMap &map, const tinyxml2::XMLElement *pElem, SStatistics &statistics)
   : CAnimatedSprite(map, &map, &map, map.get2dManager(), pElem, Ogre::Vector2(1, 2)),
     CHitableObject(pElem),
-    m_Fader(this),
+    m_Fader(pElem, this),
     m_fRightPressed(0),
     m_fLeftPressed(0),
     m_bAttackPressed(false),
@@ -113,17 +113,18 @@ CPlayer::CPlayer(CMap &map, const tinyxml2::XMLElement *pElem, SStatistics &stat
     m_uiCurrentWeapon(IntAttribute(pElem, "pl_cur_weapon", W_BOLT)),
     m_pBomb(NULL),
     m_fBombThrowStrength(RealAttribute(pElem, "pl_bomb_throw_str", 0)),
-  m_Shield(map, "Shield", this, &map, map.get2dManager(), Ogre::Vector2::ZERO, Ogre::Vector2(2, 2)),
-  m_bShieldActive(BoolAttribute(pElem, "pl_shield_active", false)),
-  m_vLinkFromPos(Vector2Attribute(pElem, "pl_gtl_from", Ogre::Vector2::ZERO)),
-  m_vLinkToPos(Vector2Attribute(pElem, "pl_gtl_to", Ogre::Vector2::ZERO)),
-  m_eGoToLinkStatus(EnumAttribute<EGoToLinkStatus>(pElem, "pl_gtl_status", GTLS_NONE)),
-  m_fManaPoints(RealAttribute(pElem, "pl_hud_mp", PLAYER_MAX_MANA_POINTS)),
-  m_uiKeyCount(IntAttribute(pElem, "pl_hud_key", 0)),
-  m_uiHealthPotionsCount(IntAttribute(pElem, "pl_hud_hp_cnt", 0)),
-  m_uiManaPotionsCount(IntAttribute(pElem, "pl_hud_mp_cnt", 0)),
-  m_uiBombCount(IntAttribute(pElem, "pl_hud_bomb_cnt", 0)),
-  m_Statistics(statistics) {
+    m_Shield(map, "Shield", this, &map, map.get2dManager(), Ogre::Vector2::ZERO, Ogre::Vector2(2, 2)),
+    m_bShieldActive(BoolAttribute(pElem, "pl_shield_active", false)),
+    m_vLinkFromPos(Ogre::StringConverter::parseVector2(Attribute(pElem, "pl_gtl_from", "0 0"))),
+    m_vLinkToPos(Ogre::StringConverter::parseVector2(Attribute(pElem, "pl_gtl_to", "0 0"))),
+    m_eGoToLinkStatus(EnumAttribute<EGoToLinkStatus>(pElem, "pl_gtl_status", GTLS_NONE)),
+    m_fManaPoints(RealAttribute(pElem, "pl_hud_mp", PLAYER_MAX_MANA_POINTS)),
+    m_uiKeyCount(IntAttribute(pElem, "pl_hud_key", 0)),
+    m_uiHealthPotionsCount(IntAttribute(pElem, "pl_hud_hp_cnt", 0)),
+    m_uiManaPotionsCount(IntAttribute(pElem, "pl_hud_mp_cnt", 0)),
+    m_uiBombCount(IntAttribute(pElem, "pl_hud_bomb_cnt", 0)),
+    m_Statistics(statistics) {
+
   constructor_impl();
   startup(getPosition(), RealAttribute(pElem, "direction", 1));
 }
@@ -686,6 +687,8 @@ void CPlayer::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle
     pElem->SetAttribute("pl_hud_mp_cnt", m_uiManaPotionsCount);
     pElem->SetAttribute("pl_hud_bomb_cnt", m_uiBombCount);
   }
+
+  m_Fader.writeToXMLElement(pElem, eStyle);
 }
 
 void CPlayer::useHealthPotion() {
