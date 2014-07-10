@@ -22,8 +22,8 @@
 
 #include "Achievements.hpp"
 #include <OgreSingleton.h>
-#include "Statistics.hpp"
 #include "MessageInjector.hpp"
+#include "AchievementProgressTester.hpp"
 
 namespace SocialGaming {
   enum EConnectionStatus {
@@ -40,6 +40,7 @@ namespace SocialGaming {
   private:
     CSocialGamingConnectionInterface *m_pConnection;
     CGameData *m_pGameData;
+    CAchievementProgressTester m_AchievementProgressTester;
 
     EConnectionStatus m_eConnectionStatus;
     float m_fConnectionCheckTimer;
@@ -58,8 +59,6 @@ namespace SocialGaming {
     EConnectionStatus getConnectionStatus() {return m_eConnectionStatus;}
 
     void update(const SStatistics &stats);
-
-    void updateAchievementsProgress(EAchievements achievement, float fPercentComplete);
 
     void sendMessageToAll(const CMessage &message);
   };
