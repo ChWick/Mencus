@@ -140,6 +140,7 @@ void CGameState::changeGameStateImpl() {
     m_eCurrentGameState = m_eNextGameState;
     switch (m_eCurrentGameState) {
     case GS_GAME:
+      m_Statistics = SStatistics(); // reset statistics
       Ogre::ResourceGroupManager::getSingleton().initialiseResourceGroup("PreloadGame");
       m_pScreenplay = new CScreenplay();
       if (m_pMapPack) {
@@ -161,6 +162,7 @@ void CGameState::changeGameStateImpl() {
       break;
     case GS_STATISTICS:
       CGUIStatistics::getSingleton().show();
+      CGUIStatistics::getSingleton().showStatistics(m_Statistics);
       break;
     case GS_AD:
       CAdDisplayManager::showAdPopup();

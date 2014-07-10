@@ -62,7 +62,7 @@ struct SStatistics {
     iKilledEnemies = IntAttribute(pElem, "killed_enemies", 0);
   }
 
-  void writeToXML(tinyxml2::XMLElement *pElem) const {
+  void writeToXMLElement(tinyxml2::XMLElement *pElem) const {
     assert(pElem);
 
     pElem->SetAttribute("level", sLevelFileName.c_str());

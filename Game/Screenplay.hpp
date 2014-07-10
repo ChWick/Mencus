@@ -29,7 +29,6 @@
 #include "PauseListener.hpp"
 #include "InputListener.hpp"
 #include <memory>
-#include "Statistics.hpp"
 #include "OutputStyle.hpp"
 
 class CMap;
@@ -100,9 +99,7 @@ class CLevel : public CScene {
 private:
   std::shared_ptr<const CMapPack> m_pMapPack;
   CMap *m_pMap;
-  CScreenplayListener *m_pScreenplayListener;
-  SStatistics m_Statistics;
-  
+  CScreenplayListener *m_pScreenplayListener;  
 public:
   CLevel(const CAct &act, unsigned int uiID, std::shared_ptr<const CMapPack> pMapPack, CScreenplayListener *pScreenplayListener)
     : CScene(act, uiID, ST_LEVEL),
@@ -120,8 +117,6 @@ public:
   void render(Ogre::Real tpf);
 
   std::shared_ptr<const CMapPack> getMapPack() const {return m_pMapPack;}
-  const SStatistics &getStatistics() const {return m_Statistics;}
-  SStatistics &getStatistics() {return m_Statistics;}
   CMap *getMap() {return m_pMap;}
 
   virtual void writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle) const;

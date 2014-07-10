@@ -23,6 +23,7 @@
 #include <OgreSingleton.h>
 #include <memory>
 #include "MainMenuStates.hpp"
+#include "Statistics.hpp"
 
 
 class CMainMenu;
@@ -55,6 +56,8 @@ private:
   bool m_bAdShown;
 
   CGUICredits *m_pCredits;	//!< Holds the credits, if they are shown
+
+  SStatistics m_Statistics;	//!< The current statistics
 public:
   static CGameState &getSingleton();
   static CGameState *getSingletonPtr();
@@ -77,6 +80,8 @@ public:
   EGameStates getCurrentGameState() {return m_eCurrentGameState;}
   CScreenplay *getScreenplay() {return m_pScreenplay;}
   void setAdShown(bool bShown) {m_bAdShown = bShown;}
+
+  SStatistics &getStatistics() {return m_Statistics;}
 
 private:
   void changeGameStateImpl();

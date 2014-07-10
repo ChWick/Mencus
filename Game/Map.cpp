@@ -1024,7 +1024,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
   if (eStyle == OS_FULL) {
     XMLElement *pStatistics(doc.NewElement("statistics"));
     pMapElem->InsertEndChild(pStatistics);
-    m_Statistics.writeToXML(pStatistics);
+    m_Statistics.writeToXMLElement(pStatistics);
     SetAttribute(pStatistics, "playing_time", m_fPlayingTime);
   }
 }
