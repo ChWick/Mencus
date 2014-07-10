@@ -50,5 +50,6 @@ void CAchievementProgressTester::update(const SStatistics &stats) {
 }
 
 void CAchievementProgressTester::updateAchievementsProgress(EAchievements achievement, float fPercentComplete) {  
+  LOGI("Update of achievement (%d): progress %f percent", achievement, fPercentComplete);
   m_SocialGaming.getConnection()->updateAchievementsProgress(achievement, fPercentComplete);
 }
