@@ -71,12 +71,12 @@ if (ANDROID)
   file(COPY "${CMAKE_SOURCE_DIR}/gfx/overlay" DESTINATION "${NDKOUT}/assets/gfx")
   file(GLOB gfxPacks "${CMAKE_SOURCE_DIR}/gfx/*.zip")
   file(COPY ${gfxPacks} DESTINATION "${NDKOUT}/assets/gfx")
-  # file(GLOB levelFiles "${CMAKE_SOURCE_DIR}/level/*.zip")
-  # file(COPY ${levelFiles} DESTINATION "${NDKOUT}/assets/level")
-  file(COPY "${CMAKE_SOURCE_DIR}/level/level_list.xml" DESTINATION "${NDKOUT}/assets/level")
-  file(GLOB MAP_PACKS "${CMAKE_SOURCE_DIR}/level/user/*.zip" PATTERN *Test* EXCLUDE)
-  file(COPY ${MAP_PACKS} DESTINATION "${NDKOUT}/assets/level/user")
-  # file(COPY "${CMAKE_SOURCE_DIR}/level/user" DESTINATION "${NDKOUT}/assets/level" PATTERN *Test* EXCLUDE)
+
+  # copy the level files (map packs)
+  set(LEVEL_TARGET_PATH "${NDKOUT}/assets/level/")
+  include(toolchain/CopyLevelFiles)
+
+  # copy materials/overlays/credits/...
   file(COPY "${CMAKE_SOURCE_DIR}/materials" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/overlays" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/credits" DESTINATION "${NDKOUT}/assets")
