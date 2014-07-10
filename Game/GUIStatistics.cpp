@@ -24,6 +24,7 @@
 #include "SaveStateManager.hpp"
 #include "Statistics.hpp"
 #include <OgreStringConverter.h>
+#include "XMLResources/Manager.hpp"
 
 using namespace CEGUI;
 
@@ -67,13 +68,13 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
 
   CEGUI::Window *pFinishedText = pButtonContainer->createChild("OgreTray/Titlebar", "text");
   pFinishedText->setFont("dejavusans12");
-  pFinishedText->setText("Mission accomplished");
+  pFinishedText->setText("unset");
   pFinishedText->setPosition(UVector2(UDim(0.05,0), UDim(0.05,0)));
   pFinishedText->setSize(USize(UDim(0.9, 0), UDim(0.1, 0)));
 
   CEGUI::Window *pStatisticsGroup = pButtonContainer->createChild("OgreTray/Group", "statisticsgroup");
   pStatisticsGroup->setFont("dejavusans12");
-  pStatisticsGroup->setText("Statistics");
+  pStatisticsGroup->setText(XMLResources::GLOBAL.getCEGUIString("Statistics"));
   pStatisticsGroup->setPosition(UVector2(UDim(0.2, 0), UDim(0.2, 0)));
   pStatisticsGroup->setSize(USize(UDim(0.6, 0), UDim(0.5, 0)));
 
@@ -81,7 +82,7 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
   pRetryButton->setPosition(UVector2(UDim(0.2, 0), UDim(0.85, 0)));
   pRetryButton->setSize(USize(UDim(0.2, 0), UDim(0.1, 0)));
   pRetryButton->setFont("dejavusans12");
-  pRetryButton->setText("Retry");
+  pRetryButton->setText(XMLResources::GLOBAL.getCEGUIString("Retry"));
   m_pButtons[BT_RETRY] = pRetryButton;
   pRetryButton->subscribeEvent(
 			       CEGUI::PushButton::EventClicked,
@@ -92,7 +93,7 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
   pToMenuButton->setPosition(UVector2(UDim(0.6, 0), UDim(0.85, 0)));
   pToMenuButton->setSize(USize(UDim(0.2, 0), UDim(0.1, 0)));
   pToMenuButton->setFont("dejavusans12");
-  pToMenuButton->setText("To level selection");
+  pToMenuButton->setText(XMLResources::GLOBAL.getCEGUIString("To level selection"));
   pToMenuButton->subscribeEvent(
 				CEGUI::PushButton::EventClicked,
 				CEGUI::Event::Subscriber(&CGUIStatistics::onToMenuClicked, this));
@@ -182,12 +183,12 @@ void CGUIStatistics::showStatistics(const SStatistics &stats) {
 
   switch (stats.eMissionState) {
   case MissionState::MS_ACCOMPLISHED:
-    pTopText->setText("Mission accomplished");
+    pTopText->setText(XMLResources::GLOBAL.getCEGUIString("Mission accomplished"));
     pTopText->setProperty("CaptionColour", "FF66FF66");
     changeSelectedSlot(BT_TO_MENU);
     break;
   case MissionState::MS_FAILED:
-    pTopText->setText("Mission failed");
+    pTopText->setText(XMLResources::GLOBAL.getCEGUIString("Mission failed"));
     pTopText->setProperty("CaptionColour", "FF992222");
     changeSelectedSlot(BT_RETRY);
     break;
@@ -223,8 +224,8 @@ void CGUIStatistics::createLabel(int iLabel, CEGUI::Window *pParent, bool bData)
   //pLabel->setProperty("FrameEnabled", "False");
   //pLabel->setProperty("BackgroundEnabled", "False");
   pLabel->setProperty("HorzFormatting", "LeftAligned");
-  pLabel->setPosition(UVector2(UDim(bData ? 0.4 : 0.05, 0), UDim(0.05 + iLabel * 0.1, 0)));
-  pLabel->setSize(USize(UDim(bData ? 0.55 : 0.4, 0), UDim(0.09, 0)));
+  pLabel->setPosition(UVector2(UDim(bData ? 0.6 : 0.05, 0), UDim(0.05 + iLabel * 0.1, 0)));
+  pLabel->setSize(USize(UDim(bData ? 0.35 : 0.6, 0), UDim(0.09, 0)));
 
   if (bData) {
     pLabel->setText("to be filled");
@@ -232,22 +233,23 @@ void CGUIStatistics::createLabel(int iLabel, CEGUI::Window *pParent, bool bData)
   else {
     switch (iLabel) {
     case L_TIME:
-      pLabel->setText("Time");
+      pLabel->setText(XMLResources::GLOBAL.getCEGUIString("Time"));
       break;
     case L_HITPOINTS:
-      pLabel->setText("Hitpoints");
+      pLabel->setText(XMLResources::GLOBAL.getCEGUIString("Hitpoints"));
       break;
     case L_MANAPOINTS:
-      pLabel->setText("Manapoints");
+      pLabel->setText(XMLResources::GLOBAL.getCEGUIString("Manapoints"));
       break;
     case L_LOST_HITPOINTS:
-      pLabel->setText("Lost hitpoints");
+      pLabel->setText(XMLResources::GLOBAL.getCEGUIString("Lost hitpoints"));
       break;
     case L_USED_MANAPOINTS:
-      pLabel->setText("Used manapoints");
+      pLabel->setText(XMLResources::GLOBAL.getCEGUIString("Used manapoints"));
       break;
     case L_KILLED_ENEMIES:
-      pLabel->setText("Killed enemies");
+      pLabel->setText(XMLResources::GLOBAL.getCEGUIString("Killed enemies"));
+      break;
     default:
       pLabel->setText("unset");
       break;
