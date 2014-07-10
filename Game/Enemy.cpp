@@ -362,6 +362,7 @@ void CEnemy::damageTakenCallback(Ogre::Real fHitpoints) {
 }
 
 void CEnemy::killedByDamageCallback() {
+  m_Map.getStatistics().iKilledEnemies++;
   this->destroy();
   new CExplosion(m_Map, getCenter(), static_cast<CExplosion::EExplosionTypes>(m_uiType + CExplosion::ET_GREEN_MONSTER));
 }

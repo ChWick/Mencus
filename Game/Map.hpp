@@ -220,6 +220,9 @@ public:
   const std::list<CEntity*> &getObjects() const {return m_pObjectsEntity->getChildren();}
   const std::list<CEntity*> &getShots() const {return m_pShotsEntity->getChildren();}
 
+  SStatistics &getStatistics() {return m_Statistics;}
+  const SStatistics &getStatistics() const {return m_Statistics;}
+
   CExit &getExit() {return m_Exit;}
 
   bool isInMap(unsigned int x, unsigned int y);

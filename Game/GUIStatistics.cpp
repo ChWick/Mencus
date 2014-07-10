@@ -214,6 +214,9 @@ void CGUIStatistics::showStatistics(const SStatistics &stats) {
 
   group->getChild("Data" + PropertyHelper<int>::toString(L_USED_MANAPOINTS))
     ->setText(PropertyHelper<int>::toString(stats.fUsedManapoints + 0.5));
+
+  group->getChild("Data" + PropertyHelper<int>::toString(L_KILLED_ENEMIES))
+    ->setText(PropertyHelper<int>::toString(stats.iKilledEnemies));
 }
 void CGUIStatistics::createLabel(int iLabel, CEGUI::Window *pParent, bool bData) {
   Window *pLabel = pParent->createChild("OgreTray/Label", ((!bData) ? "Label" : "Data") + PropertyHelper<int>::toString(iLabel));
@@ -243,6 +246,8 @@ void CGUIStatistics::createLabel(int iLabel, CEGUI::Window *pParent, bool bData)
     case L_USED_MANAPOINTS:
       pLabel->setText("Used manapoints");
       break;
+    case L_KILLED_ENEMIES:
+      pLabel->setText("Killed enemies");
     default:
       pLabel->setText("unset");
       break;

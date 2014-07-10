@@ -38,6 +38,7 @@ private:
     L_MANAPOINTS,
     L_LOST_HITPOINTS,
     L_USED_MANAPOINTS,
+    L_KILLED_ENEMIES,
     L_COUNT,
   };
 
