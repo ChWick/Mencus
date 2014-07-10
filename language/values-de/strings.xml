@@ -30,7 +30,7 @@
   <!-- GUIStatistics -->
   <string name="Statistics">Statistik</string>
   <string name="Mission accomplished">Mission vollbracht</string>
-  <string name="Mission failed">Mission misslungen</string>
+  <string name="Mission failed">Mission fehlgeschlagen</string>
   <string name="Retry">Erneut versuchen</string>
   <string name="To level selection">Zur Levelauswahl</string>
   <string name="Time">Zeit</string>
