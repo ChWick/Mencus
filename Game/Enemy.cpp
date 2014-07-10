@@ -26,6 +26,7 @@
 #include "Player.hpp"
 #include "Constants.hpp"
 #include "Shot.hpp"
+#include "Statistics.hpp"
 #include "XMLHelper.hpp"
 
 using namespace XMLHelper;
