@@ -29,7 +29,12 @@ function(copy_renamed_level src target tutorial)
 
 endfunction()
 
-copy_level("Tutorial_1" true)
+if (MENCUS_ENABLE_INPUT_TOUCH EQUAL 1)
+  copy_level("Tutorial_1" true)
+else()
+  copy_renamed_level("Tutorial_1_input_keyboard" "Tutorial_1" true)
+endif()
+
 copy_level("Tutorial_2" true)
 copy_level("Tutorial_3" true)
 copy_level("Tutorial_4" true)
