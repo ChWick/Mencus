@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="map_description">Im sechsten Tutorial lernst du, wie du Bomben benutzt.</string>
+    <string name="map_name">Tutorial 6</string>
+    <string name="msg_default_title">Tutorial 6</string>
+    <string name="msg_start">Dies ist das sechste Tutorial. Hier wirst du lernen wie du Bomben verwendest um Wälle zu zerstören oder Feinde zu beschädigen.</string>
+    <string name="msg_end">Erreiche jetzt die Fahne um dieses Tutorial zu beenden.</string>
+    <string name="msg_change_weapon">Öffne das Waffenmenü durch [colour='FFFFFFFF'][image='input_buttons/menu'][colour='FF000000'] und selektiere die Bombe mit [colour='FFFFFFFF'][image='input_buttons/left'][image='input_buttons/right][colour='FF000000']. Zum Schließen des Menüs drücke erneut [colour='FFFFFFFF'][image='input_buttons/menu'][colour='FF000000'].</string>
+    <string name="msg_plant_bomb">Lege jetzt eine Bombe vor die beschädigten Steine. Tippe auf [colour='FFFFFFFF'][image='input_buttons/attack'][colour='FF000000'] um eine Bombe vor dir zu platzieren, halte den Knopf um eine Bombe zu werfen.</string>
+</resources>

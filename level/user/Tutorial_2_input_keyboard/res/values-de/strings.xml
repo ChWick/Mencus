@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="map_description">Im zweiten Tutorial lernst du wie du Gegner mit deinem magischen Blitz bezwingst.</string>
+  <string name="map_name">Tutorial 2</string>
+  <string name="msg_default_title">Tutorial 2</string>
+  <string name="msg_start">Dies ist das zweite Tutorial. Hier wirst du lernen wie du deine Feinde bekämpfen kannst.</string>
+  <string name="msg_attack">Auf der rechten Seite ist ein Ritter, der dich aufhalten will. Drücke und halte [colour='FFFFFFFF'][image='input_buttons/attack'][colour='FF000000'] um einen magischen Blitz abzufeuern. Du brauchst zwei Treffer um den Gegner zu besiegen.</string>
+  <string name="msg_killed">Herzlichen Glückwunsch, du hast gelernt wie du deinen Blitz einsetzen kannst.</string>
+  <string name="msg_end">Erreiche jetzt die Fahne um dieses Tutorial zu beenden.</string>
+</resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="map_description">In the second tutorial you learn how to fight enemies with your magic bolt.</string>
+  <string name="map_name">Tutorial 2</string>
+  <string name="msg_default_title">Tutorial 2</string>
+  <string name="msg_start">This is the second tutorial. Here you will learn how to fight your enemies.</string>
+  <string name="msg_attack">On the right side is a knight who wants to stop you. Click and hold [colour='FFFFFFFF'][image='input_buttons/attack'][colour='FF000000'] to release a magic bolt. You will need two hits to kill him.</string>
+  <string name="msg_killed">Congratulations you learned how to use your bolt</string>
+  <string name="msg_end">Now reach the flag to finish this tutorial</string>
+</resources>

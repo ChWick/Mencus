@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="map_description">Dieses Tutorial zeigt die Funktionsweise von Türen und Durchgängen.</string>
+  <string name="map_name">Tutorial 4</string>
+  <string name="msg_default_title">Tutorial 4</string>
+  <string name="msg_start">Dies ist das vierte Tutorial. Hier wirst du lernen wie du Verbindungen nutzt und durch Türe gehst.</string>
+  <string name="msg_door">Laufe zur Tür auf der rechten Seite</string>
+  <string name="msg_door_reached">Drücke [colour='FFFFFFFF'][image='input_buttons/enterLink'][colour='FF000000'] um die Tür zu betreten. Du wirst an einer anderen Tür wieder erscheinen.</string>
+</resources>
