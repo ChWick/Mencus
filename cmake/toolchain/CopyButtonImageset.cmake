@@ -14,6 +14,8 @@ if (MENCUS_INPUT_PLATFORM EQUAL 0)
   copy_button_imageset(buttons_keyboard)
 elseif (MENCUS_INPUT_PLATFROM EQUAL 1)
   # copy nothing, touch device with buttons already included
+elseif (MENCUS_INPUT_PLATFORM EQUAL 2)
+  copy_button_imageset(buttons_amazon_remote_control)
 else() 
   message(FATAL_ERROR "Unknown input platform")
 endif()
