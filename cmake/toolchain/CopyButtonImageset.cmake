@@ -10,4 +10,10 @@ function(copy_button_imageset filename)
   configure_file("${IMAGESET_SRC_DIR}${filename}.imageset" "${IMAGESET_TARGET_DIR}input_buttons.imageset")
 endfunction()
 
-copy_button_imageset(buttons_keyboard)
+if (MENCUS_INPUT_PLATFORM EQUAL 0)
+  copy_button_imageset(buttons_keyboard)
+elseif (MENCUS_INPUT_PLATFROM EQUAL 1)
+  # copy nothing, touch device with buttons already included
+else() 
+  message(FATAL_ERROR "Unknown input platform")
+endif()

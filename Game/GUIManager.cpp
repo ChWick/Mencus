@@ -370,6 +370,10 @@ void CGUIManager::createResources() {
   CEGUI::ImageManager::getSingleton().loadImageset("game_over.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("white.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("social_gaming_logos.imageset");
+#if MENCUS_HAS_INPUT_BUTTONS_IMAGESET == 1
+  CEGUI::ImageManager::getSingleton().loadImageset("input_buttons.imageset");
+#endif
+
 #ifdef INPUT_MOUSE
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
 #else
@@ -384,6 +388,10 @@ void CGUIManager::destroyResources() {
   CEGUI::SchemeManager::getSingleton().destroy("OgreTray");
   CEGUI::ImageManager::getSingleton().destroyImageCollection("OgreTrayImages");
   CEGUI::ImageManager::getSingleton().destroyImageCollection("social_gaming_logos");
+
+#if MENCUS_HAS_INPUT_BUTTONS_IMAGESET == 1
+  CEGUI::ImageManager::getSingleton().destroyImageCollection("input_buttons");
+#endif
 }
 void CGUIManager::reloadResources() {
   m_pCEGuiOgreRenderer->getTexture("OgreTrayImages").loadFromFile("OgreTrayImages.png", "Imagesets");
@@ -395,6 +403,10 @@ void CGUIManager::reloadResources() {
   m_pCEGuiOgreRenderer->getTexture("white").loadFromFile("white.png", "Imagesets");
   m_pCEGuiOgreRenderer->getTexture("instructions").loadFromFile("instr_scroll.jpg", "Imagesets");
   m_pCEGuiOgreRenderer->getTexture("social_gaming_logos").loadFromFile("social_gaming_logos.png", "Imagesets");
+
+#if MENCUS_HAS_INPUT_BUTTONS_IMAGESET == 1
+  m_pCEGuiOgreRenderer->getTexture("input_buttons").loadFromFile("input_buttons.png", "Imagesets");
+#endif
 
   for (auto &sFontName : m_vFonts) {
     CEGUI::FontManager::getSingleton().get(sFontName).notifyDisplaySizeChanged(m_vNativeRes);

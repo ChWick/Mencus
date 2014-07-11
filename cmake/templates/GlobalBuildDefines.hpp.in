@@ -17,6 +17,16 @@
 // Flag to define wheter to enable touch-screen input
 #define ENABLE_INPUT_TOUCH    @MENCUS_ENABLE_INPUT_TOUCH@
 
+// Index of the input platform (0: keyboard, 1: touch, 2: amazon remote control)
+#define MENCUS_INPUT_PLATFORM @MENCUS_INPUT_PLATFORM@
+
+// define whether there are input buttons
+#if MENCUS_INPUT_PLATFORM == 0 || MENCUS_INPUT_PLATFORM == 2
+#define MENCUS_HAS_INPUT_BUTTONS_IMAGESET 1
+#else
+#define MENCUS_HAS_INPUT_BUTTONS_IMAGESET 0
+#endif
+
 // Flag to enable debug output
 #define ENABLE_DEBUG_DEFINES  @MENCUS_ENABLE_DEBUG_DEFINES@
 
