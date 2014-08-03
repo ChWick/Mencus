@@ -43,9 +43,9 @@ private:
   SInputSettings m_InputSettings;
   SVideoSettings m_VideoSettings;
 public:
-  static CSettings &getSingleton() {return *msSingleton;}
-  static CSettings *getSingletonPtr() {return msSingleton;}
-
+    static CSettings &getSingleton();
+    static CSettings *getSingletonPtr();
+    
   CSettings();
   ~CSettings();
 
