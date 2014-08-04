@@ -45,8 +45,8 @@ namespace SocialGaming {
     EConnectionStatus m_eConnectionStatus;
     float m_fConnectionCheckTimer;
   public:
-    static CSocialGaming &getSingleton() {return *msSingleton;}
-    static CSocialGaming *getSingletonPtr() {return msSingleton;}
+    static CSocialGaming &getSingleton();
+    static CSocialGaming *getSingletonPtr();
 
     CSocialGaming();
     virtual ~CSocialGaming();
