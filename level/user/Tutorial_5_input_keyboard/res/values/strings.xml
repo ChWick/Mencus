@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="map_description">In this tutorial you will learn the basics about switches</string>
+  <string name="map_name">Tutorial 5</string>
+  <string name="msg_default_title">Tutorial 5</string>
+  <string name="msg_start">This is the fifth tutorial. Here you will learn how to interact with switches.</string>
+  <string name="msg_first_switch">As you can see, the wall is too high for jumping over it. But there is a switch that will help you. Walk to it!</string>
+  <string name="msg_button">Press [colour='FFFFFFFF'][image='input_buttons/activate'][colour='FF000000'] to activate the switch. This will have effects on the map, like creating or removing blocks, objects, ...</string>
+  <string name="msg_timed_switch">This is a timed switch. After activation you have only limited time until the switch is reset. You can of course use the switch several times if you are not fast enough in your first approach.</string>
+  <string name="msg_switch_deactivable">This switch can be deactivated again, this will help you to proceed.</string>
+</resources>

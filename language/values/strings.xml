@@ -25,4 +25,18 @@
   <string name="select_level">Select level</string>
   <string name="close">Close</string>
   <string name="next">Next</string>
+  <string name="Tools">Tools</string>
+
+  <!-- GUIStatistics -->
+  <string name="Statistics">Statistics</string>
+  <string name="Mission accomplished">Mission accomplished</string>
+  <string name="Mission failed">Mission failed</string>
+  <string name="Retry">Retry</string>
+  <string name="To level selection">Statistics</string>
+  <string name="Time">Time</string>
+  <string name="Hitpoints">Hitpoints</string>
+  <string name="Manapoints">Manapoints</string>
+  <string name="Lost hitpoints">Lost hitpoints</string>
+  <string name="Used manapoints">Used manapoints</string>
+  <string name="Killed enemies">Killed enemies</string>
 </resources>

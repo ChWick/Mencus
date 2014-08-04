@@ -123,6 +123,11 @@ namespace XMLHelper {
 		    const T &value) {
     pElem->SetAttribute(pLabel, Ogre::StringConverter::toString(value).c_str());
  }
+
+  void SetAttribute(tinyxml2::XMLElement *pElem,
+			   const char *pLabel,
+			   const char *value);
+
   template <>
   void SetAttribute<std::string>(tinyxml2::XMLElement *pElem,
 				 const char *pLabel,

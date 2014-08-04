@@ -32,9 +32,7 @@ const std::string SETTINGS_FILE_PATH("settings.xml");
 // default values
 SInputSettings::SInputSettings() 
   : m_fMapEditorButtonSize(50) {
-#ifdef INPUT_TOUCH
   m_fTouchButtonSize = 10000; // very big number to force maximal button size as default
-#endif
 }
 SVideoSettings::SVideoSettings()
   : 
@@ -45,10 +43,13 @@ SVideoSettings::SVideoSettings()
 #endif
 {
 }
-
-CSettings &CSettings::getSingleton() {return *msSingleton;}
-CSettings *CSettings::getSingletonPtr() {return msSingleton;}
-
+CSettings &CSettings::getSingleton() {
+  assert(msSingleton);
+  return *msSingleton;
+}
+CSettings *CSettings::getSingletonPtr() {
+  return msSingleton;
+}
 CSettings::CSettings() {
   readFromFile();
 }

@@ -16,10 +16,8 @@ if (ANDROID)
   SET(ANDROID_MOD_NAME "Mencus")
   SET(DEPENDENCIES_LDLIBS "")
   SET(SOURCE_DIR "@CMAKE_SOURCE_DIR@/Game")
-  FILE(GLOB GAME_SOURCE_FILES "Game/*.cpp")
-  FILE(GLOB GAME_SOURCE_FILES_EVENTS "Game/Events/*.cpp")
-  FILE(GLOB GAME_SOURCE_FILES_XMLRESOURCES "Game/XMLResources/*.cpp")
-  STRING (REPLACE ";" "\nLOCAL_SRC_FILES += " GAME_SOURCE_FILES "${GAME_SOURCE_FILES} ${GAME_SOURCE_FILES_EVENTS} ${GAME_SOURCE_FILES_XMLRESOURCES}")
+  FILE(GLOB_RECURSE GAME_SOURCE_FILES "Game/*.cpp")
+  STRING (REPLACE ";" "\nLOCAL_SRC_FILES += " GAME_SOURCE_FILES "${GAME_SOURCE_FILES}")
   SET(SOURCE_FILES ${GAME_SOURCE_FILES})
   SET(ANT_EXECUTABLE "ant")
   
@@ -46,7 +44,8 @@ if (ANDROID)
   file(MAKE_DIRECTORY "${NDKOUT}/level")
   file(MAKE_DIRECTORY "${NDKOUT}/level/user")
   
-  if (MENCUS_ENABLE_ADS) 
+  # we need network access if using the amazon game circle
+  if (MENCUS_ENABLE_ADS OR MENCUS_USE_AMAZON_GAME_CIRCLE) 
     SET(MENCUS_ANDROID_PERMISSIONS
       "<uses-permission android:name=\"android.permission.INTERNET\" /> 
   <!-- Used to avoid sending an ad request if there is no connectivity. -->
@@ -63,19 +62,21 @@ if (ANDROID)
   SET(RESOURCES_MINIMAL "Minimal")
   SET(RESOURCES_USING_APK "APK")
   SET(RESOURCES_PREFIX "")
+
   configure_file("${MENCUS_TEMPLATES_DIR}/resources.cfg.in" "${NDKOUT}/assets/resources.cfg" @ONLY)
 
   # copy assets files
+  file(COPY "${CMAKE_SOURCE_DIR}/android/assets" DESTINATION "${NDKOUT}")
   file(COPY "${CMAKE_SOURCE_DIR}/cegui" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/gfx/overlay" DESTINATION "${NDKOUT}/assets/gfx")
   file(GLOB gfxPacks "${CMAKE_SOURCE_DIR}/gfx/*.zip")
   file(COPY ${gfxPacks} DESTINATION "${NDKOUT}/assets/gfx")
-  # file(GLOB levelFiles "${CMAKE_SOURCE_DIR}/level/*.zip")
-  # file(COPY ${levelFiles} DESTINATION "${NDKOUT}/assets/level")
-  file(COPY "${CMAKE_SOURCE_DIR}/level/level_list.xml" DESTINATION "${NDKOUT}/assets/level")
-  file(GLOB MAP_PACKS "${CMAKE_SOURCE_DIR}/level/user/*.zip" PATTERN *Test* EXCLUDE)
-  file(COPY ${MAP_PACKS} DESTINATION "${NDKOUT}/assets/level/user")
-  # file(COPY "${CMAKE_SOURCE_DIR}/level/user" DESTINATION "${NDKOUT}/assets/level" PATTERN *Test* EXCLUDE)
+
+  # copy the level files (map packs)
+  set(LEVEL_TARGET_PATH "${NDKOUT}/assets/level/")
+  include(toolchain/CopyLevelFiles)
+
+  # copy materials/overlays/credits/...
   file(COPY "${CMAKE_SOURCE_DIR}/materials" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/overlays" DESTINATION "${NDKOUT}/assets")
   file(COPY "${CMAKE_SOURCE_DIR}/credits" DESTINATION "${NDKOUT}/assets")
@@ -90,6 +91,11 @@ if (ANDROID)
 
   # copy the java src code files
   file(COPY "${CMAKE_SOURCE_DIR}/android/src" DESTINATION "${NDKOUT}")
+
+  # copy the amazon files if needed
+  if (MENCUS_USE_AMAZON_GAME_CIRCLE) 
+    file(COPY "${CMAKE_SOURCE_DIR}/android/jni" DESTINATION "${NDKOUT}")
+  endif()
 
   add_custom_command(
     TARGET Game

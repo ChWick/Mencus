@@ -38,6 +38,7 @@ private:
     L_MANAPOINTS,
     L_LOST_HITPOINTS,
     L_USED_MANAPOINTS,
+    L_KILLED_ENEMIES,
     L_COUNT,
   };
 
@@ -55,8 +56,8 @@ public:
 
   virtual bool keyPressed(const OIS::KeyEvent &arg);
 
-  void show() { m_pStatisticsRoot->setVisible(true); setInputListenerEnabled(true); }
-  void hide() { m_pStatisticsRoot->setVisible(false); setInputListenerEnabled(false); }
+  void show();
+  void hide();
 
   void activateButton(int iBtn);
   void showStatistics(const SStatistics &stats);
@@ -64,6 +65,7 @@ public:
   void resize(const CEGUI::String &smallFont, const CEGUI::String &bigfont);
 
 private:
+  void changeSelectedSlot(int i);
   void createLabel(int iLabel, CEGUI::Window *pParent, bool bData);
   bool onRetryClicked(const CEGUI::EventArgs&);
   bool onToMenuClicked(const CEGUI::EventArgs&);

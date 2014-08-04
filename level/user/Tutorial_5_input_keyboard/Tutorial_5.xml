@@ -1,0 +1,70 @@
+<map difficulty="easy" tutorial="true" background="forest" sizex="37" sizey="16" version="2">
+    <player x="5" y="1" id="Player" type="0" hp="10" direction="1"/>
+    <tiles invert="0">
+        <row tiles="26 24 24 24 24 24 24 26 26 24 24 26 24 24 24 26 24 24 24 26 26 26 24 24 24 24 24 26 26 26 26 24 24 24 24 24 24 "/>
+        <row tiles="27 25 25 27 27 27 27 31 31 31 31 31 27 31 31 27 25 27 124 25 25 25 25 25 25 27 25 31 25 27 27 31 27 27 25 25 31 "/>
+        <row tiles="23 23 23 23 23 23 23 31 31 31 31 31 31 31 23 23 23 23 123 23 23 23 23 23 23 23 23 31 23 23 23 31 23 23 23 23 31 "/>
+        <row tiles="23 23 23 23 23 23 23 31 31 31 23 31 23 23 23 23 23 34 40 40 40 40 36 23 23 31 23 23 23 31 23 23 23 31 31 23 31 "/>
+        <row tiles="23 23 23 23 23 23 23 31 23 23 23 23 23 23 23 23 31 38 41 41 41 41 37 31 31 31 23 23 23 31 23 23 23 31 31 23 31 "/>
+        <row tiles="23 23 23 23 23 23 23 31 23 23 23 23 23 23 23 23 31 31 31 31 23 31 31 23 23 31 31 31 31 31 31 31 31 31 23 23 31 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 31 23 31 23 23 31 23 23 31 23 23 23 31 23 23 23 31 23 23 31 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 31 23 31 23 31 23 23 23 31 23 23 31 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 31 23 31 23 23 23 31 23 23 23 23 31 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 31 31 31 31 31 31 31 31 31 31 31 23 31 23 23 23 31 23 23 23 23 31 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 31 23 23 23 23 23 23 23 23 23 23 23 31 31 31 31 31 31 31 31 31 31 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 31 23 23 23 23 23 23 23 23 23 23 23 31 23 124 23 31 23 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 31 23 31 31 31 31 31 23 31 31 31 31 31 23 123 23 31 23 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 31 23 23 23 23 23 31 23 23 23 23 23 23 23 31 23 23 23 34 40 40 36 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 31 23 23 23 23 23 31 23 23 23 23 23 23 23 31 23 23 23 39 35 35 42 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 31 38 41 41 37 "/>
+    </tiles>
+    <switches>
+        <switch x="23.5" y="5" id="Switch_-1489662525" type="1" flags="1" activeTime="0">
+            <events>
+                <event type="message" id="Event316824710" emitter="collision" repeat="none" src_id="Player" title="msg_default_title">
+                    <page text="msg_switch_deactivable"/>
+                </event>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="12" y="2" tile="23"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="17" y="1" tile="31"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="17" y="2" tile="31"/>
+            </events>
+        </switch>
+        <switch x="6" y="1" id="Switch_-1255430504" type="0" flags="0" activeTime="0">
+            <events>
+                <event type="message" id="Event316824710" emitter="collision" repeat="none" src_id="Player" title="msg_default_title">
+                    <page text="msg_button"/>
+                </event>
+                <event type="inject_message" id="Event1815859899" emitter="collision" repeat="none" src_id="Player" msg_type="toggle_touch_input_blink" msg_button="activate" msg_enabled="true"/>
+                <event type="inject_message" id="Event1815859899" emitter="user" repeat="none" msg_type="toggle_touch_input_blink" msg_button="activate" msg_enabled="false"/>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="4" y="1" tile="31"/>
+            </events>
+        </switch>
+        <switch x="24" y="1" id="Switch_-748926888" type="1" flags="3" activeTime="10">
+            <events>
+                <event type="message" id="Event316824710" emitter="collision" repeat="none" src_id="Player" title="msg_default_title">
+                    <page text="msg_timed_switch"/>
+                </event>
+                <event type="change_tile" id="unset" emitter="user" repeat="infinite" x="27" y="7" tile="23"/>
+            </events>
+        </switch>
+    </switches>
+    <events>
+        <event type="message" emitter="create" title="msg_default_title" id="InitialMessageBox">
+            <page text="msg_start"/>
+            <page text="msg_first_switch"/>
+        </event>
+    </events>
+    <endangeredTiles/>
+    <links/>
+    <enemies/>
+    <objects>
+        <object x="12" y="1" id="Object_-669037147" type="3" phy_gravity="0"/>
+        <object x="35" y="11" id="Object_-796138425" type="6" phy_gravity="0">
+            <events>
+                <event type="inject_message" id="Event1912844173" emitter="collision" repeat="none" src_id="Player" msg_type="exit_reached"/>
+            </events>
+        </object>
+        <object x="19.5" y="13" id="Object_601915877" type="3" phy_gravity="0"/>
+    </objects>
+    <camera/>
+</map>

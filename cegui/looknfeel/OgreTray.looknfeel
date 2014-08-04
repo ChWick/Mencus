@@ -3075,6 +3075,7 @@
         <PropertyDefinition redrawOnWrite="true" initialValue="FF000000" type="ColourRect" name="PushedTextColour"/>
         <PropertyDefinition redrawOnWrite="true" initialValue="FF666666" type="ColourRect" name="DisabledTextColour"/>
 	<PropertyDefinition redrawOnWrite="true" initialValue="tl:FFFFFFFF tr:FFFFFFFF bl:FFFFFFFF br:FFFFFFFF" type="ColourRect" name="ImageColours"/>
+	<PropertyDefinition redrawOnWrite="true" initialValue="tl:FFFFFFFF tr:FFFFFFFF bl:FFFFFFFF br:FFFFFFFF" type="ColourRect" name="BackgroundColours"/>
         <PropertyDefinition redrawOnWrite="true" initialValue="Stretched" type="VerticalFormatting" name="VertFormatting"/>
         <PropertyDefinition redrawOnWrite="true" initialValue="Stretched" type="HorizontalFormatting" name="HorzFormatting"/>
 	<PropertyDefinition redrawOnWrite="true" initialValue="" type="Image" name="Image"/>
@@ -3140,6 +3141,7 @@
                         <UnifiedDim scale="1" type="Height"/>
                     </Dim>
                 </Area>
+                <ColourRectProperty name="BackgroundColours"/>
                 <Image component="TopLeftCorner" name="OgreTrayImages/MiniTextBoxTL"/>
                 <Image component="TopRightCorner" name="OgreTrayImages/MiniTextBoxTR"/>
                 <Image component="BottomLeftCorner" name="OgreTrayImages/MiniTextBoxBL"/>
@@ -3170,6 +3172,7 @@
                         <UnifiedDim scale="1" type="Height"/>
                     </Dim>
                 </Area>
+                <ColourRectProperty name="BackgroundColours"/>
                 <Image component="TopLeftCorner" name="OgreTrayImages/MiniTextBoxOverTL"/>
                 <Image component="TopRightCorner" name="OgreTrayImages/MiniTextBoxOverTR"/>
                 <Image component="BottomLeftCorner" name="OgreTrayImages/MiniTextBoxOverBL"/>
@@ -3197,6 +3200,7 @@
                         <UnifiedDim scale="1" type="BottomEdge"/>
                     </Dim>
                 </Area>
+                <ColourRectProperty name="BackgroundColours"/>
 		<Image component="TopLeftCorner" name="OgreTrayImages/MiniTextBoxOverTL"/>
                 <Image component="TopRightCorner" name="OgreTrayImages/MiniTextBoxOverTR"/>
                 <Image component="BottomLeftCorner" name="OgreTrayImages/MiniTextBoxOverBL"/>

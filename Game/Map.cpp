@@ -42,6 +42,7 @@
 #include "Region.hpp"
 #include "Events/Event.hpp"
 #include "MapInfo.hpp"
+#include "Plugins/SocialGaming/SocialGaming.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -53,8 +54,8 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
 	   CScreenplayListener *pScreenplayListener,
 	   SStatistics &statistics,
 	   const CMapPackConstPtr pMapPack)
-  : CEntity(*this, "Map", NULL), 
-    m_pTutorialManager(new CTutorialManager(*this)), 
+  : CEntity(*this, "Map", NULL),
+    m_pTutorialManager(new CTutorialManager(*this)),
     m_p2dManagerMap(NULL),
     m_pBackground(NULL),
     m_vCameraPos(Ogre::Vector2::ZERO),
@@ -62,8 +63,8 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_vCameraDebugOffset(Ogre::Vector2::ZERO),
     m_pPlayer(NULL),
     m_pScreenplayListener(pScreenplayListener),
-    m_bUpdatePause(false),
-    m_bRenderPause(false),
+    m_bUpdatePause(CPauseManager::getSingleton().isPause(PAUSE_MAP_UPDATE)),
+    m_bRenderPause(CPauseManager::getSingleton().isPause(PAUSE_MAP_RENDER)),
     m_fPlayingTime(0),
     m_Statistics(statistics),
     m_pMapPack(pMapPack) {
@@ -246,7 +247,7 @@ void CMap::resizeTiles(unsigned int uiSizeX, unsigned int uiSizeY) {
 void CMap::resizeTilesPerScreen(const Ogre::Vector2 &tps) {
   m_vTilesPerScreen = tps;
   m_fScreenRatio = m_vTilesPerScreen.y / m_vTilesPerScreen.x;
-  
+
   for (auto &t : m_vLineNumberX) {
     delete t;
   }
@@ -684,6 +685,9 @@ void CMap::update(Ogre::Real tpf) {
       delete m_lEntitiesToDestroy.front();
       m_lEntitiesToDestroy.pop_front();
     }
+
+    // update social gaming statistics
+    SocialGaming::CSocialGaming::getSingleton().update(m_Statistics);
   }
   if (!m_bRenderPause) {
   // draw links if debug
@@ -914,7 +918,7 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
   m_pPlayer->writeToXMLElement(pPlayer, eStyle);
 
   m_pMapPack->getMapInfo()->writeToXMLElement(pMapElem, eStyle);
-  
+
   if (m_pBackground) {
     pMapElem->SetAttribute("background", m_pBackground->getName().c_str());
   }
@@ -1020,13 +1024,13 @@ void CMap::writeToXMLElement(tinyxml2::XMLElement *pMapElem, EOutputStyle eStyle
   if (eStyle == OS_FULL) {
     XMLElement *pStatistics(doc.NewElement("statistics"));
     pMapElem->InsertEndChild(pStatistics);
-    m_Statistics.writeToXML(pStatistics);
+    m_Statistics.writeToXMLElement(pStatistics);
     SetAttribute(pStatistics, "playing_time", m_fPlayingTime);
   }
 }
 void CMap::readFromXMLElement(const tinyxml2::XMLElement *pRoot) {
   clearMap();
-  
+
   //m_pTutorialManager->setEnabled(BoolAttribute(pRoot, "tutorial", false));
 
   CEntity::readFromXMLElement(pRoot);

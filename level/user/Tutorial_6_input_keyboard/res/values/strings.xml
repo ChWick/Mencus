@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<resources>
+    <string name="map_description">In the sixth tutorial you learn how to use bombs.</string>
+    <string name="map_name">Tutorial 6</string>
+    <string name="msg_default_title">Tutorial 6</string>
+    <string name="msg_start">This is the sixth tutorial. Here you will learn how to use bombs to destroy walls or to harm enemies.</string>
+    <string name="msg_end">Now reach the flag to finish this tutorial</string>
+    <string name="msg_change_weapon">Open the weapons menu with [colour='FFFFFFFF'][image='input_buttons/menu'][colour='FF000000'] and select the bomb with [colour='FFFFFFFF'][image='input_buttons/left'][image='input_buttons/right][colour='FF000000']. To close the menu press again [colour='FFFFFFFF'][image='input_buttons/menu'][colour='FF000000'].</string>
+    <string name="msg_plant_bomb">Now plant a bomb next to the damaged bricks.
+Press [colour='FFFFFFFF'][image='input_buttons/attack'][colour='FF000000'] to place the bomb in front of you, hold the button to throw the bomb.</string>
+</resources>

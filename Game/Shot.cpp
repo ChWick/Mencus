@@ -215,6 +215,7 @@ void CShot::hit() {
           dynamic_cast<CEnemy*>(m_pCatchedEnemy)->setStunned(true);
           m_eState = SS_ENEMY_CAUGHT;
           m_fTimer = COLUMN_CATCH_DURATION;
+          m_vSpeed = Ogre::Vector2::ZERO;
         }
         else {
           destroy();

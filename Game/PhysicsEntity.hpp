@@ -24,7 +24,7 @@
 
 
 class CPhysicsEntity : public CEntity {
-private:
+protected:
   bool m_bSleeping;
   Ogre::Real m_fGravity;
   Ogre::Real m_fBounce;
@@ -49,10 +49,10 @@ public:
 
   void setGravity(Ogre::Real fGravity) {m_fGravity = fGravity;}
   Ogre::Real getGravity() const {return m_fGravity;}
-  
+
   void setSpeed(const Ogre::Vector2 &vSpeed) {m_vSpeed = vSpeed;}
   const Ogre::Vector2 &getSpeed() const {return m_vSpeed;}
-  
+
   void setBounce(Ogre::Real fBounce) {m_fBounce = fBounce;}
   Ogre::Real getBounce() const {return m_fBounce;}
 

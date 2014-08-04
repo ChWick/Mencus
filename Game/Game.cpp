@@ -30,6 +30,8 @@
 #include "InputDefines.hpp"
 #include "FileManager.hpp"
 #include "MessageHandler.hpp"
+#include "Plugins/SocialGaming/SocialGaming.hpp"
+#include "Settings.hpp"
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
 #include "Android/Android.hpp"
@@ -85,6 +87,7 @@ CGame::~CGame(void) {
   if (CSaveStateManager::getSingletonPtr()) {delete CSaveStateManager::getSingletonPtr();}
 
   if (CShaderManager::getSingletonPtr()) {delete CShaderManager::getSingletonPtr();}
+  if (SocialGaming::CSocialGaming::getSingletonPtr()) {delete SocialGaming::CSocialGaming::getSingletonPtr();}
   if (CMessageHandler::getSingletonPtr()) {delete CMessageHandler::getSingletonPtr();}
 
   OGRE_DELETE_T(mFSLayer, FileSystemLayer, Ogre::MEMCATEGORY_GENERAL);
@@ -515,6 +518,8 @@ void CGame::createScene() {
   //-------------------------------------------------------------------------------------
   Ogre::LogManager::getSingletonPtr()->logMessage("    MessageManager ");
   new CMessageHandler();
+  Ogre::LogManager::getSingletonPtr()->logMessage("    SocialGaming");
+  new SocialGaming::CSocialGaming();
   Ogre::LogManager::getSingletonPtr()->logMessage("    ShaderManager ");
   new CShaderManager(mRoot->getRenderSystem());
   Ogre::LogManager::getSingletonPtr()->logMessage("    GameSate ");
@@ -530,9 +535,13 @@ void CGame::createScene() {
 
   Ogre::LogManager::getSingletonPtr()->logMessage("    changing GameState to main menu ");
   m_pGameState->changeGameState(CGameState::GS_MAIN_MENU, MainMenu::MMS_START, true);
+#if MENCUS_ENABLE_ADS == 1
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+  // preload add
   OgreAndroidBridge::callJavaVoid("preloadAd");
 #endif
+#endif
+
   if (CSnapshotManager::getSingleton().loadFromSnapshot()) {
     Ogre::LogManager::getSingletonPtr()->logMessage("    snapshot loaded.");
   }
@@ -543,6 +552,9 @@ void CGame::createScene() {
     Ogre::LogManager::getSingletonPtr()->logMessage("    no snapshot set");
   }
 
+  if (CSettings::getSingleton().getSocialGamingSettings().m_bLoginOnStart) {
+    SocialGaming::CSocialGaming::getSingleton().init();
+  }
   // call window resized once to adjust settings
   windowResized(mWindow);
 }
@@ -586,6 +598,7 @@ bool CGame::frameStarted(const Ogre::FrameEvent& evt) {
   
   // process messages
   CMessageHandler::getSingleton().process();
+  SocialGaming::CSocialGaming::getSingleton().update(evt.timeSinceLastFrame);
 
   if (CGUIManager::getSingletonPtr()) {
     CGUIManager::getSingleton().update(evt.timeSinceLastFrame);

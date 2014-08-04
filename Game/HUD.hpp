@@ -26,13 +26,13 @@
 #include "PauseListener.hpp"
 #include <list>
 
-class CGUIInput;
+class CGUIToolsMenu;
 class CHUDElement;
 
 class CHUD : public Ogre::Singleton<CHUD>, public CPauseListener {
 private:
   const bool m_bShotToolIndicators;
-  CGUIInput *m_pGUIInput;
+  CGUIToolsMenu *m_pGUIToolsMenu;
   CEGUI::Window *m_pHudRoot;
   CEGUI::Window *m_pFpsText;
   CEGUI::Window *m_pTimeText;
@@ -51,7 +51,7 @@ public:
   static CHUD &getSingleton();
   static CHUD *getSingletonPtr();
 
-  CHUD(CEGUI::Window *pGUIRoot, CGUIInput *pGUIInput);
+  CHUD(CEGUI::Window *pGUIRoot, CGUIToolsMenu *pGUIToolsMenu);
   ~CHUD();
 
   void update(Ogre::Real tpf);

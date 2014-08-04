@@ -68,7 +68,7 @@ public:
   void addCaller(CPauseCaller *pCaller) {m_lPauseCallers.push_back(pCaller);}
   void removeCaller(CPauseCaller *pCaller) {m_lPauseCallers.remove(pCaller);}
 
-  void addListener(CPauseListener *pListener) {m_lPauseListeners.push_back(pListener);}
+  void addListener(CPauseListener *pListener);
   void removeListener(CPauseListener *pListener) {m_lPauseListeners.remove(pListener);}
 
   bool isPause(unsigned int uiFlags) {return (m_uiOldPauseFlags & uiFlags) == uiFlags;}

@@ -65,6 +65,9 @@ bool CGameInputManager::keyPressed( const OIS::KeyEvent &arg ) {
   else if (arg.key == OIS::KC_M) {
     injectCommand(CGameInputCommand(GIC_USE_MANA_POTION, 1));
   }
+  else if (arg.key == OIS::KC_APPS) {
+    injectCommand(CGameInputCommand(GIC_SHOW_MENU, 1));
+  }
 
   return true;
 }
@@ -81,11 +84,14 @@ bool CGameInputManager::keyReleased( const OIS::KeyEvent &arg ) {
   else if (arg.key == OIS::KC_DOWN) {
     injectCommand(CGameInputCommand(GIC_ENTER_LINK, 0));
   }
-  else if (arg.key == OIS::KC_SPACE) {
+  else if (arg.key == OIS::KC_SPACE || arg.key == OIS::KC_PLAYPAUSE) {
     injectCommand(CGameInputCommand(GIC_ATTACK, 0));
   }
   else if (arg.key == OIS::KC_RETURN) {
     injectCommand(CGameInputCommand(GIC_ACTIVATE, 0));
+  }
+  else if (arg.key == OIS::KC_APPS) {
+    injectCommand(CGameInputCommand(GIC_SHOW_MENU, 0));
   }
 
   return true;
@@ -114,6 +120,8 @@ void CGameInputManager::injectCommand( const CGameInputCommand &cmd) {
       sendCommandToListeners(CGameInputCommand(cmd, GIS_HOLD));
       m_InputStates[cmd.getType()] = GIS_HOLD;
       break;
+    default:
+      break;
     }
   }
   else {
@@ -127,6 +135,8 @@ void CGameInputManager::injectCommand( const CGameInputCommand &cmd) {
     case GIS_NONE:
       sendCommandToListeners(CGameInputCommand(cmd, GIS_NONE));
       m_InputStates[cmd.getType()] = GIS_NONE;
+      break;
+    default:
       break;
     }
   }

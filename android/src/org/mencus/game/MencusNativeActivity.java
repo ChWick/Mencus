@@ -19,21 +19,25 @@
 
 package org.mencus.game;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.NativeActivity;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class MencusNativeActivity extends NativeActivity {
+	List<MencusPlugin> mPlugins = new ArrayList<MencusPlugin>();
+	
 	PopupWindow popUp;
 
 	MencusNativeActivity _activity;
@@ -47,10 +51,21 @@ public class MencusNativeActivity extends NativeActivity {
 	void setAdClosed(boolean addClosed) {mAddClosed = addClosed;}
 	boolean showAdWhenLoaded() {return mShowAdWhenLoaded;}
 
+    static {
+        System.loadLibrary("AmazonGamesJni");
+    	//System.loadLibrary("Mencus");
+    }
+    
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		_activity = this;
 		super.onCreate(savedInstanceState);
+
+		
+		mPlugins.add(new AmazonGameCirclePlugin(this));
+		for (Iterator<MencusPlugin> i = mPlugins.iterator(); i.hasNext();) {
+			i.next().onCreate();
+		}
         //Toast.makeText(this, "Loading, please wait...", Toast.LENGTH_LONG).show();
 		//showAdPopup();
         //Toast.makeText(this, "popup done", Toast.LENGTH_SHORT).show();
@@ -67,15 +82,36 @@ public class MencusNativeActivity extends NativeActivity {
 	}
 	public void onStop() {
 		super.onStop();
+
+		for (Iterator<MencusPlugin> i = mPlugins.iterator(); i.hasNext();) {
+			i.next().onStop();
+		}
 		mLoadDialog = null;
 	}
 	public void onPause() {
 		super.onPause();
 		mLoadDialog = null;
+		
+		for (Iterator<MencusPlugin> i = mPlugins.iterator(); i.hasNext();) {
+			i.next().onPause();
+		}
 	}
-	public void onDestroy() {
+	public void onResume() {
+		super.onResume();
+		
+		for (Iterator<MencusPlugin> i = mPlugins.iterator(); i.hasNext();) {
+			i.next().onResume();
+		}
+	}
+	public void onDestroy() {		
 		super.onDestroy();
 		mLoadDialog = null;
+	}
+	
+	public void startPlugins() {
+		for (Iterator<MencusPlugin> i = mPlugins.iterator(); i.hasNext();) {
+			i.next().start();
+		}
 	}
 
 	// Our popup window, you will call it from your C/C++ code later

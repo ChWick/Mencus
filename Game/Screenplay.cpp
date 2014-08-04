@@ -32,6 +32,8 @@
 #include "MapInfo.hpp"
 #include "GUIStatistics.hpp"
 #include "Game.hpp"
+#include "MessageHandler.hpp"
+#include "Message.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -62,7 +64,7 @@ void CLevel::init() {
   if (!m_pMap) {
     m_pMap = new CMap(Ogre::Root::getSingleton().getSceneManager("MainSceneManager"),
 		      m_pScreenplayListener,
-		      m_Statistics,
+		      CGameState::getSingleton().getStatistics(),
 		      m_pMapPack);
   }
 }
@@ -166,9 +168,12 @@ void CScreenplay::loadAct(unsigned int uiActId, unsigned int uiSceneId) {
   if (m_mapActs.find(uiActId) == m_mapActs.end()) {
     CLevel *pLevel = dynamic_cast<CLevel*>(m_pOldScene);
     if (pLevel) {
-      pLevel->getStatistics().eMissionState = MS_ACCOMPLISHED;
-      CGUIStatistics::getSingleton().showStatistics(pLevel->getStatistics());
+      SStatistics &stats = CGameState::getSingleton().getStatistics();
+      stats.eMissionState = MissionState::MS_ACCOMPLISHED;
       CGameState::getSingleton().changeGameState(CGameState::GS_STATISTICS, pLevel->getMapPack());
+      CMessageHandler::getSingleton()
+	.addMessage(CMessage(CMessage::MT_AT_LEVEL_END)
+		    .setStatistics(&stats));
     }
     else {
       CGameState::getSingleton().changeGameState(CGameState::GS_MAIN_MENU);

@@ -1,16 +1,28 @@
 project(Game)
 
 
-file(GLOB Game_source_files *.cpp)
-file(GLOB Game_source_event_files Events/*.cpp)
-file(GLOB Game_source_xmlresources_files XMLResources/*.cpp)
-file(GLOB Game_include_files *.hpp)
+SET(SOURCE_DIR "@CMAKE_SOURCE_DIR@/Game")
+
+file(GLOB_RECURSE Game_source_files "@SOURCE_DIR@/*.cpp")
+#file(GLOB Game_source_event_files Events/*.cpp)
+#file(GLOB Game_source_xmlresources_files XMLResources/*.cpp)
+#file(GLOB Game_source_xmlresources_files XMLResources/*.cpp)
+file(GLOB_RECURSE Game_include_files "@SOURCE_DIR@/*.hpp")
 
 ADD_DEFINITIONS(-std=c++11 -Wall)
 
 
+# create global build defines
 set (MENCUS_CONFIG_OUT "@CMAKE_BINARY_DIR@/include")
 include(toolchain/CreateGlobalDefines)
+
+# copy the level files (map packs)
+set(LEVEL_TARGET_PATH "@CMAKE_SOURCE_DIR@/level/")
+include(toolchain/CopyLevelFiles)
+
+#copy the input buttons
+set(IMAGESET_TARGET_DIR "@CMAKE_SOURCE_DIR@/cegui/imagesets/")
+include(toolchain/CopyButtonImageset)
 
 set(Game_include_directories
     ${MENCUS_CONFIG_OUT}

@@ -1,0 +1,2 @@
+LeaderboardId,IconId,SortOrder,ScoreThreshold,Title_en_US,ScoreUnits_en_Us,Description_en_US,Title_de_DE,ScoreUnits_de_DE,Description_de_DE
+global_ranking,global_ranking,highest scores first,1000,Global ranking,Points,The bravest wizards,Globale Rangliste,Punkte,Die mutigsten Zauberer

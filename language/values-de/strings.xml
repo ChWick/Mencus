@@ -25,4 +25,18 @@
   <string name="select_level">Karte auswählen</string>
   <string name="close">Schließen</string>
   <string name="next">Weiter</string>
+  <string name="Tools">Werkzeuge</string>
+
+  <!-- GUIStatistics -->
+  <string name="Statistics">Statistik</string>
+  <string name="Mission accomplished">Mission vollbracht</string>
+  <string name="Mission failed">Mission fehlgeschlagen</string>
+  <string name="Retry">Erneut versuchen</string>
+  <string name="To level selection">Zur Levelauswahl</string>
+  <string name="Time">Zeit</string>
+  <string name="Hitpoints">Lebenspunkte</string>
+  <string name="Manapoints">Manapunkte</string>
+  <string name="Lost hitpoints">Verlorene Lebenspunkte</string>
+  <string name="Used manapoints">Verwendete Manapunkte</string>
+  <string name="Killed enemies">Getötete Gegner</string>
 </resources>
