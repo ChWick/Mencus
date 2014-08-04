@@ -51,7 +51,7 @@ public:
     return UPGRADE_SUCCESSFULL;
   }
 private:
-  bool upgradeChangeTileType(XMLElement *pElem) {
+  EUpgradeResult upgradeChangeTileType(XMLElement *pElem) {
     if (strcmp(pElem->Value(), "event") == 0 &&
 	pElem->Attribute("type") &&
 	strcmp(pElem->Attribute("type"), "change_tile") == 0) {

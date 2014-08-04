@@ -3,7 +3,7 @@
 ################################################################################
 include(FindPackageHandleStandardArgs)
 
-find_path(CEGUI_H_PATH NAMES CEGUI/CEGUI.h PATH_SUFFIXES cegui-0)
+find_path(CEGUI_H_PATH NAMES CEGUI/CEGUI.h PATHS ${CEGUI_SDK_ROOT}/include PATH_SUFFIXES cegui-0)
 
 if (${MENCUS_STATIC_DEPENDENCIES})
   find_library(CEGUI_LIB NAMES CEGUIBase-0_Static)
@@ -42,9 +42,9 @@ if (${MENCUS_STATIC_DEPENDENCIES})
     CEGUI_DEPS_PCRE_PATH CEGUI_DEPS_PCRE_LIB
     )
 else()
-  find_library(CEGUI_LIB NAMES CEGUIBase-0)
-  find_library(CEGUI_OGRE_RENDERER_LIB NAMES CEGUIOgreRenderer-0)
-  find_library(CEGUI_LIB_DBG NAMES CEGUIBase-0_d)
+  find_library(CEGUI_LIB NAMES CEGUIBase-0 PATHS ${CEGUI_SDK_ROOT}/lib)
+  find_library(CEGUI_OGRE_RENDERER_LIB NAMES CEGUIOgreRenderer-0 CEGUIOgreRenderer-0_d PATHS ${CEGUI_SDK_ROOT}/lib)
+  find_library(CEGUI_LIB_DBG NAMES CEGUIBase-0_d PATHS ${CEGUI_SDK_ROOT}/lib)
 
   mark_as_advanced(CEGUI_H_PATH CEGUI_LIB CEGUI_OGRE_RENDERER_LIB CEGUI_LIB_DBG)
   find_package_handle_standard_args(CEGUI DEFAULT_MSG CEGUI_LIB CEGUI_OGRE_RENDERER_LIB CEGUI_H_PATH)

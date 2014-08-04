@@ -1,12 +1,12 @@
 project(Game)
 
-
 SET(SOURCE_DIR "@CMAKE_SOURCE_DIR@/Game")
 
 file(GLOB_RECURSE Game_source_files "@SOURCE_DIR@/*.cpp")
 #file(GLOB Game_source_event_files Events/*.cpp)
 #file(GLOB Game_source_xmlresources_files XMLResources/*.cpp)
 #file(GLOB Game_source_xmlresources_files XMLResources/*.cpp)
+
 file(GLOB_RECURSE Game_include_files "@SOURCE_DIR@/*.hpp")
 
 ADD_DEFINITIONS(-std=c++11 -Wall)
@@ -32,19 +32,18 @@ set(Game_include_directories
     ${OGRE_INCLUDE_DIR}
     ${CEGUI_INCLUDE_DIR}
     ${TINYXML2_INCLUDE_DIR}
+    ${BOOST_INCLUDE_DIR}
 )
 set(Game_link_libraries
     ${OIS_LIBRARIES}
     ${OGRE_LIBRARIES}
     ${CEGUI_LIBRARIES}
     ${TINYXML2_LIBRARIES}
+    ${BOOST_LIBRARIES}
 )
 
 set(Game_link_libraries
   ${Game_link_libraries}
-  boost_system
-  boost_thread
-  boost_regex
   pthread)
 
 
@@ -54,8 +53,16 @@ include_directories(${Game_include_directories})
 add_executable(Game ${Game_source_files} ${Game_source_event_files} ${Game_source_xmlresources_files} ${Game_include_files})
 target_link_libraries(Game ${Game_link_libraries})
 
-# create plugins file
-if (UNIX)
+# create plugins and resourced file
+# ==================================================================
+
+if (APPLE)
+	set(PLUGIN_FOLDER "./")
+	set(PLUGINS "Plugin=RenderSystem_GL")	
+
+  set(RESOURCES_PREFIX "")
+  set(RESOURCES_USING_APK "")
+elseif (UNIX)
   find_path(PLUGIN_OPEN_GL_LIB NAMES RenderSystem_GL.so PATH_SUFFIXES Plugins Ogre OGRE lib/OGRE lib/OGRE/Plugins lib/x86_64-linux-gnu/OGRE-1.9.0)
   find_package_handle_standard_args(PLUGIN_OPEN_GL DEFAULT_MSG PLUGIN_OPEN_GL_LIB)
   find_path(PLUGIN_OPEN_GLES2_LIB NAMES RenderSystem_GLES2.so PATH_SUFFIXES Plugins Ogre OGRE lib/OGRE lib/OGRE/Plugins lib/x86_64-linux-gnu/OGRE-1.9.0)
@@ -71,15 +78,53 @@ if (UNIX)
     set(PLUGIN_FOLDER ${PLUGIN_OPEN_GLES2_LIB})
     set(PLUGINS "${PLUGINS}Plugin=RenderSystem_GLES2\n")
   endif()
+
+  set(RESOURCES_PREFIX "..")
+  set(RESOURCES_USING_APK "")
 else()
   set(PLUGIN_FOLDER "${CMAKE_SOURCE_DIR}/plugins")
   set(PLUGINS "Plugin=RenderSystem_D9")
+
+  set(RESOURCES_PREFIX "..")  
+  set(RESOURCES_USING_APK "")
 endif()
 
 configure_file("${MENCUS_TEMPLATES_DIR}/plugins.cfg.in" "${EXECUTABLE_OUTPUT_PATH}/plugins.cfg" @ONLY)
-
-
-# create resources file
-set(RESOURCES_PREFIX "..")
-set(RESOURCES_USING_APK "")
 configure_file("${MENCUS_TEMPLATES_DIR}/resources.cfg.in" "${EXECUTABLE_OUTPUT_PATH}/resources.cfg" @ONLY)
+
+
+# create project file properties
+# ==================================================================
+
+if (APPLE)
+  #set_source_file_properties("${Game_source_files}" PROPERTIES COMPILE_FLAGS "-x objective-c++")
+
+  set(CMAKE_CXX_FLAGS "-x objective-c++")
+
+  set_property(TARGET Game PROPERTY MACOSX_BUNDLE TRUE)
+  #set_property(TARGET Game PROPERTY MACOSX_BUNDLE_ICON_FILE .icns)
+
+  set_property(TARGET Game PROPERTY MACOSX_BUNDLE_INFO_PLIST "@CMAKE_SOURCE_DIR@/OSX/Game-Info.plist")
+  set_property(TARGET Game PROPERTY MACOSX_BUNDLE_GUI_IDENTIFIER "org.mencus.game")
+  set_target_properties(Game PROPERTIES XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "YES")
+
+  # here check if ios in ogres cmakelist.txt
+
+  include_directories(
+    SYSTEM
+    "${OGRE_SDK_ROOT}/include/OGRE"
+    "${OGRE_SDK_ROOT}/include/OGRE/OSX"
+    "${OGRE_SDK_ROOT}/include/OGRE/Overlay"
+    "${OGRE_SDK_ROOT}/include/OIS"
+    "${OGRE_SDK_ROOT}/Dependencies/include"
+    "${OGRE_SDK_ROOT}/boost"
+    "${CEGUI_SDK_ROOT}/include/cegui-0"
+    "${TINYXML2_SDK_ROOT}/include"
+    "/opt/local/include"
+    )
+
+  target_link_libraries(Game ${CoreVideo_LIBRARIES})
+
+  set_target_properties(Game PROPERTIES LINK_FLAGS "-lOIS -framework IOKIT -framework Cocoa -framework Carbon -framework CoreVideo -framework ApplicationServices -framework Ogre -framework OgreOverlay -ltinyxml2")
+
+endif()

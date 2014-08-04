@@ -8,12 +8,11 @@ ADD_DEFINITIONS(-std=c++11)
 set(MapUpgrader_include_directories
     ..
     .
+    ${BOOST_INCLUDE_DIR}
     ${TINYXML2_INCLUDE_DIR}
 )
 set(MapUpgrader_link_libraries
-    boost_system
-    boost_thread
-    boost_regex
+	${BOOST_LIBRARIES}
     pthread
     ${TINYXML2_LIBRARIES}
 )
