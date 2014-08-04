@@ -43,6 +43,13 @@ SVideoSettings::SVideoSettings()
 #endif
 {
 }
+CSettings &CSettings::getSingleton() {
+  assert(msSingleton);
+  return *msSingleton;
+}
+CSettings *CSettings::getSingletonPtr() {
+  return msSingleton;
+}
 CSettings::CSettings() {
   readFromFile();
 }

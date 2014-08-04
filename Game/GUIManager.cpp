@@ -29,10 +29,10 @@
 #include "GUITutorial.hpp"
 #include "MapEditor.hpp"
 #include "Game.hpp"
-#include <SdkTrays.h>
 #include "Settings.hpp"
 #include "Plugins/SocialGaming/Overlay.hpp"
 #include "Plugins/GUIToolsMenu.hpp"
+#include <dependencies/OgreSdkUtil/SdkTrays.h>
 
 using namespace CEGUI;
 
