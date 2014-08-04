@@ -29,7 +29,7 @@
 #include "GUITutorial.hpp"
 #include "MapEditor.hpp"
 #include "Game.hpp"
-#include <SdkTrays.h>
+#include <dependencies/OgreSdkUtil/SdkTrays.h>
 
 using namespace CEGUI;
 

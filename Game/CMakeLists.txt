@@ -44,9 +44,9 @@ target_link_libraries(Game ${Game_link_libraries})
 
 # create plugins file
 if (UNIX)
-  find_path(PLUGIN_OPEN_GL_LIB NAMES RenderSystem_GL.so PATH_SUFFIXES Plugins Ogre OGRE lib/OGRE lib/OGRE/Plugins)
+  find_path(PLUGIN_OPEN_GL_LIB NAMES RenderSystem_GL.so PATH_SUFFIXES Plugins Ogre OGRE lib/OGRE lib/OGRE/Plugins lib/x86_64-linux-gnu/OGRE-1.9.0)
   find_package_handle_standard_args(PLUGIN_OPEN_GL DEFAULT_MSG PLUGIN_OPEN_GL_LIB)
-  find_path(PLUGIN_OPEN_GLES2_LIB NAMES RenderSystem_GLES2.so PATH_SUFFIXES Plugins Ogre OGRE lib/OGRE lib/OGRE/Plugins)
+  find_path(PLUGIN_OPEN_GLES2_LIB NAMES RenderSystem_GLES2.so PATH_SUFFIXES Plugins Ogre OGRE lib/OGRE lib/OGRE/Plugins lib/x86_64-linux-gnu/OGRE-1.9.0)
   find_package_handle_standard_args(PLUGIN_OPEN_GLES2 DEFAULT_MSG PLUGIN_OPEN_GLES2_LIB)
 
   
