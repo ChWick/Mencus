@@ -47,9 +47,9 @@ private:
   SVideoSettings m_VideoSettings;
   SSocialGamingSettings m_SocialGamingSettings;
 public:
-  static CSettings &getSingleton() {return *msSingleton;}
-  static CSettings *getSingletonPtr() {return msSingleton;}
-
+    static CSettings &getSingleton();
+    static CSettings *getSingletonPtr();
+    
   CSettings();
   ~CSettings();
 

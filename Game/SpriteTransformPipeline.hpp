@@ -32,6 +32,8 @@ public:
 class CDefaultSpriteTransformPipeline : public CSpriteTransformPipeline {
 public:
   static const CDefaultSpriteTransformPipeline INSTANCE;
+    
+    CDefaultSpriteTransformPipeline() {}
 
   Ogre::Vector2 transformPosition(const Ogre::Vector2 &vPosition) const {
     return vPosition;
@@ -41,6 +43,8 @@ public:
 class CBackgroundSpriteTransformPipeline : public CSpriteTransformPipeline {
 public:
   static const CBackgroundSpriteTransformPipeline INSTANCE;
+    
+    CBackgroundSpriteTransformPipeline() {}
 
   Ogre::Vector2 transformPosition(const Ogre::Vector2 &vPosition) const {
     Ogre::Vector2 vTransformed(vPosition);

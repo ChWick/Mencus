@@ -46,6 +46,11 @@ void CAchievementProgressTester::update(const SStatistics &stats) {
     else if (stats.sLevelFileName == "Tutorial_6") {
       updateAchievementsProgress(BOOTS_6, 100);
     }
+    else if (stats.sLevelFileName == "Escape") {
+      if (stats.fTime <= 120 && stats.iKilledEnemies == 6) {
+	updateAchievementsProgress(DEBUG_ACHIEVEMENT, 100);
+      }
+    }
   }
 }
 
