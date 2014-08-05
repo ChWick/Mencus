@@ -25,12 +25,12 @@ include(toolchain/AddSdkPaths)
 if (APPLE)
 	# On apple we use the framework for ogre, ois is included
 else()
-	# On other systems find Ogre and OIS
+	# On other systems find Ogre
 	find_package(Ogre)
-	find_package(OIS)
 endif()
 
 # On all systems
+find_package(OIS)
 find_package(CEGUI)
 find_package(tinyxml2)
 find_package(boost)

@@ -42,7 +42,7 @@
 #import "OgreOSXCocoaWindow.h"
 #import <QuartzCore/CVDisplayLink.h>
 
-#include "SampleBrowser.h"
+#include "Game.hpp"
 
 using namespace Ogre;
 
@@ -78,7 +78,7 @@ using namespace Ogre;
 
 @end
 
-static OgreBites::SampleBrowser sb = 0;
+static CGame *pGame = 0;
 
 #if __LP64__
 static id mAppDelegate;
@@ -144,13 +144,19 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 }
 
 - (void)go {
+    pGame = CGame::getSingletonPtr();
+    
+    if (!pGame)
+        pGame = new CGame();
+        
+    CGame &game(*pGame);
     
     NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
     mLastFrameTime = 1;
     mTimer = nil;
     
     try {
-        sb.go();
+        game.go();
         Ogre::Root::getSingleton().getRenderSystem()->_initRenderTargets();
         
         // Clear event times
@@ -204,13 +210,12 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
         
         - (void)renderOneFrame:(id)sender
         {
-            if(!sb.mIsShuttingDown && Ogre::Root::getSingletonPtr() &&
+            if(Ogre::Root::getSingletonPtr() &&
                Ogre::Root::getSingleton().isInitialised() && !Ogre::Root::getSingleton().endRenderingQueued())
             {
                 Ogre::Root::getSingleton().renderOneFrame();
             }
-            else if(sb.mIsShuttingDown)
-            {
+            else            {
                 if(mTimer)
                 {
                     [mTimer invalidate];
@@ -218,16 +223,6 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
                 }
                 
                 [NSApp performSelector:@selector(terminate:) withObject:nil afterDelay:0.0];
-            }
-            else if(!sb.isLastRun() && sb.isFirstRun())
-            {
-                sb.closeApp();
-                
-                sb.setFirstRun(false);
-                
-                sb.initApp();
-                sb.loadStartUpSample();
-                sb.setFirstRun(true);
             }
         }
         

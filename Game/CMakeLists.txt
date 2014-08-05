@@ -1,3 +1,4 @@
+
 project(Game)
 
 SET(SOURCE_DIR "@CMAKE_SOURCE_DIR@/Game")
@@ -79,13 +80,13 @@ elseif (UNIX)
     set(PLUGINS "${PLUGINS}Plugin=RenderSystem_GLES2\n")
   endif()
 
-  set(RESOURCES_PREFIX "..")
+  set(RESOURCES_PREFIX "../")
   set(RESOURCES_USING_APK "")
 else()
   set(PLUGIN_FOLDER "${CMAKE_SOURCE_DIR}/plugins")
   set(PLUGINS "Plugin=RenderSystem_D9")
 
-  set(RESOURCES_PREFIX "..")  
+  set(RESOURCES_PREFIX "../")  
   set(RESOURCES_USING_APK "")
 endif()
 
@@ -115,6 +116,8 @@ if (APPLE)
     "${OGRE_SDK_ROOT}/include/OGRE"
     "${OGRE_SDK_ROOT}/include/OGRE/OSX"
     "${OGRE_SDK_ROOT}/include/OGRE/Overlay"
+    "${OGRE_SDK_ROOT}/include/OGRE/RenderSystems/GL"
+    "${OGRE_SDK_ROOT}/include/OGRE/RenderSystems/GL/OSX"
     "${OGRE_SDK_ROOT}/include/OIS"
     "${OGRE_SDK_ROOT}/Dependencies/include"
     "${OGRE_SDK_ROOT}/boost"
@@ -125,6 +128,60 @@ if (APPLE)
 
   target_link_libraries(Game ${CoreVideo_LIBRARIES})
 
-  set_target_properties(Game PROPERTIES LINK_FLAGS "-lOIS -framework IOKIT -framework Cocoa -framework Carbon -framework CoreVideo -framework ApplicationServices -framework Ogre -framework OgreOverlay -ltinyxml2")
+  set_target_properties(Game PROPERTIES LINK_FLAGS "-F /Library/Frameworks -framework IOKIT -framework Cocoa -framework Carbon -framework CoreVideo -framework ApplicationServices -framework Ogre -framework OgreOverlay")
 
+  set_target_properties(Game PROPERTIES RUNTIME_OUTPUT_DIRECTORY ../bin)
+  set(GAME_CONTENTS_PATH ../bin/$(CONFIGURATION)/Game.app/Contents)
+
+  add_custom_command(TARGET Game POST_BUILD
+    COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Frameworks"
+    COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources"
+
+    COMMAND ditto ${CEGUI_LIB} ${GAME_CONTENTS_PATH}/Frameworks
+    COMMAND ditto ${CEGUI_OGRE_RENDERER_LIB} ${GAME_CONTENTS_PATH}/Frameworks
+    COMMAND ditto ${CEGUI_CORE_WINDOW_RENDERER_SET_LIB} ${GAME_CONTENTS_PATH}/Frameworks
+    COMMAND ditto ${CEGUI_FREE_IMAGE_IMAGE_CODEC_LIB} ${GAME_CONTENTS_PATH}/Frameworks
+    COMMAND ditto ${CEGUI_LIB_XML_PARSER_LIB} ${GAME_CONTENTS_PATH}/Frameworks
+
+    COMMAND ditto ${TINYXML2_LIBRARIES} ${GAME_CONTENTS_PATH}/Frameworks
+
+    COMMAND ditto ${CEGUI_LIB_XML_PARSER_LIB} ${GAME_CONTENTS_PATH}/Frameworks
+    COMMAND ditto ${CEGUI_LIB_XML_PARSER_LIB} ${GAME_CONTENTS_PATH}/Frameworks
+
+    )
+
+  if (CEGUI_LIB_DBG)
+    add_custom_command(TARGET Game POST_BUILD
+      COMMAND ditto ${CEGUI_LIB_DBG} ${GAME_CONTENTS_PATH}/Frameworks
+      )
+  endif()
+
+  # copy plugins and resources config file
+
+  add_custom_command(TARGET Game POST_BUILD
+    COMMAND ditto ${EXECUTABLE_OUTPUT_PATH}/plugins.cfg ${GAME_CONTENTS_PATH}/Resources
+    COMMAND ditto ${EXECUTABLE_OUTPUT_PATH}/resources.cfg ${GAME_CONTENTS_PATH}/Resources)
+  # copy resources
+
+  add_custom_command(TARGET Game POST_BUILD
+    COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/credits"
+    COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/level"
+    COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/language"
+    COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/packs"
+    COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/gfx"
+    COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/materials"
+    COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/cegui"
+    COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/RTShaderLib"
+    COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/overlays"
+
+    COMMAND ditto ${CMAKE_SOURCE_DIR}/credits ${GAME_CONTENTS_PATH}/Resources/credits
+    COMMAND ditto ${CMAKE_SOURCE_DIR}/language ${GAME_CONTENTS_PATH}/Resources/language
+    COMMAND ditto ${CMAKE_SOURCE_DIR}/packs ${GAME_CONTENTS_PATH}/Resources/packs
+    COMMAND ditto ${CMAKE_SOURCE_DIR}/cegui ${GAME_CONTENTS_PATH}/Resources/cegui
+    COMMAND ditto ${CMAKE_SOURCE_DIR}/materials ${GAME_CONTENTS_PATH}/Resources/materials
+    COMMAND ditto ${CMAKE_SOURCE_DIR}/RTShaderLib ${GAME_CONTENTS_PATH}/Resources/RTShaderLib
+    COMMAND ditto ${CMAKE_SOURCE_DIR}/overlays ${GAME_CONTENTS_PATH}/Resources/overlays
+
+    COMMAND ditto ${CMAKE_SOURCE_DIR}/gfx/game.zip ${GAME_CONTENTS_PATH}/Resources/gfx
+    )
 endif()

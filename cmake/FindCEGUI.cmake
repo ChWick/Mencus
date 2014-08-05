@@ -43,20 +43,51 @@ if (${MENCUS_STATIC_DEPENDENCIES})
     )
 else()
   find_library(CEGUI_LIB NAMES CEGUIBase-0 PATHS ${CEGUI_SDK_ROOT}/lib)
-  find_library(CEGUI_OGRE_RENDERER_LIB NAMES CEGUIOgreRenderer-0 CEGUIOgreRenderer-0_d PATHS ${CEGUI_SDK_ROOT}/lib)
   find_library(CEGUI_LIB_DBG NAMES CEGUIBase-0_d PATHS ${CEGUI_SDK_ROOT}/lib)
 
+  if (CEGUI_LIB_DBG)
+    find_library(CEGUI_OGRE_RENDERER_LIB NAMES CEGUIOgreRenderer-0_d PATHS ${CEGUI_SDK_ROOT}/lib)
+  else()
+    find_library(CEGUI_OGRE_RENDERER_LIB NAMES CEGUIOgreRenderer-0 PATHS ${CEGUI_SDK_ROOT}/lib)
+  endif()
+
   mark_as_advanced(CEGUI_H_PATH CEGUI_LIB CEGUI_OGRE_RENDERER_LIB CEGUI_LIB_DBG)
-  find_package_handle_standard_args(CEGUI DEFAULT_MSG CEGUI_LIB CEGUI_OGRE_RENDERER_LIB CEGUI_H_PATH)
+
+
+  if (APPLE) 
+
+    if (CEGUI_LIB_DBG)
+      find_library(CEGUI_CORE_WINDOW_RENDERER_SET_LIB NAMES CEGUICoreWindowRendererSet_d PATHS ${CEGUI_SDK_ROOT}/lib)
+      find_library(CEGUI_FREE_IMAGE_IMAGE_CODEC_LIB NAMES CEGUIFreeImageImageCodec_d PATHS ${CEGUI_SDK_ROOT}/lib)
+      find_library(CEGUI_LIB_XML_PARSER_LIB NAMES CEGUILibXMLParser_d PATHS ${CEGUI_SDK_ROOT}/lib)
+    else()
+      find_library(CEGUI_CORE_WINDOW_RENDERER_SET_LIB NAMES CEGUICoreWindowRendererSet PATHS ${CEGUI_SDK_ROOT}/lib)
+      find_library(CEGUI_FREE_IMAGE_IMAGE_CODEC_LIB NAMES CEGUIFreeImageImageCodec PATHS ${CEGUI_SDK_ROOT}/lib)
+      find_library(CEGUI_LIB_XML_PARSER_LIB NAMES CEGUILibXMLParser PATHS ${CEGUI_SDK_ROOT}/lib)
+    endif()
+
+    mark_as_advanced(CEGUI_CORE_WINDOW_RENDERER_SET_LIB CEGUI_FREE_IMAGE_IMAGE_CODEC_LIB CEGUI_LIB_XML_PARSER_LIB)
+
+    find_package_handle_standard_args(
+      CEGUI DEFAULT_MSG CEGUI_LIB
+      CEGUI_OGRE_RENDERER_LIB
+      CEGUI_H_PATH
+      CEGUI_CORE_WINDOW_RENDERER_SET_LIB
+      CEGUI_FREE_IMAGE_IMAGE_CODEC_LIB
+      CEGUI_LIB_XML_PARSER_LIB)
+  else()
+    find_package_handle_standard_args(CEGUI DEFAULT_MSG CEGUI_LIB CEGUI_OGRE_RENDERER_LIB CEGUI_H_PATH)
+  endif()
+
 endif()
 
-
 # set up output vars
+
 if (CEGUI_FOUND)
   set (CEGUI_INCLUDE_DIR ${CEGUI_H_PATH})
   set (CEGUI_LIBRARIES ${CEGUI_LIB} ${CEGUI_OGRE_RENDERER_LIB})
   if (CEGUI_LIB_DBG)
-    set (CEGUI_LIBRARIES_DBG ${CEGUI_LIB_DBG})
+    set (CEGUI_LIBRARIES ${CEGUI_LIB_DBG} ${CEGUI_OGRE_RENDERER_LIB})
   endif()
 else()
     set (CEGUI_INCLUDE_DIR)
