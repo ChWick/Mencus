@@ -166,9 +166,11 @@ if (APPLE)
   add_custom_command(TARGET Game POST_BUILD
     COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/credits"
     COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/level"
+    COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/level/user"
     COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/language"
     COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/packs"
     COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/gfx"
+    COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/overlay"
     COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/materials"
     COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/cegui"
     COMMAND mkdir ARGS -p "${GAME_CONTENTS_PATH}/Resources/RTShaderLib"
@@ -183,5 +185,10 @@ if (APPLE)
     COMMAND ditto ${CMAKE_SOURCE_DIR}/overlays ${GAME_CONTENTS_PATH}/Resources/overlays
 
     COMMAND ditto ${CMAKE_SOURCE_DIR}/gfx/game.zip ${GAME_CONTENTS_PATH}/Resources/gfx
+    COMMAND ditto ${CMAKE_SOURCE_DIR}/gfx/overlay ${GAME_CONTENTS_PATH}/Resources/gfx/overlay
+
+
+    COMMAND ditto ${CMAKE_SOURCE_DIR}/level/level_list.xml ${GAME_CONTENTS_PATH}/Resources/level
+    COMMAND ditto ${CMAKE_SOURCE_DIR}/level/user/*.zip ${GAME_CONTENTS_PATH}/Resources/level/user
     )
 endif()
