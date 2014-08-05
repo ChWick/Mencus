@@ -21,6 +21,7 @@
 #include "FileManager.hpp"
 #include "XMLHelper.hpp"
 #include <tinyxml2.h>
+#include "GlobalBuildDefines.hpp"
 
 using namespace XMLHelper;
 using namespace tinyxml2;
@@ -43,6 +44,15 @@ SVideoSettings::SVideoSettings()
 #endif
 {
 }
+
+SSocialGamingSettings::SSocialGamingSettings() {
+#if MENCUS_DEFAULT_LOGIN_TO_SOCIAL_GAMING == 1
+  m_bLoginOnStart = true;
+#else
+  m_bLoginOnStart = false;
+#endif
+}
+
 CSettings &CSettings::getSingleton() {
   assert(msSingleton);
   return *msSingleton;
