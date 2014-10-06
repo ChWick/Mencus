@@ -1,9 +1,29 @@
+/*****************************************************************************
+ * Copyright 2014 Christoph Wick
+ *
+ * This file is part of Mencus.
+ *
+ * Mencus is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Mencus is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * Mencus. If not, see http://www.gnu.org/licenses/.
+ *****************************************************************************/
+
 package org.mencus.game;
 
 import java.util.EnumSet;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.amazon.ags.api.AmazonGamesCallback;
@@ -45,11 +65,13 @@ public class AmazonGameCirclePlugin extends MencusPlugin {
 	        @Override
 	        public void onServiceNotReady(AmazonGamesStatus status) {
 	            //unable to use service
-	        	//Toast.makeText(mActivity, "Unable to use GameCircle (" + status.toString() + ")", Toast.LENGTH_LONG).show();
+	        	Log.e("AmazonGamesCircle", "Unable to use GameCircle (" + status.toString() + ")");
+	        	AmazonGamesClient.shutdown();
 	        }
 	        @Override
 	        public void onServiceReady(AmazonGamesClient amazonGamesClient) {
 	            agsClient = amazonGamesClient;
+	        	Log.i("AmazonGamesCircle", "Ready to use GameCircle");
 	        	//Toast.makeText(mActivity, "Ready to use GameCircle", Toast.LENGTH_LONG).show();
 	            //ready to use GameCircle
 	        }
@@ -61,6 +83,10 @@ public class AmazonGameCirclePlugin extends MencusPlugin {
 	@Override
 	protected void onDestroyImpl() {
         AmazonGamesClient.shutdown();
+	}
+	@Override
+	protected void onStopImpl() {
+		AmazonGamesClient.shutdown();
 	}
 
 }

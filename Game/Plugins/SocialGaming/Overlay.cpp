@@ -1,3 +1,22 @@
+/*****************************************************************************
+ * Copyright 2014 Christoph Wick
+ *
+ * This file is part of Mencus.
+ *
+ * Mencus is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software
+ * Foundation, either version 3 of the License, or (at your option) any later
+ * version.
+ *
+ * Mencus is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * Mencus. If not, see http://www.gnu.org/licenses/.
+ *****************************************************************************/
+
 #include "Overlay.hpp"
 #include "SocialGaming.hpp"
 #include "SocialGamingConnectionInterface.hpp"
@@ -10,7 +29,9 @@ using namespace SocialGaming;
 using namespace CEGUI;
 
 COverlay::COverlay(CEGUI::Window *pRoot) 
-  : m_pRoot(nullptr),
+  : m_fTimer(0),
+    m_iConnectingDots(0),
+    m_pRoot(nullptr),
     m_pSignedInState(nullptr) {
   m_pShowButton = pRoot->createChild("OgreTray/ImageButton", "SocialGamingOverlayShowButton");
   m_pShowButton->setPosition(UVector2(UDim(1, -100), UDim(0, 0)));
@@ -69,7 +90,7 @@ COverlay::COverlay(CEGUI::Window *pRoot)
   pHideButton->setText("Hide");
   pHideButton->subscribeEvent(PushButton::EventClicked,
 			       Event::Subscriber(&COverlay::onHideSocialGamingSideBar, this));
-  
+ 
 
   setSignedIn(CSocialGaming::getSingleton().getConnection()->isSignedIn());
   dynamic_cast<ToggleButton*>(pLoginOnStart)
@@ -85,6 +106,32 @@ COverlay::~COverlay() {
   if (m_pRoot) {
     m_pRoot->destroy();
     m_pRoot = nullptr;
+  }
+}
+
+void COverlay::update(float tpf) {
+  switch (CSocialGaming::getSingleton().getConnectionStatus()) {
+  case CONNECTED:
+    m_pSignedInState->setText("Logged in!");
+    break;
+  case CONNECTING:
+    m_fTimer -= tpf;
+    if (m_fTimer <= 0) {
+      m_fTimer = 1;
+      m_iConnectingDots++;
+      if (m_iConnectingDots > 3) {
+	m_iConnectingDots = 0;
+      } 
+      String sConnectString = "Connecting";
+      for (int i = 0; i < m_iConnectingDots; i++) {
+	sConnectString += ".";
+      }
+      m_pSignedInState->setText(sConnectString);
+    }
+    break;
+  case DISCONNECTED:
+    m_pSignedInState->setText("Disconnected!");
+    break;
   }
 }
 
@@ -149,6 +196,7 @@ bool COverlay::onShowOverlay(const CEGUI::EventArgs &args) {
 }
 bool COverlay::onRestart(const CEGUI::EventArgs &args) {
   LOGI("before restart");
+  CSocialGaming::getSingleton().getConnection()->showSignInPage();
   CSocialGaming::getSingleton().init();
   LOGI("after restart");
   return true;

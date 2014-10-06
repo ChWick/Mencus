@@ -17,10 +17,14 @@
  * Mencus. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#include "Sleep.hpp"
+#ifndef _LEADERBOARDS_HPP_
+#define _LEADERBOARDS_HPP_
 
-#if _WIN32
-void usleep(unsigned long us) {
-  return Sleep(static_cast<DWORD>(us / 1000));
-}
+namespace SocialGaming {
+  enum ELeaderboards {
+    GLOAL_RANKING,
+    LEADERBOARDS_COUNT,    
+  };
+};
+
 #endif

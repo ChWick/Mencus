@@ -30,6 +30,7 @@
 #include "MapEditor.hpp"
 #include "Game.hpp"
 #include <SdkTrays.h>
+#include "Settings.hpp"
 #include "Plugins/SocialGaming/Overlay.hpp"
 
 using namespace CEGUI;
@@ -123,6 +124,7 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   //#endif
 
   pTrayMgr->userUpdateLoadBar("done...", 0.2);
+  onGUIScalingChanged(CSettings::getSingleton().getVideoSettings().m_fHUDSize);
   Ogre::LogManager::getSingleton().logMessage("GUIManager initialized...");
   CGame::getSingleton().hideLoadingBar();
 }
@@ -161,6 +163,10 @@ void CGUIManager::update(Ogre::Real tpf) {
 #if ENABLE_MAP_EDITOR
   CMapEditor::getSingleton().render();
 #endif
+
+  for (CGUIOverlay *pOverlay : m_lGUIOverlays) {
+    pOverlay->update(tpf);
+  }
 }
 void CGUIManager::renderQueueStarted(Ogre::uint8 id, const Ogre::String& invocation, bool& skipThisQueue) {
    // make sure you check the invocation string, or you can end up rendering the GUI multiple times
@@ -290,6 +296,7 @@ void CGUIManager::createResources() {
   CEGUI::ImageManager::getSingleton().loadImageset("hud.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("game_over.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("white.imageset");
+  CEGUI::ImageManager::getSingleton().loadImageset("social_gaming_logos.imageset");
 #ifdef INPUT_MOUSE
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
 #else
@@ -303,6 +310,7 @@ void CGUIManager::destroyResources() {
   CEGUI::ImageManager::getSingleton().destroyImageCollection("save_pictures");
   CEGUI::SchemeManager::getSingleton().destroy("OgreTray");
   CEGUI::ImageManager::getSingleton().destroyImageCollection("OgreTrayImages");
+  CEGUI::ImageManager::getSingleton().destroyImageCollection("social_gaming_logos");
 }
 void CGUIManager::reloadResources() {
   m_pCEGuiOgreRenderer->getTexture("OgreTrayImages").loadFromFile("OgreTrayImages.png", "Imagesets");
@@ -313,6 +321,7 @@ void CGUIManager::reloadResources() {
   m_pCEGuiOgreRenderer->getTexture("save_pictures").loadFromFile("save_pictures.png", "Imagesets");
   m_pCEGuiOgreRenderer->getTexture("white").loadFromFile("white.png", "Imagesets");
   m_pCEGuiOgreRenderer->getTexture("instructions").loadFromFile("instr_scroll.jpg", "Imagesets");
+  m_pCEGuiOgreRenderer->getTexture("social_gaming_logos").loadFromFile("social_gaming_logos.png", "Imagesets");
 
   for (auto &sFontName : m_vFonts) {
     CEGUI::FontManager::getSingleton().get(sFontName).notifyDisplaySizeChanged(m_vNativeRes);
@@ -348,4 +357,14 @@ void CGUIManager::changeTouchButtonSize(float fSize) {
 #ifdef INPUT_TOUCH
     m_pGUIInput->buttonSizeChanged(fSize);
 #endif
+  for (CGUIOverlay *pOverlay : m_lGUIOverlays) {
+    pOverlay->changeTouchButtonSize(fSize);
+  }
+}
+
+void CGUIManager::onGUIScalingChanged(float fScaling) {
+  for (CGUIOverlay *pOverlay : m_lGUIOverlays) {
+    pOverlay->onGUIScalingChanged(fScaling);
+  }
+  CMainMenu::getSingleton().resizeGUI(fScaling);
 }

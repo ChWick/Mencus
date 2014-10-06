@@ -4,7 +4,7 @@
 
 import os
 
-excludedir = ["./dependencies", "./build_linux", "./build_android", "./.git", "./gfx", "./level", "./cmake", "./cegui", "./language", "./materials", "./bin", "./VisualStudio2013", "./RTShaderLib", "./overlays"]
+excludedir = ["./dependencies", "./build_linux", "./build_android", "./.git", "./gfx", "./level", "./cmake", "./cegui", "./language", "./materials", "./bin", "./VisualStudio2013", "./RTShaderLib", "./overlays", "./android/jni/includes"]
 excludefile = ["./Game/ogre2d-main.cpp", "./Game/ogre2d-main.hpp"]
 
 def update_source(filename, oldcopyright, copyright):

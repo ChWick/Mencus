@@ -1,4 +1,5 @@
 AchievementId,unlockedIconId,lockedIconId,pointValue,isHidden,DisplayTitle_en_US,UnlockedDescription_en_US,LockedDescription_en_US
+debug,debug_unlocked,debug_locked,0,TRUE,Debug achievement,Debug achievement,Debug achievement
 boot_1,boot_1_unlocked,boot_1_locked,10,FALSE,Tutorial 1,Tutorial 1 accomplished,Accomplish Tutorial 1
 boot_2,boot_2_unlocked,boot_2_locked,10,FALSE,Tutorial 2,Tutorial 2 accomplished,Accomplish Tutorial 2
 boot_3,boot_3_unlocked,boot_3_locked,10,FALSE,Tutorial 3,Tutorial 3 accomplished,Accomplish Tutorial 3

@@ -17,10 +17,22 @@
  * Mencus. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#include "Sleep.hpp"
+#ifndef _GUI_SETTINGS_WINDOW_HPP_
+#define _GUI_SETTINGS_WINDOW_HPP_
 
-#if _WIN32
-void usleep(unsigned long us) {
-  return Sleep(static_cast<DWORD>(us / 1000));
-}
+#include <CEGUI/CEGUI.h>
+#include "Plugins/GUIOverlay.hpp"
+
+class CGUISettingsWindow : public CGUIOverlay {
+protected:
+  CEGUI::Window *m_pRoot;
+  CEGUI::Window *m_pContent;
+public:
+  CGUISettingsWindow(CEGUI::Window *pParentRoot, const CEGUI::String &sTitle);
+  virtual ~CGUISettingsWindow();
+
+protected:
+  bool onCloseButtonClicked(const CEGUI::EventArgs &args);
+};
+
 #endif

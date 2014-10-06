@@ -82,6 +82,10 @@ public class MencusNativeActivity extends NativeActivity {
 	}
 	public void onStop() {
 		super.onStop();
+
+		for (Iterator<MencusPlugin> i = mPlugins.iterator(); i.hasNext();) {
+			i.next().onStop();
+		}
 		mLoadDialog = null;
 	}
 	public void onPause() {
@@ -99,11 +103,7 @@ public class MencusNativeActivity extends NativeActivity {
 			i.next().onResume();
 		}
 	}
-	public void onDestroy() {
-		for (Iterator<MencusPlugin> i = mPlugins.iterator(); i.hasNext();) {
-			i.next().onDestroy();
-		}
-		
+	public void onDestroy() {		
 		super.onDestroy();
 		mLoadDialog = null;
 	}

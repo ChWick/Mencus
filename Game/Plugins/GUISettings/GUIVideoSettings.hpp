@@ -17,10 +17,16 @@
  * Mencus. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#include "Sleep.hpp"
+#ifndef _GUI_VIDEO_SETTINGS_HPP_
+#define _GUI_VIDEO_SETTINGS_HPP_
 
-#if _WIN32
-void usleep(unsigned long us) {
-  return Sleep(static_cast<DWORD>(us / 1000));
-}
+#include "GUISettingsWindow.hpp"
+
+class CGUIVideoSettings : public CGUISettingsWindow {
+public:
+  CGUIVideoSettings(CEGUI::Window *pParent);
+protected:
+  bool menuSizeSliderValueChanged(const CEGUI::EventArgs &args);
+};
+
 #endif
