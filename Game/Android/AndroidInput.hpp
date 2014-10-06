@@ -142,12 +142,12 @@ public:
       key = OIS::KC_RETURN;
       break;
     case AKEYCODE_MEDIA_PLAY_PAUSE:
-      key = OIS::KC_PLAY_PAUSE;
+      key = OIS::KC_PLAYPAUSE;
       break;
-    case KEYCODE_MEDIA_REWIND:
+    case AKEYCODE_MEDIA_REWIND:
       key = OIS::KC_PREVTRACK;
       break;
-    case KEYCODE_MEDIA_FAST_FORWARD:
+    case AKEYCODE_MEDIA_FAST_FORWARD:
       key = OIS::KC_NEXTTRACK;
       break;
     }

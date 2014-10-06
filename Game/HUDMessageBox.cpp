@@ -58,10 +58,16 @@ CHUDMessageBox::CHUDMessageBox(const std::string &sID, const CEGUI::String &sTit
   pContent->setPosition(UVector2(UDim(0.05, 0), UDim(0.05, 0)));
   pContent->setSize(USize(UDim(0.9, 0), UDim(0.75, 0)));
 
-  MultiLineEditbox *pTextContainter = dynamic_cast<MultiLineEditbox*>(pContent->createChild("OgreTray/MultiLineEditbox", "Text"));
+  //MultiLineEditbox *pTextContainter = dynamic_cast<MultiLineEditbox*>(pContent->createChild("OgreTray/MultiLineEditbox", "Text"));
+  // only in static text formatting tags work
+  Window *pTextContainter = pContent->createChild("OgreTray/StaticText", "Text");
   pTextContainter->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
   pTextContainter->setSize(USize(UDim(1, 0), UDim(1, 0)));
-  pTextContainter->setReadOnly(true);
+  //pTextContainter->setReadOnly(true);
+  pTextContainter->setTextParsingEnabled(true);
+  // to allow colour formatting tags
+  pTextContainter->setProperty("TextColours", "FFFFFFFF");
+  pTextContainter->setProperty("VertFormatting", "TopAligned");
 
   showPage(0);
 
@@ -110,7 +116,9 @@ void CHUDMessageBox::showPage(unsigned int uiPage) {
     pCloseBtn->setText(XMLResources::GLOBAL.getCEGUIString("next"));
   }
   Window *pTextContainter = m_pMessageBox->getChild("Content")->getChild("Text");
-  pTextContainter->setText(reinterpret_cast<const CEGUI::utf8*>(m_vPages[m_uiCurrentPage].c_str()));
+  // default text colour
+  pTextContainter->setText("[colour='FF000000']");
+  pTextContainter->appendText(reinterpret_cast<const CEGUI::utf8*>(m_vPages[m_uiCurrentPage].c_str()));
 
   CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_MESSAGE_BOX_PAGE_CHANGED).setID(m_sID).setInt(m_uiCurrentPage));
 }

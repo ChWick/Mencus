@@ -1,3 +1,7 @@
+if (NOT DEFINED MENUCS_INPUT_PLATFORM)
+  set(MENCUS_INPUT_PLATFORM 0 CACHE INTEGER "0: Keyboard, 1: Touch, 2: Amazon Remote Control")
+endif()
+
 if (NOT DEFINED MENCUS_USE_AMAZON_GAME_CIRCLE)
   set(MENCUS_USE_AMAZON_GAME_CIRCLE 0 CACHE INTEGER "Use the amazon game circle")
 endif()

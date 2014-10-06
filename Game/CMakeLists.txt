@@ -20,6 +20,10 @@ include(toolchain/CreateGlobalDefines)
 set(LEVEL_TARGET_PATH "@CMAKE_SOURCE_DIR@/level/")
 include(toolchain/CopyLevelFiles)
 
+#copy the input buttons
+set(IMAGESET_TARGET_DIR "@CMAKE_SOURCE_DIR@/cegui/imagesets/")
+include(toolchain/CopyButtonImageset)
+
 set(Game_include_directories
     ${MENCUS_CONFIG_OUT}
     ..

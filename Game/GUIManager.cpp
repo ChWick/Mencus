@@ -33,6 +33,7 @@
 #include "Settings.hpp"
 #include "Plugins/SocialGaming/Overlay.hpp"
 #include "Plugins/GUIToolsMenu.hpp"
+#include <dependencies/OgreSdkUtil/SdkTrays.h>
 
 using namespace CEGUI;
 
@@ -127,10 +128,10 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   new CGUITutorial(guiRoot);
   new CMainMenu(guiRoot);
 
-  //#if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
+  #if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
   m_lGUIOverlays.push_back(new SocialGaming::COverlay(guiRoot->getChild("MainMenuRoot")));
   m_lGUIOverlays.push_back(pToolsMenu);
-  //#endif
+  #endif
 
   pTrayMgr->userUpdateLoadBar("done...", 0.2);
   onGUIScalingChanged(CSettings::getSingleton().getVideoSettings().m_fHUDSize);
@@ -370,6 +371,10 @@ void CGUIManager::createResources() {
   CEGUI::ImageManager::getSingleton().loadImageset("game_over.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("white.imageset");
   CEGUI::ImageManager::getSingleton().loadImageset("social_gaming_logos.imageset");
+#if MENCUS_HAS_INPUT_BUTTONS_IMAGESET == 1
+  CEGUI::ImageManager::getSingleton().loadImageset("input_buttons.imageset");
+#endif
+
 #ifdef INPUT_MOUSE
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
 #else
@@ -384,6 +389,10 @@ void CGUIManager::destroyResources() {
   CEGUI::SchemeManager::getSingleton().destroy("OgreTray");
   CEGUI::ImageManager::getSingleton().destroyImageCollection("OgreTrayImages");
   CEGUI::ImageManager::getSingleton().destroyImageCollection("social_gaming_logos");
+
+#if MENCUS_HAS_INPUT_BUTTONS_IMAGESET == 1
+  CEGUI::ImageManager::getSingleton().destroyImageCollection("input_buttons");
+#endif
 }
 void CGUIManager::reloadResources() {
   m_pCEGuiOgreRenderer->getTexture("OgreTrayImages").loadFromFile("OgreTrayImages.png", "Imagesets");
@@ -395,6 +404,10 @@ void CGUIManager::reloadResources() {
   m_pCEGuiOgreRenderer->getTexture("white").loadFromFile("white.png", "Imagesets");
   m_pCEGuiOgreRenderer->getTexture("instructions").loadFromFile("instr_scroll.jpg", "Imagesets");
   m_pCEGuiOgreRenderer->getTexture("social_gaming_logos").loadFromFile("social_gaming_logos.png", "Imagesets");
+
+#if MENCUS_HAS_INPUT_BUTTONS_IMAGESET == 1
+  m_pCEGuiOgreRenderer->getTexture("input_buttons").loadFromFile("input_buttons.png", "Imagesets");
+#endif
 
   for (auto &sFontName : m_vFonts) {
     CEGUI::FontManager::getSingleton().get(sFontName).notifyDisplaySizeChanged(m_vNativeRes);
@@ -428,7 +441,7 @@ void CGUIManager::resize(const CEGUI::Sizef &vSize) {
 }
 void CGUIManager::changeTouchButtonSize(float fSize) {
 #ifdef INPUT_TOUCH
-    m_pGUIInput->buttonSizeChanged(fSize);
+  m_pGUIInput->buttonSizeChanged(fSize);
 #endif
   for (CGUIOverlay *pOverlay : m_lGUIOverlays) {
     pOverlay->changeTouchButtonSize(fSize);

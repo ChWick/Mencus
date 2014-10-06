@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<map version="2" difficulty="easy" background="forest" sizex="16" sizey="12">
+    <tiles invert="0">
+        <row tiles="24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 24 "/>
+        <row tiles="27 27 27 27 27 27 31 27 27 31 27 31 31 27 27 27 "/>
+        <row tiles="23 23 29 23 23 23 23 23 23 31 23 31 31 23 23 23 "/>
+        <row tiles="23 23 29 23 23 23 29 23 23 31 23 31 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 31 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 31 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
+        <row tiles="23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 23 "/>
+    </tiles>
+    <player x="0.5" y="1" hp="10" direction="1"/>
+    <switches/>
+    <endangeredTiles/>
+    <links/>
+    <enemies/>
+    <objects>
+        <object type="6" id="Flag" x="14" y="1" phy_gravity="0">
+            <events>
+                <event emitter="collision" id="0" msg_type="exit_reached" repeat="none" src_id="Player" type="inject_message"/>
+            </events>
+        </object>
+    </objects>
+    <camera/>
+    <region id="region" x="5" y="1" sizex="2" sizey="14">
+        <events>
+            <event emitter="collision" id="0" repeat="none" src_id="Player" title="msg_default_title" type="message">
+                <page text="msg_obstacle"/>
+            </event>
+            <event emitter="collision" id="0" msg_button="jump" msg_enabled="true" msg_type="toggle_touch_input_blink" repeat="none" src_id="Player" type="inject_message"/>
+            <event emitter="collision" id="0" msg_button="left" msg_enabled="false" msg_type="toggle_touch_input_blink" repeat="none" src_id="Player" type="inject_message"/>
+            <event emitter="collision" id="0" msg_button="right" msg_enabled="false" msg_type="toggle_touch_input_blink" repeat="none" src_id="Player" type="inject_message"/>
+        </events>
+    </region>
+    <region id="region" x="12" y="1" sizex="2" sizey="14">
+        <events>
+            <event emitter="collision" id="0" repeat="none" src_id="Player" title="msg_default_title" type="message">
+                <page text="msg_end"/>
+            </event>
+            <event emitter="collision" id="0" msg_button="jump" msg_enabled="false" msg_type="toggle_touch_input_blink" repeat="none" src_id="Player" type="inject_message"/>
+        </events>
+    </region>
+    <events>
+        <event emitter="create" id="InitialMessageBox" repeat="infinite" text="" title="msg_default_title" type="message">
+            <page text="msg_start"/>
+            <page text="msg_move"/>
+        </event>
+    </events>
+</map>
