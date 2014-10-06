@@ -43,7 +43,16 @@ using namespace SocialGaming;
 
 template<> CSocialGaming  *Ogre::Singleton<CSocialGaming>::msSingleton = 0;
 
-CSocialGaming::CSocialGaming() 
+
+CSocialGaming &CSocialGaming::getSingleton() {
+    assert(msSingleton);
+    return *msSingleton;
+}
+CSocialGaming *CSocialGaming::getSingletonPtr() {
+    return msSingleton;
+}
+
+CSocialGaming::CSocialGaming()
   : m_eConnectionStatus(DISCONNECTED),
     m_fConnectionCheckTimer(0),
     m_AchievementProgressTester(*this) {

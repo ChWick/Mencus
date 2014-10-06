@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 2.8)
 
+if (APPLE)
+  set(CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD_32_BIT)")
+endif()
+
 project(Mencus)
 
 # set version
@@ -15,10 +19,21 @@ if (ANDROID)
   set (MENCUS_STATIC_DEPENDENCIES TRUE)
 endif()
 
-find_package(Ogre)
+
+include(toolchain/AddSdkPaths)
+
+if (APPLE)
+	# On apple we use the framework for ogre, ois is included
+else()
+	# On other systems find Ogre
+	find_package(Ogre)
+endif()
+
+# On all systems
 find_package(OIS)
 find_package(CEGUI)
 find_package(tinyxml2)
+find_package(boost)
 
 if(ANDROID)
   include(toolchain/AndroidGame)

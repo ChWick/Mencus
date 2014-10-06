@@ -5,6 +5,12 @@ endif()
 set(LEVEL_TARGET_DIR "${LEVEL_TARGET_PATH}/user/")
 set(LEVEL_SRC_DIR "${CMAKE_SOURCE_DIR}/level/user/")
 
+# generate map packs
+
+if (UNIX)
+EXECUTE_PROCESS(COMMAND /bin/sh generate_packs.sh WORKING_DIRECTORY ${LEVEL_SRC_DIR})
+endif()
+
 set(LEVELS_LIST "")
 
 function(copy_level name tutorial)

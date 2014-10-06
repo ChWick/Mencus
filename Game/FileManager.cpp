@@ -107,6 +107,8 @@ int mkpath(const char *path, mode_t mode)
 // define paths
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
 const std::string CFileManager::DIRECTORY_LEVEL("level/");
+#elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE || OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS
+const std::string CFileManager::DIRECTORY_LEVEL("level/user/");
 #else
 const std::string CFileManager::DIRECTORY_LEVEL("../level/user/");
 #endif

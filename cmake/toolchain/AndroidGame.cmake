@@ -61,7 +61,7 @@ if (ANDROID)
   # resources file
   SET(RESOURCES_MINIMAL "Minimal")
   SET(RESOURCES_USING_APK "APK")
-  SET(RESOURCES_PREFIX "")
+  SET(RESOURCES_PREFIX "/")
 
   configure_file("${MENCUS_TEMPLATES_DIR}/resources.cfg.in" "${NDKOUT}/assets/resources.cfg" @ONLY)
 

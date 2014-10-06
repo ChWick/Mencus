@@ -57,3 +57,4 @@ blendcache_*
 # build dirs
 build*/
 bin*/
+Xcode*/
