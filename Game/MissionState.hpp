@@ -17,21 +17,23 @@
  * Mencus. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef _LOG_HPP_
-#define _LOG_HPP_
+#ifndef _MISSION_STATE_HPP_
+#define _MISSION_STATE_HPP_
 
-#include <OgrePlatform.h>
+#include <string>
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-#include <android/log.h>
-#define LOGV(...) ((void)__android_log_print(ANDROID_LOG_VERBOSE, "Ogre", __VA_ARGS__))
-#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "Ogre", __VA_ARGS__))
-#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "Ogre", __VA_ARGS__))
-#else
-#include <stdio.h>
-#define LOGV(...) printf(__VA_ARGS__); printf("/n")
-#define LOGI(...) printf(__VA_ARGS__); printf("/n")
-#define LOGW(...) printf(__VA_ARGS__); printf("/n")
+namespace MissionState {
+  enum EMissionState {
+    MS_NOT_PLAYED,	        //!< This mission has never been played 
+    MS_FAILED,			//!< This mission has been failed
+    MS_ACCOMPLISHED,		//!< This mission has been accomplished
+
+    MS_COUNT,
+  };
+
+  EMissionState parseMissionState(const std::string &s);
+  const std::string &toString(const EMissionState ms);
+};
+
 #endif
-
-#endif
+  

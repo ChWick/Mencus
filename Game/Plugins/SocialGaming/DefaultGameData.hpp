@@ -17,21 +17,27 @@
  * Mencus. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef _LOG_HPP_
-#define _LOG_HPP_
+#ifndef _DEFAULT_GAME_DATA_HPP_
+#define _DEFAULT_GAME_DATA_HPP_
 
-#include <OgrePlatform.h>
+#include "GameData.hpp"
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-#include <android/log.h>
-#define LOGV(...) ((void)__android_log_print(ANDROID_LOG_VERBOSE, "Ogre", __VA_ARGS__))
-#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "Ogre", __VA_ARGS__))
-#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "Ogre", __VA_ARGS__))
-#else
-#include <stdio.h>
-#define LOGV(...) printf(__VA_ARGS__); printf("/n")
-#define LOGI(...) printf(__VA_ARGS__); printf("/n")
-#define LOGW(...) printf(__VA_ARGS__); printf("/n")
-#endif
+namespace SocialGaming {
+  class CDefaultGameData : public CGameData {
+  private:
+    const std::string m_sFileName;
+    CLevelList m_LevelList;
+  public:
+    CDefaultGameData();
+    ~CDefaultGameData();
+    CLevelList getLevelList();
+    void setMissionStateOfLevel(MissionState::EMissionState eMissionState,
+				const std::string &sLevelName,
+				bool bSkipped);
+
+    void read();
+    void save() const;
+  };
+};
 
 #endif

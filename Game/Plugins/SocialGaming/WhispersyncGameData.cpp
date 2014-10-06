@@ -17,30 +17,25 @@
  * Mencus. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef _LEVEL_STATE_HPP_
-#define _LEVEL_STATE_HPP_
+#include "WhispersyncGameData.hpp"
 
-#include <string>
-#include <vector>
-#include "Statistics.hpp"
-#include <tinyxml2.h>
+#if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
+#include "WhispersyncClientInterface.h"
 
-class CLevelState {
-private:
-  static std::vector<SStatistics> m_vLevelStatistics;
-  static bool m_bLoaded;
-  static tinyxml2::XMLDocument m_XMLDocument;
-public:
-  static bool has(const std::string &sFileName);
-  static SStatistics &get(const std::string &sFileName,
-			  bool createIfNotExisting = false);
-  static tinyxml2::XMLElement *getXMLElement(const std::string &sFileName);
-  static bool levelAccomplished(const std::string &sFileName);
-  static void add(const SStatistics &stats);
+using namespace Whispersync;
 
-private:
-  static void read();
-  static void write();
-};
+SocialGaming::CLevelList CGameData::getLevelList() {
+SocialGaming::CLevelList out;
+AmazonGames::GameDataMap* pLevelList = AmazonGames::WhispersyncClient::getGameData()->getMap("level_list");
+AmazonGames::StringList *pLevelKeys = pLevelList->getMapKeys();
+for (int i = 0; i < pLevelKeys->getSize(); i++) {
+SocialGaming::SLevelData data;
+AmazonGames::GameDataMap *pLevel = pLevelList->getMap(pLevelKeys->get(i));
+data.sLevelName = pLevel->getLatestString("level_name")->getValue();
+data.eMissionState = static_cast<EMissionState>(pLevel->getHighestNumber("level_state")->asInt());
+out.push_back(data);
+}
+return out;
+}
 
 #endif

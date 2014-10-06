@@ -17,21 +17,29 @@
  * Mencus. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef _LOG_HPP_
-#define _LOG_HPP_
+#include "MissionState.hpp"
+#include "Log.hpp"
 
-#include <OgrePlatform.h>
 
-#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-#include <android/log.h>
-#define LOGV(...) ((void)__android_log_print(ANDROID_LOG_VERBOSE, "Ogre", __VA_ARGS__))
-#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "Ogre", __VA_ARGS__))
-#define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "Ogre", __VA_ARGS__))
-#else
-#include <stdio.h>
-#define LOGV(...) printf(__VA_ARGS__); printf("/n")
-#define LOGI(...) printf(__VA_ARGS__); printf("/n")
-#define LOGW(...) printf(__VA_ARGS__); printf("/n")
-#endif
+namespace MissionState {
+  std::string MISSION_STATE_STRINGS[MS_COUNT] = {
+    "not_played",
+    "failed",
+    "accomplished"
+  };
 
-#endif
+  EMissionState parseMissionState(const std::string &s) {
+    for (int i = 0; i < MS_COUNT; i++) {
+      if (MISSION_STATE_STRINGS[i] == s) {
+	return static_cast<EMissionState>(i);
+      }
+    }
+    
+    LOGW("'%s' is not a valid mission state to parse", s.c_str());
+    
+    return MS_NOT_PLAYED;
+  }
+  const std::string &toString(const EMissionState ms) {
+    return MISSION_STATE_STRINGS[ms];
+  }
+};

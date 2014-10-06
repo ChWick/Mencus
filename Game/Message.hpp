@@ -24,6 +24,7 @@
 #include <string>
 #include <OgreException.h>
 
+struct SStatistics;
 class CEntity;
 
 class CMessage {
@@ -37,6 +38,7 @@ public:
     MT_EXIT_REACHED,
     MT_DROP_DOWN_MENU,
     MT_WEAPON_CHANGED,
+    MT_AT_LEVEL_END,
 
     MT_SOCIAL_GAMING,
   };
@@ -61,6 +63,8 @@ public:
       return "weapon_changed";
     case MT_SOCIAL_GAMING:
       return "social_gaming";
+    case MT_AT_LEVEL_END:
+      return "at_level_end";
     }
 
     throw Ogre::Exception(0, "Message type could not be converted to string", __FILE__);
@@ -76,6 +80,7 @@ public:
     else if (s == "weapon_changed") {return MT_WEAPON_CHANGED;}
 
     else if (s == "social_gaming") {return MT_SOCIAL_GAMING;}
+    else if (s == "at_level_end") {return MT_AT_LEVEL_END;}
 
     throw Ogre::Exception(0, "Message type could not be parsed: " + s, __FILE__);
   }
@@ -90,18 +95,21 @@ protected:
   std::vector<int> m_aIntValues;
   std::vector<bool> m_aBoolValues;
   const CEntity *m_pEntity;
+  const SStatistics *m_pStatistics;
 public:
   CMessage(const unsigned int uiType = MT_MESSAGE_UNSET)
     : m_uiType(uiType),
       m_aIntValues(MAX_INT_VALUES, 0),
       m_aBoolValues(MAX_BOOL_VALUES, false),
-      m_pEntity(NULL) {
+      m_pEntity(NULL),
+      m_pStatistics(nullptr) {
   }
   CMessage(const unsigned int uiType, int i0, int i1 = 0)
     : m_uiType(uiType),
       m_aIntValues(MAX_INT_VALUES),
       m_aBoolValues(MAX_BOOL_VALUES, false),
-      m_pEntity(NULL) {
+      m_pEntity(NULL),
+      m_pStatistics(nullptr) {
     m_aIntValues[0] = i0;
     m_aIntValues[1] = i1;
   }
@@ -110,7 +118,8 @@ public:
       m_sID(src.m_sID),
       m_aIntValues(src.m_aIntValues),
       m_aBoolValues(src.m_aBoolValues),
-      m_pEntity(src.m_pEntity) {
+      m_pEntity(src.m_pEntity),
+      m_pStatistics(src.m_pStatistics) {
   }
   unsigned int getType() const {return m_uiType;}
   CMessage &setType(unsigned int uiType) {m_uiType = uiType; return *this;}
@@ -126,6 +135,9 @@ public:
 
   const CEntity *getEntity() const {return m_pEntity;}
   CMessage &setEntity(const CEntity *pEntity) {m_pEntity = pEntity; return *this;}
+
+  const SStatistics *getStatistics() const {return m_pStatistics;}
+  CMessage &setStatistics(const SStatistics *pStatistics) {m_pStatistics = pStatistics; return *this;}
 };
 
 #endif

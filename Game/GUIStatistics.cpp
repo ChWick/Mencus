@@ -23,7 +23,6 @@
 #include "GameState.hpp"
 #include "SaveStateManager.hpp"
 #include "Statistics.hpp"
-#include "LevelState.hpp"
 #include <OgreStringConverter.h>
 
 using namespace CEGUI;
@@ -163,8 +162,6 @@ void CGUIStatistics::resize(const CEGUI::String &smallfont, const CEGUI::String 
   }
 }
 void CGUIStatistics::showStatistics(const SStatistics &stats) {
-  CLevelState::add(stats);
-
   Window *pButtonContainer = m_pStatisticsRoot->getChild("ButtonContainer");
   Window *group = pButtonContainer->getChild("statisticsgroup");
   Window *pTopText = pButtonContainer->getChild("text");
@@ -174,11 +171,11 @@ void CGUIStatistics::showStatistics(const SStatistics &stats) {
   int iSeconds = static_cast<int>(stats.fTime - iHours * 3600 - iMinutes * 60);
 
   switch (stats.eMissionState) {
-  case MS_ACCOMPLISHED:
+  case MissionState::MS_ACCOMPLISHED:
     pTopText->setText("Mission accomplished");
     pTopText->setProperty("CaptionColour", "FF66FF66");
     break;
-  case MS_FAILED:
+  case MissionState::MS_FAILED:
     pTopText->setText("Mission failed");
     pTopText->setProperty("CaptionColour", "FF992222");
     break;

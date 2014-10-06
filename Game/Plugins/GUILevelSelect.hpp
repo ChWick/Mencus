@@ -31,9 +31,9 @@ private:
   CEGUI::Window *m_pChickenButton;
 
   // level selection windows
+  SLevelInfo *m_pLevelInfo;
   CLevelList m_LevelList;
   unsigned int m_uiSelectedLevelID;
-  SLevelInfo *m_pLevelInfo;
 public:
   CGUILevelSelect(CEGUI::Window *pParent);
   virtual ~CGUILevelSelect();

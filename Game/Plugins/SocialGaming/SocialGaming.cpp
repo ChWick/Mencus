@@ -23,6 +23,7 @@
 #include "Sleep.hpp"
 #include "Game.hpp"
 #include "HUDMessageBox.hpp"
+#include "MessageHandler.hpp"
 
 #include <OgrePlatform.h>
 
@@ -32,8 +33,10 @@
 
 #if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
 #include "GameCircle.hpp"
+#include "WhispersyncGameData.hpp"
 #else
 #include "SocialGamingConnectionInterface.hpp"
+#include "DefaultGameData.hpp"
 #endif
 
 using namespace SocialGaming;
@@ -45,10 +48,20 @@ CSocialGaming::CSocialGaming()
     m_fConnectionCheckTimer(0) {
 #if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
   m_pConnection = new GameCircle::CConnectionInterface();
+  m_pGameData = new Whispersync::CGameData();
 #else
   // dummy to avoid nullptr checks
   m_pConnection = new CSocialGamingConnectionInterface();
+  m_pGameData = new CDefaultGameData();
 #endif
+
+  CMessageHandler::getSingleton().addInjector(this);
+}
+
+CSocialGaming::~CSocialGaming() {
+  CMessageHandler::getSingleton().removeInjector(this);
+  delete m_pGameData;
+  delete m_pConnection;
 }
 
 void CSocialGaming::init() {
@@ -59,7 +72,7 @@ void CSocialGaming::init() {
   else {
     m_eConnectionStatus = CONNECTING;
 #if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
-    OgreAndroidBridge::callJavaVoid("startPlugins");
+    OgreAndroidBridge::callJavaVoid("restartGameCircle");
 #else
     LOGW("Restart not implemented");
 #endif
@@ -86,7 +99,7 @@ void CSocialGaming::update(float tpf) {
   }
 }
 void CSocialGaming::update(const SStatistics &stats) {
-  if (stats.eMissionState == MS_ACCOMPLISHED) {
+  if (stats.eMissionState == MissionState::MS_ACCOMPLISHED) {
     LOGV("Level finished in social gaming: %s", stats.sLevelFileName.c_str());
     if (stats.sLevelFileName == "Tutorial_1") {
       updateAchievementsProgress(BOOTS_1, 100);
@@ -105,4 +118,13 @@ void CSocialGaming::update(const SStatistics &stats) {
 
 void CSocialGaming::updateAchievementsProgress(EAchievements achievement, float fPercentComplete) {  
   m_pConnection->updateAchievementsProgress(achievement, fPercentComplete);
+}
+
+void CSocialGaming::sendMessageToAll(const CMessage &message) {
+  if (message.getType() == CMessage::MT_AT_LEVEL_END) {
+    m_pGameData->setMissionStateOfLevel(message.getStatistics()->eMissionState,
+					message.getStatistics()->sLevelFileName,
+					m_pGameData->getLevelList()
+					.isSkipped(message.getStatistics()->sLevelFileName));
+  }
 }
