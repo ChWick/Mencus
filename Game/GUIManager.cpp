@@ -127,10 +127,10 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   new CGUITutorial(guiRoot);
   new CMainMenu(guiRoot);
 
-  //#if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
+  #if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
   m_lGUIOverlays.push_back(new SocialGaming::COverlay(guiRoot->getChild("MainMenuRoot")));
   m_lGUIOverlays.push_back(pToolsMenu);
-  //#endif
+  #endif
 
   pTrayMgr->userUpdateLoadBar("done...", 0.2);
   onGUIScalingChanged(CSettings::getSingleton().getVideoSettings().m_fHUDSize);
