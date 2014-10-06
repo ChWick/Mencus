@@ -118,7 +118,9 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   new CGUITutorial(guiRoot);
   new CMainMenu(guiRoot);
 
-
+  //#if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
+  m_lGUIOverlays.push_back(new SocialGaming::COverlay(guiRoot->getChild("MainMenuRoot")));
+  //#endif
 
   pTrayMgr->userUpdateLoadBar("done...", 0.2);
   Ogre::LogManager::getSingleton().logMessage("GUIManager initialized...");
@@ -127,6 +129,12 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
 CGUIManager::~CGUIManager() {
   CInputListenerManager::getSingleton().removeInputListener(this);
   m_pSceneManager->removeRenderQueueListener(this);
+
+  while (m_lGUIOverlays.size() > 0) {
+    delete m_lGUIOverlays.front();
+    m_lGUIOverlays.pop_front();
+  }
+
   delete CHUD::getSingletonPtr();
   delete CGUIInstructions::getSingletonPtr();
   delete CGUIGameOver::getSingletonPtr();

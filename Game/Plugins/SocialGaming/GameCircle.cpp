@@ -9,9 +9,14 @@ using namespace AmazonGames;
 using namespace GameCircle;
 
 
-CConnectionInterface::CConnectionInterface() {
+CConnectionInterface::CConnectionInterface() 
+  : CSocialGamingConnectionInterface("Amazon GameCircle",
+				     "AmazonGameCircle") {
+}
+
+bool CConnectionInterface::init() {
   PlayerClientInterface::setSignedInStateChangedListener(this);
-  changeSignedIn(PlayerClientInterface::isSignedIn());
+  return PlayerClientInterface::isSignedIn();
 }
 
 void CConnectionInterface::updateAchievementsProgress(SocialGaming::EAchievements achievement,

@@ -38,10 +38,17 @@ struct SVideoSettings {
   float m_fHUDSize;
 };
 
+struct SSocialGamingSettings {
+  SSocialGamingSettings();
+  
+  bool m_bLoginOnStart;
+};
+
 class CSettings : public Ogre::Singleton<CSettings> {
 private:
   SInputSettings m_InputSettings;
   SVideoSettings m_VideoSettings;
+  SSocialGamingSettings m_SocialGamingSettings;
 public:
     static CSettings &getSingleton();
     static CSettings *getSingletonPtr();
@@ -51,6 +58,7 @@ public:
 
   SInputSettings &getInputSettings() {return m_InputSettings;}
   SVideoSettings &getVideoSettings() {return m_VideoSettings;}  
+  SSocialGamingSettings &getSocialGamingSettings() {return m_SocialGamingSettings;}
 
   void writeToFile();
 private:

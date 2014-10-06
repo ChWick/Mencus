@@ -27,15 +27,23 @@ using namespace CEGUI;
 CHUDMessageBox::CHUDMessageBox(const std::string &sID, const CEGUI::String &sTitle, const std::vector<std::string> &vPages)
   : m_sID(sID), m_vPages(vPages) {
   assert(m_vPages.size() > 0);
-  Window *pWnd = CHUD::getSingleton().getRoot()->createChild("OgreTray/Group");
+  Window *pMainRoot = CEGUI::System::getSingleton().getDefaultGUIContext().getRootWindow();
+  Window *pPane = pMainRoot->createChild("OgreTray/StaticImage");
+  m_pRootWindow = pPane;
+  pPane->setPosition(UVector2(UDim(0, 0), UDim(0, 0)));
+  pPane->setSize(USize(UDim(1, 0), UDim(1, 0)));
+  pPane->setAlwaysOnTop(true);
+  pPane->moveToFront();
+  pPane->setProperty("FrameEnabled", "false");
+  pPane->setProperty("Image", "OgreTrayImages/Shade");
+  
+  Window *pWnd = pPane->createChild("OgreTray/Group");
   m_pMessageBox = pWnd;
   // FrameWindow crashes on android, use default window
   //FrameWindow *pWnd = dynamic_cast<FrameWindow*>(m_pRoot->createChild("OgreTray/FrameWindow", label));
   pWnd->setPosition(UVector2(UDim(0.2, 0), UDim(0.2, 0)));
   pWnd->setSize(USize(UDim(0.6, 0), UDim(0.6, 0)));
   pWnd->setText(sTitle);
-  pWnd->setAlwaysOnTop(true);
-  pWnd->moveToFront();
 
   Window *pCloseBtn = pWnd->createChild("OgreTray/Button", "CloseButton");
   pCloseBtn->setUserData(dynamic_cast<Window*>(pWnd)); // to be sure that is a Window * ptr
@@ -59,7 +67,7 @@ CHUDMessageBox::CHUDMessageBox(const std::string &sID, const CEGUI::String &sTit
 }
 CHUDMessageBox::~CHUDMessageBox() {
   unpause(PAUSE_MAP_UPDATE);
-  m_pMessageBox->destroy();
+  m_pRootWindow->destroy();
 }
 bool CHUDMessageBox::onCloseButtonClicked(const CEGUI::EventArgs &args) {
   ++m_uiCurrentPage;

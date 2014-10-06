@@ -19,6 +19,8 @@ namespace GameCircle {
       public AmazonGames::IUpdateProgressCb {
   public:
     CConnectionInterface();
+
+    bool init();
     
     void loadAchievements() {}
     void updateAchievementsProgress(SocialGaming::EAchievements achievement,

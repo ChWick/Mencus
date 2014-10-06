@@ -10,11 +10,15 @@ namespace SocialGaming {
     : public CGUIOverlay,
       public CMessageInjector {
   private:
+    CEGUI::Window *m_pShowButton;
     CEGUI::Window *m_pRoot;
     CEGUI::Window *m_pSignedInState;
   public:
     COverlay(CEGUI::Window *pRoot);
     ~COverlay();
+
+
+    void changeTouchButtonSize(float fSize);
 
 
     void sendMessageToAll(const CMessage &message);
@@ -23,8 +27,12 @@ namespace SocialGaming {
     void setSignedIn(bool bSignedIn);
 
     // button callbacks
+    bool onShowSocialGamingSideBar(const CEGUI::EventArgs &args);
+    bool onHideSocialGamingSideBar(const CEGUI::EventArgs &args);
     bool onShowOverlay(const CEGUI::EventArgs &args);
     bool onRestart(const CEGUI::EventArgs &args);
+
+    bool onLoginOnStartToggled(const CEGUI::EventArgs &args);
   };
 };
 

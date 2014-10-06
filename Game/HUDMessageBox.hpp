@@ -29,6 +29,7 @@ class CHUDMessageBox
     public CPauseCaller {
 private:
   const std::string m_sID;
+  CEGUI::Window *m_pRootWindow;
   CEGUI::Window *m_pMessageBox;
   const std::vector<std::string> m_vPages;
   unsigned int m_uiCurrentPage;
