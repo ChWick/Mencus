@@ -45,7 +45,8 @@ template<> CSocialGaming  *Ogre::Singleton<CSocialGaming>::msSingleton = 0;
 
 CSocialGaming::CSocialGaming() 
   : m_eConnectionStatus(DISCONNECTED),
-    m_fConnectionCheckTimer(0) {
+    m_fConnectionCheckTimer(0),
+    m_AchievementProgressTester(*this) {
 #if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
   m_pConnection = new GameCircle::CConnectionInterface();
   m_pGameData = new Whispersync::CGameData();
@@ -98,33 +99,19 @@ void CSocialGaming::update(float tpf) {
     }
   }
 }
-void CSocialGaming::update(const SStatistics &stats) {
-  if (stats.eMissionState == MissionState::MS_ACCOMPLISHED) {
-    LOGV("Level finished in social gaming: %s", stats.sLevelFileName.c_str());
-    if (stats.sLevelFileName == "Tutorial_1") {
-      updateAchievementsProgress(BOOTS_1, 100);
-    }
-    else if (stats.sLevelFileName == "Tutorial_2") {
-      updateAchievementsProgress(BOOTS_2, 100);
-    }
-    else if (stats.sLevelFileName == "Tutorial_3") {
-      updateAchievementsProgress(BOOTS_3, 100);
-    }
-    else if (stats.sLevelFileName == "Tutorial_4") {
-      updateAchievementsProgress(DEBUG_ACHIEVEMENT, 100);
-    }
-  }
-}
 
-void CSocialGaming::updateAchievementsProgress(EAchievements achievement, float fPercentComplete) {  
-  m_pConnection->updateAchievementsProgress(achievement, fPercentComplete);
+void CSocialGaming::update(const SStatistics &stats) {
+  m_AchievementProgressTester.update(stats);
 }
 
 void CSocialGaming::sendMessageToAll(const CMessage &message) {
   if (message.getType() == CMessage::MT_AT_LEVEL_END) {
+    CLevelList levelList = m_pGameData->getLevelList();
+    std::string levelName = message.getStatistics()->sLevelFileName;
+    if (levelList.getMissionState(levelName) < message.getStatistics()->eMissionState) {
     m_pGameData->setMissionStateOfLevel(message.getStatistics()->eMissionState,
-					message.getStatistics()->sLevelFileName,
-					m_pGameData->getLevelList()
-					.isSkipped(message.getStatistics()->sLevelFileName));
+				        levelName,
+					levelList.isSkipped(levelName));
+    }
   }
 }

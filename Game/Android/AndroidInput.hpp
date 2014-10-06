@@ -116,14 +116,40 @@ public:
   }
   void injectKeyEvent(int action, int32_t keyCode) {
     OIS::KeyCode key = OIS::KC_UNASSIGNED;
-    if(keyCode == AKEYCODE_BACK) {
+    switch (keyCode) {
+    case AKEYCODE_BACK:
       key = OIS::KC_ESCAPE;
-    }
-    else if (keyCode == AKEYCODE_SEARCH) {
+      break;
+    case AKEYCODE_SEARCH:
       key = OIS::KC_RMENU;
-    }
-    else if (keyCode == AKEYCODE_MENU) {
-      key = OIS::KC_RWIN;
+      break;
+    case AKEYCODE_MENU:
+      key = OIS::KC_APPS;
+      break;
+    case AKEYCODE_DPAD_LEFT:
+      key = OIS::KC_LEFT;
+      break;
+    case AKEYCODE_DPAD_RIGHT:
+      key = OIS::KC_RIGHT;
+      break;
+    case AKEYCODE_DPAD_UP:
+      key = OIS::KC_UP;
+      break;
+    case AKEYCODE_DPAD_DOWN:
+      key = OIS::KC_DOWN;
+      break;
+    case AKEYCODE_DPAD_CENTER:
+      key = OIS::KC_RETURN;
+      break;
+    case AKEYCODE_MEDIA_PLAY_PAUSE:
+      key = OIS::KC_PLAY_PAUSE;
+      break;
+    case KEYCODE_MEDIA_REWIND:
+      key = OIS::KC_PREVTRACK;
+      break;
+    case KEYCODE_MEDIA_FAST_FORWARD:
+      key = OIS::KC_NEXTTRACK;
+      break;
     }
 
     OIS::KeyEvent evt(mKeyboard, key, 0);

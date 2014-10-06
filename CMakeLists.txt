@@ -11,7 +11,7 @@ set (MENCUS_TEMPLATES_DIR "${CMAKE_MODULE_PATH}/templates")
 
 set (MENCUS_STATIC_DEPENDENCIES FALSE)
 if (ANDROID)
-  message("Using static dependencies. Android needs them.")
+  message(STATUS "Using static dependencies. Android needs them.")
   set (MENCUS_STATIC_DEPENDENCIES TRUE)
 endif()
 

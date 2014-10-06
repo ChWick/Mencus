@@ -29,9 +29,9 @@
 #define LOGW(...) ((void)__android_log_print(ANDROID_LOG_WARN, "Ogre", __VA_ARGS__))
 #else
 #include <stdio.h>
-#define LOGV(...) printf(__VA_ARGS__); printf("/n")
-#define LOGI(...) printf(__VA_ARGS__); printf("/n")
-#define LOGW(...) printf(__VA_ARGS__); printf("/n")
+#define LOGV(...) printf(__VA_ARGS__); printf("\n")
+#define LOGI(...) printf(__VA_ARGS__); printf("\n")
+#define LOGW(...) printf(__VA_ARGS__); printf("\n")
 #endif
 
 #endif

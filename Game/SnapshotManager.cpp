@@ -88,6 +88,7 @@ const CSnapshot &CSnapshotManager::makeSnapshot(const Ogre::String &name, CSnaps
       pElem->SetAttribute("map_name", CGameState::getSingleton().getMapPack()->getMapName().c_str());
       tinyxml2::XMLElement *pStatElem = doc.NewElement("statistics");
       pElem->InsertEndChild(pStatElem);
+      CGameState::getSingleton().getStatistics().writeToXMLElement(pStatElem);
     }
   default:
     // not supported yet... state is not saved
@@ -148,6 +149,9 @@ void CSnapshotManager::loadFromSnapshot(const CSnapshot &snapshot) {
 								"map_name").c_str()));
       CGameState::getSingleton().setMapPack(pMapPack);
       //eGameStateToChangeTo = CGameState::GS_GAME;
+    }
+    else if (snapshot.getGameState() == CGameState::GS_STATISTICS) {
+      CGameState::getSingleton().getStatistics().readFromXMLElement(pSnapshotElem->FirstChildElement("statistics"));
     }
 
     CGameState::getSingleton().changeGameState(eGameStateToChangeTo, true, false);

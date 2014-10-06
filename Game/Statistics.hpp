@@ -35,7 +35,8 @@ struct SStatistics {
       fTime(0),
       fHitpoints(0),
       fLostHitpoints(0),
-      fUsedManapoints(0) {
+      fUsedManapoints(0),
+      iKilledEnemies(0) {
     for (auto &ic : uiUsedItems) {
       ic = 0;
     }
@@ -57,9 +58,11 @@ struct SStatistics {
     for (unsigned int i = 0; i < Weapon::I_COUNT; i++) {
       uiUsedItems[i] = IntAttribute(pElem, ("used_" + Weapon::toString(i)).c_str(), 0);
     }
+
+    iKilledEnemies = IntAttribute(pElem, "killed_enemies", 0);
   }
 
-  void writeToXML(tinyxml2::XMLElement *pElem) const {
+  void writeToXMLElement(tinyxml2::XMLElement *pElem) const {
     assert(pElem);
 
     pElem->SetAttribute("level", sLevelFileName.c_str());
@@ -72,6 +75,7 @@ struct SStatistics {
     for (unsigned int i = 0; i < Weapon::I_COUNT; i++) {
       pElem->SetAttribute(("used_" + Weapon::toString(i)).c_str(), uiUsedItems[i]);
     }
+    pElem->SetAttribute("killed_enemies", iKilledEnemies);
   }
   
   std::string sLevelFileName;
@@ -86,6 +90,8 @@ struct SStatistics {
   float fUsedManapoints;
 
   unsigned int uiUsedItems[Weapon::I_COUNT];
+
+  int iKilledEnemies;
 };
 
 #endif

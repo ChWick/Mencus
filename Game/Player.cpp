@@ -95,10 +95,10 @@ CPlayer::CPlayer(CMap &map, SStatistics &statistics)
   m_Statistics(statistics) {
   constructor_impl();
 }
-CPlayer::CPlayer(CMap &map, const tinyxml2::XMLElement *pElem, SStatistics &statistics) 
+CPlayer::CPlayer(CMap &map, const tinyxml2::XMLElement *pElem, SStatistics &statistics)
   : CAnimatedSprite(map, &map, &map, map.get2dManager(), pElem, Ogre::Vector2(1, 2)),
     CHitableObject(pElem),
-    m_Fader(this),
+    m_Fader(pElem, this),
     m_fRightPressed(0),
     m_fLeftPressed(0),
     m_bAttackPressed(false),
@@ -113,17 +113,18 @@ CPlayer::CPlayer(CMap &map, const tinyxml2::XMLElement *pElem, SStatistics &stat
     m_uiCurrentWeapon(IntAttribute(pElem, "pl_cur_weapon", W_BOLT)),
     m_pBomb(NULL),
     m_fBombThrowStrength(RealAttribute(pElem, "pl_bomb_throw_str", 0)),
-  m_Shield(map, "Shield", this, &map, map.get2dManager(), Ogre::Vector2::ZERO, Ogre::Vector2(2, 2)),
-  m_bShieldActive(BoolAttribute(pElem, "pl_shield_active", false)),
-  m_vLinkFromPos(Vector2Attribute(pElem, "pl_gtl_from", Ogre::Vector2::ZERO)),
-  m_vLinkToPos(Vector2Attribute(pElem, "pl_gtl_to", Ogre::Vector2::ZERO)),
-  m_eGoToLinkStatus(EnumAttribute<EGoToLinkStatus>(pElem, "pl_gtl_status", GTLS_NONE)),
-  m_fManaPoints(RealAttribute(pElem, "pl_hud_mp", PLAYER_MAX_MANA_POINTS)),
-  m_uiKeyCount(IntAttribute(pElem, "pl_hud_key", 0)),
-  m_uiHealthPotionsCount(IntAttribute(pElem, "pl_hud_hp_cnt", 0)),
-  m_uiManaPotionsCount(IntAttribute(pElem, "pl_hud_mp_cnt", 0)),
-  m_uiBombCount(IntAttribute(pElem, "pl_hud_bomb_cnt", 0)),
-  m_Statistics(statistics) {
+    m_Shield(map, "Shield", this, &map, map.get2dManager(), Ogre::Vector2::ZERO, Ogre::Vector2(2, 2)),
+    m_bShieldActive(BoolAttribute(pElem, "pl_shield_active", false)),
+    m_vLinkFromPos(Ogre::StringConverter::parseVector2(Attribute(pElem, "pl_gtl_from", "0 0"))),
+    m_vLinkToPos(Ogre::StringConverter::parseVector2(Attribute(pElem, "pl_gtl_to", "0 0"))),
+    m_eGoToLinkStatus(EnumAttribute<EGoToLinkStatus>(pElem, "pl_gtl_status", GTLS_NONE)),
+    m_fManaPoints(RealAttribute(pElem, "pl_hud_mp", PLAYER_MAX_MANA_POINTS)),
+    m_uiKeyCount(IntAttribute(pElem, "pl_hud_key", 0)),
+    m_uiHealthPotionsCount(IntAttribute(pElem, "pl_hud_hp_cnt", 0)),
+    m_uiManaPotionsCount(IntAttribute(pElem, "pl_hud_mp_cnt", 0)),
+    m_uiBombCount(IntAttribute(pElem, "pl_hud_bomb_cnt", 0)),
+    m_Statistics(statistics) {
+
   constructor_impl();
   startup(getPosition(), RealAttribute(pElem, "direction", 1));
 }
@@ -280,22 +281,24 @@ void CPlayer::update(Ogre::Real tpf) {
 
       // check if collision with lock
       if (m_uiKeyCount > 0) {
-	Ogre::Real fLockPenetration = 0;
-	CTile *pTile(NULL);
-	if (m_vCurrentSpeed.x < 0) {
-	  fLockPenetration = m_Map.hitsTile(CCD_LEFT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
-	} else if (m_vCurrentSpeed.x > 0) {
-	  fLockPenetration += m_Map.hitsTile(CCD_RIGHT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
-	}
-	if (fLockPenetration != 0) {
-	  m_uiKeyCount--;
-	  CHUD::getSingleton().setKeysCount(m_uiKeyCount);
-	  m_Statistics.uiUsedItems[Weapon::I_KEY]++;
-	  m_Map.unlock(pTile->getMapPosX(), pTile->getMapPosY());
-	}
+        Ogre::Real fLockPenetration = 0;
+        CTile *pTile(NULL);
+        if (m_vCurrentSpeed.x < 0) {
+          fLockPenetration = m_Map.hitsTile(CCD_LEFT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
+        } else if (m_vCurrentSpeed.x > 0) {
+          fLockPenetration += m_Map.hitsTile(CCD_RIGHT, CTile::TF_LOCK, getWorldBoundingBox(), &pTile);
+        }
+        if (fLockPenetration != 0) {
+          m_uiKeyCount--;
+          CHUD::getSingleton().setKeysCount(m_uiKeyCount);
+          m_Statistics.uiUsedItems[Weapon::I_KEY]++;
+          m_Map.unlock(pTile->getMapPosX(), pTile->getMapPosY());
+        }
       }
-      m_vPosition.x -= fPenetration;
-      m_vCurrentSpeed.x = 0;
+      if (fPenetration != 0) {
+        m_vPosition.x -= fPenetration;
+        m_vCurrentSpeed.x = 0;
+      }
 
       if (m_Map.collidesWithMapMargin(getWorldBoundingBox())) {
         m_vPosition.x -= m_vCurrentSpeed.x * tpf;
@@ -457,14 +460,14 @@ void CPlayer::pickobject(unsigned int uiObjectId) {
 bool CPlayer::keyPressed( const OIS::KeyEvent &arg ) {
  if (arg.key == OIS::KC_COMMA) {
     if (m_uiCurrentWeapon == 0) {
-      m_uiCurrentWeapon = W_COUNT - 1;
+      m_uiCurrentWeapon = I_COUNT - 1;
     } else {
       --m_uiCurrentWeapon;
     }
     CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
   } else if (arg.key == OIS::KC_PERIOD) {
     ++m_uiCurrentWeapon;
-    if (m_uiCurrentWeapon >= W_COUNT) {
+    if (m_uiCurrentWeapon >= I_COUNT) {
       m_uiCurrentWeapon = 0;
     }
     CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
@@ -525,6 +528,12 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
     break;
   case GIC_ATTACK:
     if (cmd.getFloatValue() > 0.5) {
+      if (m_uiCurrentWeapon == I_MANA_POTION) {
+	useManaPotion();
+      }
+      else if (m_uiCurrentWeapon == I_HEALTH_POTION) {
+	useHealthPotion();
+      }
       if (m_eGoToLinkStatus == GTLS_NONE) {
 	if (m_uiCurrentWeapon == W_BOMB) {
 	  if (m_uiBombCount <= 0) {
@@ -554,25 +563,17 @@ void CPlayer::receiveInputCommand( const CGameInputCommand &cmd) {
     }
     break;
   case GIC_USE_HEALTH_POTION:
-    if (m_uiHealthPotionsCount > 0 && (cmd.getState() == GIS_PRESSED || cmd.getState() == GIS_CLICKED)) {
-      --m_uiHealthPotionsCount;
-      addHitpoints(PLAYER_HEALTH_POTION_REGAIN_PERCENTAGE * getMaximumHitpoints());
-      CHUD::getSingleton().setHealthPotionCount(m_uiHealthPotionsCount);
-      CHUD::getSingleton().setHP(getHitpoints() / getMaximumHitpoints());
-      m_Statistics.uiUsedItems[Weapon::I_HEALTH_POTION]++;
+    if (cmd.getState() == GIS_PRESSED || cmd.getState() == GIS_CLICKED) {
+      useHealthPotion();
     }
     break;
   case GIC_USE_MANA_POTION:
-    if (m_uiManaPotionsCount > 0 && (cmd.getState() == GIS_PRESSED || cmd.getState() == GIS_CLICKED)) {
-      --m_uiManaPotionsCount;
-      m_fManaPoints = min(PLAYER_MAX_MANA_POINTS, m_fManaPoints + PLAYER_MANA_POTION_REGAIN_PERCENTAGE * PLAYER_MAX_MANA_POINTS);
-      CHUD::getSingleton().setManaPotionCount(m_uiManaPotionsCount);
-      CHUD::getSingleton().setMP(m_fManaPoints / PLAYER_MAX_MANA_POINTS);
-      m_Statistics.uiUsedItems[Weapon::I_MANA_POTION]++;
+    if (cmd.getState() == GIS_PRESSED || cmd.getState() == GIS_CLICKED) {
+      useManaPotion();
     }
     break;
   case GIC_CHANGE_WEAPON:
-    m_uiCurrentWeapon = min(W_COUNT - 1, max(0, cmd.getIntValue()));
+    m_uiCurrentWeapon = min(I_COUNT - 1, max(0, cmd.getIntValue()));
     CHUD::getSingleton().setCurrentWeapon(m_uiCurrentWeapon);
     CMessageHandler::getSingleton().addMessage(CMessage(CMessage::MT_WEAPON_CHANGED).setInt(m_uiCurrentWeapon));
     break;
@@ -675,15 +676,37 @@ void CPlayer::writeToXMLElement(tinyxml2::XMLElement *pElem, EOutputStyle eStyle
     pElem->SetAttribute("pl_cur_weapon", m_uiCurrentWeapon);
     pElem->SetAttribute("pl_bomb_throw_str", m_fBombThrowStrength);
     pElem->SetAttribute("pl_shield_active", m_bShieldActive);
-    
+
     pElem->SetAttribute("pl_gtl_status", m_eGoToLinkStatus);
     SetAttribute<Ogre::Vector2>(pElem, "pl_gtl_from", m_vLinkFromPos);
     SetAttribute<Ogre::Vector2>(pElem, "pl_gtl_to", m_vLinkToPos);
-    
+
     pElem->SetAttribute("pl_hud_mp", m_fManaPoints);
     pElem->SetAttribute("pl_hud_key", m_uiKeyCount);
     pElem->SetAttribute("pl_hud_hp_cnt", m_uiHealthPotionsCount);
     pElem->SetAttribute("pl_hud_mp_cnt", m_uiManaPotionsCount);
     pElem->SetAttribute("pl_hud_bomb_cnt", m_uiBombCount);
+  }
+
+  m_Fader.writeToXMLElement(pElem, eStyle);
+}
+
+void CPlayer::useHealthPotion() {
+  if (m_uiHealthPotionsCount > 0) {
+    --m_uiHealthPotionsCount;
+    addHitpoints(PLAYER_HEALTH_POTION_REGAIN_PERCENTAGE * getMaximumHitpoints());
+    CHUD::getSingleton().setHealthPotionCount(m_uiHealthPotionsCount);
+      CHUD::getSingleton().setHP(getHitpoints() / getMaximumHitpoints());
+      m_Statistics.uiUsedItems[Weapon::I_HEALTH_POTION]++;
+  }
+}
+
+void CPlayer::useManaPotion() {
+  if (m_uiManaPotionsCount > 0) {
+    --m_uiManaPotionsCount;
+    m_fManaPoints = min(PLAYER_MAX_MANA_POINTS, m_fManaPoints + PLAYER_MANA_POTION_REGAIN_PERCENTAGE * PLAYER_MAX_MANA_POINTS);
+    CHUD::getSingleton().setManaPotionCount(m_uiManaPotionsCount);
+    CHUD::getSingleton().setMP(m_fManaPoints / PLAYER_MAX_MANA_POINTS);
+    m_Statistics.uiUsedItems[Weapon::I_MANA_POTION]++;
   }
 }

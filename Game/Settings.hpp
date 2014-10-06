@@ -26,10 +26,7 @@
 struct SInputSettings {
   SInputSettings();
 
-#ifdef INPUT_TOUCH
-  // touch input
   float m_fTouchButtonSize;
-#endif
   float m_fMapEditorButtonSize;
 };
 struct SVideoSettings {

@@ -39,11 +39,11 @@ std::string toString(EEmitter eEmitter) {
   case EMIT_ON_COLLISION:
     return "collision";
   case EMIT_ON_MESSAGE_BOX_PAGE_CHANGE:
-    return "message_page_chagned";
+    return "message_page_changed";
   case EMIT_ON_MESSAGE:
     return "message";
   }
-  
+
   throw Ogre::Exception(0, "Emitter type " + Ogre::StringConverter::toString(eEmitter) + " could not be converted to a string", __FILE__);
 }
 EEmitter parseEmitter(const std::string &sString) {

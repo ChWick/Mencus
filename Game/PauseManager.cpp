@@ -62,3 +62,7 @@ void CPauseManager::update() {
 
   m_uiOldPauseFlags = uiTotalPause;
 }
+
+void CPauseManager::addListener(CPauseListener *pListener) {
+  m_lPauseListeners.push_back(pListener);
+}

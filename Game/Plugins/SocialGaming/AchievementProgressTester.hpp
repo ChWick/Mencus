@@ -17,38 +17,29 @@
  * Mencus. If not, see http://www.gnu.org/licenses/.
  *****************************************************************************/
 
-#ifndef _HUD_MESSAGE_BOX_HPP_
-#define _HUD_MESSAGE_BOX_HPP_
+#ifndef _ACHIEVEMENT_PROGRESS_TESTER_HPP_
+#define _ACHIEVEMENT_PROGRESS_TESTER_HPP_
 
-#include <CEGUI/CEGUI.h>
-#include "HUDElement.hpp"
-#include "PauseCaller.hpp"
-#include "InputListener.hpp"
+#include "Achievements.hpp"
+#include "Statistics.hpp"
 
-class CHUDMessageBox
-  : public CHUDElement,
-    public CPauseCaller,
-    public CInputListener {
-private:
-  const std::string m_sID;
-  CEGUI::Window *m_pRootWindow;
-  CEGUI::Window *m_pMessageBox;
-  const std::vector<std::string> m_vPages;
-  unsigned int m_uiCurrentPage;
-public:
-  CHUDMessageBox(const std::string &sID, const CEGUI::String &sTitle, const std::vector<std::string> &vPages);
-  ~CHUDMessageBox();
+namespace SocialGaming {
 
-  bool onCloseButtonClicked(const CEGUI::EventArgs &args);
+  class CSocialGaming;
 
-  // Input listener
-  bool keyPressed( const OIS::KeyEvent &arg );
+  class CAchievementProgressTester {
+  private:
+    CSocialGaming &m_SocialGaming;
+  public:
+    CAchievementProgressTester(CSocialGaming &socialGaming) 
+      : m_SocialGaming(socialGaming) {
+    }
+    
+    void update(const SStatistics &stats);
 
-private:
-
-  // return true on close
-  bool onButtonClicked();
-  void showPage(unsigned int uiPage);
+  private:
+    void updateAchievementsProgress(EAchievements achievement, float fPercentComplete);
+  };
 };
 
 #endif

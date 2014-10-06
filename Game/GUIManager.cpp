@@ -32,6 +32,7 @@
 #include <SdkTrays.h>
 #include "Settings.hpp"
 #include "Plugins/SocialGaming/Overlay.hpp"
+#include "Plugins/GUIToolsMenu.hpp"
 
 using namespace CEGUI;
 
@@ -52,7 +53,12 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   m_nRenderQueue(Ogre::RENDER_QUEUE_OVERLAY),
   m_bPostQueue(false),
   m_bRenderPause(false),
-  m_vNativeRes(target.getWidth(), target.getHeight()) {
+  m_vNativeRes(target.getWidth(), target.getHeight()),
+  m_MouseMoving(MD_COUNT, false),
+  m_fMouseSpeedX(0),
+  m_fMouseSpeedY(0),
+  m_fMouseAcceleration(2),
+  m_fMouseInitialSpeed(50) {
   CInputListenerManager::getSingleton().addInputListener(this);
 
   OgreBites::SdkTrayManager *pTrayMgr = CGame::getSingleton().showLoadingBar(1, 1);
@@ -91,6 +97,7 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseInvisible");
 #endif
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setPosition(CEGUI::Vector2f(0,0));
+  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setConstraintArea(NULL);
 
 
   pTrayMgr->userUpdateLoadBar("Creating fonts", 0.2);
@@ -105,13 +112,14 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
 
   pTrayMgr->userUpdateLoadBar("Creating gui components", 0.2);
   //destroyResources();
+  CGUIToolsMenu *pToolsMenu = new CGUIToolsMenu(guiRoot);
   new CGUIInstructions(guiRoot);
   new CGUIGameOver(guiRoot);
   new CGUIStatistics(guiRoot);
 #ifdef INPUT_TOUCH
   m_pGUIInput = new CGUIInput(guiRoot); // gui input before hud, since hud depends
 #endif
-  new CHUD(guiRoot, m_pGUIInput);
+  new CHUD(guiRoot, pToolsMenu);
   Ogre::LogManager::getSingleton().logMessage("Singleton for map editor");
 #if ENABLE_MAP_EDITOR
   new CMapEditor(guiRoot);
@@ -121,10 +129,14 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
 
   //#if MENCUS_USE_AMAZON_GAME_CIRCLE == 1
   m_lGUIOverlays.push_back(new SocialGaming::COverlay(guiRoot->getChild("MainMenuRoot")));
+  m_lGUIOverlays.push_back(pToolsMenu);
   //#endif
 
   pTrayMgr->userUpdateLoadBar("done...", 0.2);
   onGUIScalingChanged(CSettings::getSingleton().getVideoSettings().m_fHUDSize);
+  Sizef vSize = CGUIManager::getSingleton().getNativeRes();
+  float maxValue = std::min(vSize.d_height / 4.0, vSize.d_width / 8.0);
+  changeTouchButtonSize(std::min(CSettings::getSingleton().getInputSettings().m_fTouchButtonSize, maxValue));
   Ogre::LogManager::getSingleton().logMessage("GUIManager initialized...");
   CGame::getSingleton().hideLoadingBar();
 }
@@ -154,6 +166,14 @@ CGUIManager::~CGUIManager() {
 }
 void CGUIManager::update(Ogre::Real tpf) {
   CEGUI::System::getSingleton().injectTimePulse(tpf);
+
+  // move mouse cursor
+  if (CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible()) {
+    m_fMouseSpeedX += m_fMouseSpeedX * m_fMouseAcceleration * tpf;
+    m_fMouseSpeedY += m_fMouseSpeedY * m_fMouseAcceleration * tpf;
+    CEGUI::System::getSingleton().getDefaultGUIContext().injectMouseMove(m_fMouseSpeedX * tpf, m_fMouseSpeedY * tpf);
+  }
+  
   if (m_bRenderPause) {return;}
   CHUD::getSingleton().update(tpf);
   CMainMenu::getSingleton().update(tpf);
@@ -190,11 +210,64 @@ bool CGUIManager::keyPressed( const OIS::KeyEvent &arg ) {
   sys.getDefaultGUIContext().injectKeyDown(static_cast<CEGUI::Key::Scan>(arg.key));
   sys.getDefaultGUIContext().injectChar(arg.text);
 
+  switch (arg.key) {
+  case OIS::KC_LEFT:
+    m_MouseMoving[MD_LEFT] = true;
+    m_fMouseSpeedX = -m_fMouseInitialSpeed;
+    break;
+  case OIS::KC_RIGHT:
+    m_MouseMoving[MD_RIGHT] = true;
+    m_fMouseSpeedX = m_fMouseInitialSpeed;
+    break;
+  case OIS::KC_UP:
+    m_MouseMoving[MD_UP] = true;
+    m_fMouseSpeedY = -m_fMouseInitialSpeed;
+    break;
+  case OIS::KC_DOWN:
+    m_MouseMoving[MD_DOWN] = true;
+    m_fMouseSpeedY = m_fMouseInitialSpeed;
+    break;
+  case OIS::KC_RETURN:
+    if (CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible()) {
+      sys.getDefaultGUIContext().injectMouseButtonDown(CEGUI::LeftButton);
+    }
+    break;
+  default:
+    break;
+  }
+
   return true;
 }
 
 bool CGUIManager::keyReleased( const OIS::KeyEvent &arg ) {
-  CEGUI::System::getSingleton().getDefaultGUIContext().injectKeyUp(static_cast<CEGUI::Key::Scan>(arg.key));
+  CEGUI::System &sys = CEGUI::System::getSingleton();
+  sys.getDefaultGUIContext().injectKeyUp(static_cast<CEGUI::Key::Scan>(arg.key));
+
+  switch (arg.key) {
+  case OIS::KC_LEFT:
+    m_MouseMoving[MD_LEFT] = false;
+    m_fMouseSpeedX = 0;
+    break;
+  case OIS::KC_RIGHT:
+    m_MouseMoving[MD_RIGHT] = false;
+    m_fMouseSpeedX = 0;
+    break;
+  case OIS::KC_UP:
+    m_MouseMoving[MD_UP] = false;
+    m_fMouseSpeedY = 0;
+    break;
+  case OIS::KC_DOWN:
+    m_MouseMoving[MD_DOWN] = false;
+    m_fMouseSpeedY = 0;
+    break;
+  case OIS::KC_RETURN:
+    if (CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().isVisible()) {
+      sys.getDefaultGUIContext().injectMouseButtonUp(CEGUI::LeftButton);
+    }
+    break;
+  default:
+    break;
+  }
 
   return true;
 }
