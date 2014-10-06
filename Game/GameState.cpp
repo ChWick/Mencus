@@ -26,17 +26,7 @@
 #include "MapInfo.hpp"
 #include "GUIStatistics.hpp"
 #include "GUICredits.hpp"
-
-// sleep functions
-#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-#include <windows.h>
-void usleep(unsigned long us) {
-  return Sleep(static_cast<DWORD>(us / 1000));
-}
-#else
-// linux/android
-#include <unistd.h>
-#endif
+#include "Sleep.hpp"
 
 using namespace std;
 

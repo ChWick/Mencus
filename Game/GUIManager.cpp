@@ -29,7 +29,8 @@
 #include "GUITutorial.hpp"
 #include "MapEditor.hpp"
 #include "Game.hpp"
-#include <dependencies/OgreSdkUtil/SdkTrays.h>
+#include <SdkTrays.h>
+#include "Plugins/SocialGaming/Overlay.hpp"
 
 using namespace CEGUI;
 

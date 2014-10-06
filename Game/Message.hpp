@@ -37,6 +37,8 @@ public:
     MT_EXIT_REACHED,
     MT_DROP_DOWN_MENU,
     MT_WEAPON_CHANGED,
+
+    MT_SOCIAL_GAMING,
   };
   
   static std::string toString(EMessageTypes eMT) {
@@ -57,6 +59,8 @@ public:
       return "drop_down_menu";
     case MT_WEAPON_CHANGED:
       return "weapon_changed";
+    case MT_SOCIAL_GAMING:
+      return "social_gaming";
     }
 
     throw Ogre::Exception(0, "Message type could not be converted to string", __FILE__);
@@ -70,6 +74,8 @@ public:
     else if (s == "entity_destroyed") {return MT_ENTITY_DESTROYED;}
     else if (s == "drop_down_menu") {return MT_DROP_DOWN_MENU;}
     else if (s == "weapon_changed") {return MT_WEAPON_CHANGED;}
+
+    else if (s == "social_gaming") {return MT_SOCIAL_GAMING;}
 
     throw Ogre::Exception(0, "Message type could not be parsed: " + s, __FILE__);
   }

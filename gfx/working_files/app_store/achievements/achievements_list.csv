@@ -1,0 +1,7 @@
+AchievementId,unlockedIconId,lockedIconId,pointValue,isHidden,DisplayTitle_en_US,UnlockedDescription_en_US,LockedDescription_en_US
+boot_1,boot_1_unlocked,boot_1_locked,10,FALSE,Tutorial 1,Tutorial 1 accomplished,Accomplish Tutorial 1
+boot_2,boot_2_unlocked,boot_2_locked,10,FALSE,Tutorial 2,Tutorial 2 accomplished,Accomplish Tutorial 2
+boot_3,boot_3_unlocked,boot_3_locked,10,FALSE,Tutorial 3,Tutorial 3 accomplished,Accomplish Tutorial 3
+boot_4,boot_4_unlocked,boot_4_locked,10,FALSE,Tutorial 4,Tutorial 4 accomplished,Accomplish Tutorial 4
+boot_5,boot_5_unlocked,boot_5_locked,10,FALSE,Tutorial 5,Tutorial 5 accomplished,Accomplish Tutorial 5
+boot_6,boot_6_unlocked,boot_6_locked,10,FALSE,Tutorial 6,Tutorial 6 accomplished,Accomplish Tutorial 6

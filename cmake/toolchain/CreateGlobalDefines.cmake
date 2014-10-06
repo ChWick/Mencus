@@ -1,3 +1,6 @@
+if (NOT DEFINED MENCUS_USE_AMAZON_GAME_CIRCLE)
+  set(MENCUS_USE_AMAZON_GAME_CIRCLE 0 CACHE INTEGER "Use the amazon game circle")
+endif()
 
 if (NOT DEFINED MENCUS_ENABLE_MAP_EDITOR)
   set(MENCUS_ENABLE_MAP_EDITOR 1 CACHE INTEGER "Enable the mapeditor")
@@ -37,6 +40,10 @@ else()
   file(MAKE_DIRECTORY ${MENCUS_CONFIG_OUT})
 
   configure_file("${MENCUS_TEMPLATES_DIR}/GlobalBuildDefines.hpp.in" "${MENCUS_CONFIG_OUT}/GlobalBuildDefines.hpp" @ONLY)
+endif()
 
 
+# addidtional global properties
+if (MENCUS_USE_AMAZON_GAME_CIRCLE)
+  include(toolchain/AmazonGameCircle)
 endif()
