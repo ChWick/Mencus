@@ -8,7 +8,7 @@ set(LEVEL_SRC_DIR "${CMAKE_SOURCE_DIR}/level/user/")
 # generate map packs
 
 if (UNIX)
-EXECUTE_PROCESS(COMMAND /bin/sh generate_packs.sh WORKING_DIRECTORY ${LEVEL_SRC_DIR})
+EXECUTE_PROCESS(COMMAND python generate_packs.py WORKING_DIRECTORY ${LEVEL_SRC_DIR})
 endif()
 
 set(LEVELS_LIST "")
@@ -36,12 +36,14 @@ function(copy_renamed_level src target tutorial)
 endfunction()
 
 if (MENCUS_ENABLE_INPUT_TOUCH EQUAL 1)
+  message(STATUS "Copying touch tutorials")
   copy_level("Tutorial_1" true)
   copy_level("Tutorial_2" true)
   copy_level("Tutorial_3" true)
   copy_level("Tutorial_4" true)
   copy_level("Tutorial_5" true)
 else()
+  message(STATUS "Copying keyboard tutorials")
   copy_renamed_level("Tutorial_1_input_keyboard" "Tutorial_1" true)
   copy_renamed_level("Tutorial_2_input_keyboard" "Tutorial_2" true)
   copy_renamed_level("Tutorial_3_input_keyboard" "Tutorial_3" true)
