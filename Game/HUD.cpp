@@ -22,6 +22,7 @@
 #include <OgreStringConverter.h>
 #include <iostream>
 #include "HUDElement.hpp"
+#include "Settings.hpp"
 
 using namespace std;
 
@@ -71,7 +72,6 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIToolsMenu *pGUIToolsMenu)
   pTopBar->setProperty("BackgroundEnabled","False");
   pTopBar->setRiseOnClickEnabled(false);
 
-
   Window *pBottomBar = pMain->createChild("OgreTray/StaticImage", "bottom_bar");
   pBottomBar->setSize(USize(UDim(0.28125, 0), UDim(0.05859375, 0)));
   pBottomBar->setPosition(UVector2(UDim(0.359375, 0), UDim(0.94140625, 0)));
@@ -94,8 +94,8 @@ CHUD::CHUD(CEGUI::Window *pGUIRoot, CGUIToolsMenu *pGUIToolsMenu)
   m_pTimeText->setProperty("TextColours", "FFFFFFFF");
   m_pTimeText->setProperty("FrameEnabled","False");
   m_pTimeText->setProperty("BackgroundEnabled","False");
-  m_pTimeText->setSize(USize(UDim(0.2, 0), UDim(0.3, 0)));
-  m_pTimeText->setPosition(UVector2(UDim(0.25, 0), UDim(0.66, 0)));
+  m_pTimeText->setSize(USize(UDim(0.3, 0), UDim(0.3, 0)));
+  m_pTimeText->setPosition(UVector2(UDim(0.22, 0), UDim(0.66, 0)));
   m_pTimeText->setText("0:00:00");
   m_pTimeText->setFont("dejavusans8");
   m_pTimeText->setRiseOnClickEnabled(false);

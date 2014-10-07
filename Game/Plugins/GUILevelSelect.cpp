@@ -52,6 +52,7 @@ CGUILevelSelect::CGUILevelSelect(CEGUI::Window *pParent)
   pBackBtn->setSize(USize(UDim(0.35, 0), UDim(0.2, 0)));
   pBackBtn->setText(XMLResources::GLOBAL.getCEGUIString("back"));
   pBackBtn->subscribeEvent(PushButton::EventClicked, Event::Subscriber(&CGUILevelSelect::onBackButtonClicked, this));
+  pBackBtn->setFont("dejavusans20");
 
   Window *pPlayBtn = pWnd->createChild("OgreTray/Button", "PlayButton");
   pPlayBtn->setUserData(dynamic_cast<Window*>(pWnd)); // to be sure that is a Window * ptr
@@ -59,6 +60,7 @@ CGUILevelSelect::CGUILevelSelect(CEGUI::Window *pParent)
   pPlayBtn->setSize(USize(UDim(0.35, 0), UDim(0.2, 0)));
   pPlayBtn->setText(XMLResources::GLOBAL.getCEGUIString("start_game"));
   pPlayBtn->subscribeEvent(PushButton::EventClicked, Event::Subscriber(&CGUILevelSelect::onPlayButtonClicked, this));
+  pPlayBtn->setFont("dejavusans20");
 
   Window *pContent = pWnd->createChild("DefaultWindow", "Content");
   m_pContent = pContent;
