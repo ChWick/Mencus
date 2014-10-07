@@ -67,21 +67,21 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
   pButtonContainer->setSize(USize(UDim(1, 0), UDim(1, 0)));
 
   CEGUI::Window *pFinishedText = pButtonContainer->createChild("OgreTray/Titlebar", "text");
-  pFinishedText->setFont("dejavusans12");
+  pFinishedText->setFont("dejavusans20");
   pFinishedText->setText("unset");
   pFinishedText->setPosition(UVector2(UDim(0.05,0), UDim(0.05,0)));
   pFinishedText->setSize(USize(UDim(0.9, 0), UDim(0.1, 0)));
 
   CEGUI::Window *pStatisticsGroup = pButtonContainer->createChild("OgreTray/Group", "statisticsgroup");
-  pStatisticsGroup->setFont("dejavusans12");
+  pStatisticsGroup->setFont("dejavusans16");
   pStatisticsGroup->setText(XMLResources::GLOBAL.getCEGUIString("Statistics"));
-  pStatisticsGroup->setPosition(UVector2(UDim(0.2, 0), UDim(0.2, 0)));
-  pStatisticsGroup->setSize(USize(UDim(0.6, 0), UDim(0.5, 0)));
+  pStatisticsGroup->setPosition(UVector2(UDim(0.1, 0), UDim(0.2, 0)));
+  pStatisticsGroup->setSize(USize(UDim(0.8, 0), UDim(0.5, 0)));
 
   CEGUI::Window *pRetryButton = pButtonContainer->createChild("OgreTray/Button", "Retry");
-  pRetryButton->setPosition(UVector2(UDim(0.2, 0), UDim(0.85, 0)));
-  pRetryButton->setSize(USize(UDim(0.2, 0), UDim(0.1, 0)));
-  pRetryButton->setFont("dejavusans12");
+  pRetryButton->setPosition(UVector2(UDim(0.1, 0), UDim(0.8, 0)));
+  pRetryButton->setSize(USize(UDim(0.3, 0), UDim(0.15, 0)));
+  pRetryButton->setFont("dejavusans16");
   pRetryButton->setText(XMLResources::GLOBAL.getCEGUIString("Retry"));
   m_pButtons[BT_RETRY] = pRetryButton;
   pRetryButton->subscribeEvent(
@@ -90,9 +90,9 @@ CGUIStatistics::CGUIStatistics(Window *pRoot)
 
 
   CEGUI::Window *pToMenuButton = pButtonContainer->createChild("OgreTray/Button", "ToMenu");
-  pToMenuButton->setPosition(UVector2(UDim(0.6, 0), UDim(0.85, 0)));
-  pToMenuButton->setSize(USize(UDim(0.2, 0), UDim(0.1, 0)));
-  pToMenuButton->setFont("dejavusans12");
+  pToMenuButton->setPosition(UVector2(UDim(0.6, 0), UDim(0.8, 0)));
+  pToMenuButton->setSize(USize(UDim(0.3, 0), UDim(0.15, 0)));
+  pToMenuButton->setFont("dejavusans16");
   pToMenuButton->setText(XMLResources::GLOBAL.getCEGUIString("To level selection"));
   pToMenuButton->subscribeEvent(
 				CEGUI::PushButton::EventClicked,
@@ -159,18 +159,18 @@ void CGUIStatistics::activateButton(int iBtn) {
   }
 }
 void CGUIStatistics::resize(const CEGUI::String &smallfont, const CEGUI::String &bigfont) {
-  for (int i = 0; i < BT_COUNT; i++) {
-    m_pButtons[i]->setFont(smallfont);
+  /*for (int i = 0; i < BT_COUNT; i++) {
+    m_pButtons[i]->setFont(bigfont);
   }
   Window *pButtonContainer = m_pStatisticsRoot->getChild("ButtonContainer");
-  pButtonContainer->getChild("text")->setFont(smallfont);
-  pButtonContainer->getChild("statisticsgroup")->setFont(smallfont);
+  pButtonContainer->getChild("text")->setFont(bigfont);
+  pButtonContainer->getChild("statisticsgroup")->setFont(bigfont);
 
   for (int i = 0; i < L_COUNT; i++) {
     pButtonContainer->getChild("statisticsgroup")->getChild("Label" + PropertyHelper<int>::toString(i))->setFont(smallfont);
     pButtonContainer->getChild("statisticsgroup")->getChild("Data" + PropertyHelper<int>::toString(i))->setFont(smallfont);
 
-  }
+    }*/
 }
 void CGUIStatistics::showStatistics(const SStatistics &stats) {
   Window *pButtonContainer = m_pStatisticsRoot->getChild("ButtonContainer");

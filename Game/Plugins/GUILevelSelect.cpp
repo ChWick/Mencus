@@ -44,23 +44,24 @@ CGUILevelSelect::CGUILevelSelect(CEGUI::Window *pParent)
   Window *pWnd = pPane->createChild("OgreTray/Group");
   pWnd->setPosition(UVector2(UDim(0.1, 0), UDim(0.1, 0)));
   pWnd->setSize(USize(UDim(0.8, 0), UDim(0.8, 0)));
+  pWnd->setFont("dejavusans20");
   pWnd->setText(XMLResources::GLOBAL.getCEGUIString("select_level"));
 
   Window *pBackBtn = pWnd->createChild("OgreTray/Button", "BackButton");
   pBackBtn->setUserData(dynamic_cast<Window*>(pWnd)); // to be sure that is a Window * ptr
-  pBackBtn->setPosition(UVector2(UDim(0.05, 0), UDim(0.80, 0)));
-  pBackBtn->setSize(USize(UDim(0.35, 0), UDim(0.2, 0)));
+  pBackBtn->setPosition(UVector2(UDim(0.05, 0), UDim(0.85, 0)));
+  pBackBtn->setSize(USize(UDim(0.35, 0), UDim(0.15, 0)));
   pBackBtn->setText(XMLResources::GLOBAL.getCEGUIString("back"));
   pBackBtn->subscribeEvent(PushButton::EventClicked, Event::Subscriber(&CGUILevelSelect::onBackButtonClicked, this));
-  pBackBtn->setFont("dejavusans20");
+  pBackBtn->setFont("dejavusans16");
 
   Window *pPlayBtn = pWnd->createChild("OgreTray/Button", "PlayButton");
   pPlayBtn->setUserData(dynamic_cast<Window*>(pWnd)); // to be sure that is a Window * ptr
-  pPlayBtn->setPosition(UVector2(UDim(0.6, 0), UDim(0.80, 0)));
-  pPlayBtn->setSize(USize(UDim(0.35, 0), UDim(0.2, 0)));
+  pPlayBtn->setPosition(UVector2(UDim(0.6, 0), UDim(0.85, 0)));
+  pPlayBtn->setSize(USize(UDim(0.35, 0), UDim(0.15, 0)));
   pPlayBtn->setText(XMLResources::GLOBAL.getCEGUIString("start_game"));
   pPlayBtn->subscribeEvent(PushButton::EventClicked, Event::Subscriber(&CGUILevelSelect::onPlayButtonClicked, this));
-  pPlayBtn->setFont("dejavusans20");
+  pPlayBtn->setFont("dejavusans16");
 
   Window *pContent = pWnd->createChild("DefaultWindow", "Content");
   m_pContent = pContent;
@@ -80,9 +81,10 @@ CGUILevelSelect::CGUILevelSelect(CEGUI::Window *pParent)
   float fButtonSize = pPlayBtn->getPixelSize().d_height;
   Window *pChickenButton = pWnd->createChild("OgreTray/ImageButton",
 						     "ChickenButton");
-  pChickenButton->setPosition(UVector2(UDim(0.45, 0), UDim(0.80, 0)));
+  pChickenButton->setPosition(UVector2(UDim(0.45, 0), UDim(0.85, 0)));
   pChickenButton->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
   pChickenButton->setText("0");
+  pChickenButton->setFont(pPlayBtn->getFont());
   pChickenButton->setProperty("Image", "hud_weapons/skip");
   pChickenButton->subscribeEvent(PushButton::EventClicked,
 				 Event::Subscriber(&CGUILevelSelect::onChickenPressed, this));
@@ -133,7 +135,7 @@ void CGUILevelSelect::updateLevelsSelection() {
   for (unsigned int i = 0; i < lList.size(); i++) {
     RadioButton *pBut = dynamic_cast<RadioButton*>(pPane->createChild("OgreTray/ToggleRadioButton", PropertyHelper<unsigned int>::toString(i + 1)));
     pBut->setText(pBut->getName());
-    pBut->setFont("dejavusans20");
+    pBut->setFont("dejavusans16");
     pBut->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
     pBut->setPosition(UVector2(UDim(0, fButtonSize * (i % uiLevelsPerRow)), UDim(0, fButtonSize * (i / uiLevelsPerRow))));
     pBut->setUserData(const_cast<SLevelInfo*>(&(*it)));

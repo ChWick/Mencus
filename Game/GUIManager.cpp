@@ -101,6 +101,7 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   createFreeTypeFont("dejavusans8", 8, "DejaVuSans.ttf");
   createFreeTypeFont("diploma15", 15, "diploma.ttf");
   createFreeTypeFont("diploma20", 20, "diploma.ttf");
+  createFreeTypeFont("dejavusans16", 16, "DejaVuSans.ttf");
   createFreeTypeFont("dejavusans20", 20, "DejaVuSans.ttf");
   CEGUI::System::getSingleton().getDefaultGUIContext().setDefaultFont( "dejavusans12" );
   guiRoot->setFont("dejavusans12");
