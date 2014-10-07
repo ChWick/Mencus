@@ -114,10 +114,10 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   new CGUIInstructions(guiRoot);
   new CGUIGameOver(guiRoot);
   new CGUIStatistics(guiRoot);
+  CHUD *pHud = new CHUD(guiRoot, pToolsMenu);
 #ifdef INPUT_TOUCH
-  m_pGUIInput = new CGUIInput(guiRoot); // gui input before hud, since hud depends
+  m_pGUIInput = new CGUIInput(pHud->getRoot()); // gui input before hud, since hud depends
 #endif
-  new CHUD(guiRoot, pToolsMenu);
   Ogre::LogManager::getSingleton().logMessage("Singleton for map editor");
 #if ENABLE_MAP_EDITOR
   new CMapEditor(guiRoot);

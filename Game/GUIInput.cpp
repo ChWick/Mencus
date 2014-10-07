@@ -35,9 +35,11 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
 
   m_pDirectionButtonContainer = pGUIRoot->createChild("DefaultWindow", "ButtonContainer");
   m_pDirectionButtonContainer->setInheritsAlpha(false);
+  m_pDirectionButtonContainer->setAlpha(1);
 
   m_pControlButtonContainer = pGUIRoot->createChild("DefaultWindow", "ControlContainer");
   m_pControlButtonContainer->setInheritsAlpha(false);
+  m_pControlButtonContainer->setAlpha(1);
 
   for (int i = 0; i < BT_COUNT; i++) {
     m_pButtons[i] = createButton(i);
@@ -47,9 +49,9 @@ CGUIInput::CGUIInput(CEGUI::Window *pGUIRoot)
   m_pDirectionButtonContainer->setAlwaysOnTop(true);
   m_pControlButtonContainer->setAlwaysOnTop(true);
   // initial size will be set by options input, the following line would have no effect
-  // this->buttonSizeChanged(85);
+  //  this->buttonSizeChanged(85);
 
-  hide();
+  //hide();
 }
 CGUIInput::~CGUIInput() {
   CMessageHandler::getSingleton().removeInjector(this);
