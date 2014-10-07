@@ -18,6 +18,7 @@
  *****************************************************************************/
 
 #include "GUIToolsMenu.hpp"
+#include "InputDefines.hpp"
 #include "MessageHandler.hpp"
 #include "GameInputCommand.hpp"
 #include "GameInputManager.hpp"
@@ -42,7 +43,7 @@ CGUIToolsMenu::CGUIToolsMenu(CEGUI::Window *pParent)
   Window *pDragButton = m_pRoot->createChild("OgreTray/StaticImage", "DragButton");
   pDragButton->setSize(USize(UDim(1, 0), UDim(0, 50)));
   pDragButton->setAlpha(0.5);
-#if INPUT_TOUCH
+#if ENABLE_INPUT_TOUCH == 1
   //pDragButton->setProperty("FrameEnabled", "False");
   //pDragButton->setProperty("BackgroundEnabled", "True");
   pDragButton->
@@ -144,7 +145,7 @@ CEGUI::Window *CGUIToolsMenu::createWeaponButton(unsigned int uiWeapon) {
   pButton->setPosition(UVector2(UDim(0, uiWeapon * 100), UDim(0, 0)));
   pButton->setProperty("Image", Weapon::getPicture(uiWeapon));
 
-#if INPUT_TOUCH
+#if ENABLE_INPUT_TOUCH == 1
   pButton->
     subscribeEvent(Window::EventMouseButtonDown,
 		   Event::Subscriber(&CGUIToolsMenu::onWeaponClick, this));
@@ -164,7 +165,7 @@ CEGUI::Window *CGUIToolsMenu::createWeaponButtonLabel(unsigned int uiWeapon) {
   pButton->setProperty("NormalTextColour", "FFFFFFFF");
   pButton->setProperty("VertFormatting", "BottomAligned");
   pButton->setFont("dejavusans12");
-#if INPUT_TOUCH
+#if ENABLE_INPUT_TOUCH == 1
   pButton->
     subscribeEvent(Window::EventMouseButtonDown,
 		   Event::Subscriber(&CGUIToolsMenu::onWeaponClick, this));

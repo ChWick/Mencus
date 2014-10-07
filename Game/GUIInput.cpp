@@ -126,6 +126,9 @@ CEGUI::Window *CGUIInput::createButton(int bt) {
   case BT_ACTIVATE:
     pButton->setProperty("Image", "hud_weapons/switch");
     break;
+  case BT_ATTACK:
+    pButton->setProperty("Image", Weapon::getPicture(0));
+    break;
   }
 
   return pButton;
