@@ -52,7 +52,7 @@ public class MencusNativeActivity extends NativeActivity {
 	boolean showAdWhenLoaded() {return mShowAdWhenLoaded;}
 
     static {
-        System.loadLibrary("AmazonGamesJni");
+        //System.loadLibrary("AmazonGamesJni");
     	//System.loadLibrary("Mencus");
     }
     
@@ -62,7 +62,7 @@ public class MencusNativeActivity extends NativeActivity {
 		super.onCreate(savedInstanceState);
 
 		
-		mPlugins.add(new AmazonGameCirclePlugin(this));
+		//mPlugins.add(new AmazonGameCirclePlugin(this));
 		for (Iterator<MencusPlugin> i = mPlugins.iterator(); i.hasNext();) {
 			i.next().onCreate();
 		}
