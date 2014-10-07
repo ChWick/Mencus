@@ -131,6 +131,7 @@ void CGUILevelSelect::updateLevelsSelection() {
   for (unsigned int i = 0; i < lList.size(); i++) {
     RadioButton *pBut = dynamic_cast<RadioButton*>(pPane->createChild("OgreTray/ToggleRadioButton", PropertyHelper<unsigned int>::toString(i + 1)));
     pBut->setText(pBut->getName());
+    pBut->setFont("dejavusans20");
     pBut->setSize(USize(UDim(0, fButtonSize), UDim(0, fButtonSize)));
     pBut->setPosition(UVector2(UDim(0, fButtonSize * (i % uiLevelsPerRow)), UDim(0, fButtonSize * (i / uiLevelsPerRow))));
     pBut->setUserData(const_cast<SLevelInfo*>(&(*it)));

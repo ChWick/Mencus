@@ -96,13 +96,14 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setPosition(CEGUI::Vector2f(0,0));
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setConstraintArea(NULL);
 
+  float fFontScale = target.getHeight() / 400;
 
   pTrayMgr->userUpdateLoadBar("Creating fonts", 0.2);
-  createFreeTypeFont("dejavusans12", 12, "DejaVuSans.ttf");
-  createFreeTypeFont("dejavusans8", 8, "DejaVuSans.ttf");
-  createFreeTypeFont("diploma15", 15, "diploma.ttf");
-  createFreeTypeFont("diploma20", 20, "diploma.ttf");
-  createFreeTypeFont("dejavusans20", 20, "DejaVuSans.ttf");
+  createFreeTypeFont("dejavusans12", 12 * fFontScale, "DejaVuSans.ttf");
+  createFreeTypeFont("dejavusans8", 8 * fFontScale, "DejaVuSans.ttf");
+  createFreeTypeFont("diploma15", 15 * fFontScale, "diploma.ttf");
+  createFreeTypeFont("diploma20", 20 * fFontScale, "diploma.ttf");
+  createFreeTypeFont("dejavusans20", 20 * fFontScale, "DejaVuSans.ttf");
   CEGUI::System::getSingleton().getDefaultGUIContext().setDefaultFont( "dejavusans12" );
   guiRoot->setFont("dejavusans12");
 
