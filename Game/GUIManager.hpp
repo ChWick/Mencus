@@ -74,6 +74,8 @@ public:
   ~CGUIManager();
 
   const CEGUI::Sizef &getNativeRes() const {return m_vNativeRes;}
+  void hideCursor();
+  void showCursor();
 
   void createResources();
   void destroyResources();

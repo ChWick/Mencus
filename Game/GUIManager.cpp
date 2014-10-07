@@ -92,11 +92,7 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   guiRoot->setSize(USize(UDim(1, 0), UDim(1, 0)));
   //guiRoot->setProperty("BackgroundEnabled", "false");
   CEGUI::System::getSingleton().getDefaultGUIContext().setRootWindow(guiRoot);
-#ifdef INPUT_MOUSE
-  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
-#else
-  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseInvisible");
-#endif
+  showCursor();
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setPosition(CEGUI::Vector2f(0,0));
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setConstraintArea(NULL);
 
@@ -189,6 +185,19 @@ void CGUIManager::update(Ogre::Real tpf) {
     pOverlay->update(tpf);
   }
 }
+
+void CGUIManager::hideCursor() {
+  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseInvisible");
+}
+
+void CGUIManager::showCursor() {
+#ifdef INPUT_MOUSE
+  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseArrow");
+#else
+  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setDefaultImage("OgreTrayImages/MouseInvisible");
+#endif
+}
+
 void CGUIManager::renderQueueStarted(Ogre::uint8 id, const Ogre::String& invocation, bool& skipThisQueue) {
    // make sure you check the invocation string, or you can end up rendering the GUI multiple times
    // per frame due to shadow cameras.

@@ -596,13 +596,13 @@ bool CMainMenu::onSelectButtonClicked(const CEGUI::EventArgs &args) {
   return true;
 }
 void CMainMenu::show() {
-  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().show();
+  CGUIManager::getSingleton().showCursor();
   m_pMMRoot->setVisible(true);
   setInputListenerEnabled(true);
   pause(PAUSE_ALL);
 }
 void CMainMenu::hide() {
-  CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().hide();
+  CGUIManager::getSingleton().hideCursor();
   m_pMMRoot->setVisible(false);
   setInputListenerEnabled(false);
   unpause(PAUSE_ALL);
