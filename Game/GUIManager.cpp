@@ -110,6 +110,7 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   pTrayMgr->userUpdateLoadBar("Creating gui components", 0.2);
   //destroyResources();
   CGUIToolsMenu *pToolsMenu = new CGUIToolsMenu(guiRoot);
+  m_lGUIOverlays.push_back(pToolsMenu);
   new CGUIInstructions(guiRoot);
   new CGUIGameOver(guiRoot);
   new CGUIStatistics(guiRoot);
