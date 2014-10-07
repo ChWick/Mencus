@@ -18,6 +18,7 @@
  *****************************************************************************/
 
 #include "Map.hpp"
+#include "Game.hpp"
 #include "Util.hpp"
 #include <tinyxml2.h>
 #include "InputListener.hpp"
@@ -59,8 +60,8 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_pTutorialManager(new CTutorialManager(*this)),
     m_p2dManagerMap(NULL),
     m_pBackground(NULL),
-    m_vScreenSize(Ogre::Root::getSingleton().getAutoCreatedWindow()->getWidth(),
-		  Ogre::Root::getSingleton().getAutoCreatedWindow()->getHeight()),
+    m_vScreenSize(CGame::getSingleton().getRenderWindow()->getWidth(),
+		  CGame::getSingleton().getRenderWindow()->getHeight()),
     m_vCameraPos(Ogre::Vector2::ZERO),
     m_vCameraTargetPos(Ogre::Vector2::ZERO),
     m_vCameraDebugOffset(Ogre::Vector2::ZERO),
