@@ -78,6 +78,7 @@ private:
   CEntity *m_pOthersEntity;
 
   Ogre::Vector2 m_vTilesPerScreen;
+  const Ogre::Vector2 m_vScreenSize;
   float m_fScreenRatio;
   Ogre::Vector2 m_vMapSize;
   Ogre::Vector2 m_vTransformedStartPos;

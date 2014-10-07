@@ -43,6 +43,7 @@
 #include "Events/Event.hpp"
 #include "MapInfo.hpp"
 #include "Plugins/SocialGaming/SocialGaming.hpp"
+#include "Settings.hpp"
 
 using namespace tinyxml2;
 using namespace XMLHelper;
@@ -58,6 +59,8 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_pTutorialManager(new CTutorialManager(*this)),
     m_p2dManagerMap(NULL),
     m_pBackground(NULL),
+    m_vScreenSize(Ogre::Root::getSingleton().getAutoCreatedWindow()->getWidth(),
+		  Ogre::Root::getSingleton().getAutoCreatedWindow()->getHeight()),
     m_vCameraPos(Ogre::Vector2::ZERO),
     m_vCameraTargetPos(Ogre::Vector2::ZERO),
     m_vCameraDebugOffset(Ogre::Vector2::ZERO),
@@ -114,10 +117,6 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
 
   resize(Ogre::Vector2(CGame::getSingleton().getRenderWindow()->getWidth(),
 		       CGame::getSingleton().getRenderWindow()->getHeight()));
-
-
-  m_vBlackBarSizeBottomLeft = Ogre::Vector2(3, 3);
-  m_vBlackBarSizeTopRight = Ogre::Vector2(1, 1);
 }
 CMap::~CMap() {
   CMessageHandler::getSingleton().addMessage(CMessage::MT_MAP_DESTROYED);
@@ -665,6 +664,12 @@ void CMap::mapRenderPauseChanged(bool bPause) {
 #endif
 }
 void CMap::update(Ogre::Real tpf) {
+  // update black bar size
+#if ENABLE_INPUT_TOUCH == 1
+  m_vBlackBarSizeTopRight.x = CSettings::getSingleton().getInputSettings().m_fTouchButtonSize / m_vScreenSize.x * m_vTilesPerScreen.x; // 1 button there
+  m_vBlackBarSizeBottomLeft.x = 2 * m_vBlackBarSizeTopRight.x; // 2 buttons there
+#endif
+
   if (!m_bUpdatePause) {
     m_fPlayingTime += tpf;
     CHUD::getSingleton().setCurrentTime(m_fPlayingTime);
