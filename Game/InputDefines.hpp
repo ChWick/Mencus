@@ -23,7 +23,10 @@
 #include "GlobalBuildDefines.hpp"
 
 #define INPUT_KEYBOARD
-#define INPUT_MOUSE
+
+#if MENCUS_INPUT_PLATFORM == 0 || MENCUS_INPUT_PLATFORM == 2
+#  define INPUT_MOUSE
+#endif
 
 #if ENABLE_INPUT_TOUCH == 1
 #  define INPUT_TOUCH
