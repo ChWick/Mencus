@@ -78,6 +78,7 @@ private:
   CEntity *m_pOthersEntity;
 
   Ogre::Vector2 m_vTilesPerScreen;
+  const Ogre::Vector2 m_vScreenSize;
   float m_fScreenRatio;
   Ogre::Vector2 m_vMapSize;
   Ogre::Vector2 m_vTransformedStartPos;
@@ -85,6 +86,8 @@ private:
   Ogre::Vector2 m_vCameraPos;
   Ogre::Vector2 m_vCameraTargetPos;
   Ogre::Vector2 m_vCameraDebugOffset;
+  Ogre::Vector2 m_vBlackBarSizeBottomLeft;
+  Ogre::Vector2 m_vBlackBarSizeTopRight;
 
   CPlayer *m_pPlayer;
   CExit m_Exit;

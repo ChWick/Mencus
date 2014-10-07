@@ -34,6 +34,7 @@
 #include "Plugins/SocialGaming/Overlay.hpp"
 #include "Plugins/GUIToolsMenu.hpp"
 #include <dependencies/OgreSdkUtil/SdkTrays.h>
+#include "Settings.hpp"
 
 using namespace CEGUI;
 
@@ -95,6 +96,16 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
   showCursor();
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setPosition(CEGUI::Vector2f(0,0));
   CEGUI::System::getSingleton().getDefaultGUIContext().getMouseCursor().setConstraintArea(NULL);
+  
+  Sizef vSize = guiRoot->getPixelSize();
+  float maxValue = std::min(vSize.d_height / 4.0, vSize.d_width / 8.0);
+
+  if (CSettings::getSingleton().getInputSettings().m_fTouchButtonSize < 0) {
+    CSettings::getSingleton().getInputSettings().m_fTouchButtonSize = maxValue;
+  }
+  else {
+    CSettings::getSingleton().getInputSettings().m_fTouchButtonSize = std::min<float>(maxValue,  CSettings::getSingleton().getInputSettings().m_fTouchButtonSize);
+  }
 
   pTrayMgr->userUpdateLoadBar("Creating fonts", 0.2);
   createFreeTypeFont("dejavusans12", 12, "DejaVuSans.ttf");
@@ -132,8 +143,6 @@ CGUIManager::CGUIManager(Ogre::SceneManager *pSceneManager, Ogre::RenderTarget &
 
   pTrayMgr->userUpdateLoadBar("done...", 0.2);
   onGUIScalingChanged(CSettings::getSingleton().getVideoSettings().m_fHUDSize);
-  Sizef vSize = CGUIManager::getSingleton().getNativeRes();
-  float maxValue = std::min(vSize.d_height / 4.0, vSize.d_width / 8.0);
   changeTouchButtonSize(std::min(CSettings::getSingleton().getInputSettings().m_fTouchButtonSize, maxValue));
   Ogre::LogManager::getSingleton().logMessage("GUIManager initialized...");
   CGame::getSingleton().hideLoadingBar();
