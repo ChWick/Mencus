@@ -85,6 +85,8 @@ private:
   Ogre::Vector2 m_vCameraPos;
   Ogre::Vector2 m_vCameraTargetPos;
   Ogre::Vector2 m_vCameraDebugOffset;
+  Ogre::Vector2 m_vBlackBarSizeBottomLeft;
+  Ogre::Vector2 m_vBlackBarSizeTopRight;
 
   CPlayer *m_pPlayer;
   CExit m_Exit;

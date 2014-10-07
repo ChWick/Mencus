@@ -61,6 +61,8 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
     m_vCameraPos(Ogre::Vector2::ZERO),
     m_vCameraTargetPos(Ogre::Vector2::ZERO),
     m_vCameraDebugOffset(Ogre::Vector2::ZERO),
+    m_vBlackBarSizeBottomLeft(Ogre::Vector2::ZERO),
+    m_vBlackBarSizeTopRight(Ogre::Vector2::ZERO),
     m_pPlayer(NULL),
     m_pScreenplayListener(pScreenplayListener),
     m_bUpdatePause(CPauseManager::getSingleton().isPause(PAUSE_MAP_UPDATE)),
@@ -112,6 +114,10 @@ CMap::CMap(Ogre::SceneManager *pSceneManager,
 
   resize(Ogre::Vector2(CGame::getSingleton().getRenderWindow()->getWidth(),
 		       CGame::getSingleton().getRenderWindow()->getHeight()));
+
+
+  m_vBlackBarSizeBottomLeft = Ogre::Vector2(3, 3);
+  m_vBlackBarSizeTopRight = Ogre::Vector2(1, 1);
 }
 CMap::~CMap() {
   CMessageHandler::getSingleton().addMessage(CMessage::MT_MAP_DESTROYED);
@@ -712,14 +718,15 @@ void CMap::render(Ogre::Real tpf) {
   //for (auto pTile : m_gridTiles) {
   //  pTile->render(tpf);
   //}
-  unsigned int xmin = std::max<int>(0, static_cast<int>(m_vCameraPos.x));
-  unsigned int ymin = std::max<int>(0, static_cast<int>(m_vCameraPos.y));
-  unsigned int xmax = std::min<unsigned int>(floor(m_vCameraPos.x + m_vTilesPerScreen.x + 1), m_gridTiles.getSizeX());
-  unsigned int ymax = std::min<unsigned int>(floor(m_vCameraPos.y + m_vTilesPerScreen.y + 1), m_gridTiles.getSizeY());
 
   m_pTilesEntity->render(tpf);
 
 #if ENABLE_MAP_EDITOR
+  unsigned int xmin = std::max<int>(-m_vBlackBarSizeBottomLeft.x, static_cast<int>(m_vCameraPos.x));
+  unsigned int ymin = std::max<int>(-m_vBlackBarSizeBottomLeft.y, static_cast<int>(m_vCameraPos.y));
+  unsigned int xmax = std::min<unsigned int>(floor(m_vCameraPos.x + m_vTilesPerScreen.x + 1), m_gridTiles.getSizeX());
+  unsigned int ymax = std::min<unsigned int>(floor(m_vCameraPos.y + m_vTilesPerScreen.y + 1), m_gridTiles.getSizeY());
+
   if (CMapEditor::getSingleton().isVisible()) {
     // line numbers
     for (unsigned int x = 0; x < m_vLineNumberX.size(); x++) {
@@ -749,6 +756,26 @@ void CMap::render(Ogre::Real tpf) {
   m_pPlayer->render(tpf);
   m_pExplosionsEntity->render(tpf);
   m_pOthersEntity->render(tpf);
+
+  // render black bars at the side of screen if necessary
+  // ====================================================
+
+  // compute the size of the bar
+  Ogre::Vector2 vBlackBarBottomLeftEnd(std::min<Ogre::Real>(0, m_vCameraPos.x), std::min<Ogre::Real>(0, m_vCameraPos.y));
+  Ogre::Vector2 vBlackBarTopRightEnd(std::min<Ogre::Real>(0, m_vCameraPos.x - m_gridTiles.getSizeX()), std::min<Ogre::Real>(0, m_vCameraPos.y - m_gridTiles.getSizeY()));
+  // covert to screen size
+  vBlackBarBottomLeftEnd /= m_vTilesPerScreen;
+  vBlackBarBottomLeftEnd = -vBlackBarBottomLeftEnd * 2 - Ogre::Vector2::UNIT_SCALE;
+
+  vBlackBarTopRightEnd /= m_vTilesPerScreen;
+  vBlackBarTopRightEnd = -vBlackBarTopRightEnd * 2 - Ogre::Vector2::UNIT_SCALE;
+
+
+  m_p2dManagerMap->spriteBltFull("black.png", -1, -1, 1, vBlackBarBottomLeftEnd.y);
+  m_p2dManagerMap->spriteBltFull("black.png", -1, -1, vBlackBarBottomLeftEnd.x, 1);
+
+  m_p2dManagerMap->spriteBltFull("black.png", -1, vBlackBarTopRightEnd.y, 1, 1);
+  m_p2dManagerMap->spriteBltFull("black.png", vBlackBarTopRightEnd.x, -1, 1, 1);
 }
 void CMap::updateBackground(Ogre::Real tpf) {
   if (m_pBackground) {
@@ -763,11 +790,11 @@ void CMap::renderBackground(Ogre::Real tpf) {
 void CMap::updateCameraPos(Ogre::Real tpf) {
   Ogre::Vector2 vCenter = m_pPlayer->getPosition() + m_pPlayer->getSize() / 2;
   m_vCameraTargetPos = vCenter - m_vTilesPerScreen/ 2;
-  m_vCameraTargetPos.x = max(m_vCameraTargetPos.x, static_cast<Ogre::Real>(0));
-  m_vCameraTargetPos.y = max(m_vCameraTargetPos.y, static_cast<Ogre::Real>(0));
+  m_vCameraTargetPos.x = max<Ogre::Real>(m_vCameraTargetPos.x, -m_vBlackBarSizeBottomLeft.x);
+  m_vCameraTargetPos.y = max<Ogre::Real>(m_vCameraTargetPos.y, -m_vBlackBarSizeBottomLeft.y);
 
-  m_vCameraTargetPos.x = min(m_vCameraTargetPos.x, m_gridTiles.getSizeX() - m_vTilesPerScreen.x);
-  m_vCameraTargetPos.y = min(m_vCameraTargetPos.y, m_gridTiles.getSizeY() - m_vTilesPerScreen.y);
+  m_vCameraTargetPos.x = min<Ogre::Real>(m_vCameraTargetPos.x, m_gridTiles.getSizeX() - m_vTilesPerScreen.x + m_vBlackBarSizeTopRight.x);
+  m_vCameraTargetPos.y = min<Ogre::Real>(m_vCameraTargetPos.y, m_gridTiles.getSizeY() - m_vTilesPerScreen.y + m_vBlackBarSizeTopRight.y);
 
   for (auto &camRestr : m_vCameraRestrictions) {
     camRestr.update(m_vCameraTargetPos, m_pPlayer->getCenter());
@@ -776,10 +803,10 @@ void CMap::updateCameraPos(Ogre::Real tpf) {
   m_vCameraPos += vDir * std::min(vDir.normalise(), tpf * CAMERA_MAX_MOVE_SPEED);
 
   // bounds
-  m_vCameraPos.x = max(m_vCameraPos.x, static_cast<Ogre::Real>(0));
-  m_vCameraPos.y = max(m_vCameraPos.y, static_cast<Ogre::Real>(0));
-  m_vCameraPos.x = min(m_vCameraPos.x, m_gridTiles.getSizeX() - m_vTilesPerScreen.x);
-  m_vCameraPos.y = min(m_vCameraPos.y, m_gridTiles.getSizeY() - m_vTilesPerScreen.y);
+  m_vCameraPos.x = max<Ogre::Real>(m_vCameraPos.x, -m_vBlackBarSizeBottomLeft.x);
+  m_vCameraPos.y = max<Ogre::Real>(m_vCameraPos.y, -m_vBlackBarSizeBottomLeft.y);
+  m_vCameraPos.x = min<Ogre::Real>(m_vCameraPos.x, m_gridTiles.getSizeX() - m_vTilesPerScreen.x + m_vBlackBarSizeTopRight.x);
+  m_vCameraPos.y = min<Ogre::Real>(m_vCameraPos.y, m_gridTiles.getSizeY() - m_vTilesPerScreen.y + m_vBlackBarSizeTopRight.y);
 }
 Ogre::Vector2 CMap::mapToRelativeScreenPos(const Ogre::Vector2 &vMapPos) const {
   Ogre::Vector2 vOffset(m_vCameraPos + m_vCameraDebugOffset);
