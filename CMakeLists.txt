@@ -7,8 +7,8 @@ endif()
 project(Mencus)
 
 # set version
-set (MENCUS_VERSION_CODE 12)
-set (MENCUS_VERSION_NAME 0.0.12)
+set (MENCUS_VERSION_CODE 13)
+set (MENCUS_VERSION_NAME 0.1.0)
 set (CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set (MENCUS_TEMPLATES_DIR "${CMAKE_MODULE_PATH}/templates")
 #include(cotire)
