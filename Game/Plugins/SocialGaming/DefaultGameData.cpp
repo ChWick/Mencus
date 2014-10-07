@@ -75,7 +75,8 @@ void CDefaultGameData::save() const {
     SetAttribute(pSingleLevelData, "skipped", data.bSkipped ? "true" : "false");
   }
 
-  if (doc.SaveFile(m_sFileName.c_str())) {
+  if (doc.SaveFile(CFileManager::getValidPath(m_sFileName,
+					      CFileManager::SL_INTERNAL).c_str())) {
     LOGW("Error on saving game data file");
   }
 }
